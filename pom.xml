@@ -236,15 +236,6 @@
 			<id>swt-repo</id>
 			<url>https://swt-repo.googlecode.com/svn/repo/</url>
 		</repository>
-		<repository>
-			<id>swt-eclipse-repo</id>
-			<url>http://maven.eclipse.org/nexus/content/repositories/testing/</url>
-		</repository>
-		<repository>
-			<id>for_jnlp_servlet</id>
-			<name>For jnlp-servlet</name>
-			<url>http://dev.joget.org/archiva/repository/internal</url>
-		</repository>
 	</repositories>
 
 	<pluginRepositories>
