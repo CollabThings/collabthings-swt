@@ -28,7 +28,8 @@ Section "" ;No components page, name is not important
 	SetOutPath $INSTDIR\assets\img
 	File "files\assets\img\logo.png" 
 	File "files\assets\img\splash.png" 
-	File "files\assets\img\icon.ico" 
+	File "files\assets\img\icon.ico" " 
+	File "files\assets\config.xml" 
 	 
 	SetOutPath $INSTDIR\assets\ini
 	File "files\assets\ini\settings.ini" 
@@ -39,6 +40,7 @@ Section "" ;No components page, name is not important
 	; Put file there
 	File "files\LibraryOfThings.exe" 
 	File "files\Ionic.Zip.dll"
+ 	File "files\log4net.dll"
  
 	# Start Menu
 	createDirectory "$SMPROGRAMS\${APPNAME}"
