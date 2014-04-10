@@ -129,16 +129,17 @@
 			<version>1.5.0.0</version>
 		</dependency>
 
+
 		<dependency>
 			<groupId>waazdoh</groupId>
 			<artifactId>waazdoh.client</artifactId>
-			<version>1.0.8-SNAPSHOT</version>
+			<version>1.1.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.libraryofthings</groupId>
 			<artifactId>libraryofthings.client</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -153,6 +154,13 @@
 			<version>3.8.0.v20120521-2329</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>javafx</artifactId>
+			<version>2.2.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/jfxrt.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<profiles>
@@ -235,6 +243,11 @@
 		<repository>
 			<id>swt-repo</id>
 			<url>https://swt-repo.googlecode.com/svn/repo/</url>
+		</repository>
+		<repository>
+			<id>waazdoh</id>
+			<name>waazdoh</name>
+			<url>http://maven.waazdoh.com/repository</url>
 		</repository>
 	</repositories>
 
