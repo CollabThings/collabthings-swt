@@ -33,6 +33,7 @@ public final class AppWindow {
 	private LOTApp app;
 	private TabFolder tabFolder;
 	private Table table;
+	private Label lblBottonInfo;
 
 	public AppWindow(LOTApp app) {
 		this.app = app;
@@ -182,11 +183,25 @@ public final class AppWindow {
 		scrolledComposite.setMinSize(table
 				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
-		Label lblBottonInfo = new Label(composite, SWT.NONE);
+		lblBottonInfo = new Label(composite, SWT.NONE);
 		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
 				false, 1, 1));
 		lblBottonInfo.setAlignment(SWT.RIGHT);
-		lblBottonInfo.setText("LOT:" + LOTEnvironment.version + " Waazdoh:"
-				+ WaazdohInfo.version + " service: " + app.getEnvironment());
+
+		setBottomInfo();
+	}
+
+	private void setBottomInfo() {
+		shell.getDisplay().timerExec(1000, new Runnable() {
+
+			@Override
+			public void run() {
+				lblBottonInfo.setText("LOT:" + LOTEnvironment.version
+						+ " Waazdoh:" + WaazdohInfo.version + " environment: "
+						+ app.getEnvironment());
+				//
+				setBottomInfo();
+			}
+		});
 	}
 }

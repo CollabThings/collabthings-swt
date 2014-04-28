@@ -28,7 +28,7 @@ public class Part3DView extends Composite {
 		createScene(canvas);
 	}
 
-	private void createScene(FXCanvas fxCanvas) {
+	private void createScene(FXCanvas canvas) {
 		/* Create a JavaFX Group node */
 		Group group = new Group();
 		/* Create a JavaFX button */
@@ -45,7 +45,7 @@ public class Part3DView extends Composite {
 
 		/* Attach an external stylesheet */
 		scene.getStylesheets().add("twobuttons/Buttons.css");
-		fxCanvas.setScene(scene);
+		//
+		canvas.setScene(scene);
 	}
 }
-

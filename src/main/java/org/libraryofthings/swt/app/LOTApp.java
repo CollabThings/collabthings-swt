@@ -5,14 +5,12 @@ import java.net.MalformedURLException;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.model.LOTPart;
 
-import waazdoh.client.MBinarySource;
 import waazdoh.client.WClientListener;
-import waazdoh.client.rest.RestClient;
+import waazdoh.client.rest.RestServiceClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
 import waazdoh.cutils.AppPreferences;
 import waazdoh.cutils.MLogger;
 import waazdoh.cutils.MPreferences;
-import waazdoh.service.CMService;
 
 public class LOTApp {
 	private static final String PREFERENCES_PREFIX = "lot";
@@ -21,13 +19,16 @@ public class LOTApp {
 	private LOTEnvironment env;
 	//
 	private MLogger log = MLogger.getLogger(this);
+	private AppPreferences preferences;
+	private String serviceurl;
+	private RestServiceClient service;
+	private P2PBinarySource binarysource;
 
 	public LOTApp() throws MalformedURLException {
-		MPreferences a = new AppPreferences(LOTApp.PREFERENCES_PREFIX);
-		MBinarySource b = new P2PBinarySource(a, true);
-		CMService c = new RestClient(a.get(MPreferences.SERVICE_URL, ""), b);
-		//
-		env = new LOTEnvironment(a, b, c);
+		preferences = new AppPreferences(LOTApp.PREFERENCES_PREFIX);
+		serviceurl = preferences.get(MPreferences.SERVICE_URL, "");
+		binarysource = new P2PBinarySource(preferences, true);
+		service = new RestServiceClient(serviceurl, binarysource);
 	}
 
 	public void addClientListener(WClientListener listener) {
@@ -35,15 +36,18 @@ public class LOTApp {
 	}
 
 	public LOTEnvironment getEnvironment() {
+		if(env==null) {
+			env = new LOTEnvironment(preferences, binarysource, service);
+		}
 		return env;
 	}
 
 	public void close() {
-		env.stop();
+		getEnvironment().stop();
 	}
 
 	public LOTPart newPart() {
-		return env.getObjectFactory().getPart();
+		return getEnvironment().getObjectFactory().getPart();
 	}
 
 	public boolean loginWithStored() {
@@ -53,7 +57,7 @@ public class LOTApp {
 				LOTApp.PREFERENCES_SESSION, "unknown_session");
 
 		try {
-			return getEnvironment().getClient().setUsernameAndSession(username,
+			return getEnvironment().getClient().setSession(username,
 					session);
 		} catch (Exception e) {
 			log.info("failed at login " + e);
