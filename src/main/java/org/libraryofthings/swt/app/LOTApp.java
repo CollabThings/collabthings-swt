@@ -36,7 +36,7 @@ public class LOTApp {
 	}
 
 	public LOTEnvironment getEnvironment() {
-		if(env==null) {
+		if (env == null) {
 			env = new LOTEnvironment(preferences, binarysource, service);
 		}
 		return env;
@@ -51,14 +51,11 @@ public class LOTApp {
 	}
 
 	public boolean loginWithStored() {
-		String username = getEnvironment().getPreferences().get(
-				LOTApp.PREFERENCES_USERNAME, "unknown_user");
 		String session = getEnvironment().getPreferences().get(
 				LOTApp.PREFERENCES_SESSION, "unknown_session");
 
 		try {
-			return getEnvironment().getClient().setSession(username,
-					session);
+			return getEnvironment().getClient().setSession(session);
 		} catch (Exception e) {
 			log.info("failed at login " + e);
 			return false;
@@ -67,5 +64,14 @@ public class LOTApp {
 
 	public boolean isServiceAvailable() {
 		return getEnvironment().getClient().getService().isConnected();
+	}
+
+	public boolean setSession(String sessionId) {
+		boolean b = getEnvironment().getClient().setSession(sessionId);
+		if (b) {
+			getEnvironment().getPreferences().set(LOTApp.PREFERENCES_SESSION,
+					sessionId);
+		}
+		return b;
 	}
 }

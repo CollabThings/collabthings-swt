@@ -59,7 +59,7 @@ public class LoginWindow {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(426, 326);
+		shell.setSize(497, 329);
 		shell.setText("Login");
 		shell.setLayout(new GridLayout(1, false));
 
@@ -71,6 +71,7 @@ public class LoginWindow {
 			}
 		});
 		link.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		link.setText("Working on it...");
 		browser = new Browser(shell, SWT.NONE);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		//
@@ -97,21 +98,23 @@ public class LoginWindow {
 
 			@Override
 			public void run() {
-				synchronized (app) {
-					try {
-						while (getApplogin().getSessionId() == null
-								&& !shell.isDisposed()) {
-							applogin = app.getEnvironment().getClient()
-									.checkAppLogin(getApplogin().getId());
-							app.wait(2000);
+				if (!app.loginWithStored()) {
+					synchronized (app) {
+						try {
+							while (getApplogin().getSessionId() == null
+									&& !shell.isDisposed()) {
+								applogin = app.getEnvironment().getClient()
+										.checkAppLogin(getApplogin().getId());
+								app.wait(2000);
+							}
+						} catch (InterruptedException e) {
+							e.printStackTrace();
 						}
-					} catch (InterruptedException e) {
-						e.printStackTrace();
 					}
-				}
 
-				app.getEnvironment().getClient()
-						.setSession(getApplogin().getSessionId());
+					app.setSession(getApplogin().getSessionId());
+				}
+				//
 				dispose();
 			}
 		});
@@ -129,7 +132,8 @@ public class LoginWindow {
 
 				@Override
 				public void run() {
-					link.setText("<a href=\"" + getURL() + "\">New Link</a>");
+					link.setText("<a href=\"" + getURL()
+							+ "\">Open in a browser</a>");
 
 					String url = "" + getURL() + "?simplepage=true";
 					log.info("opening url " + url);
