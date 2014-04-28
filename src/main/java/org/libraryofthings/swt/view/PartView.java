@@ -8,8 +8,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.swt.SWTResourceManager;
 import org.libraryofthings.swt.controls.ObjectViewer;
 
 public class PartView extends Composite {

@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.swt.app.LOTApp;
