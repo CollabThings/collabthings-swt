@@ -4,10 +4,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.libraryofthings.LLog;
 import org.libraryofthings.swt.app.LOTApp;
@@ -59,8 +61,19 @@ public class LoginWindow {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(497, 329);
+		int w = 497;
+		int h = 329;
+		shell.setSize(w, h);
 		shell.setText("Login");
+		
+		Monitor primary = shell.getDisplay().getPrimaryMonitor();
+	    Rectangle bounds = primary.getBounds();
+	    Rectangle rect = shell.getBounds();
+	    
+	    int x = bounds.x + (bounds.width - rect.width) / 2;
+	    int y = bounds.y + (bounds.height - rect.height) / 2;
+	    
+	    shell.setLocation(x, y);
 		shell.setLayout(new GridLayout(1, false));
 
 		link = new Link(shell, SWT.NONE);
