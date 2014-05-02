@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 
 import org.libraryofthings.swt.app.LOTApp;
 
+import waazdoh.cutils.MLogger;
+
 public final class AppLauncher {
 	private LOTApp app;
 	private LoginWindow loginwindow;
@@ -14,6 +16,7 @@ public final class AppLauncher {
 	}
 
 	private void launch() throws MalformedURLException {
+		MLogger.getLogger(this).info("Launching " + this);
 		app = new LOTApp();
 		try {
 			loginwindow = new LoginWindow(app);

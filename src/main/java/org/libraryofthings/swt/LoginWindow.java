@@ -30,7 +30,7 @@ public class LoginWindow {
 	}
 
 	private void loginLinkSelected() {
-		System.out.println("You have selected: " + getURL());
+		log.info("You have selected: " + getURL());
 		// Open default external browser
 		org.eclipse.swt.program.Program.launch(getURL());
 	}

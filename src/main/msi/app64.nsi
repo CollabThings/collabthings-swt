@@ -3,10 +3,10 @@
 !define APPNAME "Library of Things"
 
 ; The name of the installer
-Name "Library if Things"
+Name "Library of Things"
 
 ; The file to write
-OutFile "libraryofthing64.exe"
+OutFile "libraryofthings64.exe"
 
 ; The default installation directory
 InstallDir $APPDATA\LibraryOfThings
