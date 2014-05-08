@@ -2,6 +2,7 @@ package org.libraryofthings.swt.app;
 
 import java.net.MalformedURLException;
 
+import org.libraryofthings.LLog;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.model.LOTPart;
 
@@ -9,7 +10,6 @@ import waazdoh.client.WClientListener;
 import waazdoh.client.rest.RestServiceClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
 import waazdoh.cutils.AppPreferences;
-import waazdoh.cutils.MLogger;
 import waazdoh.cutils.MPreferences;
 
 public class LOTApp {
@@ -18,7 +18,7 @@ public class LOTApp {
 	private static final String PREFERENCES_SESSION = "user.session";
 	private LOTEnvironment env;
 	//
-	private MLogger log = MLogger.getLogger(this);
+	private LLog log = LLog.getLogger(this);
 	private AppPreferences preferences;
 	private String serviceurl;
 	private RestServiceClient service;

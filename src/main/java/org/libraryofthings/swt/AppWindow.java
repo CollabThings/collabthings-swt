@@ -1,5 +1,6 @@
 package org.libraryofthings.swt;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -19,6 +20,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.libraryofthings.LLog;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.swt.app.LOTApp;
@@ -59,11 +61,23 @@ public final class AppWindow {
 		shell.setMaximized(true);
 		//
 		while (!shell.isDisposed()) {
+			readAndDispatch(display);
+		}
+
+		app.close();
+	}
+
+	private void readAndDispatch(Display display) {
+		try {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
+		} catch (Exception e) {
+			MessageDialog dialog = new MessageDialog(shell, "ERROR!!", null, ""
+					+ e, MessageDialog.ERROR, new String[] { "OK" }, 0);
+			LLog.getLogger(this).error(this, "displayloop", e);
+			dialog.open();
 		}
-		app.close();
 	}
 
 	/**

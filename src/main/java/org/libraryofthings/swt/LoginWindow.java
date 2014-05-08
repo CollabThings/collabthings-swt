@@ -65,15 +65,15 @@ public class LoginWindow {
 		int h = 329;
 		shell.setSize(w, h);
 		shell.setText("Login");
-		
+
 		Monitor primary = shell.getDisplay().getPrimaryMonitor();
-	    Rectangle bounds = primary.getBounds();
-	    Rectangle rect = shell.getBounds();
-	    
-	    int x = bounds.x + (bounds.width - rect.width) / 2;
-	    int y = bounds.y + (bounds.height - rect.height) / 2;
-	    
-	    shell.setLocation(x, y);
+		Rectangle bounds = primary.getBounds();
+		Rectangle rect = shell.getBounds();
+
+		int x = bounds.x + (bounds.width - rect.width) / 2;
+		int y = bounds.y + (bounds.height - rect.height) / 2;
+
+		shell.setLocation(x, y);
 		shell.setLayout(new GridLayout(1, false));
 
 		link = new Link(shell, SWT.NONE);
@@ -93,13 +93,19 @@ public class LoginWindow {
 	}
 
 	private void waitForLogin() {
-		shell.getDisplay().timerExec(200, new Runnable() {
+		shell.getDisplay().timerExec(1000, new Runnable() {
 
 			@Override
 			public void run() {
-				if (app.getEnvironment().getClient().getService().isLoggedIn()) {
-					shell.dispose();
-				} else {
+				try {
+					if (app.getEnvironment().getClient().getService()
+							.isLoggedIn()) {
+						shell.dispose();
+					} else {
+						waitForLogin();
+					}
+				} catch (Exception e) {
+					log.error(this, "waitForLogin", e);
 					waitForLogin();
 				}
 			}

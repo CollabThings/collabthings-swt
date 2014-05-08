@@ -2,9 +2,8 @@ package org.libraryofthings.swt;
 
 import java.net.MalformedURLException;
 
+import org.libraryofthings.LLog;
 import org.libraryofthings.swt.app.LOTApp;
-
-import waazdoh.cutils.MLogger;
 
 public final class AppLauncher {
 	private LOTApp app;
@@ -16,7 +15,7 @@ public final class AppLauncher {
 	}
 
 	private void launch() throws MalformedURLException {
-		MLogger.getLogger(this).info("Launching " + this);
+		LLog.getLogger(this).info("Launching " + this);
 		app = new LOTApp();
 		try {
 			loginwindow = new LoginWindow(app);
