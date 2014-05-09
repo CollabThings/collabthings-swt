@@ -141,7 +141,11 @@ public class LoginWindow {
 	}
 
 	public void dispose() {
-		shell.dispose();
+		shell.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				shell.dispose();
+			}
+		});
 	}
 
 	public WClientAppLogin getApplogin() {
