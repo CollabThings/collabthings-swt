@@ -2,12 +2,18 @@ package org.libraryofthings.swt.view;
 
 import java.net.URL;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.embed.swt.FXCanvas;
+import javafx.scene.AmbientLight;
+import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -39,21 +45,74 @@ public class Part3DView extends Composite {
 	private void createScene(FXCanvas canvas) {
 		/* Create a JavaFX Group node */
 		Group group = new Group();
-		/* Create a JavaFX button */
-		final Button jfxButton = new Button("JFX Button");
-		/* Assign the CSS ID ipad-dark-grey */
-		jfxButton.setId("ipad-dark-grey");
-		/* Add the button as a child of the Group node */
-		group.getChildren().add(jfxButton);
 		/* Create the Scene instance and set the group node as root */
-		Scene scene = new Scene(group, Color.BLACK);// ,
+		org.eclipse.swt.graphics.Color bg = getBackground();
+		double red = bg.getRed() / 255.0 * 0.8f;
+		double green = bg.getGreen() / 255.0 * 0.8f;
+		double blue = bg.getBlue() / 255.0;
+		Scene scene = new Scene(group, new Color(red, green, blue, 1));// ,
 		// Color.rgb(getBackground().getRed(),
 		// getBackground().getGreen(),
 		// getBackground().getBlue()));
+		Camera camera = new PerspectiveCamera(true);
+		scene.setCamera(camera);
+		//
+		Group cameraGroup = new Group();
+		cameraGroup.getChildren().add(camera);
+		group.getChildren().add(cameraGroup);
+		cameraGroup.setTranslateZ(-75);
 
 		/* Attach an external stylesheet */
 		scene.getStylesheets().add("twobuttons/Buttons.css");
 		//
+		testImport(group);
+
 		canvas.setScene(scene);
+	}
+
+	private void testImport(Group group) {
+		X3dModelImporter x3dImporter = new X3dModelImporter();
+		try {
+			log.info("example resource "
+					+ this.getClass().getResource("/example").getPath());
+
+			URL modelUrl = this.getClass().getResource(
+					"/example/models/cube.x3d");
+			log.info("loading model " + modelUrl);
+			x3dImporter.read(modelUrl);
+		} catch (ImportException e) {
+			// handle exception
+			log.error(this, "testview3d", e);
+		}
+		//
+		Group ogroup = new Group();
+
+		Node[] rootNodes = x3dImporter.getImport();
+		log.info("imported nodes " + rootNodes);
+		for (Node node : rootNodes) {
+			ogroup.getChildren().add(node);
+		}
+		// ogroup.setTranslateY(20);
+		ogroup.setScaleY(10);
+		ogroup.setScaleX(2);
+		//
+		group.getChildren().add(ogroup);
+		//
+
+		AmbientLight light = new AmbientLight();
+		Group lightgroup = new Group();
+		lightgroup.getChildren().add(light);
+		group.getChildren().add(lightgroup);
+
+		//
+		// Cylinder myCylinder = new Cylinder(1, 2);
+		// group.getChildren().add(myCylinder);
+		final Timeline timeline = new Timeline();
+		timeline.setCycleCount(Timeline.INDEFINITE);
+		timeline.setAutoReverse(true);
+		final KeyValue kv = new KeyValue(ogroup.rotateProperty(), 360);
+		final KeyFrame kf = new KeyFrame(Duration.millis(2000), kv);
+		timeline.getKeyFrames().add(kf);
+		timeline.play();
 	}
 }

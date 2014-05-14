@@ -60,6 +60,9 @@ public final class AppWindow {
 		shell.layout();
 		shell.setMaximized(true);
 		//
+		// FIXME TODO REMOVE
+		newPart();
+		//
 		while (!shell.isDisposed()) {
 			readAndDispatch(display);
 		}
