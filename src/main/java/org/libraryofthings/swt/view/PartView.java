@@ -26,7 +26,7 @@ public class PartView extends Composite {
 	private static final String DEFAULT_X3D_IMPORTPATH = "lot.gui.default.import_path";
 	private LOTPart part;
 	private ObjectViewer table_properties;
-	private Part3DView partcanvas;
+	private Model3DView partcanvas;
 	private LLog log = LLog.getLogger(this);
 	private LOTApp app;
 
@@ -88,7 +88,7 @@ public class PartView extends Composite {
 		c_view.setBounds(0, 0, 64, 64);
 		//
 
-		partcanvas = new Part3DView(c_view, SWT.NONE);
+		partcanvas = new Model3DView(c_view, SWT.NONE);
 		composite_main.setWeights(new int[] { 91, 356 });
 
 	}
@@ -115,6 +115,6 @@ public class PartView extends Composite {
 	public void importFile(File file) throws SAXException, IOException {
 		log.info("loading model " + file);
 		part.importModel(file);
-		this.partcanvas.viewModel(part.getModel());
+		this.partcanvas.addModel(part.getModel());
 	}
 }

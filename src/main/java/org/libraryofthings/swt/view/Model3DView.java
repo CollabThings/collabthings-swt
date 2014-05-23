@@ -3,9 +3,6 @@ package org.libraryofthings.swt.view;
 import java.io.File;
 import java.io.IOException;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.embed.swt.FXCanvas;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -14,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -28,12 +24,12 @@ import org.xml.sax.SAXException;
 
 import com.interactivemesh.jfx.importer.x3d.X3dModelImporter;
 
-public class Part3DView extends Composite {
+public class Model3DView extends Composite {
 	private LLog log = LLog.getLogger(this);
 	private Group scenegroup;
 	private LOTEnvironment env;
 
-	public Part3DView(Composite c_view, int style) {
+	public Model3DView(Composite c_view, int style) {
 		super(c_view, style);
 
 		setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -84,7 +80,7 @@ public class Part3DView extends Composite {
 		scenegroup.getChildren().add(lightgroup);
 	}
 
-	public void viewModel(LOT3DModel b) {
+	public Group addModel(LOT3DModel b) {
 		try {
 			X3dModelImporter x3dImporter = new X3dModelImporter();
 			File modelFile = b.getModelFile();
@@ -98,26 +94,15 @@ public class Part3DView extends Composite {
 			for (Node node : rootNodes) {
 				ogroup.getChildren().add(node);
 			}
-			// ogroup.setTranslateY(20);
-			ogroup.setScaleY(2);
-			ogroup.setScaleX(2);
 			//
 			scenegroup.getChildren().add(ogroup);
-
 			//
-			// Cylinder myCylinder = new Cylinder(1, 2);
-			// group.getChildren().add(myCylinder);
-			final Timeline timeline = new Timeline();
-			timeline.setCycleCount(Timeline.INDEFINITE);
-			timeline.setAutoReverse(true);
-			final KeyValue kv = new KeyValue(ogroup.rotateProperty(), 360);
-			final KeyFrame kf = new KeyFrame(Duration.millis(2000), kv);
-			timeline.getKeyFrames().add(kf);
-			timeline.play();
+			return ogroup;
 		} catch (IOException | SAXException e) {
 			log.error(this, "importModel", e);
 			LOTMessageDialog d = new LOTMessageDialog(getShell());
 			d.show(e);
+			return null;
 		}
 	}
 }
