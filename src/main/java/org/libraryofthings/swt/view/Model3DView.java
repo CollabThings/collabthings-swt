@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import javafx.embed.swt.FXCanvas;
 import javafx.scene.AmbientLight;
-import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
@@ -13,6 +12,10 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.GestureEvent;
+import org.eclipse.swt.events.GestureListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -24,10 +27,13 @@ import org.xml.sax.SAXException;
 
 import com.interactivemesh.jfx.importer.x3d.X3dModelImporter;
 
-public class Model3DView extends Composite {
+public class Model3DView extends Composite implements GestureListener {
 	private LLog log = LLog.getLogger(this);
 	private Group scenegroup;
 	private LOTEnvironment env;
+	private double zoom = 10.0;
+	private PerspectiveCamera camera;
+	private Group cameraGroup;
 
 	public Model3DView(Composite c_view, int style) {
 		super(c_view, style);
@@ -43,6 +49,33 @@ public class Model3DView extends Composite {
 			}
 		};
 		createScene(canvas);
+
+		canvas.addGestureListener(this);
+		canvas.addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseScrolled(MouseEvent arg0) {
+				doMouseScrolled(arg0);
+			}
+		});
+	}
+
+	protected void doMouseScrolled(MouseEvent e) {
+		if (e.count == 0)
+			return;
+		int direction = e.count > 0 ? 1 : -1;
+
+		zoom += e.count * 0.1;
+		updateZoom();
+	}
+
+	private void updateZoom() {
+		log.info("updating zoom " + zoom);
+		cameraGroup.setTranslateZ(zoom * 10);
+	}
+
+	@Override
+	public void gesture(GestureEvent arg0) {
+		log.info("gesture " + arg0);
 	}
 
 	private void createScene(FXCanvas canvas) {
@@ -57,10 +90,10 @@ public class Model3DView extends Composite {
 		// Color.rgb(getBackground().getRed(),
 		// getBackground().getGreen(),
 		// getBackground().getBlue()));
-		Camera camera = new PerspectiveCamera(true);
+		this.camera = new PerspectiveCamera(true);
 		scene.setCamera(camera);
 		//
-		Group cameraGroup = new Group();
+		this.cameraGroup = new Group();
 		cameraGroup.getChildren().add(camera);
 		scenegroup.getChildren().add(cameraGroup);
 		cameraGroup.setTranslateZ(-75);
