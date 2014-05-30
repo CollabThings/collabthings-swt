@@ -18,7 +18,8 @@
 
 	<scm>
 		<connection>scm:svn:http://127.0.0.1/dummy</connection>
-		<developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
+		<developerConnection>scm:svn:https://127.0.0.1/dummy
+		</developerConnection>
 		<tag>HEAD</tag>
 		<url>http://127.0.0.1/dummy</url>
 	</scm>
@@ -154,7 +155,13 @@
 		<dependency>
 			<groupId>org.libraryofthings</groupId>
 			<artifactId>libraryofthings.client</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>[0.0.1,)</version>
+		</dependency>
+
+		<dependency>
+			<groupId>waazdoh</groupId>
+			<artifactId>waazdoh.swt</artifactId>
+			<version>[0.0.1,)</version>
 		</dependency>
 
 		<dependency>
@@ -174,9 +181,10 @@
 			<artifactId>jfx</artifactId>
 			<version>2.2.3</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/app/bin/jimX3dModelImporterJFX.jar</systemPath>
+			<systemPath>${project.basedir}/src/main/app/bin/jimX3dModelImporterJFX.jar
+			</systemPath>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx</artifactId>
@@ -184,7 +192,7 @@
 			<scope>system</scope>
 			<systemPath>${env.JAVA_HOME}/jre/lib/jfxswt.jar</systemPath>
 		</dependency>
-		
+
 	</dependencies>
 
 	<profiles>

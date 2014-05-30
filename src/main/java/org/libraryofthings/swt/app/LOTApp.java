@@ -6,16 +6,16 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTEnvironment;
 import org.libraryofthings.model.LOTPart;
 
+import waazdoh.client.WClient;
 import waazdoh.client.WClientListener;
 import waazdoh.client.rest.RestServiceClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
 import waazdoh.cutils.AppPreferences;
 import waazdoh.cutils.MPreferences;
+import waazdoh.swt.WSWTApp;
 
 public class LOTApp {
 	private static final String PREFERENCES_PREFIX = "lot";
-	private static final String PREFERENCES_USERNAME = "user.name";
-	private static final String PREFERENCES_SESSION = "user.session";
 	private LOTEnvironment env;
 	//
 	private LLog log = LLog.getLogger(this);
@@ -50,28 +50,7 @@ public class LOTApp {
 		return getEnvironment().getObjectFactory().getPart();
 	}
 
-	public boolean loginWithStored() {
-		String session = getEnvironment().getPreferences().get(
-				LOTApp.PREFERENCES_SESSION, "unknown_session");
-
-		try {
-			return getEnvironment().getClient().setSession(session);
-		} catch (Exception e) {
-			log.info("failed at login " + e);
-			return false;
-		}
-	}
-
 	public boolean isServiceAvailable() {
 		return getEnvironment().getClient().getService().isConnected();
-	}
-
-	public boolean setSession(String sessionId) {
-		boolean b = getEnvironment().getClient().setSession(sessionId);
-		if (b) {
-			getEnvironment().getPreferences().set(LOTApp.PREFERENCES_SESSION,
-					sessionId);
-		}
-		return b;
 	}
 }
