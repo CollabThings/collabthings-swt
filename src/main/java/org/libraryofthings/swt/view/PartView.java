@@ -19,16 +19,18 @@ import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.swt.SWTResourceManager;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.controls.ObjectViewer;
+import org.libraryofthings.swt.controls.ObjectViewerListener;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.xml.sax.SAXException;
 
 public class PartView extends Composite {
 	private static final String DEFAULT_X3D_IMPORTPATH = "lot.gui.default.import_path";
 	private LOTPart part;
-	private ObjectViewer table_properties;
+	private ObjectViewer partobjectviewer;
 	private Model3DView partcanvas;
 	private LLog log = LLog.getLogger(this);
 	private LOTApp app;
+	private ObjectViewer modelobjectviewer;
 
 	public PartView(LOTApp app, LOTPart p, Composite composite) {
 		super(composite, SWT.None);
@@ -75,12 +77,13 @@ public class PartView extends Composite {
 				true, 1, 1));
 
 		Composite c_partproperties = new Composite(composite_main, SWT.NONE);
-		c_partproperties.setLayout(new FillLayout(SWT.HORIZONTAL));
+		c_partproperties.setLayout(new FillLayout(SWT.VERTICAL));
 		c_partproperties.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
 				true, 1, 1));
 		c_partproperties.setBounds(0, 0, 64, 64);
 
-		table_properties = new ObjectViewer(c_partproperties, part);
+		createPartDataViewer(c_partproperties);
+		createModelDataViewer(c_partproperties);
 
 		Composite c_view = new Composite(composite_main, SWT.NONE);
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -91,6 +94,35 @@ public class PartView extends Composite {
 		partcanvas = new Model3DView(c_view, SWT.NONE);
 		composite_main.setWeights(new int[] { 91, 356 });
 
+	}
+
+	private void createModelDataViewer(Composite c_partproperties) {
+		this.modelobjectviewer = new ObjectViewer(c_partproperties,
+				part.getModel());
+		this.modelobjectviewer.addListener(new ObjectViewerListener() {
+			@Override
+			public void valueChanged(String name, Object o) {
+				modelObjectChanged(name, o);
+			}
+		});
+	}
+
+	private void createPartDataViewer(Composite c_partproperties) {
+		this.partobjectviewer = new ObjectViewer(c_partproperties, part);
+		partobjectviewer.addListener(new ObjectViewerListener() {
+			@Override
+			public void valueChanged(String name, Object o) {
+				partObjectChanged(name, o);
+			}
+		});
+	}
+
+	private void modelObjectChanged(String name, Object value) {
+		this.partcanvas.refresh(part.getModel());
+	}
+
+	protected void partObjectChanged(String name, Object o) {
+		// TODO Auto-generated method stub
 	}
 
 	protected void importSelected() {
@@ -116,5 +148,6 @@ public class PartView extends Composite {
 		log.info("loading model " + file);
 		part.importModel(file);
 		this.partcanvas.addModel(part.getModel());
+		modelobjectviewer.setObject(part.getModel());
 	}
 }

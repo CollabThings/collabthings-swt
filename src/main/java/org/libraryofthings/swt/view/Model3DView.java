@@ -2,6 +2,8 @@ package org.libraryofthings.swt.view;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.embed.swt.FXCanvas;
 import javafx.scene.AmbientLight;
@@ -14,13 +16,16 @@ import javafx.scene.paint.Color;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.events.GestureListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.xml.sax.SAXException;
@@ -29,11 +34,19 @@ import com.interactivemesh.jfx.importer.x3d.X3dModelImporter;
 
 public class Model3DView extends Composite implements GestureListener {
 	private LLog log = LLog.getLogger(this);
-	private Group scenegroup;
 	private LOTEnvironment env;
-	private double zoom = 10.0;
+	private double zoom = 1.0;
 	private PerspectiveCamera camera;
 	private Group cameraGroup;
+	private Group objectgroup;
+	private Group scenegroup;
+	protected boolean mousedown;
+	private int lastmousey;
+	private int lastmousex;
+	private double rotatex;
+	private double rotatey;
+	//
+	private Map<LOT3DModel, Group> groups = new HashMap<LOT3DModel, Group>();
 
 	public Model3DView(Composite c_view, int style) {
 		super(c_view, style);
@@ -57,20 +70,59 @@ public class Model3DView extends Composite implements GestureListener {
 				doMouseScrolled(arg0);
 			}
 		});
+
+		canvas.addMouseMoveListener(new MouseMoveListener() {
+
+			@Override
+			public void mouseMove(MouseEvent arg0) {
+				doMouseMoved(arg0);
+			}
+		});
+
+		canvas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				mousedown = true;
+			}
+
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				mousedown = false;
+			}
+		});
 	}
 
-	protected void doMouseScrolled(MouseEvent e) {
+	private void doMouseMoved(MouseEvent e) {
+		int dx = lastmousex - e.x;
+		int dy = lastmousey - e.y;
+		this.lastmousex = e.x;
+		this.lastmousey = e.y;
+		if (mousedown) {
+			this.rotatex += 0.1 * dx;
+			this.rotatey += 0.1 * dy;
+			updateRotation();
+		}
+	}
+
+	private void doMouseScrolled(MouseEvent e) {
 		if (e.count == 0)
 			return;
-		int direction = e.count > 0 ? 1 : -1;
 
-		zoom += e.count * 0.1;
+		int direction = e.count > 0 ? 1 : -1;
+		zoom += direction * 0.1;
 		updateZoom();
+	}
+
+	private void updateRotation() {
+		log.info("updating zoom " + zoom);
+		this.objectgroup.setRotate(rotatex);
 	}
 
 	private void updateZoom() {
 		log.info("updating zoom " + zoom);
-		cameraGroup.setTranslateZ(zoom * 10);
+		this.objectgroup.setScaleX(zoom);
+		this.objectgroup.setScaleY(zoom);
+		this.objectgroup.setScaleZ(zoom);
 	}
 
 	@Override
@@ -80,7 +132,7 @@ public class Model3DView extends Composite implements GestureListener {
 
 	private void createScene(FXCanvas canvas) {
 		/* Create a JavaFX Group node */
-		scenegroup = new Group();
+		this.scenegroup = new Group();
 		/* Create the Scene instance and set the group node as root */
 		org.eclipse.swt.graphics.Color bg = getBackground();
 		double red = bg.getRed() / 255.0 * 0.8f;
@@ -97,11 +149,16 @@ public class Model3DView extends Composite implements GestureListener {
 		cameraGroup.getChildren().add(camera);
 		scenegroup.getChildren().add(cameraGroup);
 		cameraGroup.setTranslateZ(-75);
+		this.objectgroup = new Group();
+		scenegroup.getChildren().add(objectgroup);
 
 		/* Attach an external stylesheet */
 		scene.getStylesheets().add("twobuttons/Buttons.css");
 		//
 		createAmbientLight();
+
+		updateRotation();
+		updateZoom();
 
 		canvas.setScene(scene);
 	}
@@ -121,6 +178,7 @@ public class Model3DView extends Composite implements GestureListener {
 			x3dImporter.read(modelFile);
 			//
 			Group ogroup = new Group();
+			groups.put(b, ogroup);
 
 			Node[] rootNodes = x3dImporter.getImport();
 			log.info("imported nodes " + rootNodes);
@@ -128,7 +186,7 @@ public class Model3DView extends Composite implements GestureListener {
 				ogroup.getChildren().add(node);
 			}
 			//
-			scenegroup.getChildren().add(ogroup);
+			objectgroup.getChildren().add(ogroup);
 			//
 			return ogroup;
 		} catch (IOException | SAXException e) {
@@ -136,6 +194,21 @@ public class Model3DView extends Composite implements GestureListener {
 			LOTMessageDialog d = new LOTMessageDialog(getShell());
 			d.show(e);
 			return null;
+		}
+	}
+
+	public void refresh(LOT3DModel b) {
+		Group group = groups.get(b);
+		if (group != null) {
+			double s = b.getScale();
+			group.setScaleX(s);
+			group.setScaleY(s);
+			group.setScaleZ(s);
+			//
+			LVector t = b.getTranslation();
+			group.setTranslateX(s);
+		} else {
+			log.info("calling refresh with 3dmodel " + b + "... group is null");
 		}
 	}
 }
