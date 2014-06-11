@@ -18,8 +18,6 @@ import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.events.GestureListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -64,20 +62,8 @@ public class Model3DView extends Composite implements GestureListener {
 		createScene(canvas);
 
 		canvas.addGestureListener(this);
-		canvas.addMouseWheelListener(new MouseWheelListener() {
-			@Override
-			public void mouseScrolled(MouseEvent arg0) {
-				doMouseScrolled(arg0);
-			}
-		});
-
-		canvas.addMouseMoveListener(new MouseMoveListener() {
-
-			@Override
-			public void mouseMove(MouseEvent arg0) {
-				doMouseMoved(arg0);
-			}
-		});
+		canvas.addMouseWheelListener(arg0 -> doMouseScrolled(arg0));
+		canvas.addMouseMoveListener(arg0 -> doMouseMoved(arg0));
 
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
@@ -148,7 +134,8 @@ public class Model3DView extends Composite implements GestureListener {
 		this.cameraGroup = new Group();
 		cameraGroup.getChildren().add(camera);
 		scenegroup.getChildren().add(cameraGroup);
-		cameraGroup.setTranslateZ(-75);
+		//
+		cameraGroup.setTranslateZ(-35);
 		this.objectgroup = new Group();
 		scenegroup.getChildren().add(objectgroup);
 
@@ -206,7 +193,9 @@ public class Model3DView extends Composite implements GestureListener {
 			group.setScaleZ(s);
 			//
 			LVector t = b.getTranslation();
-			group.setTranslateX(s);
+			group.setTranslateX(t.getX());
+			group.setTranslateY(t.getY());
+			group.setTranslateZ(t.getZ());
 		} else {
 			log.info("calling refresh with 3dmodel " + b + "... group is null");
 		}

@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.libraryofthings.LLog;
+import org.libraryofthings.math.LVector;
 
 public class ObjectViewer extends Composite {
 	private LLog log = LLog.getLogger(this);
@@ -118,6 +119,8 @@ public class ObjectViewer extends Composite {
 			return true;
 		} else if (value instanceof String) {
 			return true;
+		} else if (value instanceof LVector) {
+			return true;
 		} else {
 			return false;
 		}
@@ -140,6 +143,7 @@ public class ObjectViewer extends Composite {
 		for (String key : methods.keySet()) {
 			addRow(key);
 		}
+
 	}
 
 	private void addRow(String key) {
@@ -159,9 +163,11 @@ public class ObjectViewer extends Composite {
 		Method method = methods.get(key);
 		Object o = invokeGetMethod(method);
 		if (o instanceof String) {
-			addStringField(key, c, o);
+			addStringField(key, c, (String) o);
 		} else if (o instanceof Double) {
-			addDoubleField(key, c, o);
+			addDoubleField(key, c, (Double) o);
+		} else if (o instanceof LVector) {
+			addVectorField(key, c, (LVector) o);
 		} else {
 			Label la = new Label(c, getStyle());
 			la.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -169,8 +175,8 @@ public class ObjectViewer extends Composite {
 		}
 	}
 
-	private void addDoubleField(String key, Composite c, Object o) {
-		addTextField(c, o, new ModifyListener() {
+	private void addDoubleField(String key, Composite c, Double d) {
+		addTextField(c, "" + d, new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent arg0) {
@@ -180,8 +186,12 @@ public class ObjectViewer extends Composite {
 		});
 	}
 
-	private void addStringField(String key, Composite c, Object o) {
-		addTextField(c, o, new ModifyListener() {
+	private void addVectorField(String key, Composite c, LVector orgv) {
+		new LOTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
+	}
+
+	private void addStringField(String key, Composite c, String s) {
+		addTextField(c, s, new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent arg0) {
@@ -196,11 +206,11 @@ public class ObjectViewer extends Composite {
 		return "" + t.getText();
 	}
 
-	private void addTextField(Composite c, Object o, ModifyListener listener) {
+	private void addTextField(Composite c, String text, ModifyListener listener) {
 		Text s = new Text(c, SWT.NONE);
 		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		s.setEditable(true);
-		s.setText("" + o);
+		s.setText(text);
 		s.addModifyListener(listener);
 	}
 
