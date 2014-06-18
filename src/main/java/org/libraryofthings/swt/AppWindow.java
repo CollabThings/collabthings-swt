@@ -25,7 +25,7 @@ import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.libraryofthings.swt.view.PartView;
 
-import waazdoh.client.WaazdohInfo;
+import waazdoh.client.model.WaazdohInfo;
 
 public final class AppWindow {
 	protected Shell shell;

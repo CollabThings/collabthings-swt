@@ -5,3 +5,5 @@ target/
 .externalToolBuilders
 /bin
 
+/bin/
+/bin/

@@ -6,9 +6,9 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.client.WClient;
-import waazdoh.cutils.MPreferences;
 import waazdoh.swt.WSWTApp;
 import waazdoh.swt.WSWTAppLauncher;
+import waazdoh.util.MPreferences;
 
 public final class AppLauncher implements WSWTApp {
 	private LOTApp app;

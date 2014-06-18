@@ -10,9 +10,9 @@ import waazdoh.client.WClient;
 import waazdoh.client.WClientListener;
 import waazdoh.client.rest.RestServiceClient;
 import waazdoh.cp2p.impl.P2PBinarySource;
-import waazdoh.cutils.AppPreferences;
-import waazdoh.cutils.MPreferences;
 import waazdoh.swt.WSWTApp;
+import waazdoh.util.AppPreferences;
+import waazdoh.util.MPreferences;
 
 public class LOTApp {
 	private static final String PREFERENCES_PREFIX = "lot";
