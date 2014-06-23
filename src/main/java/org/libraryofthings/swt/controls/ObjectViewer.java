@@ -57,7 +57,7 @@ public class ObjectViewer extends Composite {
 			try {
 				parseMethod(method);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+				log.error(this, "parse " + o, e);
 			}
 		}
 	}
