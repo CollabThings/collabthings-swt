@@ -19,8 +19,9 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.model.impl.LOTPartImpl;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.libraryofthings.swt.view.PartView;
@@ -217,7 +218,7 @@ public final class AppWindow {
 
 			@Override
 			public void run() {
-				lblBottonInfo.setText("LOT:" + LOTEnvironment.version
+				lblBottonInfo.setText("LOT:" + LOTClient.VERSION
 						+ " Waazdoh:" + WaazdohInfo.version + " environment: "
 						+ app.getEnvironment());
 				//

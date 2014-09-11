@@ -22,7 +22,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.libraryofthings.LLog;
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
@@ -32,7 +32,7 @@ import com.interactivemesh.jfx.importer.x3d.X3dModelImporter;
 
 public class Model3DView extends Composite implements GestureListener {
 	private LLog log = LLog.getLogger(this);
-	private LOTEnvironment env;
+	private LOTClient env;
 	private double zoom = 1.0;
 	private PerspectiveCamera camera;
 	private Group cameraGroup;
@@ -44,7 +44,7 @@ public class Model3DView extends Composite implements GestureListener {
 	private double rotatex;
 	private double rotatey;
 	//
-	private Map<LOT3DModel, Group> groups = new HashMap<LOT3DModel, Group>();
+	private Map<LOT3DModel, Group> groups = new HashMap<>();
 
 	public Model3DView(Composite c_view, int style) {
 		super(c_view, style);
@@ -157,15 +157,15 @@ public class Model3DView extends Composite implements GestureListener {
 		scenegroup.getChildren().add(lightgroup);
 	}
 
-	public Group addModel(LOT3DModel b) {
+	public Group addModel(LOT3DModel lot3dModel) {
 		try {
 			X3dModelImporter x3dImporter = new X3dModelImporter();
-			File modelFile = b.getModelFile();
+			File modelFile = lot3dModel.getModelFile();
 			log.info("reading " + modelFile);
 			x3dImporter.read(modelFile);
 			//
 			Group ogroup = new Group();
-			groups.put(b, ogroup);
+			groups.put(lot3dModel, ogroup);
 
 			Node[] rootNodes = x3dImporter.getImport();
 			log.info("imported nodes " + rootNodes);
@@ -184,20 +184,21 @@ public class Model3DView extends Composite implements GestureListener {
 		}
 	}
 
-	public void refresh(LOT3DModel b) {
-		Group group = groups.get(b);
+	public void refresh(LOT3DModel lot3dModel) {
+		Group group = groups.get(lot3dModel);
 		if (group != null) {
-			double s = b.getScale();
+			double s = lot3dModel.getScale();
 			group.setScaleX(s);
 			group.setScaleY(s);
 			group.setScaleZ(s);
 			//
-			LVector t = b.getTranslation();
+			LVector t = lot3dModel.getTranslation();
 			group.setTranslateX(t.getX());
 			group.setTranslateY(t.getY());
 			group.setTranslateZ(t.getZ());
 		} else {
-			log.info("calling refresh with 3dmodel " + b + "... group is null");
+			log.info("calling refresh with 3dmodel " + lot3dModel
+					+ "... group is null");
 		}
 	}
 }

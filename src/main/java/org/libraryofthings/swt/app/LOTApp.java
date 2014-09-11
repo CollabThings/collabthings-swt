@@ -3,20 +3,20 @@ package org.libraryofthings.swt.app;
 import java.net.MalformedURLException;
 
 import org.libraryofthings.LLog;
-import org.libraryofthings.LOTEnvironment;
+import org.libraryofthings.LOTClient;
+import org.libraryofthings.impl.LOTClientImpl;
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.model.impl.LOTPartImpl;
 
-import waazdoh.client.WClient;
 import waazdoh.client.WClientListener;
 import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.service.rest.RestServiceClient;
-import waazdoh.swt.WSWTApp;
 import waazdoh.util.AppPreferences;
 import waazdoh.util.MPreferences;
 
 public class LOTApp {
 	private static final String PREFERENCES_PREFIX = "lot";
-	private LOTEnvironment env;
+	private LOTClient env;
 	//
 	private LLog log = LLog.getLogger(this);
 	private AppPreferences preferences;
@@ -35,9 +35,9 @@ public class LOTApp {
 		getEnvironment().getClient().addListener(listener);
 	}
 
-	public LOTEnvironment getEnvironment() {
+	public LOTClient getEnvironment() {
 		if (env == null) {
-			env = new LOTEnvironment(preferences, binarysource, service);
+			env = new LOTClientImpl(preferences, binarysource, service);
 		}
 		return env;
 	}
