@@ -72,6 +72,15 @@ public class PartView extends Composite {
 		button.setText("A");
 		button.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 
+		Button btnPublish = new Button(c_toolbar, SWT.NONE);
+		btnPublish.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				publish();
+			}
+		});
+		btnPublish.setText("Publish");
+
 		SashForm composite_main = new SashForm(this, SWT.NONE);
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true, 1, 1));
@@ -92,8 +101,12 @@ public class PartView extends Composite {
 		//
 
 		partcanvas = new Model3DView(c_view, SWT.NONE);
-		composite_main.setWeights(new int[] { 91, 356 });
+		composite_main.setWeights(new int[] { 136, 311 });
 
+	}
+
+	protected void publish() {
+		this.part.publish();
 	}
 
 	private void createModelDataViewer(Composite c_partproperties) {
