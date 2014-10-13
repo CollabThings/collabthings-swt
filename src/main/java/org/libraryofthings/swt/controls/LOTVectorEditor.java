@@ -25,9 +25,9 @@ public class LOTVectorEditor extends Composite {
 		gridLayout.horizontalSpacing = 4;
 		setLayout(gridLayout);
 
-		ex = createField((Double) v.getX());
-		ey = createField((Double) v.getY());
-		ez = createField((Double) v.getZ());
+		ex = createField((Double) v.x);
+		ey = createField((Double) v.y);
+		ez = createField((Double) v.z);
 	}
 
 	private LOTDoubleEditor createField(Double value) {

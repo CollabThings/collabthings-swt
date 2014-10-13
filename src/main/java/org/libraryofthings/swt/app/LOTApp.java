@@ -6,7 +6,6 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.impl.LOTClientImpl;
 import org.libraryofthings.model.LOTPart;
-import org.libraryofthings.model.impl.LOTPartImpl;
 
 import waazdoh.client.WClientListener;
 import waazdoh.cp2p.P2PBinarySource;

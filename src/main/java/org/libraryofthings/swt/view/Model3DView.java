@@ -193,9 +193,9 @@ public class Model3DView extends Composite implements GestureListener {
 			group.setScaleZ(s);
 			//
 			LVector t = lot3dModel.getTranslation();
-			group.setTranslateX(t.getX());
-			group.setTranslateY(t.getY());
-			group.setTranslateZ(t.getZ());
+			group.setTranslateX(t.x);
+			group.setTranslateY(t.y);
+			group.setTranslateZ(t.z);
 		} else {
 			log.info("calling refresh with 3dmodel " + lot3dModel
 					+ "... group is null");

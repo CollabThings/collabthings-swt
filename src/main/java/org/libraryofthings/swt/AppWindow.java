@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTPart;
-import org.libraryofthings.model.impl.LOTPartImpl;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.libraryofthings.swt.view.PartView;
