@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.impl.LOTClientImpl;
+import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
 
 import waazdoh.client.WClientListener;
@@ -15,7 +16,7 @@ import waazdoh.util.MPreferences;
 
 public class LOTApp {
 	private static final String PREFERENCES_PREFIX = "lot";
-	private LOTClient env;
+	private LOTClient client;
 	//
 	private LLog log = LLog.getLogger(this);
 	private AppPreferences preferences;
@@ -35,14 +36,15 @@ public class LOTApp {
 	}
 
 	public LOTClient getEnvironment() {
-		if (env == null) {
-			env = new LOTClientImpl(preferences, binarysource, service);
+		if (client == null) {
+			client = new LOTClientImpl(preferences, binarysource, service);
 		}
-		return env;
+		return client;
 	}
 
 	public void close() {
 		getEnvironment().stop();
+		binarysource.close();
 	}
 
 	public LOTPart newPart() {
@@ -51,5 +53,9 @@ public class LOTApp {
 
 	public boolean isServiceAvailable() {
 		return getEnvironment().getClient().getService().isConnected();
+	}
+
+	public LOTFactory newFactory() {
+		return getEnvironment().getObjectFactory().getFactory();
 	}
 }

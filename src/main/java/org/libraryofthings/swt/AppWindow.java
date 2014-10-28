@@ -20,9 +20,11 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.libraryofthings.LOTClient;
+import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
+import org.libraryofthings.swt.view.FactoryView;
 import org.libraryofthings.swt.view.PartView;
 
 import waazdoh.client.model.WaazdohInfo;
@@ -42,14 +44,24 @@ public final class AppWindow {
 	public void newPart() {
 		try {
 			LOTPart p = app.newPart();
-			TabItem i = new TabItem(tabFolder, SWT.NONE);
-			i.setText("part " + p);
 			PartView view = new PartView(app, p, tabFolder);
-			i.setControl(view);
-			tabFolder.setSelection(i);
+			addTab("part " + p, view);
 		} catch (Exception e) {
 			showError(e);
 		}
+	}
+
+	public void newFactory() {
+		LOTFactory f = app.newFactory();
+		FactoryView v = new FactoryView(app, f, tabFolder);
+		addTab("" + f, v);
+	}
+
+	private void addTab(String name, Composite c) {
+		TabItem i = new TabItem(tabFolder, SWT.None);
+		i.setText(name);
+		i.setControl(c);
+		tabFolder.setSelection(i);
 	}
 
 	/**
@@ -64,7 +76,7 @@ public final class AppWindow {
 		shell.setMaximized(true);
 		//
 		// FIXME TODO REMOVE
-		newPart();
+		newFactory();
 		//
 		while (!shell.isDisposed()) {
 			readAndDispatch(display);
@@ -120,7 +132,16 @@ public final class AppWindow {
 				newPart();
 			}
 		});
-		mntmNewPart.setText("New Part");
+		mntmNewPart.setText("Part");
+
+		MenuItem mntmNewFactory = new MenuItem(menu_new, SWT.NONE);
+		mntmNewFactory.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				newFactory();
+			}
+		});
+		mntmNewFactory.setText("Factory");
 
 		MenuItem mntmRun = new MenuItem(menu, SWT.NONE);
 		mntmRun.setText("Run");
@@ -217,8 +238,8 @@ public final class AppWindow {
 
 			@Override
 			public void run() {
-				lblBottonInfo.setText("LOT:" + LOTClient.VERSION
-						+ " Waazdoh:" + WaazdohInfo.version + " environment: "
+				lblBottonInfo.setText("LOT:" + LOTClient.VERSION + " Waazdoh:"
+						+ WaazdohInfo.version + " environment: "
 						+ app.getEnvironment());
 				//
 				setBottomInfo();

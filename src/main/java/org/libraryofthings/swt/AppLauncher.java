@@ -23,7 +23,7 @@ public final class AppLauncher implements WSWTApp {
 	private void launch() throws MalformedURLException {
 		LLog.getLogger(this).info("Launching " + this);
 		WSWTAppLauncher l = new WSWTAppLauncher();
-		app = new LOTApp();		
+		app = new LOTApp();
 		l.launch(this);
 	}
 
@@ -31,7 +31,7 @@ public final class AppLauncher implements WSWTApp {
 	public void close() {
 		app.close();
 	}
-	
+
 	@Override
 	public WClient getClient() {
 		return app.getEnvironment().getClient();
@@ -45,5 +45,6 @@ public final class AppLauncher implements WSWTApp {
 	public static void main(String[] args) throws MalformedURLException {
 		AppLauncher l = new AppLauncher();
 		l.launch();
+		System.exit(0);
 	}
 }
