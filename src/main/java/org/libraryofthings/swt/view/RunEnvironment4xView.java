@@ -47,17 +47,13 @@ public class RunEnvironment4xView extends Composite {
 				}, "Z");
 
 		ycanvas = new RunEnvironmentCanvas(this, SWT.NONE, ydrawer);
-		ycanvas.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1,
-				1));
+		ycanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		zcanvas = new RunEnvironmentCanvas(this, SWT.NONE, zdrawer);
-		zcanvas.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1,
-				1));
+		zcanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		xcanvas = new RunEnvironmentCanvas(this, SWT.NONE, xdrawer);
-		xcanvas.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1,
-				1));
+		xcanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		fcanvas = new RunEnvironmentCanvas(this, SWT.NONE, freedrawer);
-		fcanvas.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1,
-				1));
+		fcanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	}
 
 	public void doRepaint() {

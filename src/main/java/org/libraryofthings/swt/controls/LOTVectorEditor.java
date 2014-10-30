@@ -12,10 +12,12 @@ public class LOTVectorEditor extends Composite {
 	private LOTDoubleEditor ey;
 	private LOTDoubleEditor ez;
 	private LOTDoubleEditor ex;
+	private LVector v;
 
-	public LOTVectorEditor(Composite c, LVector v,
+	public LOTVectorEditor(Composite c, LVector nv,
 			ChangeListener<LVector> listener) {
 		super(c, SWT.None);
+		this.v = nv;
 		this.listener = listener;
 		//
 		GridLayout gridLayout = new GridLayout(3, false);
@@ -25,13 +27,30 @@ public class LOTVectorEditor extends Composite {
 		gridLayout.horizontalSpacing = 4;
 		setLayout(gridLayout);
 
-		ex = createField((Double) v.x);
-		ey = createField((Double) v.y);
-		ez = createField((Double) v.z);
+		if (v == null) {
+			v = new LVector();
+		}
+
+		ex = createField((Double) v.x, d -> {
+			v.x = d;
+			changed();
+		});
+		ey = createField((Double) v.x, d -> {
+			v.y = d;
+			changed();
+		});
+		ez = createField((Double) v.x, d -> {
+			v.z = d;
+			changed();
+		});
+
+		updateValues();
 	}
 
-	private LOTDoubleEditor createField(Double value) {
-		LOTDoubleEditor ley = new LOTDoubleEditor(this, value, e -> changed());
+	private LOTDoubleEditor createField(
+			Double value,
+			org.libraryofthings.swt.controls.LOTDoubleEditor.ChangeListener<Double> flistener) {
+		LOTDoubleEditor ley = new LOTDoubleEditor(this, value, flistener);
 		ley.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
 		return ley;
 	}
@@ -41,11 +60,16 @@ public class LOTVectorEditor extends Composite {
 	}
 
 	private LVector getV() {
-		return new LVector(ex.getValue(), ey.getValue(), ez.getValue()
-				);
+		return new LVector(ex.getValue(), ey.getValue(), ez.getValue());
 	}
 
 	public static interface ChangeListener<T> {
 		void changed(T t);
+	}
+
+	public void updateValues() {
+		ex.setValue(v.x);
+		ey.setValue(v.y);
+		ez.setValue(v.z);
 	}
 }

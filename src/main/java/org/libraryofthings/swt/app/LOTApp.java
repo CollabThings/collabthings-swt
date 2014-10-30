@@ -23,6 +23,7 @@ public class LOTApp {
 	private String serviceurl;
 	private RestServiceClient service;
 	private P2PBinarySource binarysource;
+	private boolean closed;
 
 	public LOTApp() throws MalformedURLException {
 		preferences = new AppPreferences(LOTApp.PREFERENCES_PREFIX);
@@ -45,6 +46,11 @@ public class LOTApp {
 	public void close() {
 		getEnvironment().stop();
 		binarysource.close();
+		closed = true;
+	}
+
+	public boolean isClosed() {
+		return closed;
 	}
 
 	public LOTPart newPart() {

@@ -22,13 +22,15 @@ import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.controls.ObjectViewer;
 import org.libraryofthings.swt.controls.ObjectViewerListener;
 
+import waazdoh.util.ConditionWaiter;
+
 public class FactoryView extends Composite {
 	private LOTFactory factory;
-	private ObjectViewer partobjectviewer;
 	private RunEnvironment4xView view;
 	private LLog log = LLog.getLogger(this);
 	private LOTApp app;
-	private ObjectViewer modelobjectviewer;
+	private ObjectViewer factoryobjectviewer;
+	private ObjectViewer envobjectviewer;
 
 	public FactoryView(LOTApp app, LOTFactory f, Composite composite) {
 		super(composite, SWT.None);
@@ -85,7 +87,6 @@ public class FactoryView extends Composite {
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);
-		//
 
 		view = new RunEnvironment4xView(c_view, SWT.NONE);
 
@@ -101,6 +102,7 @@ public class FactoryView extends Composite {
 				factory).getRunEnvironment();
 		view.setRunEnvironment(runenv);
 		view.step(0);
+		view.doRepaint();
 	}
 
 	protected void publish() {
@@ -108,9 +110,9 @@ public class FactoryView extends Composite {
 	}
 
 	private void createEnvironmentDataViewer(Composite c_partproperties) {
-		this.modelobjectviewer = new ObjectViewer(c_partproperties,
+		this.envobjectviewer = new ObjectViewer(c_partproperties,
 				factory.getEnvironment());
-		this.modelobjectviewer.addListener(new ObjectViewerListener() {
+		this.envobjectviewer.addListener(new ObjectViewerListener() {
 			@Override
 			public void valueChanged(String name, Object o) {
 				environmentObjectChanged(name, o);
@@ -119,8 +121,8 @@ public class FactoryView extends Composite {
 	}
 
 	private void createFactoryDataViewer(Composite c_partproperties) {
-		this.partobjectviewer = new ObjectViewer(c_partproperties, factory);
-		partobjectviewer.addListener(new ObjectViewerListener() {
+		this.factoryobjectviewer = new ObjectViewer(c_partproperties, factory);
+		factoryobjectviewer.addListener(new ObjectViewerListener() {
 			@Override
 			public void valueChanged(String name, Object o) {
 				factoryObjectChanged(name, o);
@@ -129,13 +131,11 @@ public class FactoryView extends Composite {
 	}
 
 	protected void factoryObjectChanged(String name, Object o) {
-		// TODO Auto-generated method stub
-
+		updateFactory();
 	}
 
 	protected void environmentObjectChanged(String name, Object o) {
-		// TODO Auto-generated method stub
-
+		updateFactory();
 	}
 
 }

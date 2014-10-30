@@ -18,7 +18,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.libraryofthings.LLog;
+import org.libraryofthings.math.LOrientation;
 import org.libraryofthings.math.LVector;
+import org.libraryofthings.model.LOTBoundingBox;
 
 public class ObjectViewer extends Composite {
 	private LLog log = LLog.getLogger(this);
@@ -33,12 +35,30 @@ public class ObjectViewer extends Composite {
 	private Map<String, Method> methods = new HashMap<>();
 	private Set<ObjectViewerListener> listeners = new HashSet<>();
 	private Text testext;
+	private Map<Class, LEditorFactory> editors = new HashMap<>();
 
 	public ObjectViewer(Composite parent, Object o) {
 		super(parent, SWT.NONE);
 
+		initOkTypes();
 		parse(o);
 		addRows();
+	}
+
+	private void initOkTypes() {
+		editors.put(String.class,
+				(key, c, o) -> addStringField(key, c, (String) o));
+		editors.put(LVector.class,
+				(key, c, o) -> addVectorField(key, c, (LVector) o));
+
+		editors.put(Double.class,
+				(key, c, o) -> addDoubleField(key, c, (Double) o));
+
+		editors.put(LOrientation.class,
+				(key, c, o) -> addOrientationField(key, c, (LOrientation) o));
+		editors.put(LOTBoundingBox.class,
+				(key, c, o) -> addBoundingBoxField(key, c, (LOTBoundingBox) o));
+
 	}
 
 	private String getObjectValue(String name) {
@@ -115,12 +135,8 @@ public class ObjectViewer extends Composite {
 	}
 
 	private boolean isOKValueType(Object value) {
-		if (value instanceof Number) {
-			return true;
-		} else if (value instanceof String) {
-			return true;
-		} else if (value instanceof LVector) {
-			return true;
+		if (value != null) {
+			return editors.get(value.getClass()) != null;
 		} else {
 			return false;
 		}
@@ -162,17 +178,22 @@ public class ObjectViewer extends Composite {
 		//
 		Method method = methods.get(key);
 		Object o = invokeGetMethod(method);
-		if (o instanceof String) {
-			addStringField(key, c, (String) o);
-		} else if (o instanceof Double) {
-			addDoubleField(key, c, (Double) o);
-		} else if (o instanceof LVector) {
-			addVectorField(key, c, (LVector) o);
+		LEditorFactory e = editors.get(o.getClass());
+		if (e != null) {
+			e.add(key, c, o);
 		} else {
 			Label la = new Label(c, getStyle());
 			la.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 			la.setText("unknown type");
 		}
+	}
+
+	private void addBoundingBoxField(String key, Composite c, LOTBoundingBox box) {
+		new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
+	}
+
+	private void addOrientationField(String key, Composite c, LOrientation orgo) {
+		new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key, orgo));
 	}
 
 	private void addDoubleField(String key, Composite c, Double d) {
@@ -195,7 +216,7 @@ public class ObjectViewer extends Composite {
 
 			@Override
 			public void modifyText(ModifyEvent arg0) {
-				String sdata = "" + arg0.data;
+				String sdata = "" + getString(arg0);
 				invokeSetMethod(key, sdata);
 			}
 		});
@@ -229,5 +250,9 @@ public class ObjectViewer extends Composite {
 
 	public void addListener(ObjectViewerListener objectViewerListener) {
 		this.listeners.add(objectViewerListener);
+	}
+
+	private interface LEditorFactory {
+		public void add(String key, Composite c, Object o);
 	}
 }
