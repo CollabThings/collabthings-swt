@@ -10,6 +10,7 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -46,19 +47,23 @@ public class ObjectViewer extends Composite {
 	}
 
 	private void initOkTypes() {
-		editors.put(String.class,
-				(key, c, o) -> addStringField(key, c, (String) o));
-		editors.put(LVector.class,
-				(key, c, o) -> addVectorField(key, c, (LVector) o));
+		editors.put(String.class, (key, c, o) -> {
+			return addStringField(key, c, (String) o);
+		});
+		editors.put(LVector.class, (key, c, o) -> {
+			return addVectorField(key, c, (LVector) o);
+		});
 
-		editors.put(Double.class,
-				(key, c, o) -> addDoubleField(key, c, (Double) o));
+		editors.put(Double.class, (key, c, o) -> {
+			return addDoubleField(key, c, (Double) o);
+		});
 
-		editors.put(LOrientation.class,
-				(key, c, o) -> addOrientationField(key, c, (LOrientation) o));
-		editors.put(LOTBoundingBox.class,
-				(key, c, o) -> addBoundingBoxField(key, c, (LOTBoundingBox) o));
-
+		editors.put(LOrientation.class, (key, c, o) -> {
+			return addOrientationField(key, c, (LOrientation) o);
+		});
+		editors.put(LOTBoundingBox.class, (key, c, o) -> {
+			return addBoundingBoxField(key, c, (LOTBoundingBox) o);
+		});
 	}
 
 	private String getObjectValue(String name) {
@@ -180,7 +185,8 @@ public class ObjectViewer extends Composite {
 		Object o = invokeGetMethod(method);
 		LEditorFactory e = editors.get(o.getClass());
 		if (e != null) {
-			e.add(key, c, o);
+			Control cc = e.add(key, c, o);
+			cc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		} else {
 			Label la = new Label(c, getStyle());
 			la.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -188,16 +194,19 @@ public class ObjectViewer extends Composite {
 		}
 	}
 
-	private void addBoundingBoxField(String key, Composite c, LOTBoundingBox box) {
-		new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
+	private Composite addBoundingBoxField(String key, Composite c,
+			LOTBoundingBox box) {
+		return new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
 	}
 
-	private void addOrientationField(String key, Composite c, LOrientation orgo) {
-		new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key, orgo));
+	private Composite addOrientationField(String key, Composite c,
+			LOrientation orgo) {
+		return new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key,
+				orgo));
 	}
 
-	private void addDoubleField(String key, Composite c, Double d) {
-		addTextField(c, "" + d, new ModifyListener() {
+	private Control addDoubleField(String key, Composite c, Double d) {
+		return addTextField(c, "" + d, new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent arg0) {
@@ -207,12 +216,12 @@ public class ObjectViewer extends Composite {
 		});
 	}
 
-	private void addVectorField(String key, Composite c, LVector orgv) {
-		new LOTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
+	private Composite addVectorField(String key, Composite c, LVector orgv) {
+		return new LOTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
 	}
 
-	private void addStringField(String key, Composite c, String s) {
-		addTextField(c, s, new ModifyListener() {
+	private Control addStringField(String key, Composite c, String s) {
+		return addTextField(c, s, new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent arg0) {
@@ -227,12 +236,14 @@ public class ObjectViewer extends Composite {
 		return "" + t.getText();
 	}
 
-	private void addTextField(Composite c, String text, ModifyListener listener) {
+	private Control addTextField(Composite c, String text,
+			ModifyListener listener) {
 		Text s = new Text(c, SWT.NONE);
 		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		s.setEditable(true);
 		s.setText(text);
 		s.addModifyListener(listener);
+		return s;
 	}
 
 	public void setObject(Object o) {
@@ -253,6 +264,6 @@ public class ObjectViewer extends Composite {
 	}
 
 	private interface LEditorFactory {
-		public void add(String key, Composite c, Object o);
+		public Control add(String key, Composite c, Object o);
 	}
 }

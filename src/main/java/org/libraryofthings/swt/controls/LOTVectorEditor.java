@@ -5,6 +5,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.libraryofthings.math.LVector;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class LOTVectorEditor extends Composite {
 
@@ -31,28 +32,23 @@ public class LOTVectorEditor extends Composite {
 			v = new LVector();
 		}
 
-		ex = createField((Double) v.x, d -> {
+		ex = new LOTDoubleEditor(this, (Double) v.x, d -> {
 			v.x = d;
 			changed();
 		});
-		ey = createField((Double) v.x, d -> {
+		ex.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		ey = new LOTDoubleEditor(this, (Double) v.x, d -> {
 			v.y = d;
 			changed();
 		});
-		ez = createField((Double) v.x, d -> {
+		ey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		ez = new LOTDoubleEditor(this, (Double) v.x, d -> {
 			v.z = d;
 			changed();
 		});
+		ez.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		updateValues();
-	}
-
-	private LOTDoubleEditor createField(
-			Double value,
-			org.libraryofthings.swt.controls.LOTDoubleEditor.ChangeListener<Double> flistener) {
-		LOTDoubleEditor ley = new LOTDoubleEditor(this, value, flistener);
-		ley.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-		return ley;
 	}
 
 	private void changed() {

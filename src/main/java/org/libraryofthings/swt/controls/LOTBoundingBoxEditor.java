@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.libraryofthings.model.LOTBoundingBox;
+import org.eclipse.swt.layout.GridData;
 
 public class LOTBoundingBoxEditor extends Composite {
 
@@ -26,7 +27,9 @@ public class LOTBoundingBoxEditor extends Composite {
 		setLayout(gridLayout);
 
 		el = new LOTVectorEditor(this, box.getA(), v -> listener.changed(box));
+		el.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		en = new LOTVectorEditor(this, box.getB(), v -> listener.changed(box));
+		en.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 	}
 
 	public static interface ChangeListener<T> {
