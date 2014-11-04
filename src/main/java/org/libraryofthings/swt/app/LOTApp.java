@@ -64,4 +64,5 @@ public class LOTApp {
 	public LOTFactory newFactory() {
 		return getEnvironment().getObjectFactory().getFactory();
 	}
+
 }

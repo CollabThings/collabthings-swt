@@ -53,7 +53,11 @@ public final class AppWindow {
 
 	public void newFactory() {
 		LOTFactory f = app.newFactory();
-		FactoryView v = new FactoryView(app, f, tabFolder);
+		viewFactory(f);
+	}
+
+	public void viewFactory(LOTFactory f) {
+		FactoryView v = new FactoryView(app, this, f, tabFolder);
 		addTab("" + f, v);
 	}
 
@@ -246,4 +250,5 @@ public final class AppWindow {
 			}
 		});
 	}
+
 }

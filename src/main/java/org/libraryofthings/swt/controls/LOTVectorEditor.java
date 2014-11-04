@@ -5,7 +5,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.libraryofthings.math.LVector;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class LOTVectorEditor extends Composite {
 
