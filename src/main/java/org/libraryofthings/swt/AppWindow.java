@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
@@ -100,6 +101,7 @@ public final class AppWindow {
 	}
 
 	private void showError(Exception e) {
+		LLog.getLogger(this).error(this, null, e);
 		LOTMessageDialog d = new LOTMessageDialog(shell);
 		d.show(e);
 	}

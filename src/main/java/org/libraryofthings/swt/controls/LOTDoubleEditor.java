@@ -7,6 +7,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import com.sun.swing.internal.plaf.synth.resources.synth;
+
 public class LOTDoubleEditor extends Composite {
 	private Text s;
 	private ChangeListener<Double> listener;
@@ -26,8 +28,7 @@ public class LOTDoubleEditor extends Composite {
 
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-
+				changed();
 			}
 
 			@Override
@@ -55,6 +56,10 @@ public class LOTDoubleEditor extends Composite {
 			}
 			setDouble(nd);
 		}
+	}
+
+	private synchronized void changed() {
+		listener.changed(getDouble());
 	}
 
 	private synchronized void setDouble(double nd) {

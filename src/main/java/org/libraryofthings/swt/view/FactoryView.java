@@ -1,5 +1,7 @@
 package org.libraryofthings.swt.view;
 
+import java.util.Set;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -12,6 +14,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.environment.LOTRunEnvironment;
@@ -35,6 +38,7 @@ public class FactoryView extends Composite {
 	private ScrolledComposite scrolledComposite;
 	private Composite composite;
 	private AppWindow window;
+	private int currentfactoryhash;
 
 	public FactoryView(LOTApp app, AppWindow w, LOTFactory f,
 			Composite composite) {
@@ -51,33 +55,8 @@ public class FactoryView extends Composite {
 	}
 
 	private void addChild() {
-		LOTFactory child = this.factory.addFactory();
-
-		Composite cc = new Composite(cchildrenlist, SWT.NONE);
-		cc.setBackground(new Color(getDisplay(), 100, 200, 200));
-
-		Composite childpanel = new Composite(cc, SWT.None);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-
-		childpanel.setLayout(gridLayout);
-		Button b = new Button(childpanel, getStyle());
-		b.setText("view");
-		b.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		b.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				viewChild(child);
-			}
-		});
-		createDataEditors(cc, child);
-
-		cc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-		updateLayout();
+		this.factory.addFactory();
+		updateDataEditors(composite);
 	}
 
 	private void viewChild(LOTFactory f) {
@@ -127,6 +106,24 @@ public class FactoryView extends Composite {
 
 		this.composite = new Composite(scrolledComposite, SWT.NONE);
 
+		createDataView();
+
+		scrolledComposite.setContent(composite);
+
+		Composite c_view = new Composite(composite_main, SWT.NONE);
+		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
+		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		c_view.setBounds(0, 0, 64, 64);
+
+		view = new RunEnvironment4xView(c_view, SWT.NONE);
+		composite_main.setWeights(new int[] { 1, 1 });
+
+		updateFactory();
+		//
+		new Thread(() -> checkFactoryUpdate()).start();
+	}
+
+	private void createDataView() {
 		createDataEditors(composite, factory);
 
 		Composite cchildren = new Composite(composite, SWT.NONE);
@@ -166,17 +163,76 @@ public class FactoryView extends Composite {
 		cchildrenlist.setSize(0, 0);
 		cchildrenlist.setLayout(new GridLayout(1, false));
 
-		scrolledComposite.setContent(composite);
+		Set<String> children = factory.getFactories();
+		for (String fname : children) {
+			LOTFactory child = factory.getFactory(fname);
 
-		Composite c_view = new Composite(composite_main, SWT.NONE);
-		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
-		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		c_view.setBounds(0, 0, 64, 64);
+			Composite cc = new Composite(cchildrenlist, SWT.NONE);
+			cc.setBackground(new Color(getDisplay(), 100, 200, 200));
+			cc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+					1));
 
-		view = new RunEnvironment4xView(c_view, SWT.NONE);
-		composite_main.setWeights(new int[] { 1, 1 });
+			Composite childpanel = new Composite(cc, SWT.None);
+			GridLayout gridLayout = new GridLayout();
+			gridLayout.horizontalSpacing = 0;
+			gridLayout.verticalSpacing = 0;
+			gridLayout.marginWidth = 0;
+			gridLayout.marginHeight = 0;
 
-		updateFactory();
+			childpanel.setLayout(gridLayout);
+			Button b = new Button(childpanel, getStyle());
+			b.setText("view");
+			b.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+					1));
+			b.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					viewChild(child);
+				}
+			});
+			createDataEditors(cc, child);
+
+		}
+
+		updateLayout();
+
+	}
+
+	private void checkFactoryUpdate() {
+		while (!isDisposed()) {
+			int nhash = factory.getBean().hashCode();
+			if (nhash != currentfactoryhash) {
+				currentfactoryhash = nhash;
+				getDisplay().asyncExec(() -> {
+					updateDataEditors(composite);
+					updateFactory();
+				});
+			} else {
+				synchronized (factory) {
+					try {
+						factory.wait(1000);
+					} catch (InterruptedException e) {
+						log.info("" + e);
+					}
+				}
+			}
+		}
+	}
+
+	private void updateDataEditors(Composite c) {
+		Control[] cc = c.getChildren();
+		for (Control control : cc) {
+			control.dispose();
+		}
+		//
+		createDataView();
+
+		updateFactoryHash();
+		updateLayout();
+	}
+
+	private void updateFactoryHash() {
+		currentfactoryhash = factory.getBean().hashCode();
 	}
 
 	private void createDataEditors(Composite c, LOTFactory f) {
@@ -185,6 +241,8 @@ public class FactoryView extends Composite {
 	}
 
 	private void updateFactory() {
+		updateFactoryHash();
+
 		LOTClient client = app.getEnvironment();
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view",

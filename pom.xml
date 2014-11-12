@@ -127,6 +127,10 @@
 									destfile="${project.build.directory}/lot-app-${app.arch}/jdk${java.version}.zip">
 									<fileset dir="${jdk}" />
 								</zip>
+								<zip
+									destfile="${project.build.directory}/lot-app-${app.arch}/resources${buildNumber}.zip">
+									<fileset dir="src/main/resources" />
+								</zip>
 							</tasks>
 						</configuration>
 					</execution>
