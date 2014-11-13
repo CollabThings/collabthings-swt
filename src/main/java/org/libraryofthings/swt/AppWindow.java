@@ -38,6 +38,10 @@ public final class AppWindow {
 	private Table table;
 	private Label lblBottonInfo;
 
+	private Menu objectmenu;
+	private LOTAppControl currentappcontrol;
+	private Menu menu;
+
 	public AppWindow(LOTApp app) {
 		this.app = app;
 	}
@@ -46,7 +50,7 @@ public final class AppWindow {
 		try {
 			LOTPart p = app.newPart();
 			PartView view = new PartView(app, p, tabFolder);
-			addTab("part " + p, view);
+			addTab("part " + p, view, p);
 		} catch (Exception e) {
 			showError(e);
 		}
@@ -55,18 +59,21 @@ public final class AppWindow {
 	public void newFactory() {
 		LOTFactory f = app.newFactory();
 		viewFactory(f);
+
 	}
 
 	public void viewFactory(LOTFactory f) {
 		FactoryView v = new FactoryView(app, this, f, tabFolder);
-		addTab("" + f, v);
+		addTab("" + f, v, f);
 	}
 
-	private void addTab(String name, Composite c) {
+	private void addTab(String name, Composite c, Object data) {
 		TabItem i = new TabItem(tabFolder, SWT.None);
 		i.setText(name);
 		i.setControl(c);
+		i.setData(data);
 		tabFolder.setSelection(i);
+		tabSelected();
 	}
 
 	/**
@@ -122,7 +129,7 @@ public final class AppWindow {
 		gl_shell.marginWidth = 1;
 		shell.setLayout(gl_shell);
 
-		Menu menu = new Menu(shell, SWT.BAR);
+		menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
 
 		MenuItem mntmNew = new MenuItem(menu, SWT.CASCADE);
@@ -130,6 +137,15 @@ public final class AppWindow {
 
 		Menu menu_new = new Menu(mntmNew);
 		mntmNew.setMenu(menu_new);
+
+		MenuItem mntmNewFactory = new MenuItem(menu_new, SWT.NONE);
+		mntmNewFactory.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				newFactory();
+			}
+		});
+		mntmNewFactory.setText("New");
 
 		MenuItem mntmNewPart = new MenuItem(menu_new, SWT.NONE);
 		mntmNewPart.addSelectionListener(new SelectionAdapter() {
@@ -139,15 +155,6 @@ public final class AppWindow {
 			}
 		});
 		mntmNewPart.setText("Part");
-
-		MenuItem mntmNewFactory = new MenuItem(menu_new, SWT.NONE);
-		mntmNewFactory.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				newFactory();
-			}
-		});
-		mntmNewFactory.setText("Factory");
 
 		MenuItem mntmRun = new MenuItem(menu, SWT.NONE);
 		mntmRun.setText("Run");
@@ -196,6 +203,12 @@ public final class AppWindow {
 		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_MAGENTA));
 
 		tabFolder = new TabFolder(composite, SWT.NONE);
+		tabFolder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				tabSelected();
+			}
+		});
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 
@@ -239,6 +252,19 @@ public final class AppWindow {
 		setBottomInfo();
 	}
 
+	protected void tabSelected() {
+		if (lblBottonInfo != null) {
+			LOTAppControl v = (LOTAppControl) tabFolder.getTabList()[tabFolder
+					.getSelectionIndex()];
+			v.selected(this);
+			if (objectmenu != null) {
+				objectmenu.dispose();
+			}
+			objectmenu = v.createMenu(menu);
+			this.currentappcontrol = v;
+		}
+	}
+
 	private void setBottomInfo() {
 		shell.getDisplay().timerExec(1000, new Runnable() {
 
@@ -252,5 +278,4 @@ public final class AppWindow {
 			}
 		});
 	}
-
 }

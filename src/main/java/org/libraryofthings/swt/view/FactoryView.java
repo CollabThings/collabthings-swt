@@ -11,10 +11,12 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.environment.LOTRunEnvironment;
@@ -23,12 +25,12 @@ import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.swt.AppWindow;
-import org.libraryofthings.swt.SWTResourceManager;
+import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.controls.ObjectViewer;
 import org.libraryofthings.swt.controls.ObjectViewerListener;
 
-public class FactoryView extends Composite {
+public class FactoryView extends Composite implements LOTAppControl {
 	private LOTFactory factory;
 	private RunEnvironment4xView view;
 	private LLog log = LLog.getLogger(this);
@@ -54,6 +56,11 @@ public class FactoryView extends Composite {
 		init();
 	}
 
+	@Override
+	public void selected(AppWindow w) {
+
+	}
+
 	private void addChild() {
 		this.factory.addFactory();
 		updateDataEditors(composite);
@@ -76,24 +83,6 @@ public class FactoryView extends Composite {
 		gridLayout.marginHeight = 0;
 		gridLayout.horizontalSpacing = 0;
 		setLayout(gridLayout);
-
-		Composite c_toolbar = new Composite(this, SWT.NONE);
-		c_toolbar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,
-				1, 1));
-		c_toolbar.setLayout(new RowLayout(SWT.HORIZONTAL));
-
-		Button button = new Button(c_toolbar, SWT.FLAT);
-		button.setText("A");
-		button.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
-
-		Button btnPublish = new Button(c_toolbar, SWT.NONE);
-		btnPublish.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				publish();
-			}
-		});
-		btnPublish.setText("Publish");
 
 		SashForm composite_main = new SashForm(this, SWT.NONE);
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
@@ -127,8 +116,8 @@ public class FactoryView extends Composite {
 		createDataEditors(composite, factory);
 
 		Composite cchildren = new Composite(composite, SWT.NONE);
-		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1,
-				1));
+		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false,
+				1, 1));
 		GridLayout gl_cchildren = new GridLayout(1, false);
 		gl_cchildren.marginWidth = 0;
 		gl_cchildren.verticalSpacing = 0;
@@ -147,6 +136,9 @@ public class FactoryView extends Composite {
 		gl_cchildrenpanel.marginWidth = 0;
 		cchildrenpanel.setLayout(gl_cchildrenpanel);
 
+		Label lblChildren = new Label(cchildrenpanel, SWT.NONE);
+		lblChildren.setText("Children");
+
 		Button bnewchild = new Button(cchildrenpanel, SWT.NONE);
 		bnewchild.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -158,8 +150,8 @@ public class FactoryView extends Composite {
 		bnewchild.setText("+");
 
 		this.cchildrenlist = new Composite(cchildren, SWT.NONE);
-		cchildrenlist.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true, 1, 1));
+		cchildrenlist.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true,
+				1, 1));
 		cchildrenlist.setSize(0, 0);
 		cchildrenlist.setLayout(new GridLayout(1, false));
 
@@ -252,13 +244,9 @@ public class FactoryView extends Composite {
 		view.doRepaint();
 	}
 
-	protected void publish() {
-		this.factory.publish();
-	}
-
 	private void createEnvironmentDataViewer(Composite c, LOTFactory f) {
 		ObjectViewer envobjectviewer = new ObjectViewer(c, f.getEnvironment());
-		envobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+		envobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
 				false, 1, 1));
 		GridLayout gridLayout = (GridLayout) envobjectviewer.getLayout();
 		gridLayout.marginWidth = 0;
@@ -277,12 +265,12 @@ public class FactoryView extends Composite {
 	private void createFactoryDataViewer(Composite c, LOTFactory f) {
 		GridLayout gl_c_factoryproperties_1 = new GridLayout(1, false);
 		gl_c_factoryproperties_1.marginHeight = 0;
-		gl_c_factoryproperties_1.verticalSpacing = 0;
-		gl_c_factoryproperties_1.marginWidth = 0;
+		gl_c_factoryproperties_1.verticalSpacing = 4;
+		gl_c_factoryproperties_1.marginWidth = 3;
 		c.setLayout(gl_c_factoryproperties_1);
 		ObjectViewer factoryobjectviewer = new ObjectViewer(c, f);
-		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 1, 1));
+		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
+				false, 1, 1));
 		GridLayout gridLayout = (GridLayout) factoryobjectviewer.getLayout();
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
@@ -303,4 +291,46 @@ public class FactoryView extends Composite {
 	protected void environmentObjectChanged(String name, Object o) {
 		updateFactory();
 	}
+
+	public Menu createMenu(Menu menu) {
+		MenuItem mifactory = new MenuItem(menu, SWT.CASCADE);
+		mifactory.setText("Factory");
+
+		Menu mfactory = new Menu(mifactory);
+		mifactory.setMenu(mfactory);
+
+		MenuItem mifscripts = new MenuItem(mfactory, SWT.CASCADE);
+		mifscripts.setText("Scripts");
+
+		Menu mfmscripts = new Menu(mifscripts);
+		mifscripts.setMenu(mfmscripts);
+
+		MenuItem mfsaddnew = new MenuItem(mfmscripts, SWT.NONE);
+		mfsaddnew.setText("New");
+
+		MenuItem mfmImport = new MenuItem(mfmscripts, SWT.NONE);
+		mfmImport.setText("Import");
+
+		MenuItem mifaddchild = new MenuItem(mfactory, SWT.NONE);
+		mifaddchild.setText("Add child");
+		mifaddchild.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				factory.addFactory();
+			}
+		});
+
+		MenuItem mifpublish = new MenuItem(mfactory, SWT.NONE);
+		mifpublish.setText("Publish");
+		mifpublish.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				factory.publish();
+			}
+		});
+
+		//
+		return mfactory;
+	}
+
 }
