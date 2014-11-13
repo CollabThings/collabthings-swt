@@ -116,6 +116,13 @@ public class FactoryView extends Composite implements LOTAppControl {
 		createDataEditors(composite, factory);
 
 		Composite cchildren = new Composite(composite, SWT.NONE);
+		createChildrenComposite(cchildren);
+
+		updateLayout();
+
+	}
+
+	private void createChildrenComposite(Composite cchildren) {
 		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false,
 				1, 1));
 		GridLayout gl_cchildren = new GridLayout(1, false);
@@ -185,9 +192,6 @@ public class FactoryView extends Composite implements LOTAppControl {
 			createDataEditors(cc, child);
 
 		}
-
-		updateLayout();
-
 	}
 
 	private void checkFactoryUpdate() {
@@ -217,6 +221,8 @@ public class FactoryView extends Composite implements LOTAppControl {
 			control.dispose();
 		}
 		//
+		window.updateObjectMenu(this);
+
 		createDataView();
 
 		updateFactoryHash();
@@ -292,7 +298,7 @@ public class FactoryView extends Composite implements LOTAppControl {
 		updateFactory();
 	}
 
-	public Menu createMenu(Menu menu) {
+	public MenuItem createMenu(Menu menu) {
 		MenuItem mifactory = new MenuItem(menu, SWT.CASCADE);
 		mifactory.setText("Factory");
 
@@ -307,6 +313,24 @@ public class FactoryView extends Composite implements LOTAppControl {
 
 		MenuItem mfsaddnew = new MenuItem(mfmscripts, SWT.NONE);
 		mfsaddnew.setText("New");
+		mfsaddnew.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				factory.addScript("script" + factory.getScripts().size());
+			}
+		});
+
+		MenuItem micscripts = new MenuItem(mfmscripts, SWT.CASCADE);
+		micscripts.setText("list");
+
+		Menu mscripts = new Menu(micscripts);
+		micscripts.setMenu(mscripts);
+
+		Set<String> scripts = factory.getEnvironment().getScripts();
+		for (String string : scripts) {
+			MenuItem mscript = new MenuItem(mscripts, SWT.NONE);
+			mscript.setText(string);
+		}
 
 		MenuItem mfmImport = new MenuItem(mfmscripts, SWT.NONE);
 		mfmImport.setText("Import");
@@ -316,7 +340,7 @@ public class FactoryView extends Composite implements LOTAppControl {
 		mifaddchild.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				factory.addFactory();
+				addChild();
 			}
 		});
 
@@ -330,7 +354,7 @@ public class FactoryView extends Composite implements LOTAppControl {
 		});
 
 		//
-		return mfactory;
+		return mifactory;
 	}
 
 }

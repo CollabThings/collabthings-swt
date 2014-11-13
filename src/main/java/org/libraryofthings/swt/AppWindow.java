@@ -38,7 +38,7 @@ public final class AppWindow {
 	private Table table;
 	private Label lblBottonInfo;
 
-	private Menu objectmenu;
+	private MenuItem objectmenu;
 	private LOTAppControl currentappcontrol;
 	private Menu menu;
 
@@ -59,7 +59,6 @@ public final class AppWindow {
 	public void newFactory() {
 		LOTFactory f = app.newFactory();
 		viewFactory(f);
-
 	}
 
 	public void viewFactory(LOTFactory f) {
@@ -145,7 +144,7 @@ public final class AppWindow {
 				newFactory();
 			}
 		});
-		mntmNewFactory.setText("New");
+		mntmNewFactory.setText("Factory");
 
 		MenuItem mntmNewPart = new MenuItem(menu_new, SWT.NONE);
 		mntmNewPart.addSelectionListener(new SelectionAdapter() {
@@ -257,12 +256,16 @@ public final class AppWindow {
 			LOTAppControl v = (LOTAppControl) tabFolder.getTabList()[tabFolder
 					.getSelectionIndex()];
 			v.selected(this);
-			if (objectmenu != null) {
-				objectmenu.dispose();
-			}
-			objectmenu = v.createMenu(menu);
+			updateObjectMenu(v);
 			this.currentappcontrol = v;
 		}
+	}
+
+	public void updateObjectMenu(LOTAppControl v) {
+		if (objectmenu != null) {
+			objectmenu.dispose();
+		}
+		objectmenu = v.createMenu(menu);
 	}
 
 	private void setBottomInfo() {

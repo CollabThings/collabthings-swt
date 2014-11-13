@@ -1,11 +1,12 @@
 package org.libraryofthings.swt;
 
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 public interface LOTAppControl {
 
 	void selected(AppWindow appWindow);
 
-	Menu createMenu(Menu menu);
+	MenuItem createMenu(Menu menu);
 
 }
