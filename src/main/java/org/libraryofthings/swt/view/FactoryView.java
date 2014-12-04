@@ -330,6 +330,11 @@ public class FactoryView extends Composite implements LOTAppControl {
 		for (String string : scripts) {
 			MenuItem mscript = new MenuItem(mscripts, SWT.NONE);
 			mscript.setText(string);
+			mscript.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent arg0) {
+					scriptMenuSelected(string);
+				};
+			});
 		}
 
 		MenuItem mfmImport = new MenuItem(mfmscripts, SWT.NONE);
@@ -353,8 +358,11 @@ public class FactoryView extends Composite implements LOTAppControl {
 			}
 		});
 
-		//
 		return mifactory;
+	}
+
+	protected void scriptMenuSelected(String string) {
+		window.viewScript(factory.getScript(string));
 	}
 
 }

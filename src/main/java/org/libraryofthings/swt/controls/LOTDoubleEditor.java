@@ -7,8 +7,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import com.sun.swing.internal.plaf.synth.resources.synth;
-
 public class LOTDoubleEditor extends Composite {
 	private Text s;
 	private ChangeListener<Double> listener;

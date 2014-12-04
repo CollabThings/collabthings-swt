@@ -2,6 +2,7 @@ package org.libraryofthings.swt.controls;
 
 import org.libraryofthings.math.LVector;
 
+
 public class TableTestData {
 	private String value1 = "value1";
 	private String value2 = "value2";

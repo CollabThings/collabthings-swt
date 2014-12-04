@@ -23,10 +23,12 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.libraryofthings.swt.view.FactoryView;
 import org.libraryofthings.swt.view.PartView;
+import org.libraryofthings.swt.view.ScriptView;
 
 import waazdoh.client.model.WaazdohInfo;
 
@@ -64,6 +66,11 @@ public final class AppWindow {
 	public void viewFactory(LOTFactory f) {
 		FactoryView v = new FactoryView(app, this, f, tabFolder);
 		addTab("" + f, v, f);
+	}
+
+	public void viewScript(LOTScript script) {
+		ScriptView v = new ScriptView(tabFolder, app, this, script);
+		addTab("" + script, v, script);
 	}
 
 	private void addTab(String name, Composite c, Object data) {
