@@ -75,6 +75,10 @@ public class FactoryView extends Composite implements LOTAppControl {
 		window.viewFactory(f);
 	}
 
+	LOTScript addScript() {
+		return factory.addScript("script" + factory.getScripts().size());
+	}
+
 	private void updateLayout() {
 		scrolledComposite.layout(true, true);
 		scrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT,
@@ -120,6 +124,9 @@ public class FactoryView extends Composite implements LOTAppControl {
 	private void createDataView() {
 		createDataEditors(composite, factory);
 
+		EnvironmentView ev = new EnvironmentView(composite, window,
+				factory.getEnvironment());
+
 		Composite cchildren = new Composite(composite, SWT.NONE);
 		createChildrenComposite(cchildren);
 
@@ -149,7 +156,7 @@ public class FactoryView extends Composite implements LOTAppControl {
 		cchildrenpanel.setLayout(gl_cchildrenpanel);
 
 		Label lblChildren = new Label(cchildrenpanel, SWT.NONE);
-		lblChildren.setText("Children");
+		lblChildren.setText("CHILDREN");
 
 		Button bnewchild = new Button(cchildrenpanel, SWT.NONE);
 		bnewchild.addSelectionListener(new SelectionAdapter() {
@@ -390,9 +397,4 @@ public class FactoryView extends Composite implements LOTAppControl {
 	protected void scriptMenuSelected(String string) {
 		window.viewScript(factory.getScript(string));
 	}
-
-	LOTScript addScript() {
-		return factory.addScript("script" + factory.getScripts().size());
-	}
-
 }
