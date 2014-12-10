@@ -120,7 +120,7 @@ public final class AppWindow {
 		}
 	}
 
-	private void showError(Exception e) {
+	public void showError(Exception e) {
 		LLog.getLogger(this).error(this, null, e);
 		LOTMessageDialog d = new LOTMessageDialog(shell);
 		d.show(e);

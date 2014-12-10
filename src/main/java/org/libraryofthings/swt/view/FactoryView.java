@@ -1,5 +1,8 @@
 package org.libraryofthings.swt.view;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
@@ -14,6 +17,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -23,6 +27,7 @@ import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.environment.impl.LOTFactoryState;
 import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
+import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
@@ -316,7 +321,7 @@ public class FactoryView extends Composite implements LOTAppControl {
 		mfsaddnew.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				factory.addScript("script" + factory.getScripts().size());
+				addScript();
 			}
 		});
 
@@ -339,6 +344,12 @@ public class FactoryView extends Composite implements LOTAppControl {
 
 		MenuItem mfmImport = new MenuItem(mfmscripts, SWT.NONE);
 		mfmImport.setText("Import");
+		mfmImport.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				importSelected();
+			}
+		});
 
 		MenuItem mifaddchild = new MenuItem(mfactory, SWT.NONE);
 		mifaddchild.setText("Add child");
@@ -361,8 +372,27 @@ public class FactoryView extends Composite implements LOTAppControl {
 		return mifactory;
 	}
 
+	protected void importSelected() {
+		getDisplay().asyncExec(() -> {
+			try {
+				FileDialog fd = new FileDialog(getShell());
+				String filename = fd.open();
+
+				LOTScript s = addScript();
+				byte[] bs = Files.readAllBytes(Paths.get(filename));
+				s.setScript(new String(bs));
+			} catch (IOException e) {
+				window.showError(e);
+			}
+		});
+	}
+
 	protected void scriptMenuSelected(String string) {
 		window.viewScript(factory.getScript(string));
+	}
+
+	LOTScript addScript() {
+		return factory.addScript("script" + factory.getScripts().size());
 	}
 
 }
