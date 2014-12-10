@@ -34,12 +34,12 @@ public final class AppLauncher implements WSWTApp {
 
 	@Override
 	public WClient getClient() {
-		return app.getEnvironment().getClient();
+		return app.getLClient().getClient();
 	}
 
 	@Override
 	public MPreferences getPreferences() {
-		return app.getEnvironment().getPreferences();
+		return app.getLClient().getPreferences();
 	}
 
 	public static void main(String[] args) throws MalformedURLException {

@@ -141,14 +141,14 @@ public class PartView extends Composite {
 	protected void importSelected() {
 		FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
 		dialog.setFilterExtensions(new String[] { "*.x3d" });
-		String path = app.getEnvironment().getPreferences()
+		String path = app.getLClient().getPreferences()
 				.get(DEFAULT_X3D_IMPORTPATH, "");
 		dialog.setFilterPath(path);
 		String result = dialog.open();
 
 		try {
 			File file = new File(result);
-			app.getEnvironment().getPreferences()
+			app.getLClient().getPreferences()
 					.set(DEFAULT_X3D_IMPORTPATH, file.getParent());
 			importFile(file);
 		} catch (SAXException | IOException e) {

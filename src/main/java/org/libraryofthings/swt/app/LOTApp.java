@@ -33,10 +33,10 @@ public class LOTApp {
 	}
 
 	public void addClientListener(WClientListener listener) {
-		getEnvironment().getClient().addListener(listener);
+		getLClient().getClient().addListener(listener);
 	}
 
-	public LOTClient getEnvironment() {
+	public LOTClient getLClient() {
 		if (client == null) {
 			client = new LOTClientImpl(preferences, binarysource, service);
 		}
@@ -44,7 +44,7 @@ public class LOTApp {
 	}
 
 	public void close() {
-		getEnvironment().stop();
+		getLClient().stop();
 		binarysource.close();
 		closed = true;
 	}
@@ -54,15 +54,15 @@ public class LOTApp {
 	}
 
 	public LOTPart newPart() {
-		return getEnvironment().getObjectFactory().getPart();
+		return getLClient().getObjectFactory().getPart();
 	}
 
 	public boolean isServiceAvailable() {
-		return getEnvironment().getClient().getService().isConnected();
+		return getLClient().getClient().getService().isConnected();
 	}
 
 	public LOTFactory newFactory() {
-		return getEnvironment().getObjectFactory().getFactory();
+		return getLClient().getObjectFactory().getFactory();
 	}
 
 }

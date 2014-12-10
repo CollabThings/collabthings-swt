@@ -29,6 +29,7 @@ import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.libraryofthings.swt.view.FactoryView;
 import org.libraryofthings.swt.view.PartView;
 import org.libraryofthings.swt.view.ScriptView;
+import org.libraryofthings.swt.view.SearchView;
 
 import waazdoh.client.model.WaazdohInfo;
 
@@ -37,7 +38,6 @@ public final class AppWindow {
 	//
 	private LOTApp app;
 	private TabFolder tabFolder;
-	private Table table;
 	private Label lblBottonInfo;
 
 	private MenuItem objectmenu;
@@ -64,8 +64,14 @@ public final class AppWindow {
 	}
 
 	public void viewFactory(LOTFactory f) {
-		FactoryView v = new FactoryView(app, this, f, tabFolder);
+		FactoryView v = new FactoryView(tabFolder, app, this, f);
 		addTab("" + f, v, f);
+	}
+
+	public void viewSearch(String searchitem) {
+		SearchView s = new SearchView(tabFolder, app, this);
+		addTab("" + searchitem, s, searchitem);
+		s.search(searchitem);
 	}
 
 	public void viewScript(LOTScript script) {
@@ -95,6 +101,7 @@ public final class AppWindow {
 		//
 		// FIXME TODO REMOVE
 		newFactory();
+		viewSearch("test");
 		//
 		while (!shell.isDisposed()) {
 			readAndDispatch(display);
@@ -218,38 +225,6 @@ public final class AppWindow {
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 
-		TabItem tbtmInfo = new TabItem(tabFolder, SWT.NONE);
-		tbtmInfo.setText("Search");
-
-		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
-		tbtmInfo.setControl(composite_1);
-		composite_1.setLayout(new GridLayout(1, false));
-
-		Composite composite_2 = new Composite(composite_1, SWT.NONE);
-		composite_2.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
-				false, 1, 1));
-		composite_2.setLayout(new RowLayout(SWT.HORIZONTAL));
-
-		Text text = new Text(composite_2, SWT.BORDER);
-		text.setLayoutData(new RowData(167, SWT.DEFAULT));
-
-		Button buttonSearch = new Button(composite_2, SWT.NONE);
-		buttonSearch.setText("Search");
-
-		ScrolledComposite scrolledComposite = new ScrolledComposite(
-				composite_1, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true, 1, 1));
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-
-		table = new Table(scrolledComposite, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		scrolledComposite.setContent(table);
-		scrolledComposite.setMinSize(table
-				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
 		lblBottonInfo = new Label(composite, SWT.NONE);
 		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
 				false, 1, 1));
@@ -282,7 +257,7 @@ public final class AppWindow {
 			public void run() {
 				lblBottonInfo.setText("LOT:" + LOTClient.VERSION + " Waazdoh:"
 						+ WaazdohInfo.version + " environment: "
-						+ app.getEnvironment());
+						+ app.getLClient());
 				//
 				setBottomInfo();
 			}

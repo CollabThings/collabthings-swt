@@ -42,8 +42,8 @@ public class FactoryView extends Composite implements LOTAppControl {
 	private AppWindow window;
 	private int currentfactoryhash;
 
-	public FactoryView(LOTApp app, AppWindow w, LOTFactory f,
-			Composite composite) {
+	public FactoryView(Composite composite, LOTApp app, AppWindow w,
+			LOTFactory f) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;
@@ -241,7 +241,7 @@ public class FactoryView extends Composite implements LOTAppControl {
 	private void updateFactory() {
 		updateFactoryHash();
 
-		LOTClient client = app.getEnvironment();
+		LOTClient client = app.getLClient();
 		LOTEnvironment env = new LOTEnvironmentImpl(client);
 		LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view",
 				factory).getRunEnvironment();
