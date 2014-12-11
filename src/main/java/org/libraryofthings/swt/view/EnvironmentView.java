@@ -47,43 +47,47 @@ public class EnvironmentView extends Composite {
 				false, 1, 1));
 		cscriptslist.setBounds(0, 0, 64, 64);
 
-		Set<String> scripts = environment.getScripts();
-		for (String string : scripts) {
-			// String string = "test";
+		if (environment != null) {
+			Set<String> scripts = environment.getScripts();
+			for (String string : scripts) {
+				// String string = "test";
 
-			Composite cscript = new Composite(cscriptslist, SWT.NONE);
-			GridLayout gl_cscript = new GridLayout();
-			gl_cscript.numColumns = 3;
-			cscript.setLayout(gl_cscript);
+				Composite cscript = new Composite(cscriptslist, SWT.NONE);
+				GridLayout gl_cscript = new GridLayout();
+				gl_cscript.numColumns = 3;
+				cscript.setLayout(gl_cscript);
 
-			Text tname = new Text(cscript, SWT.NONE);
-			GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false,
-					false, 1, 1);
-			gd_tname.widthHint = 146;
-			tname.setLayoutData(gd_tname);
-			tname.setText(string);
-			tname.setEditable(true);
-			tname.addModifyListener((e) -> {
-				environment.renameScript(string, tname.getText());
-			});
+				Text tname = new Text(cscript, SWT.NONE);
+				GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false,
+						false, 1, 1);
+				gd_tname.widthHint = 146;
+				tname.setLayoutData(gd_tname);
+				tname.setText(string);
+				tname.setEditable(true);
+				tname.addModifyListener((e) -> {
+					environment.renameScript(string, tname.getText());
+				});
 
-			Button btnopenscript = new Button(cscript, SWT.NONE);
-			btnopenscript.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent arg0) {
-					window.viewScript(environment.getScript(string));
-				}
-			});
+				Button btnopenscript = new Button(cscript, SWT.NONE);
+				btnopenscript.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent arg0) {
+						window.viewScript(environment.getScript(string));
+					}
+				});
 
-			btnopenscript.setText("open");
+				btnopenscript.setText("open");
 
-			Button btndeletescript = new Button(cscript, SWT.NONE);
-			btndeletescript.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					environment.deleteScript(string);
-				}
-			});
-			btndeletescript.setText("delete");
+				Button btndeletescript = new Button(cscript, SWT.NONE);
+				btndeletescript.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						environment.deleteScript(string);
+					}
+				});
+				btndeletescript.setText("delete");
+			}
+		} else {
+
 		}
 	}
 }

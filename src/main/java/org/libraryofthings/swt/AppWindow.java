@@ -1,24 +1,20 @@
 package org.libraryofthings.swt;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTFactory;
@@ -37,7 +33,7 @@ public final class AppWindow {
 	protected Shell shell;
 	//
 	private LOTApp app;
-	private TabFolder tabFolder;
+	private CTabFolder tabFolder;
 	private Label lblBottonInfo;
 
 	private MenuItem objectmenu;
@@ -80,7 +76,7 @@ public final class AppWindow {
 	}
 
 	private void addTab(String name, Composite c, Object data) {
-		TabItem i = new TabItem(tabFolder, SWT.None);
+		CTabItem i = new CTabItem(tabFolder, SWT.CLOSE);
 		i.setText(name);
 		i.setControl(c);
 		i.setData(data);
@@ -215,7 +211,7 @@ public final class AppWindow {
 		composite.setLayoutData(gd_composite);
 		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_MAGENTA));
 
-		tabFolder = new TabFolder(composite, SWT.NONE);
+		tabFolder = new CTabFolder(composite, SWT.NONE);
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -235,11 +231,14 @@ public final class AppWindow {
 
 	protected void tabSelected() {
 		if (lblBottonInfo != null) {
-			LOTAppControl v = (LOTAppControl) tabFolder.getTabList()[tabFolder
+			Control control = tabFolder.getTabList()[tabFolder
 					.getSelectionIndex()];
-			v.selected(this);
-			updateObjectMenu(v);
-			this.currentappcontrol = v;
+			if (control instanceof LOTAppControl) {
+				LOTAppControl v = (LOTAppControl) control;
+				v.selected(this);
+				updateObjectMenu(v);
+				this.currentappcontrol = v;
+			}
 		}
 	}
 
