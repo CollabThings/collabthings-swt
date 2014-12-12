@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTFactory;
@@ -88,22 +87,32 @@ public final class AppWindow {
 	 * Open the window.
 	 */
 	public void open() {
-		Display display = Display.getDefault();
-		createContents();
-		//
-		shell.open();
-		shell.layout();
-		shell.setMaximized(true);
-		//
-		// FIXME TODO REMOVE
-		newFactory();
-		viewSearch("test");
-		//
-		while (!shell.isDisposed()) {
-			readAndDispatch(display);
+		try {
+			try {
+				Display display = Display.getDefault();
+				createContents();
+				//
+				shell.open();
+				shell.layout();
+				shell.setMaximized(true);
+				//
+				// FIXME TODO REMOVE
+				newFactory();
+				viewSearch("test");
+				//
+				while (!shell.isDisposed()) {
+					readAndDispatch(display);
+				}
+			} catch (Exception e) {
+				// TODO shouldn't catch Exception, but didn't come up with enything better.
+				showError(e);
+			}
+		} finally {
+			if (shell != null) {
+				shell.dispose();
+			}
+			app.close();
 		}
-
-		app.close();
 	}
 
 	private void readAndDispatch(Display display) {
@@ -137,6 +146,8 @@ public final class AppWindow {
 		gl_shell.marginHeight = 1;
 		gl_shell.marginWidth = 1;
 		shell.setLayout(gl_shell);
+
+		menu.dispose();
 
 		menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
