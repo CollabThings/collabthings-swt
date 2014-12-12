@@ -54,7 +54,7 @@ public class EnvironmentView extends Composite {
 
 				Composite cscript = new Composite(cscriptslist, SWT.NONE);
 				GridLayout gl_cscript = new GridLayout();
-				gl_cscript.numColumns = 3;
+				gl_cscript.numColumns = 4;
 				cscript.setLayout(gl_cscript);
 
 				Text tname = new Text(cscript, SWT.NONE);
@@ -64,9 +64,14 @@ public class EnvironmentView extends Composite {
 				tname.setLayoutData(gd_tname);
 				tname.setText(string);
 				tname.setEditable(true);
-				tname.addModifyListener((e) -> {
-					environment.renameScript(string, tname.getText());
+
+				Button btnrenamescript = new Button(cscript, SWT.NONE);
+				btnrenamescript.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent arg0) {
+						environment.renameScript(string, tname.getText());
+					}
 				});
+				btnrenamescript.setText("rename");
 
 				Button btnopenscript = new Button(cscript, SWT.NONE);
 				btnopenscript.addSelectionListener(new SelectionAdapter() {

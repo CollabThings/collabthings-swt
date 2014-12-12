@@ -10,7 +10,6 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.app.LOTApp;
 
-import sun.util.logging.resources.logging;
 import waazdoh.client.model.JBean;
 import waazdoh.util.MStringID;
 
