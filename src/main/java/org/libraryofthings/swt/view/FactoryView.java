@@ -1,5 +1,6 @@
 package org.libraryofthings.swt.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -75,8 +76,8 @@ public class FactoryView extends Composite implements LOTAppControl {
 		window.viewFactory(f);
 	}
 
-	LOTScript addScript() {
-		return factory.addScript("script" + factory.getScripts().size());
+	LOTScript addScript(String name) {
+		return factory.addScript(name);
 	}
 
 	private void updateLayout() {
@@ -328,7 +329,8 @@ public class FactoryView extends Composite implements LOTAppControl {
 		mfsaddnew.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				addScript();
+				addScript("script"
+						+ factory.getEnvironment().getScripts().size());
 			}
 		});
 
@@ -380,18 +382,24 @@ public class FactoryView extends Composite implements LOTAppControl {
 	}
 
 	protected void importSelected() {
-		getDisplay().asyncExec(() -> {
-			try {
-				FileDialog fd = new FileDialog(getShell());
-				String filename = fd.open();
+		getDisplay().asyncExec(
+				() -> {
+					try {
+						FileDialog fd = new FileDialog(getShell(), SWT.MULTI);
+						fd.open();
 
-				LOTScript s = addScript();
-				byte[] bs = Files.readAllBytes(Paths.get(filename));
-				s.setScript(new String(bs));
-			} catch (IOException e) {
-				window.showError(e);
-			}
-		});
+						String fpath = fd.getFilterPath();
+						String[] fns = fd.getFileNames();
+						for (String string : fns) {
+							LOTScript s = addScript(string);
+							byte[] bs = Files.readAllBytes(Paths.get(fpath
+									+ File.separator + string));
+							s.setScript(new String(bs));
+						}
+					} catch (IOException e) {
+						window.showError(e);
+					}
+				});
 	}
 
 	protected void scriptMenuSelected(String string) {
