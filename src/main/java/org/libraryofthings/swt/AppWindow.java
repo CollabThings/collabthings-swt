@@ -36,7 +36,6 @@ public final class AppWindow {
 	private Label lblBottonInfo;
 
 	private MenuItem objectmenu;
-	private LOTAppControl currentappcontrol;
 	private Menu menu;
 
 	public AppWindow(LOTApp app) {
@@ -190,33 +189,6 @@ public final class AppWindow {
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
 		mntmHelp.setText("Help");
 
-		Menu menu_1 = new Menu(mntmHelp);
-		mntmHelp.setMenu(menu_1);
-
-		MenuItem mntmNewSubmenu_1 = new MenuItem(menu_1, SWT.CASCADE);
-		mntmNewSubmenu_1.setText("New SubMenu");
-
-		Menu menu_2 = new Menu(mntmNewSubmenu_1);
-		mntmNewSubmenu_1.setMenu(menu_2);
-
-		MenuItem mntmNewSubmenu_3 = new MenuItem(menu_1, SWT.CASCADE);
-		mntmNewSubmenu_3.setText("New SubMenu");
-
-		Menu menu_4 = new Menu(mntmNewSubmenu_3);
-		mntmNewSubmenu_3.setMenu(menu_4);
-
-		MenuItem mntmNewSubmenu_2 = new MenuItem(menu_1, SWT.CASCADE);
-		mntmNewSubmenu_2.setText("New SubMenu");
-
-		Menu menu_3 = new Menu(mntmNewSubmenu_2);
-		mntmNewSubmenu_2.setMenu(menu_3);
-
-		MenuItem mntmNewItem_2 = new MenuItem(menu_3, SWT.NONE);
-		mntmNewItem_2.setText("New Item");
-
-		MenuItem mntmNewItem_3 = new MenuItem(menu_3, SWT.NONE);
-		mntmNewItem_3.setText("New Item");
-
 		Composite composite = new Composite(shell, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.horizontalSpacing = 0;
@@ -256,7 +228,6 @@ public final class AppWindow {
 				LOTAppControl v = (LOTAppControl) control;
 				v.selected(this);
 				updateObjectMenu(v);
-				this.currentappcontrol = v;
 			}
 		}
 	}
