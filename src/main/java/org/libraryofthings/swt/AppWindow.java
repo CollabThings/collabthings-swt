@@ -175,6 +175,15 @@ public final class AppWindow {
 		});
 		mntmNewPart.setText("Part");
 
+		MenuItem mntmSearch = new MenuItem(menu, SWT.CASCADE);
+		mntmSearch.setText("Search");
+		mntmSearch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				viewSearch("search");
+			}
+		});
+
 		MenuItem mntmRun = new MenuItem(menu, SWT.NONE);
 		mntmRun.setText("Run");
 
