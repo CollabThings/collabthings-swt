@@ -32,7 +32,7 @@ public class PartView extends Composite {
 	private LOTApp app;
 	private ObjectViewer modelobjectviewer;
 
-	public PartView(LOTApp app, LOTPart p, Composite composite) {
+	public PartView(Composite composite, LOTApp app, LOTPart p) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.part = p;

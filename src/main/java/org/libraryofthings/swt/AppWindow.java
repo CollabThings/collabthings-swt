@@ -45,7 +45,7 @@ public final class AppWindow {
 	public void newPart() {
 		try {
 			LOTPart p = app.newPart();
-			PartView view = new PartView(app, p, tabFolder);
+			PartView view = new PartView(tabFolder, app, p);
 			addTab("part " + p, view, p);
 		} catch (Exception e) {
 			showError(e);
