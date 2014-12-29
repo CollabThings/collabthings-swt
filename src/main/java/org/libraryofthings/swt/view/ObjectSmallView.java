@@ -10,7 +10,7 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.app.LOTApp;
 
-import waazdoh.client.model.JBean;
+import waazdoh.client.model.WData;
 import waazdoh.util.MStringID;
 
 public class ObjectSmallView extends Composite {
@@ -52,11 +52,11 @@ public class ObjectSmallView extends Composite {
 
 	private void setData() {
 		if (id != null && app != null) {
-			JBean o = this.app.getLClient().getService().read(id);
+			WData o = this.app.getLClient().getService().read(id);
 			LLog.getLogger(this).info("Got object " + o);
 
 			text.setText("" + o);
-			JBean fname = o.find("name");
+			WData fname = o.find("name");
 			if (fname != null) {
 				lname.setText("" + fname.getText());
 				lid.setText("" + o.getChildren().get(0).getAttribute("id"));
