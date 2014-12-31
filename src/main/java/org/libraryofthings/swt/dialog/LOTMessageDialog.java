@@ -18,10 +18,16 @@ public class LOTMessageDialog {
 	public void show(Exception e) {
 		StringWriter out2 = new StringWriter();
 		e.printStackTrace(new PrintWriter(out2));
-		MessageDialog dialog = new MessageDialog(shell, "ERROR!! " + e, null,
-				out2.toString(), MessageDialog.ERROR, new String[] { "OK" }, 0);
+		String message = out2.toString();
+		String title = "ERROR!! " + e;
 		LLog.getLogger(this).error(this, "displayloop", e);
-		dialog.open();
+
+		show(title, message);
 	}
 
+	public void show(String title, String message) {
+		MessageDialog dialog = new MessageDialog(shell, title, null, message,
+				MessageDialog.ERROR, new String[] { "OK" }, 0);
+		dialog.open();
+	}
 }

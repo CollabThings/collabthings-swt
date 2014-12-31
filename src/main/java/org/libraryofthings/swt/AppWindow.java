@@ -38,6 +38,8 @@ public final class AppWindow {
 	private MenuItem objectmenu;
 	private Menu menu;
 
+	private LLog log = LLog.getLogger(this);
+
 	public AppWindow(LOTApp app) {
 		this.app = app;
 	}
@@ -131,6 +133,12 @@ public final class AppWindow {
 		d.show(e);
 	}
 
+	public void showError(String message) {
+		LLog.getLogger(this).info("ERROR " + message);
+		LOTMessageDialog d = new LOTMessageDialog(shell);
+		d.show("Error", message);
+	}
+
 	/**
 	 * Create contents of the window.
 	 * 
@@ -222,21 +230,37 @@ public final class AppWindow {
 
 	protected void tabSelected() {
 		if (lblBottonInfo != null) {
-			Control control = tabFolder.getTabList()[tabFolder
-					.getSelectionIndex()];
+			disposeObjectMenu();
+
+			// Really like this? //TODO
+			int selectionIndex = tabFolder.getSelectionIndex() + 1;
+			Control control = tabFolder.getTabList()[selectionIndex];
+
 			if (control instanceof LOTAppControl) {
 				LOTAppControl v = (LOTAppControl) control;
+				log.info("selected " + v);
+
 				v.selected(this);
 				updateObjectMenu(v);
+			} else {
+				showError("Selected " + control
+						+ " that is not a LOTAppControl. Index "
+						+ selectionIndex + " Name:"
+						+ tabFolder.getSelection().getText());
 			}
 		}
 	}
 
 	public void updateObjectMenu(LOTAppControl v) {
+		disposeObjectMenu();
+		objectmenu = v.createMenu(menu);
+	}
+
+	private void disposeObjectMenu() {
 		if (objectmenu != null) {
 			objectmenu.dispose();
+			objectmenu = null;
 		}
-		objectmenu = v.createMenu(menu);
 	}
 
 	private void setBottomInfo() {
