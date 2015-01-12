@@ -1,8 +1,14 @@
 package org.libraryofthings.swt;
 
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.MenuAdapter;
+import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -19,6 +25,7 @@ import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
+import org.libraryofthings.model.impl.LOTFactoryImpl;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.libraryofthings.swt.view.FactoryView;
@@ -26,9 +33,15 @@ import org.libraryofthings.swt.view.PartView;
 import org.libraryofthings.swt.view.ScriptView;
 import org.libraryofthings.swt.view.SearchView;
 
+import waazdoh.client.model.User;
+import waazdoh.client.model.UserID;
+import waazdoh.client.model.WData;
 import waazdoh.client.model.WaazdohInfo;
+import waazdoh.client.storage.BeanStorage;
+import waazdoh.util.MStringID;
 
 public final class AppWindow {
+	private static final String MAX_LOCALMENU_OBJECTS = "lot.gui.local.menuobjects.max";
 	protected Shell shell;
 	//
 	private LOTApp app;
@@ -39,9 +52,19 @@ public final class AppWindow {
 	private Menu menu;
 
 	private LLog log = LLog.getLogger(this);
+	private Menu menulocal;
+
+	private Map<String, OpenObjectHandler> openobjecthandlers = new HashMap<String, AppWindow.OpenObjectHandler>();
 
 	public AppWindow(LOTApp app) {
 		this.app = app;
+
+		openobjecthandlers.put(LOTFactoryImpl.BEANNAME,
+				(data) -> {
+					LOTFactory f = app.getLClient().getObjectFactory()
+							.getFactory(data.getIDValue("id"));
+					viewFactory(f);
+				});
 	}
 
 	public void newPart() {
@@ -158,7 +181,13 @@ public final class AppWindow {
 		menu = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(menu);
 
-		MenuItem mntmNew = new MenuItem(menu, SWT.CASCADE);
+		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
+		mntmFile.setText("File");
+
+		Menu menufile = new Menu(mntmFile);
+		mntmFile.setMenu(menufile);
+
+		MenuItem mntmNew = new MenuItem(menufile, SWT.CASCADE);
 		mntmNew.setText("New");
 
 		Menu menu_new = new Menu(mntmNew);
@@ -181,6 +210,21 @@ public final class AppWindow {
 			}
 		});
 		mntmNewPart.setText("Part");
+
+		MenuItem menulocalitem = new MenuItem(menufile, SWT.CASCADE);
+		menulocalitem.setText("Local");
+
+		menulocal = new Menu(menulocalitem);
+		menulocal.addMenuListener(new MenuAdapter() {
+			@Override
+			public void menuShown(MenuEvent arg0) {
+				localMenuShown();
+			}
+		});
+		menulocalitem.setMenu(menulocal);
+
+		MenuItem menulocaldate = new MenuItem(menulocal, SWT.NONE);
+		menulocaldate.setText("Date");
 
 		MenuItem mntmSearch = new MenuItem(menu, SWT.CASCADE);
 		mntmSearch.setText("Search");
@@ -226,6 +270,80 @@ public final class AppWindow {
 		lblBottonInfo.setAlignment(SWT.RIGHT);
 
 		setBottomInfo();
+	}
+
+	protected void localMenuShown() {
+		log.info("Local menu shown");
+		BeanStorage storage = app.getBeanStorage();
+		String search = "" + Calendar.getInstance().get(Calendar.YEAR);
+		Iterable<MStringID> ids = storage.getLocalSetIDs(search);
+
+		MenuItem[] items = menulocal.getItems();
+		for (MenuItem menuItem : items) {
+			menuItem.dispose();
+		}
+
+		int count = 0;
+		for (MStringID id : ids) {
+			WData bean = storage.getBean(id);
+			// modified -value should be in every bean.
+			if (bean != null) {
+				if (openobjecthandlers.get(bean.getName()) != null
+						&& bean.getValue("modified") != null) {
+					addObjectMenu(id, bean);
+
+					if (count++ > app.getLClient().getPreferences()
+							.getInteger(MAX_LOCALMENU_OBJECTS, 40)) {
+						MenuItem tbci = new MenuItem(menulocal, SWT.NONE);
+						tbci.setText("...");
+						break;
+					}
+				} else {
+					log.info("Not showing " + bean.getName() + " "
+							+ bean.getValue("name") + " in menu");
+				}
+			}
+		}
+	}
+
+	private void addObjectMenu(MStringID id, WData bean) {
+		MenuItem i = new MenuItem(menulocal, SWT.NONE);
+		i.setText(getLocalBeanInfo(bean));
+		i.setData(id);
+		i.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				openLocal(id);
+			}
+		});
+	}
+
+	protected void openLocal(MStringID id) {
+		WData b = app.getBeanStorage().getBean(id);
+		log.info("opening " + b);
+		
+		OpenObjectHandler h = openobjecthandlers.get(b.getName());
+		if (h != null) {
+			h.open(b);
+		} else {
+			log.info("No handler for " + b.getName());
+		}
+	}
+
+	private String getLocalBeanInfo(WData bean) {
+		StringBuilder sb = new StringBuilder();
+		String userid = bean.getValue("creator");
+		if (userid != null) {
+			User user = app.getLClient().getUser(new UserID(userid));
+			long modified = bean.getLongValue("modified");
+			String name = bean.getValue("name");
+
+			sb.append("" + name + " by " + user.getName() + " at " + modified);
+		} else {
+			sb.append("User not found");
+		}
+
+		return sb.toString();
 	}
 
 	protected void tabSelected() {
@@ -275,5 +393,11 @@ public final class AppWindow {
 				setBottomInfo();
 			}
 		});
+	}
+
+	private interface OpenObjectHandler {
+
+		void open(WData b);
+
 	}
 }
