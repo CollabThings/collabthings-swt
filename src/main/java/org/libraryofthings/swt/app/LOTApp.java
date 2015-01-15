@@ -33,8 +33,7 @@ public class LOTApp {
 		serviceurl = preferences.get(MPreferences.SERVICE_URL, "");
 		beanstorage = new FileBeanStorage(preferences);
 		binarysource = new P2PBinarySource(preferences, beanstorage, true);
-		service = new RestService(serviceurl, new FileBeanStorage(
-				preferences));
+		service = new RestService(serviceurl, new FileBeanStorage(preferences));
 	}
 
 	public void addClientListener(WClientListener listener) {
@@ -50,6 +49,7 @@ public class LOTApp {
 	}
 
 	public void close() {
+		log.info("Closing app");
 		getLClient().stop();
 		binarysource.close();
 		closed = true;

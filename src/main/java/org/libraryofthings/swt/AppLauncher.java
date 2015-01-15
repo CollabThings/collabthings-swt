@@ -21,7 +21,7 @@ public final class AppLauncher implements WSWTApp {
 	}
 
 	private void launch() throws MalformedURLException {
-		LLog.getLogger(this).info("Launching " + this);
+		log.info("Launching " + this);
 		WSWTAppLauncher l = new WSWTAppLauncher();
 		app = new LOTApp();
 		l.launch(this);
