@@ -1,4 +1,4 @@
-package org.libraryofthings.swt;
+package org.libraryofthings.swt.controls;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -12,8 +12,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.libraryofthings.LLog;
-import org.libraryofthings.model.LOTFactory;
-import org.libraryofthings.model.impl.LOTFactoryImpl;
+import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.client.model.User;
@@ -41,13 +40,10 @@ public class LocalObjectsMenu {
 				localMenuShown();
 			}
 		});
+	}
 
-		openobjecthandlers.put(LOTFactoryImpl.BEANNAME, (data) -> {
-			LOTFactory f = appWindow.getApp().getLClient().getObjectFactory()
-					.getFactory(data.getIDValue("id"));
-			appWindow.viewFactory(f);
-		});
-
+	public void addObjectHandler(String name, OpenObjectHandler h) {
+		openobjecthandlers.put(name, h);
 	}
 
 	protected void localMenuShown() {
@@ -131,7 +127,7 @@ public class LocalObjectsMenu {
 		}
 	}
 
-	private interface OpenObjectHandler {
+	public interface OpenObjectHandler {
 		void open(WData b);
 	}
 }

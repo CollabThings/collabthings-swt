@@ -1,8 +1,5 @@
 package org.libraryofthings.swt;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -24,17 +21,14 @@ import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.impl.LOTFactoryImpl;
 import org.libraryofthings.swt.app.LOTApp;
+import org.libraryofthings.swt.controls.LocalObjectsMenu;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.libraryofthings.swt.view.FactoryView;
 import org.libraryofthings.swt.view.PartView;
 import org.libraryofthings.swt.view.ScriptView;
 import org.libraryofthings.swt.view.SearchView;
 
-import waazdoh.client.model.User;
-import waazdoh.client.model.UserID;
-import waazdoh.client.model.WData;
 import waazdoh.client.model.WaazdohInfo;
-import waazdoh.util.MStringID;
 
 public final class AppWindow {
 	protected Shell shell;
@@ -201,7 +195,8 @@ public final class AppWindow {
 		menulocalitem.setText("Local");
 
 		menulocal = new Menu(menulocalitem);
-		new LocalObjectsMenu(this, menulocal);
+		initLocalMenu();
+
 		menulocalitem.setMenu(menulocal);
 
 		MenuItem menulocaldate = new MenuItem(menulocal, SWT.NONE);
@@ -251,6 +246,16 @@ public final class AppWindow {
 		lblBottonInfo.setAlignment(SWT.RIGHT);
 
 		setBottomInfo();
+	}
+
+	private void initLocalMenu() {
+		LocalObjectsMenu localmenu = new LocalObjectsMenu(this, menulocal);
+		localmenu.addObjectHandler(LOTFactoryImpl.BEANNAME,
+				(data) -> {
+					LOTFactory f = getApp().getLClient().getObjectFactory()
+							.getFactory(data.getIDValue("id"));
+					viewFactory(f);
+				});
 	}
 
 	protected void tabSelected() {

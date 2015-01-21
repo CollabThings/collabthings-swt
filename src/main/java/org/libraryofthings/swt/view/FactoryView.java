@@ -30,9 +30,11 @@ import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.impl.LOTEnvironmentImpl;
+import org.libraryofthings.model.impl.LOTFactoryImpl;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
+import org.libraryofthings.swt.controls.LocalObjectsMenu;
 import org.libraryofthings.swt.controls.ObjectViewer;
 import org.libraryofthings.swt.controls.ObjectViewerListener;
 
@@ -69,7 +71,13 @@ public class FactoryView extends Composite implements LOTAppControl {
 
 	private void addChild() {
 		this.factory.addFactory();
-		updateDataEditors(composite);
+		updateDataEditors();
+	}
+
+	private void addChild(LOTFactory f) {
+		this.factory
+				.addFactory("child" + this.factory.getFactories().size(), f);
+		updateDataEditors();
 	}
 
 	private void viewChild(LOTFactory f) {
@@ -217,7 +225,7 @@ public class FactoryView extends Composite implements LOTAppControl {
 			if (nhash != currentfactoryhash) {
 				currentfactoryhash = nhash;
 				getDisplay().asyncExec(() -> {
-					updateDataEditors(composite);
+					updateDataEditors();
 					updateFactory();
 				});
 			} else {
@@ -230,6 +238,10 @@ public class FactoryView extends Composite implements LOTAppControl {
 				}
 			}
 		}
+	}
+
+	private void updateDataEditors() {
+		updateDataEditors(composite);
 	}
 
 	private void updateDataEditors(Composite c) {
@@ -376,11 +388,13 @@ public class FactoryView extends Composite implements LOTAppControl {
 		MenuItem mifaddnewchild = new MenuItem(mAddChild, SWT.NONE);
 		mifaddnewchild.setText("New");
 
-		MenuItem mAddChildLocal = new MenuItem(mAddChild, SWT.CASCADE);
-		mAddChildLocal.setText("Local");
+		MenuItem miAddLocalChild = new MenuItem(mAddChild, SWT.CASCADE);
+		miAddLocalChild.setText("Local");
 
-		Menu menu_1 = new Menu(mAddChildLocal);
-		mAddChildLocal.setMenu(menu_1);
+		Menu mAddLocalChild = new Menu(miAddLocalChild);
+		miAddLocalChild.setMenu(mAddLocalChild);
+		initLocalMenu(mAddLocalChild);
+
 		mifaddnewchild.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -395,6 +409,15 @@ public class FactoryView extends Composite implements LOTAppControl {
 		});
 
 		return mifactory;
+	}
+
+	private void initLocalMenu(Menu mAddLocalChild) {
+		LocalObjectsMenu m = new LocalObjectsMenu(window, mAddLocalChild);
+		m.addObjectHandler(LOTFactoryImpl.BEANNAME, (data) -> {
+			LOTFactory f = window.getApp().getLClient().getObjectFactory()
+					.getFactory(data.getIDValue("id"));
+			addChild(f);
+		});
 	}
 
 	protected void importSelected() {
