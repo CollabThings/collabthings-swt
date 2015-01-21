@@ -117,6 +117,10 @@ public class FactoryView extends Composite implements LOTAppControl {
 		view = new RunEnvironment4xView(c_view, SWT.NONE);
 		composite_main.setWeights(new int[] { 1, 1 });
 
+		Menu tempmenu = new Menu(this);
+		setMenu(tempmenu);
+		createMenu(tempmenu);
+
 		updateFactory();
 		//
 		new Thread(() -> checkFactoryUpdate()).start();
@@ -360,17 +364,29 @@ public class FactoryView extends Composite implements LOTAppControl {
 			}
 		});
 
-		MenuItem mifaddchild = new MenuItem(mfactory, SWT.NONE);
-		mifaddchild.setText("Add child");
-		mifaddchild.addSelectionListener(new SelectionAdapter() {
+		MenuItem mifpublish = new MenuItem(mfactory, SWT.NONE);
+		mifpublish.setText("Publish");
+
+		MenuItem mntmAddChild = new MenuItem(mfactory, SWT.CASCADE);
+		mntmAddChild.setText("Add  child");
+
+		Menu mAddChild = new Menu(mntmAddChild);
+		mntmAddChild.setMenu(mAddChild);
+
+		MenuItem mifaddnewchild = new MenuItem(mAddChild, SWT.NONE);
+		mifaddnewchild.setText("New");
+
+		MenuItem mAddChildLocal = new MenuItem(mAddChild, SWT.CASCADE);
+		mAddChildLocal.setText("Local");
+
+		Menu menu_1 = new Menu(mAddChildLocal);
+		mAddChildLocal.setMenu(menu_1);
+		mifaddnewchild.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				addChild();
 			}
 		});
-
-		MenuItem mifpublish = new MenuItem(mfactory, SWT.NONE);
-		mifpublish.setText("Publish");
 		mifpublish.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
