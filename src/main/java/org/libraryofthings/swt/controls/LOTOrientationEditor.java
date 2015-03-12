@@ -27,17 +27,17 @@ public class LOTOrientationEditor extends Composite {
 		gridLayout.horizontalSpacing = 4;
 		setLayout(gridLayout);
 
-		el = new LOTVectorEditor(this, o.location, v -> listener.changed(o));
+		el = new LOTVectorEditor(this, o.getLocation(), v -> listener.changed(o));
 		el.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		en = new LOTVectorEditor(this, o.normal, v -> {
+		en = new LOTVectorEditor(this, o.getNormal(), v -> {
 			if (en != null) {
-				o.normal.normalize();
+				o.getNormal().normalize();
 				en.updateValues();
 				listener.changed(o);
 			}
 		});
 		en.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		ea = createField((Double) o.angle);
+		ea = createField((Double) o.getAngle());
 	}
 
 	private LOTDoubleEditor createField(Double value) {
@@ -48,7 +48,7 @@ public class LOTOrientationEditor extends Composite {
 	}
 
 	private void angleChanged(double na) {
-		o.angle = na;
+		o.setAngle(na);
 		listener.changed(o);
 	}
 

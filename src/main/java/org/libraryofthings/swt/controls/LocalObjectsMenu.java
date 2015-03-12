@@ -97,7 +97,7 @@ public class LocalObjectsMenu {
 		StringBuilder sb = new StringBuilder();
 		String userid = bean.getValue("creator");
 		if (userid != null) {
-			User user = appwindow.getApp().getLClient()
+			User user = appwindow.getApp().getLClient().getClient()
 					.getUser(new UserID(userid));
 			if (user != null) {
 				long modified = bean.getLongValue("modified");

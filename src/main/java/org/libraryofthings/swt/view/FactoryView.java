@@ -188,8 +188,8 @@ public class FactoryView extends Composite implements LOTAppControl {
 		cchildrenlist.setLayout(new GridLayout(1, false));
 
 		Set<String> children = factory.getFactories();
-		for (String fname : children) {
-			LOTFactory child = factory.getFactory(fname);
+		for (String childname : children) {
+			LOTFactory child = factory.getFactory(childname);
 
 			Composite cc = new Composite(cchildrenlist, SWT.NONE);
 			cc.setBackground(new Color(getDisplay(), 100, 200, 200));
