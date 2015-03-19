@@ -22,7 +22,7 @@ import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
 
 public class SearchView extends Composite implements LOTAppControl {
 	private AppWindow window;

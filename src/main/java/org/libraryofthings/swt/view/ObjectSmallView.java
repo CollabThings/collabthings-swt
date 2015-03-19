@@ -10,8 +10,8 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.app.LOTApp;
 
-import waazdoh.client.model.WData;
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
+import waazdoh.common.WData;
 
 public class ObjectSmallView extends Composite {
 	private Text text;

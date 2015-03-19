@@ -6,9 +6,9 @@ import org.libraryofthings.LLog;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.client.WClient;
+import waazdoh.common.WPreferences;
 import waazdoh.swt.WSWTApp;
 import waazdoh.swt.WSWTAppLauncher;
-import waazdoh.util.MPreferences;
 
 public final class AppLauncher implements WSWTApp {
 	private LOTApp app;
@@ -38,7 +38,7 @@ public final class AppLauncher implements WSWTApp {
 	}
 
 	@Override
-	public MPreferences getPreferences() {
+	public WPreferences getPreferences() {
 		return app.getLClient().getPreferences();
 	}
 

@@ -12,9 +12,9 @@ import waazdoh.client.WClientListener;
 import waazdoh.client.service.rest.RestService;
 import waazdoh.client.storage.BeanStorage;
 import waazdoh.client.storage.local.FileBeanStorage;
+import waazdoh.common.AppPreferences;
+import waazdoh.common.WPreferences;
 import waazdoh.cp2p.P2PBinarySource;
-import waazdoh.util.AppPreferences;
-import waazdoh.util.MPreferences;
 
 public class LOTApp {
 	private static final String PREFERENCES_PREFIX = "lot";
@@ -30,7 +30,7 @@ public class LOTApp {
 
 	public LOTApp() throws MalformedURLException {
 		preferences = new AppPreferences(LOTApp.PREFERENCES_PREFIX);
-		serviceurl = preferences.get(MPreferences.SERVICE_URL, "");
+		serviceurl = preferences.get(WPreferences.SERVICE_URL, "");
 		beanstorage = new FileBeanStorage(preferences);
 		binarysource = new P2PBinarySource(preferences, beanstorage, true);
 		service = new RestService(serviceurl, new FileBeanStorage(preferences));

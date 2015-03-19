@@ -16,10 +16,10 @@ import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.client.model.User;
-import waazdoh.client.model.UserID;
-import waazdoh.client.model.WData;
 import waazdoh.client.storage.BeanStorage;
-import waazdoh.util.MStringID;
+import waazdoh.common.MStringID;
+import waazdoh.common.UserID;
+import waazdoh.common.WData;
 
 public class LocalObjectsMenu {
 	private static final String MAX_LOCALMENU_OBJECTS = "lot.gui.local.menuobjects.max";

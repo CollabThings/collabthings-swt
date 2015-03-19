@@ -28,7 +28,7 @@ import org.libraryofthings.swt.view.PartView;
 import org.libraryofthings.swt.view.ScriptView;
 import org.libraryofthings.swt.view.SearchView;
 
-import waazdoh.client.model.WaazdohInfo;
+import waazdoh.common.WaazdohInfo;
 
 public final class AppWindow {
 	protected Shell shell;
