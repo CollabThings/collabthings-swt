@@ -9,11 +9,11 @@ import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTPart;
 
 import waazdoh.client.WClientListener;
-import waazdoh.client.service.rest.RestService;
 import waazdoh.client.storage.BeanStorage;
 import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.common.AppPreferences;
 import waazdoh.common.WPreferences;
+import waazdoh.common.client.RestServiceClient;
 import waazdoh.cp2p.P2PBinarySource;
 
 public class LOTApp {
@@ -23,7 +23,6 @@ public class LOTApp {
 	private LLog log = LLog.getLogger(this);
 	private AppPreferences preferences;
 	private String serviceurl;
-	private RestService service;
 	private P2PBinarySource binarysource;
 	private boolean closed;
 	private FileBeanStorage beanstorage;
@@ -33,7 +32,6 @@ public class LOTApp {
 		serviceurl = preferences.get(WPreferences.SERVICE_URL, "");
 		beanstorage = new FileBeanStorage(preferences);
 		binarysource = new P2PBinarySource(preferences, beanstorage, true);
-		service = new RestService(serviceurl, new FileBeanStorage(preferences));
 	}
 
 	public void addClientListener(WClientListener listener) {
@@ -43,7 +41,7 @@ public class LOTApp {
 	public LOTClient getLClient() {
 		if (client == null) {
 			client = new LOTClientImpl(preferences, binarysource, beanstorage,
-					service);
+					new RestServiceClient(serviceurl));
 		}
 		return client;
 	}
@@ -64,7 +62,7 @@ public class LOTApp {
 	}
 
 	public boolean isServiceAvailable() {
-		return getLClient().getClient().getService().isConnected();
+		return getLClient().getClient().isRunning();
 	}
 
 	public LOTFactory newFactory() {

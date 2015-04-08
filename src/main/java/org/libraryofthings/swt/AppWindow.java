@@ -27,6 +27,7 @@ import org.libraryofthings.swt.view.FactoryView;
 import org.libraryofthings.swt.view.PartView;
 import org.libraryofthings.swt.view.ScriptView;
 import org.libraryofthings.swt.view.SearchView;
+import org.libraryofthings.swt.view.UserView;
 
 import waazdoh.common.WaazdohInfo;
 
@@ -76,6 +77,11 @@ public final class AppWindow {
 	public void viewScript(LOTScript script) {
 		ScriptView v = new ScriptView(tabFolder, app, this, script);
 		addTab("" + script, v, script);
+	}
+
+	public void viewUser(String name, String userid) {
+		UserView v = new UserView(tabFolder, app, this, userid);
+		addTab("" + name, v, userid);
 	}
 
 	private void addTab(String name, Composite c, Object data) {
@@ -224,8 +230,7 @@ public final class AppWindow {
 		gl_composite.marginWidth = 0;
 		gl_composite.verticalSpacing = 0;
 		composite.setLayout(gl_composite);
-		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1);
+		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_composite.widthHint = 216;
 		composite.setLayoutData(gd_composite);
 		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_MAGENTA));
@@ -237,12 +242,10 @@ public final class AppWindow {
 				tabSelected();
 			}
 		});
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1));
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		lblBottonInfo = new Label(composite, SWT.NONE);
-		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
-				false, 1, 1));
+		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		lblBottonInfo.setAlignment(SWT.RIGHT);
 
 		setBottomInfo();
@@ -250,7 +253,8 @@ public final class AppWindow {
 
 	private void initLocalMenu() {
 		LocalObjectsMenu localmenu = new LocalObjectsMenu(this, menulocal);
-		localmenu.addObjectHandler(LOTFactoryImpl.BEANNAME,
+		localmenu.addObjectHandler(
+				LOTFactoryImpl.BEANNAME,
 				(data) -> {
 					LOTFactory f = getApp().getLClient().getObjectFactory()
 							.getFactory(data.getIDValue("id"));
@@ -273,10 +277,8 @@ public final class AppWindow {
 				v.selected(this);
 				updateObjectMenu(v);
 			} else {
-				showError("Selected " + control
-						+ " that is not a LOTAppControl. Index "
-						+ selectionIndex + " Name:"
-						+ tabFolder.getSelection().getText());
+				showError("Selected " + control + " that is not a LOTAppControl. Index "
+						+ selectionIndex + " Name:" + tabFolder.getSelection().getText());
 			}
 		}
 	}
@@ -299,8 +301,7 @@ public final class AppWindow {
 			@Override
 			public void run() {
 				lblBottonInfo.setText("LOT:" + LOTClient.VERSION + " Waazdoh:"
-						+ WaazdohInfo.version + " environment: "
-						+ app.getLClient());
+						+ WaazdohInfo.version + " environment: " + app.getLClient());
 				//
 				setBottomInfo();
 			}
