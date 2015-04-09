@@ -8,9 +8,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -24,6 +24,7 @@ import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.client.WClient;
 import waazdoh.common.MStringID;
+import org.eclipse.swt.widgets.Label;
 
 public class SearchView extends Composite implements LOTAppControl {
 	private AppWindow window;
@@ -37,48 +38,41 @@ public class SearchView extends Composite implements LOTAppControl {
 	 * @wbp.parser.constructor
 	 */
 	public SearchView(Composite c, LOTApp app, AppWindow appWindow) {
-		this(c, app, appWindow, true);
+		this(c, app, appWindow, false);
 	}
 
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, boolean viewsearchbox) {
+	public SearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox) {
 		super(c, SWT.NONE);
 		this.app = app;
 		this.window = appWindow;
-		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		setLayout(gridLayout);
+		setLayout(new GridLayout(1, false));
 
-		if (viewsearchbox) {
-			Composite composite = new Composite(this, SWT.NONE);
-			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-			composite.setLayout(new GridLayout(2, false));
+		// if (!hidesearchbox) {
+		Composite composite = new Composite(this, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		composite.setLayout(new GridLayout(2, false));
 
-			text = new Text(composite, SWT.BORDER);
-			text.addTraverseListener(new TraverseListener() {
+		text = new Text(composite, SWT.BORDER);
+		text.addTraverseListener(new TraverseListener() {
 
-				@Override
-				public void keyTraversed(TraverseEvent e) {
-					if (e.detail == SWT.TRAVERSE_RETURN) {
-						searchSelected();
-					}
-				}
-			});
-			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-
-			Button bsearch = new Button(composite, SWT.NONE);
-			bsearch.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
+			@Override
+			public void keyTraversed(TraverseEvent e) {
+				if (e.detail == SWT.TRAVERSE_RETURN) {
 					searchSelected();
 				}
-			});
-			bsearch.setBounds(0, 0, 75, 25);
-			bsearch.setText("Search");
+			}
+		});
+		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-		}
+		Button bsearch = new Button(composite, SWT.NONE);
+		bsearch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				searchSelected();
+			}
+		});
+		bsearch.setBounds(0, 0, 75, 25);
+		bsearch.setText("Search");
 
 		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -86,11 +80,9 @@ public class SearchView extends Composite implements LOTAppControl {
 		scrolledComposite.setExpandVertical(true);
 
 		clist = new Composite(scrolledComposite, SWT.NONE);
+
 		scrolledComposite.setContent(clist);
 		scrolledComposite.setMinSize(clist.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-		FillLayout fl_clist = new FillLayout(SWT.VERTICAL);
-		clist.setLayout(fl_clist);
 		//
 		addRow(new MStringID().toString());
 		addRow(new MStringID().toString());
@@ -137,7 +129,9 @@ public class SearchView extends Composite implements LOTAppControl {
 	}
 
 	private void addRow(String id) {
-		new ObjectSmallView(clist, this.app, this.window, id);
+		RowLayout rl_clist = new RowLayout(SWT.VERTICAL);
+		clist.setLayout(rl_clist);
+		ObjectSmallView view = new ObjectSmallView(clist, this.app, this.window, id);
 	}
 
 	@Override

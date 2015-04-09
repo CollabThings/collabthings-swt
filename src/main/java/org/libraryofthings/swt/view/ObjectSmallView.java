@@ -7,8 +7,10 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -20,95 +22,101 @@ import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.UserVO;
 
 public class ObjectSmallView extends Composite {
-	private Composite items;
-	private String id;
 	private LOTApp app;
 
 	private Map<String, DataHandler> handlers = new HashMap<>();
 	private Label ltype;
-	private Label lid;
+
+	private Composite items;
+
+	private String id;
 
 	public ObjectSmallView(Composite cc, LOTApp app, AppWindow window, String id) {
 		super(cc, SWT.NONE);
-		this.id = id;
 		this.app = app;
+		this.id = id;
 
-		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 1;
-		gridLayout.horizontalSpacing = 1;
-		setLayout(gridLayout);
+		this.setLayout(new GridLayout());
 
-		Composite composite = new Composite(this, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite.setLayout(new GridLayout(2, false));
+		Composite ctitle = new Composite(this, SWT.NONE);
+		ctitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		ctitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+		ctitle.setLayout(new GridLayout(2, false));
 
-		Label lname = new Label(composite, SWT.NONE);
+		Label lname = new Label(ctitle, SWT.NONE);
+		lname.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		lname.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
 		lname.setText("Name");
 		lname.setAlignment(SWT.CENTER);
 		lname.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.BOLD));
-		lname.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 
-		ltype = new Label(composite, SWT.NONE);
+		ltype = new Label(ctitle, SWT.NONE);
+		ltype.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
 		ltype.setText("Type");
 		addDataHandler("name", d -> {
 			lname.setText(d.getText());
 		});
 
-		Composite composite_3 = new Composite(this, SWT.NONE);
-		composite_3.setLayout(new GridLayout(2, false));
-		composite_3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		Composite cvalues = new Composite(this, SWT.NONE);
+		cvalues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		cvalues.setLayout(new GridLayout(1, false));
 
-		Label lblId = new Label(composite_3, SWT.NONE);
-		lblId.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		lblId.setText("ID");
+		Composite ctools = new Composite(cvalues, SWT.NONE);
+		ctools.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		ctools.setLayout(new GridLayout(2, false));
 
-		lid = new Label(composite_3, SWT.NONE);
-		lid.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true, 1, 1));
+		Button bview = new Button(ctools, SWT.NONE);
+		bview.setText("View");
 
-		Composite composite_1 = new Composite(this, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		composite_1.setLayout(new GridLayout(4, false));
+		Button bcopyid = new Button(ctools, SWT.NONE);
+		bcopyid.addSelectionListener(new CopyToClipbardSelectionAdapter(this, id));
+		bcopyid.setText("ID");
 
-		Label lblModified = new Label(composite_1, SWT.NONE);
+		Composite cdates = new Composite(cvalues, SWT.NONE);
+		cdates.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		cdates.setLayout(new GridLayout(4, false));
+
+		Label lblModified = new Label(cdates, SWT.NONE);
 		lblModified.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblModified.setText("Modified");
 
-		Label lmodified = new Label(composite_1, SWT.NONE);
+		Label lmodified = new Label(cdates, SWT.NONE);
 		lmodified.setText("date");
-		GridData gd_lmodified = new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1);
+		GridData gd_lmodified = new GridData(SWT.LEFT, SWT.FILL, true, false, 1, 1);
 		gd_lmodified.minimumWidth = 60;
 		lmodified.setLayoutData(gd_lmodified);
 
-		Label lblCreated = new Label(composite_1, SWT.NONE);
+		Label lblCreated = new Label(cdates, SWT.NONE);
 		lblCreated.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblCreated.setText("Created");
+
+		Label lcreated = new Label(cdates, SWT.NONE);
+		lcreated.setText("date");
+		GridData gd_lcreated = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gd_lcreated.minimumWidth = 60;
+		lcreated.setLayoutData(gd_lcreated);
+
 		addDataHandler("modified", d -> {
 			lmodified.setText("" + new Date(Long.parseLong(d.getText())));
 		});
-
-		Label lcreated = new Label(composite_1, SWT.NONE);
-		lcreated.setText("date");
-		GridData gd_lcreated = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lcreated.minimumWidth = 60;
-		lcreated.setLayoutData(gd_lcreated);
 		addDataHandler("created", d -> {
 			lcreated.setText("" + new Date(Long.parseLong(d.getText())));
 		});
 
-		Composite composite_2 = new Composite(this, SWT.NONE);
-		composite_2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		composite_2.setLayout(new GridLayout(3, false));
+		Composite ccreator = new Composite(cvalues, SWT.NONE);
+		ccreator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		ccreator.setLayout(new GridLayout(3, false));
 
-		Label lblCreator = new Label(composite_2, SWT.NONE);
+		Label lblCreator = new Label(ccreator, SWT.NONE);
 		lblCreator.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblCreator.setText("Created by");
 
-		Label lcreator = new Label(composite_2, SWT.NONE);
+		Label lcreator = new Label(ccreator, SWT.NONE);
 		lcreator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		lcreator.setBounds(0, 0, 55, 15);
 		lcreator.setText("Creator");
 
-		Label lversion = new Label(composite_2, SWT.NONE);
+		Label lversion = new Label(ccreator, SWT.NONE);
 		addDataHandler("version", lversion);
 		addDataHandler("license", e -> {
 		});
@@ -132,15 +140,15 @@ public class ObjectSmallView extends Composite {
 			}).start();
 		});
 
-		items = new Composite(this, getStyle());
+		items = new Composite(cvalues, getStyle());
+		items.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 2));
 
-		GridLayout gl_items = new GridLayout(1, false);
-		gl_items.marginWidth = 1;
-		gl_items.verticalSpacing = 1;
-		gl_items.marginHeight = 1;
-		gl_items.horizontalSpacing = 1;
+		FillLayout gl_items = new FillLayout(SWT.VERTICAL);
 		items.setLayout(gl_items);
-		items.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		addDataHandler("scripts", d -> {
+			new ScriptList(items, app, window, d);
+		});
 
 		setData();
 	}
@@ -160,9 +168,9 @@ public class ObjectSmallView extends Composite {
 		}
 
 		WData o;
+
 		if (vo != null && (o = vo.getWData()) != null) {
 			ltype.setText(o.getName());
-			lid.setText(o.getAttribute("id"));
 
 			for (WData child : o.getChildren()) {
 				String name = child.getName();
@@ -171,7 +179,7 @@ public class ObjectSmallView extends Composite {
 					dh.handle(child);
 				} else {
 					Label l = new Label(items, getStyle());
-					l.setText("" + child);
+					l.setText("" + name + " " + child.toText());
 				}
 			}
 		} else {
