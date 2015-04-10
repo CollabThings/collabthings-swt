@@ -7,11 +7,11 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.libraryofthings.swt.AppWindow;
@@ -20,6 +20,8 @@ import org.libraryofthings.swt.app.LOTApp;
 import waazdoh.common.WData;
 import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.UserVO;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class ObjectSmallView extends Composite {
 	private LOTApp app;
@@ -58,6 +60,7 @@ public class ObjectSmallView extends Composite {
 		});
 
 		Composite cvalues = new Composite(this, SWT.NONE);
+		cvalues.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
 		cvalues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		cvalues.setLayout(new GridLayout(1, false));
 
@@ -66,6 +69,12 @@ public class ObjectSmallView extends Composite {
 		ctools.setLayout(new GridLayout(2, false));
 
 		Button bview = new Button(ctools, SWT.NONE);
+		bview.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				window.view(ltype.getText(), id);
+			}
+		});
 		bview.setText("View");
 
 		Button bcopyid = new Button(ctools, SWT.NONE);
@@ -141,14 +150,22 @@ public class ObjectSmallView extends Composite {
 		});
 
 		items = new Composite(cvalues, getStyle());
-		items.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 2));
-
-		FillLayout gl_items = new FillLayout(SWT.VERTICAL);
-		items.setLayout(gl_items);
+		items.setLayout(new GridLayout(1, false));
+		items.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 2));
+		items.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
 
 		addDataHandler("scripts", d -> {
-			new ScriptList(items, app, window, d);
+			ScriptList sl = new ScriptList(items, app, window, d);
+			setListLayoutData(sl);
 		});
+
+		addDataHandler("environmentid", d -> {
+			//
+			});
+
+		addDataHandler("value", d -> {
+			// Probably script base64 value
+			});
 
 		setData();
 	}
@@ -179,13 +196,19 @@ public class ObjectSmallView extends Composite {
 					dh.handle(child);
 				} else {
 					Label l = new Label(items, getStyle());
-					l.setText("" + name + " " + child.toText());
+					l.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
+					l.setText("NAME " + name + " " + child.toText());
+					setListLayoutData(l);
 				}
 			}
 		} else {
 			Label nulll = new Label(items, getStyle());
 			nulll.setText("Null id or app is not initialized");
 		}
+	}
+
+	private void setListLayoutData(Control l) {
+		l.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 	}
 
 	void addDataHandler(String name, DataHandler d) {

@@ -29,6 +29,7 @@ import org.libraryofthings.swt.view.ScriptView;
 import org.libraryofthings.swt.view.SearchView;
 import org.libraryofthings.swt.view.UserView;
 
+import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
 
 public final class AppWindow {
@@ -44,8 +45,11 @@ public final class AppWindow {
 	private LLog log = LLog.getLogger(this);
 	private Menu menulocal;
 
+	private final ViewTypes viewtypes;
+
 	public AppWindow(LOTApp app) {
 		this.app = app;
+		this.viewtypes = new ViewTypes(this, app);
 	}
 
 	public void newPart() {
@@ -61,6 +65,10 @@ public final class AppWindow {
 	public void newFactory() {
 		LOTFactory f = app.newFactory();
 		viewFactory(f);
+	}
+
+	public void view(String type, String id) {
+		viewtypes.view(type, new MStringID(id));
 	}
 
 	public void viewFactory(LOTFactory f) {
@@ -311,5 +319,4 @@ public final class AppWindow {
 	public LOTApp getApp() {
 		return this.app;
 	}
-
 }

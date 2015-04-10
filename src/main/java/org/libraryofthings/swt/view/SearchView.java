@@ -14,6 +14,8 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
@@ -23,8 +25,6 @@ import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.client.WClient;
-import waazdoh.common.MStringID;
-import org.eclipse.swt.widgets.Label;
 
 public class SearchView extends Composite implements LOTAppControl {
 	private AppWindow window;
@@ -47,34 +47,35 @@ public class SearchView extends Composite implements LOTAppControl {
 		this.window = appWindow;
 		setLayout(new GridLayout(1, false));
 
-		// if (!hidesearchbox) {
-		Composite composite = new Composite(this, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite.setLayout(new GridLayout(2, false));
+		if (!hidesearchbox) {
+			Composite composite = new Composite(this, SWT.NONE);
+			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			composite.setLayout(new GridLayout(2, false));
 
-		text = new Text(composite, SWT.BORDER);
-		text.addTraverseListener(new TraverseListener() {
+			text = new Text(composite, SWT.BORDER);
+			text.addTraverseListener(new TraverseListener() {
 
-			@Override
-			public void keyTraversed(TraverseEvent e) {
-				if (e.detail == SWT.TRAVERSE_RETURN) {
+				@Override
+				public void keyTraversed(TraverseEvent e) {
+					if (e.detail == SWT.TRAVERSE_RETURN) {
+						searchSelected();
+					}
+				}
+			});
+			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+
+			Button bsearch = new Button(composite, SWT.NONE);
+			bsearch.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
 					searchSelected();
 				}
-			}
-		});
-		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			});
 
-		Button bsearch = new Button(composite, SWT.NONE);
-		bsearch.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				searchSelected();
-			}
-		});
-		bsearch.setBounds(0, 0, 75, 25);
-		bsearch.setText("Search");
+			bsearch.setText("Search");
+		}
 
-		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
@@ -82,10 +83,14 @@ public class SearchView extends Composite implements LOTAppControl {
 		clist = new Composite(scrolledComposite, SWT.NONE);
 
 		scrolledComposite.setContent(clist);
-		scrolledComposite.setMinSize(clist.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		//
-		addRow(new MStringID().toString());
-		addRow(new MStringID().toString());
+
+		scrolledComposite.addListener(SWT.Resize, new Listener() {
+
+			@Override
+			public void handleEvent(Event arg0) {
+				updateLayout();
+			}
+		});
 	}
 
 	@Override
@@ -111,6 +116,7 @@ public class SearchView extends Composite implements LOTAppControl {
 		if (list != null) {
 			getDisplay().asyncExec(() -> {
 				addRows(list);
+				updateLayout();
 			});
 		}
 	}
@@ -129,8 +135,7 @@ public class SearchView extends Composite implements LOTAppControl {
 	}
 
 	private void addRow(String id) {
-		RowLayout rl_clist = new RowLayout(SWT.VERTICAL);
-		clist.setLayout(rl_clist);
+		clist.setLayout(new RowLayout(SWT.HORIZONTAL));
 		ObjectSmallView view = new ObjectSmallView(clist, this.app, this.window, id);
 	}
 
@@ -147,8 +152,10 @@ public class SearchView extends Composite implements LOTAppControl {
 
 	private void updateLayout() {
 		if (scrolledComposite != null) {
-			scrolledComposite.layout(true, true);
-			scrolledComposite.setMinSize(clist.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+			clist.pack();
+
+			int w = scrolledComposite.getClientArea().width;
+			scrolledComposite.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
 		}
 	}
 

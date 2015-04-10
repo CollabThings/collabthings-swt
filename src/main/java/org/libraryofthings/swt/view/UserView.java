@@ -48,7 +48,7 @@ public class UserView extends Composite implements LOTAppControl {
 			});
 		}).start();
 
-		SearchView searchView = new SearchView(this, app, window, false);
+		SearchView searchView = new SearchView(this, app, window, true);
 		searchView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		searchView.search("" + userid);
 	}
