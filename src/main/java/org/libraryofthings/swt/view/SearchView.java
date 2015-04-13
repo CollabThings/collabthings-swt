@@ -98,6 +98,16 @@ public class SearchView extends Composite implements LOTAppControl {
 
 	}
 
+	@Override
+	public Control getControl() {
+		return this;
+	}
+
+	@Override
+	public String getControlName() {
+		return "Search";
+	}
+
 	private void searchSelected() {
 		String s = this.text.getText();
 		search(s);

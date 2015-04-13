@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -17,6 +18,7 @@ import waazdoh.common.vo.UserVO;
 public class UserView extends Composite implements LOTAppControl {
 
 	private LOTApp app;
+	private UserVO u;
 
 	/**
 	 * Create the composite.
@@ -42,7 +44,7 @@ public class UserView extends Composite implements LOTAppControl {
 		lname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		new Thread(() -> {
-			UserVO u = app.getLClient().getService().getUsers().getUser(userid);
+			u = app.getLClient().getService().getUsers().getUser(userid);
 			getDisplay().syncExec(() -> {
 				lname.setText("" + u.getUsername());
 			});
@@ -54,8 +56,18 @@ public class UserView extends Composite implements LOTAppControl {
 	}
 
 	@Override
+	public Control getControl() {
+		return this;
+	}
+
+	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
+	}
+
+	@Override
+	public String getControlName() {
+		return "User: " + this.u.getUsername();
 	}
 
 	@Override

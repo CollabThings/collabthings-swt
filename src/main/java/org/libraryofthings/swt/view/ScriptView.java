@@ -7,6 +7,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
@@ -22,21 +23,19 @@ public class ScriptView extends Composite implements LOTAppControl {
 	private LOTScript script;
 	private Text bottomtext;
 
-	public ScriptView(Composite c, LOTApp app, AppWindow appWindow,
-			LOTScript script) {
+	public ScriptView(Composite c, LOTApp app, AppWindow appWindow, LOTScript script) {
 		super(c, SWT.NONE);
 		this.window = appWindow;
 		setLayout(new GridLayout(1, false));
 		this.script = script;
 
 		SashForm sashForm = new SashForm(this, SWT.VERTICAL);
-		GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1);
+		GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_sashForm.heightHint = 200;
 		sashForm.setLayoutData(gd_sashForm);
 
-		scripttext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		scripttext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL
+				| SWT.MULTI);
 		scripttext.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -46,20 +45,29 @@ public class ScriptView extends Composite implements LOTAppControl {
 
 		scripttext.setText("" + script.getScript());
 
-		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL
+				| SWT.MULTI);
 		sashForm.setWeights(new int[] { 3, 1 });
 	}
 
 	protected void key(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public Control getControl() {
+		return this;
+	}
+
+	@Override
+	public String getControlName() {
+		return "Script: " + script;
 	}
 
 	private void save() {
 		String sscripttext = scripttext.getText();
-		if (script.getScript() == null
-				|| !script.getScript().equals(sscripttext)) {
+		if (script.getScript() == null || !script.getScript().equals(sscripttext)) {
 			boolean b = script.setScript(sscripttext);
 			if (!b) {
 				String error = script.getError();

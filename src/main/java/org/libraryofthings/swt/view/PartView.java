@@ -13,9 +13,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.libraryofthings.LLog;
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.swt.AppWindow;
+import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.SWTResourceManager;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.controls.ObjectViewer;
@@ -23,7 +28,7 @@ import org.libraryofthings.swt.controls.ObjectViewerListener;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.xml.sax.SAXException;
 
-public class PartView extends Composite {
+public class PartView extends Composite implements LOTAppControl {
 	private static final String DEFAULT_X3D_IMPORTPATH = "lot.gui.default.import_path";
 	private LOTPart part;
 	private ObjectViewer partobjectviewer;
@@ -44,6 +49,26 @@ public class PartView extends Composite {
 		init();
 	}
 
+	@Override
+	public Control getControl() {
+		return this;
+	}
+
+	@Override
+	public MenuItem createMenu(Menu menu) {
+		return null;
+	}
+
+	@Override
+	public String getControlName() {
+		return "part " + part.getName();
+	}
+
+	@Override
+	public void selected(AppWindow appWindow) {
+
+	}
+
 	private void init() {
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 0;
@@ -53,8 +78,7 @@ public class PartView extends Composite {
 		setLayout(gridLayout);
 
 		Composite c_toolbar = new Composite(this, SWT.NONE);
-		c_toolbar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,
-				1, 1));
+		c_toolbar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		c_toolbar.setLayout(new RowLayout(SWT.HORIZONTAL));
 
 		Button btnImport = new Button(c_toolbar, SWT.FLAT);
@@ -64,8 +88,7 @@ public class PartView extends Composite {
 				importSelected();
 			}
 		});
-		btnImport
-				.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
+		btnImport.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 		btnImport.setText("+");
 
 		Button button = new Button(c_toolbar, SWT.FLAT);
@@ -82,13 +105,11 @@ public class PartView extends Composite {
 		btnPublish.setText("Publish");
 
 		SashForm composite_main = new SashForm(this, SWT.NONE);
-		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true, 1, 1));
+		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite c_partproperties = new Composite(composite_main, SWT.NONE);
 		c_partproperties.setLayout(new FillLayout(SWT.VERTICAL));
-		c_partproperties.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
-				true, 1, 1));
+		c_partproperties.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true, 1, 1));
 		c_partproperties.setBounds(0, 0, 64, 64);
 
 		createPartDataViewer(c_partproperties);
@@ -110,8 +131,7 @@ public class PartView extends Composite {
 	}
 
 	private void createModelDataViewer(Composite c_partproperties) {
-		this.modelobjectviewer = new ObjectViewer(c_partproperties,
-				part.getModel());
+		this.modelobjectviewer = new ObjectViewer(c_partproperties, part.getModel());
 		this.modelobjectviewer.addListener(new ObjectViewerListener() {
 			@Override
 			public void valueChanged(String name, Object o) {
@@ -141,15 +161,13 @@ public class PartView extends Composite {
 	protected void importSelected() {
 		FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
 		dialog.setFilterExtensions(new String[] { "*.x3d" });
-		String path = app.getLClient().getPreferences()
-				.get(DEFAULT_X3D_IMPORTPATH, "");
+		String path = app.getLClient().getPreferences().get(DEFAULT_X3D_IMPORTPATH, "");
 		dialog.setFilterPath(path);
 		String result = dialog.open();
 
 		try {
 			File file = new File(result);
-			app.getLClient().getPreferences()
-					.set(DEFAULT_X3D_IMPORTPATH, file.getParent());
+			app.getLClient().getPreferences().set(DEFAULT_X3D_IMPORTPATH, file.getParent());
 			importFile(file);
 		} catch (SAXException | IOException e) {
 			LOTMessageDialog d = new LOTMessageDialog(getShell());

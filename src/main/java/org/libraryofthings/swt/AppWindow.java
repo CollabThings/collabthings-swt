@@ -1,5 +1,8 @@
 package org.libraryofthings.swt;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -36,6 +39,9 @@ public final class AppWindow {
 	protected Shell shell;
 	//
 	private LOTApp app;
+
+	private List<LOTAppControl> controls = new LinkedList<>();
+
 	private CTabFolder tabFolder;
 	private Label lblBottonInfo;
 
@@ -92,13 +98,18 @@ public final class AppWindow {
 		addTab("" + name, v, userid);
 	}
 
-	private void addTab(String name, Composite c, Object data) {
+	private void addTab(String name, LOTAppControl c, Object data) {
 		CTabItem i = new CTabItem(tabFolder, SWT.CLOSE);
 		i.setText(name);
-		i.setControl(c);
+		i.setControl(c.getControl());
 		i.setData(data);
 		tabFolder.setSelection(i);
 		tabSelected();
+
+		controls.add(c);
+		i.addDisposeListener(e -> {
+			controls.remove(c);
+		});
 	}
 
 	/**
@@ -318,5 +329,9 @@ public final class AppWindow {
 
 	public LOTApp getApp() {
 		return this.app;
+	}
+
+	public List<LOTAppControl> getTablist() {
+		return new LinkedList<LOTAppControl>(controls);
 	}
 }

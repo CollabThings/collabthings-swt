@@ -5,13 +5,17 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.libraryofthings.swt.AppWindow;
+import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.common.WData;
@@ -33,6 +37,8 @@ public class ScriptList extends Composite {
 		l.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		l.setText("Scripts");
 
+		addRow(new WData("scripts"));
+
 		List<WData> cs = d.getChildren();
 		for (WData scriptdata : cs) {
 			addRow(scriptdata);
@@ -44,7 +50,7 @@ public class ScriptList extends Composite {
 		cscript.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		String name = scriptdata.getValue("name");
 		String id = scriptdata.getValue("id");
-		cscript.setLayout(new GridLayout(3, false));
+		cscript.setLayout(new GridLayout(4, false));
 		Label clname = new Label(cscript, SWT.NONE);
 		clname.setText("" + name);
 
@@ -60,5 +66,46 @@ public class ScriptList extends Composite {
 		Button btnId = new Button(cscript, SWT.NONE);
 		btnId.addSelectionListener(new CopyToClipbardSelectionAdapter(cscript, id));
 		btnId.setText("ID");
+
+		Composite composite = new Composite(cscript, SWT.NONE);
+		GridLayout gl_composite = new GridLayout(2, false);
+		gl_composite.verticalSpacing = 0;
+		gl_composite.horizontalSpacing = 0;
+		composite.setLayout(gl_composite);
+
+		Label lblAddTo = new Label(composite, SWT.NONE);
+		lblAddTo.setText("Add to");
+
+		Button btnAdd = new Button(composite, SWT.FLAT | SWT.ARROW | SWT.DOWN);
+		btnAdd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Menu menu = new Menu(btnAdd.getShell(), SWT.POP_UP);
+
+				createAddToMenu(id, menu);
+
+				menu.setVisible(true);
+			}
+
+		});
+		btnAdd.setText("Add to");
+
+	}
+
+	private void createAddToMenu(String id, Menu menu) {
+		List<LOTAppControl> controls = window.getTablist();
+		for (LOTAppControl c : controls) {
+			if (c instanceof ScriptUser) {
+				ScriptUser su = (ScriptUser) c;
+				MenuItem mcontrol = new MenuItem(menu, SWT.NONE);
+				mcontrol.setText("" + c.getControlName());
+				mcontrol.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						su.addScript(app.getObjectFactory().getScript(id));
+					}
+				});
+			}
+		}
 	}
 }
