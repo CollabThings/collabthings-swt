@@ -75,7 +75,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	@Override
 	public void addScript(LOTScript script) {
-		factory.addScript("script" + factory.getScripts().size(), script);
+		factory.addScript("script" + factory.getScripts().size() + " " + script.getName(), script);
 	}
 
 	@Override

@@ -46,50 +46,52 @@ public class ScriptList extends Composite {
 	}
 
 	private void addRow(WData scriptdata) {
-		Composite cscript = new Composite(this, SWT.NONE);
-		cscript.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		String name = scriptdata.getValue("name");
 		String id = scriptdata.getValue("id");
-		cscript.setLayout(new GridLayout(4, false));
-		Label clname = new Label(cscript, SWT.NONE);
-		clname.setText("" + name);
+		if (id != null && name != null) {
+			Composite cscript = new Composite(this, SWT.NONE);
+			cscript.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 
-		Button btnView = new Button(cscript, SWT.NONE);
-		btnView.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				window.viewScript(app.getObjectFactory().getScript(id));
-			}
-		});
-		btnView.setText("View");
+			cscript.setLayout(new GridLayout(4, false));
+			Label clname = new Label(cscript, SWT.NONE);
+			clname.setText("" + name);
 
-		Button btnId = new Button(cscript, SWT.NONE);
-		btnId.addSelectionListener(new CopyToClipbardSelectionAdapter(cscript, id));
-		btnId.setText("ID");
+			Button btnView = new Button(cscript, SWT.NONE);
+			btnView.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					window.viewScript(app.getObjectFactory().getScript(id));
+				}
+			});
+			btnView.setText("View");
 
-		Composite composite = new Composite(cscript, SWT.NONE);
-		GridLayout gl_composite = new GridLayout(2, false);
-		gl_composite.verticalSpacing = 0;
-		gl_composite.horizontalSpacing = 0;
-		composite.setLayout(gl_composite);
+			Button btnId = new Button(cscript, SWT.NONE);
+			btnId.addSelectionListener(new CopyToClipbardSelectionAdapter(cscript, id));
+			btnId.setText("ID");
 
-		Label lblAddTo = new Label(composite, SWT.NONE);
-		lblAddTo.setText("Add to");
+			Composite composite = new Composite(cscript, SWT.NONE);
+			GridLayout gl_composite = new GridLayout(2, false);
+			gl_composite.verticalSpacing = 0;
+			gl_composite.horizontalSpacing = 0;
+			composite.setLayout(gl_composite);
 
-		Button btnAdd = new Button(composite, SWT.FLAT | SWT.ARROW | SWT.DOWN);
-		btnAdd.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				Menu menu = new Menu(btnAdd.getShell(), SWT.POP_UP);
+			Label lblAddTo = new Label(composite, SWT.NONE);
+			lblAddTo.setText("Add to");
 
-				createAddToMenu(id, menu);
+			Button btnAdd = new Button(composite, SWT.FLAT | SWT.ARROW | SWT.DOWN);
+			btnAdd.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					Menu menu = new Menu(btnAdd.getShell(), SWT.POP_UP);
 
-				menu.setVisible(true);
-			}
+					createAddToMenu(id, menu);
 
-		});
-		btnAdd.setText("Add to");
+					menu.setVisible(true);
+				}
 
+			});
+			btnAdd.setText("Add to");
+		}
 	}
 
 	private void createAddToMenu(String id, Menu menu) {
