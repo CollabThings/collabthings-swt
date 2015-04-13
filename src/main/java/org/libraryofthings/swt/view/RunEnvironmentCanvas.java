@@ -11,9 +11,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.libraryofthings.view.LOTGraphics;
 import org.libraryofthings.view.RunEnviromentDrawer;
+import org.eclipse.wb.swt.SWTResourceManager;
 
-public class RunEnvironmentCanvas extends Composite implements PaintListener,
-		LOTGraphics {
+public class RunEnvironmentCanvas extends Composite implements PaintListener, LOTGraphics {
 
 	private RunEnviromentDrawer drawer;
 	private GC gc;
@@ -25,9 +25,9 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 	 * @param style
 	 * @param drawer
 	 */
-	public RunEnvironmentCanvas(Composite parent, int style,
-			RunEnviromentDrawer drawer) {
+	public RunEnvironmentCanvas(Composite parent, int style, RunEnviromentDrawer drawer) {
 		super(parent, style);
+		setBackground(SWTResourceManager.getColor(248, 248, 255));
 		setLayout(new GridLayout(1, false));
 		addPaintListener(this);
 		this.drawer = drawer;
@@ -76,8 +76,7 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 
 	@Override
 	public void setColor(java.awt.Color nc) {
-		Color c = new Color(getDisplay(), nc.getRed(), nc.getGreen(),
-				nc.getBlue());
+		Color c = new Color(getDisplay(), nc.getRed(), nc.getGreen(), nc.getBlue());
 		gc.setForeground(c);
 	}
 

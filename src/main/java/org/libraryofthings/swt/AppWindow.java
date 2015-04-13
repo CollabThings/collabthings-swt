@@ -252,7 +252,6 @@ public final class AppWindow {
 		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_composite.widthHint = 216;
 		composite.setLayoutData(gd_composite);
-		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_MAGENTA));
 
 		tabFolder = new CTabFolder(composite, SWT.NONE);
 		tabFolder.addSelectionListener(new SelectionAdapter() {

@@ -2,6 +2,7 @@ package org.libraryofthings.swt.controls;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.libraryofthings.LLog;
 import org.libraryofthings.math.LOrientation;
 import org.libraryofthings.math.LVector;
@@ -49,6 +51,7 @@ public class ObjectViewer extends Composite {
 		editors.put(String.class, (key, c, o) -> {
 			return addStringField(key, c, (String) o);
 		});
+
 		editors.put(LVector.class, (key, c, o) -> {
 			return addVectorField(key, c, (LVector) o);
 		});
@@ -60,8 +63,17 @@ public class ObjectViewer extends Composite {
 		editors.put(LOrientation.class, (key, c, o) -> {
 			return addOrientationField(key, c, (LOrientation) o);
 		});
+
 		editors.put(LOTBoundingBox.class, (key, c, o) -> {
 			return addBoundingBoxField(key, c, (LOTBoundingBox) o);
+		});
+
+		editors.put(Long.class, (key, c, o) -> {
+			if (key.equals("modifytime") || key.equals("creationtime")) {
+				return addDateField(key, c, (Long) o);
+			} else {
+				return addStringField(key, c, "WHAT IS THIS " + key + " " + o);
+			}
 		});
 	}
 
@@ -100,8 +112,7 @@ public class ObjectViewer extends Composite {
 	}
 
 	private void invokeSetMethod(String name, Object value) {
-		String methodname = "set" + name.substring(0, 1).toUpperCase()
-				+ name.substring(1);
+		String methodname = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
 		Method[] ms = objectShown.getClass().getMethods();
 		for (Method method : ms) {
 			if (method.getName().equals(methodname)) {
@@ -128,8 +139,7 @@ public class ObjectViewer extends Composite {
 		if (method != null) {
 			try {
 				return method.invoke(objectShown);
-			} catch (IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException e) {
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				log.error(e, "invokeGetMethod", e);
 				return null;
 			}
@@ -147,17 +157,21 @@ public class ObjectViewer extends Composite {
 	}
 
 	private void addRows() {
-		setLayout(new GridLayout(1, false));
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.marginTop = 5;
+		gridLayout.marginRight = 5;
+		gridLayout.marginLeft = 5;
+		setLayout(gridLayout);
 
 		Label lblObject = new Label(this, SWT.NONE);
-		lblObject.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true,
-				false, 1, 1));
+		lblObject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblObject.setAlignment(SWT.CENTER);
 		lblObject.setText("" + objectShown);
+		lblObject.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+		lblObject.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.BOLD));
 
 		composite = new Composite(this, SWT.BORDER);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1,
-				1));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
 		composite.setLayout(new FillLayout(SWT.VERTICAL));
 
 		for (String key : methods.keySet()) {
@@ -193,15 +207,16 @@ public class ObjectViewer extends Composite {
 		}
 	}
 
-	private Composite addBoundingBoxField(String key, Composite c,
-			LOTBoundingBox box) {
+	private Control addDateField(String key, Composite c, Long d) {
+		return addLabelField(key, c, "" + new Date(d));
+	}
+
+	private Composite addBoundingBoxField(String key, Composite c, LOTBoundingBox box) {
 		return new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
 	}
 
-	private Composite addOrientationField(String key, Composite c,
-			LOrientation orgo) {
-		return new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key,
-				orgo));
+	private Composite addOrientationField(String key, Composite c, LOrientation orgo) {
+		return new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key, orgo));
 	}
 
 	private Control addDoubleField(String key, Composite c, Double d) {
@@ -235,8 +250,14 @@ public class ObjectViewer extends Composite {
 		return "" + t.getText();
 	}
 
-	private Control addTextField(Composite c, String text,
-			ModifyListener listener) {
+	private Control addLabelField(String key, Composite c, String text) {
+		Label s = new Label(c, SWT.NONE);
+		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		s.setText(text);
+		return s;
+	}
+
+	private Control addTextField(Composite c, String text, ModifyListener listener) {
 		Text s = new Text(c, SWT.NONE);
 		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		s.setEditable(true);

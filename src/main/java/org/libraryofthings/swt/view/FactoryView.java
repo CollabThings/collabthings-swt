@@ -108,10 +108,6 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private void init() {
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
 		setLayout(gridLayout);
 
 		SashForm composite_main = new SashForm(this, SWT.NONE);
@@ -134,7 +130,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		c_view.setBounds(0, 0, 64, 64);
 
 		view = new RunEnvironment4xView(c_view, SWT.NONE);
-		composite_main.setWeights(new int[] { 1, 1 });
+		composite_main.setWeights(new int[] { 248, 448 });
 
 		Menu tempmenu = new Menu(this);
 		setMenu(tempmenu);
@@ -160,20 +156,12 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	private void createChildrenComposite(Composite cchildren) {
 		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		GridLayout gl_cchildren = new GridLayout(1, false);
-		gl_cchildren.marginWidth = 0;
-		gl_cchildren.verticalSpacing = 0;
-		gl_cchildren.marginHeight = 0;
-		gl_cchildren.horizontalSpacing = 0;
 		cchildren.setLayout(gl_cchildren);
 
 		Composite cchildrenpanel = new Composite(cchildren, SWT.NONE);
 		cchildrenpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		cchildrenpanel.setSize(65, 25);
 		GridLayout gl_cchildrenpanel = new GridLayout(2, false);
-		gl_cchildrenpanel.horizontalSpacing = 0;
-		gl_cchildrenpanel.marginHeight = 0;
-		gl_cchildrenpanel.verticalSpacing = 0;
-		gl_cchildrenpanel.marginWidth = 0;
 		cchildrenpanel.setLayout(gl_cchildrenpanel);
 
 		Label lblChildren = new Label(cchildrenpanel, SWT.NONE);
@@ -204,10 +192,6 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 			Composite childpanel = new Composite(cc, SWT.None);
 			GridLayout gridLayout = new GridLayout();
-			gridLayout.horizontalSpacing = 0;
-			gridLayout.verticalSpacing = 0;
-			gridLayout.marginWidth = 0;
-			gridLayout.marginHeight = 0;
 
 			childpanel.setLayout(gridLayout);
 			Button b = new Button(childpanel, getStyle());
@@ -303,9 +287,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private void createFactoryDataViewer(Composite c, LOTFactory f) {
 		GridLayout gl_c_factoryproperties_1 = new GridLayout(1, false);
+		gl_c_factoryproperties_1.marginTop = 5;
 		gl_c_factoryproperties_1.marginHeight = 0;
-		gl_c_factoryproperties_1.verticalSpacing = 4;
-		gl_c_factoryproperties_1.marginWidth = 3;
 		c.setLayout(gl_c_factoryproperties_1);
 		ObjectViewer factoryobjectviewer = new ObjectViewer(c, f);
 		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));

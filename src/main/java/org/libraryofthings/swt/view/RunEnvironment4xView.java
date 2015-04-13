@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.view.RunEnviromentDrawer;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class RunEnvironment4xView extends Composite {
 	private LTransformation freetransform;
@@ -23,12 +24,12 @@ public class RunEnvironment4xView extends Composite {
 		this(parent, style, null);
 	}
 
-	public RunEnvironment4xView(Composite parent, int style,
-			LOTRunEnvironment nrunenv) {
+	public RunEnvironment4xView(Composite parent, int style, LOTRunEnvironment nrunenv) {
 		super(parent, style);
 
 		this.runenv = nrunenv;
 		setLayout(new GridLayout(2, false));
+		setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 
 		RunEnviromentDrawer ydrawer = new RunEnviromentDrawer(runenv, (v) -> {
 			v.y = v.z;
@@ -41,10 +42,9 @@ public class RunEnvironment4xView extends Composite {
 		RunEnviromentDrawer zdrawer = new RunEnviromentDrawer(runenv, (v) -> {
 			v.z = 0;
 		}, "Z");
-		RunEnviromentDrawer freedrawer = new RunEnviromentDrawer(runenv,
-				(v) -> {
-					freetransform.transform(v);
-				}, "Z");
+		RunEnviromentDrawer freedrawer = new RunEnviromentDrawer(runenv, (v) -> {
+			freetransform.transform(v);
+		}, "Z");
 
 		ycanvas = new RunEnvironmentCanvas(this, SWT.NONE, ydrawer);
 		ycanvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -66,10 +66,8 @@ public class RunEnvironment4xView extends Composite {
 	public void step(double dtime) {
 		freeangle += dtime * 0.00002;
 		LTransformation nfreetransform = new LTransformation();
-		nfreetransform.mult(LTransformation.getRotate(new Vector3d(1, 0, 0),
-				0.4));
-		nfreetransform.mult(LTransformation.getRotate(new Vector3d(0, 1, 0),
-				freeangle));
+		nfreetransform.mult(LTransformation.getRotate(new Vector3d(1, 0, 0), 0.4));
+		nfreetransform.mult(LTransformation.getRotate(new Vector3d(0, 1, 0), freeangle));
 		freetransform = nfreetransform;
 	}
 

@@ -14,8 +14,7 @@ public class LOTOrientationEditor extends Composite {
 	private LOTDoubleEditor ea;
 	private LOrientation o;
 
-	public LOTOrientationEditor(Composite c, LOrientation no,
-			ChangeListener<LOrientation> listener) {
+	public LOTOrientationEditor(Composite c, LOrientation no, ChangeListener<LOrientation> listener) {
 		super(c, SWT.None);
 		this.o = no;
 		this.listener = listener;
@@ -41,8 +40,7 @@ public class LOTOrientationEditor extends Composite {
 	}
 
 	private LOTDoubleEditor createField(Double value) {
-		LOTDoubleEditor ley = new LOTDoubleEditor(this, value,
-				e -> angleChanged(e));
+		LOTDoubleEditor ley = new LOTDoubleEditor(this, value, e -> angleChanged(e));
 		ley.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		return ley;
 	}

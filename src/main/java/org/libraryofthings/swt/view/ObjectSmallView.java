@@ -47,9 +47,9 @@ public class ObjectSmallView extends Composite {
 
 		Label lname = new Label(ctitle, SWT.NONE);
 		lname.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		lname.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
 		lname.setText("Name");
 		lname.setAlignment(SWT.CENTER);
+		lname.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
 		lname.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.BOLD));
 
 		ltype = new Label(ctitle, SWT.NONE);

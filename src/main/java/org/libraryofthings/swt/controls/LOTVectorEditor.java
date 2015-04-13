@@ -14,8 +14,7 @@ public class LOTVectorEditor extends Composite {
 	private LOTDoubleEditor ex;
 	private LVector v;
 
-	public LOTVectorEditor(Composite c, LVector nv,
-			ChangeListener<LVector> listener) {
+	public LOTVectorEditor(Composite c, LVector nv, ChangeListener<LVector> listener) {
 		super(c, SWT.None);
 		this.v = nv;
 		this.listener = listener;

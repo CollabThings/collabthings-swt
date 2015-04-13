@@ -33,10 +33,6 @@ public class UserView extends Composite implements LOTAppControl {
 		this.app = app;
 
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 1;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 1;
 		setLayout(gridLayout);
 
 		Label lname = new Label(this, SWT.NONE);

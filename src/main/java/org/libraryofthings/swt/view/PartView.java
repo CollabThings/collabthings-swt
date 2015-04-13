@@ -71,10 +71,6 @@ public class PartView extends Composite implements LOTAppControl {
 
 	private void init() {
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
 		setLayout(gridLayout);
 
 		Composite c_toolbar = new Composite(this, SWT.NONE);

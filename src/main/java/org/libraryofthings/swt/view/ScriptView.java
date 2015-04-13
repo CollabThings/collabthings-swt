@@ -16,12 +16,16 @@ import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 
+import com.sun.corba.se.impl.orbutil.concurrent.Sync;
+
 public class ScriptView extends Composite implements LOTAppControl {
 
 	private AppWindow window;
 	private Text scripttext;
 	private LOTScript script;
 	private Text bottomtext;
+	private String shouldsave;
+	private Thread savingthread;
 
 	public ScriptView(Composite c, LOTApp app, AppWindow appWindow, LOTScript script) {
 		super(c, SWT.NONE);
@@ -50,9 +54,28 @@ public class ScriptView extends Composite implements LOTAppControl {
 		sashForm.setWeights(new int[] { 3, 1 });
 	}
 
-	protected void key(KeyEvent arg0) {
-		// TODO Auto-generated method stub
+	protected synchronized void key(KeyEvent arg0) {
+		startSave();
+	}
 
+	private void startSave() {
+		shouldsave = this.scripttext.getText();
+		if (savingthread == null) {
+			savingthread = new Thread(() -> {
+				synchronized (savingthread) {
+					do {
+						shouldsave = null;
+						try {
+							savingthread.wait(500);
+						} catch (Exception e) {
+						}
+						save(shouldsave);
+					} while (shouldsave != null);
+					savingthread = null;
+				}
+			});
+			savingthread.start();
+		}
 	}
 
 	@Override
@@ -65,16 +88,18 @@ public class ScriptView extends Composite implements LOTAppControl {
 		return "Script: " + script;
 	}
 
-	private void save() {
-		String sscripttext = scripttext.getText();
-		if (script.getScript() == null || !script.getScript().equals(sscripttext)) {
-			boolean b = script.setScript(sscripttext);
-			if (!b) {
-				String error = script.getError();
-				bottomtext.append("" + error + "\n");
-			} else {
-				bottomtext.append("OK\n");
-			}
+	private void save(String sscripttext) {
+		if (sscripttext != null
+				&& (script.getScript() == null || !script.getScript().equals(sscripttext))) {
+			getDisplay().asyncExec(() -> {
+				boolean b = script.setScript(sscripttext);
+				if (!b) {
+					String error = script.getError();
+					bottomtext.append("ERROR " + error + "\n");
+				} else {
+					bottomtext.append("OK\n");
+				}
+			});
 		}
 	}
 

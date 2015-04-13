@@ -20,10 +20,6 @@ public class LOTBoundingBoxEditor extends Composite {
 		this.listener = listener;
 		//
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 4;
 		setLayout(gridLayout);
 
 		el = new LOTVectorEditor(this, box.getA(), v -> listener.changed(box));

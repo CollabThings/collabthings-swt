@@ -85,7 +85,6 @@ public class SearchView extends Composite implements LOTAppControl {
 		scrolledComposite.setContent(clist);
 
 		scrolledComposite.addListener(SWT.Resize, new Listener() {
-
 			@Override
 			public void handleEvent(Event arg0) {
 				updateLayout();
