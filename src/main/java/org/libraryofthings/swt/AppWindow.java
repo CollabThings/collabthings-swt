@@ -16,10 +16,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.libraryofthings.LLog;
 import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTFactory;
+import org.libraryofthings.model.LOTInfo;
 import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.impl.LOTFactoryImpl;
@@ -35,7 +37,7 @@ import org.libraryofthings.swt.view.UserView;
 import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
 
-public final class AppWindow {
+public final class AppWindow implements LOTInfo {
 	protected Shell shell;
 	//
 	private LOTApp app;
@@ -52,6 +54,9 @@ public final class AppWindow {
 	private Menu menulocal;
 
 	private final ViewTypes viewtypes;
+	private LOTAppControl selectedcontrol;
+	private Label lblStatus;
+	private ProgressBar progressBar;
 
 	public AppWindow(LOTApp app) {
 		this.app = app;
@@ -74,12 +79,30 @@ public final class AppWindow {
 	}
 
 	public void view(String type, String id) {
-		viewtypes.view(type, new MStringID(id));
+		setInfo(0, 0, 0, "View " + type + " id:" + id);
+
+		new Thread(() -> {
+			viewtypes.view(type, new MStringID(id));
+		}).start();
 	}
 
 	public void viewFactory(LOTFactory f) {
-		FactoryView v = new FactoryView(tabFolder, app, this, f);
-		addTab("" + f, v, f);
+		setInfo(0, 0, 0, "Viewing factory");
+
+		shell.getDisplay().asyncExec(() -> {
+			FactoryView v = new FactoryView(tabFolder, app, this, f);
+			addTab("" + f, v, f);
+		});
+	}
+
+	private void setInfo(int current, int min, int max, String string) {
+		shell.getDisplay().asyncExec(() -> {
+			progressBar.setMaximum(max);
+			progressBar.setMinimum(min);
+			progressBar.setSelection(current);
+
+			lblStatus.setText("" + string);
+		});
 	}
 
 	public void viewSearch(String searchitem) {
@@ -126,8 +149,8 @@ public final class AppWindow {
 				shell.setMaximized(true);
 				//
 				// FIXME TODO REMOVE
-				newFactory();
-				viewSearch("test");
+				// newFactory();
+				viewSearch("boxsetfactory");
 				//
 				while (!shell.isDisposed()) {
 					readAndDispatch(display);
@@ -262,6 +285,16 @@ public final class AppWindow {
 		});
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
+		Composite composite_1 = new Composite(composite, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		composite_1.setLayout(new GridLayout(2, false));
+
+		lblStatus = new Label(composite_1, SWT.NONE);
+		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblStatus.setText("status");
+
+		progressBar = new ProgressBar(composite_1, SWT.NONE);
+
 		lblBottonInfo = new Label(composite, SWT.NONE);
 		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		lblBottonInfo.setAlignment(SWT.RIGHT);
@@ -284,12 +317,12 @@ public final class AppWindow {
 		if (lblBottonInfo != null) {
 			disposeObjectMenu();
 
-			// Really like this? //TODO
 			int selectionIndex = tabFolder.getSelectionIndex() + 1;
 			Control control = tabFolder.getTabList()[selectionIndex];
 
 			if (control instanceof LOTAppControl) {
 				LOTAppControl v = (LOTAppControl) control;
+				selectedcontrol = v;
 				log.info("selected " + v);
 
 				v.selected(this);
@@ -332,5 +365,9 @@ public final class AppWindow {
 
 	public List<LOTAppControl> getTablist() {
 		return new LinkedList<LOTAppControl>(controls);
+	}
+
+	public boolean isSelected(LOTAppControl c) {
+		return selectedcontrol == c;
 	}
 }

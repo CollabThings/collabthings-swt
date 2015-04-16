@@ -2,11 +2,16 @@ package org.libraryofthings.swt.view;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -20,8 +25,6 @@ import org.libraryofthings.swt.app.LOTApp;
 import waazdoh.common.WData;
 import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.UserVO;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 public class ObjectSmallView extends Composite {
 	private LOTApp app;
@@ -32,11 +35,14 @@ public class ObjectSmallView extends Composite {
 	private Composite items;
 
 	private String id;
+	private Set<String> ignorelist;
 
 	public ObjectSmallView(Composite cc, LOTApp app, AppWindow window, String id) {
 		super(cc, SWT.NONE);
 		this.app = app;
 		this.id = id;
+
+		initIgnoreList();
 
 		this.setLayout(new GridLayout());
 
@@ -108,7 +114,7 @@ public class ObjectSmallView extends Composite {
 		addDataHandler("modified", d -> {
 			lmodified.setText("" + new Date(Long.parseLong(d.getText())));
 		});
-		addDataHandler("created", d -> {
+		addDataHandler("creationtime", d -> {
 			lcreated.setText("" + new Date(Long.parseLong(d.getText())));
 		});
 
@@ -150,7 +156,10 @@ public class ObjectSmallView extends Composite {
 		});
 
 		items = new Composite(cvalues, getStyle());
-		items.setLayout(new GridLayout(1, false));
+		GridLayout gl_items = new GridLayout(1, false);
+		gl_items.marginWidth = 0;
+		gl_items.marginHeight = 0;
+		items.setLayout(gl_items);
 		items.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 2));
 		items.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
 
@@ -168,6 +177,18 @@ public class ObjectSmallView extends Composite {
 			});
 
 		setData();
+	}
+
+	private void initIgnoreList() {
+		if (ignorelist == null) {
+			ignorelist = new HashSet<String>();
+			String s = app.getLClient().getPreferences().get("smallview.ignorelist", "list");
+			StringTokenizer st = new StringTokenizer(s, ",");
+			while (st.hasMoreTokens()) {
+				String t = st.nextToken();
+				ignorelist.add(t);
+			}
+		}
 	}
 
 	private void addDataHandler(String name, Label label) {
@@ -194,9 +215,9 @@ public class ObjectSmallView extends Composite {
 				DataHandler dh = handlers.get(name);
 				if (dh != null) {
 					dh.handle(child);
-				} else {
+				} else if (!ignorelist.contains(name)) {
 					Label l = new Label(items, getStyle());
-					l.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
+					// l.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_BACKGROUND));
 					l.setText("NAME " + name + " " + child.toText());
 					setListLayoutData(l);
 				}

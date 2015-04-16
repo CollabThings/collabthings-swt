@@ -2,6 +2,7 @@ package org.libraryofthings.swt.controls;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,9 +12,9 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -36,14 +37,43 @@ public class ObjectViewer extends Composite {
 	//
 	private Map<String, Method> methods = new HashMap<>();
 	private Set<ObjectViewerListener> listeners = new HashSet<>();
-	private Text testext;
 	private Map<Class, LEditorFactory> editors = new HashMap<>();
+	private Label lblObject;
+	private final Set<String> ignoreset;
 
-	public ObjectViewer(Composite parent, Object o) {
+	public ObjectViewer(Composite paranet, Object o) {
+		this(paranet, o, new String[0]);
+	}
+
+	public ObjectViewer(Composite parent, Object o, String ignore[]) {
 		super(parent, SWT.NONE);
+
+		this.ignoreset = new HashSet<String>();
+		for (String s : ignore) {
+			ignoreset.add(s);
+		}
 
 		initOkTypes();
 		parse(o);
+
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.marginTop = 5;
+		gridLayout.marginRight = 5;
+		gridLayout.marginLeft = 5;
+		setLayout(gridLayout);
+
+		lblObject = new Label(this, SWT.NONE);
+		lblObject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblObject.setAlignment(SWT.CENTER);
+		lblObject.setText("" + objectShown);
+		lblObject.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+		lblObject.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.BOLD));
+
+		composite = new Composite(this, SWT.BORDER);
+		composite.setBackground(SWTResourceManager.getColor(248, 248, 255));
+		composite.setLayout(new GridLayout(1, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
 		addRows();
 	}
 
@@ -75,6 +105,10 @@ public class ObjectViewer extends Composite {
 				return addStringField(key, c, "WHAT IS THIS " + key + " " + o);
 			}
 		});
+
+		editors.put(Set.class, (key, c, o) -> {
+			return addCollectionView(key, c, o);
+		});
 	}
 
 	private String getObjectValue(String name) {
@@ -102,11 +136,12 @@ public class ObjectViewer extends Composite {
 		String mname = method.getName();
 		if (mname.startsWith("get") && method.getParameterTypes().length == 0) {
 			String fname = mname.substring(3).toLowerCase();
-
-			Object value;
-			value = invokeGetMethod(method);
-			if (isOKValueType(value)) {
-				methods.put(fname, method);
+			if (!ignoreset.contains(fname)) {
+				Object value;
+				value = invokeGetMethod(method);
+				if (isOKValueType(value)) {
+					methods.put(fname, method);
+				}
 			}
 		}
 	}
@@ -150,59 +185,64 @@ public class ObjectViewer extends Composite {
 
 	private boolean isOKValueType(Object value) {
 		if (value != null) {
-			return editors.get(value.getClass()) != null;
+			return getEditor(value) != null;
 		} else {
 			return false;
 		}
 	}
 
+	private LEditorFactory getEditor(Object o) {
+		if (o != null) {
+			Class<? extends Object> class1 = o.getClass();
+			LEditorFactory e = editors.get(class1);
+			if (e != null) {
+				return e;
+			}
+
+			Class<?>[] cs = class1.getDeclaredClasses();
+			for (Class<?> class2 : cs) {
+				e = editors.get(class2);
+				if (e != null) {
+					return e;
+				}
+			}
+
+			Class<?>[] ics = class1.getInterfaces();
+			for (Class<?> class2 : ics) {
+				e = editors.get(class2);
+				if (e != null) {
+					return e;
+				}
+			}
+		}
+		return null;
+	}
+
 	private void addRows() {
-		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.marginTop = 5;
-		gridLayout.marginRight = 5;
-		gridLayout.marginLeft = 5;
-		setLayout(gridLayout);
-
-		Label lblObject = new Label(this, SWT.NONE);
-		lblObject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblObject.setAlignment(SWT.CENTER);
-		lblObject.setText("" + objectShown);
-		lblObject.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
-		lblObject.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.BOLD));
-
-		composite = new Composite(this, SWT.BORDER);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
-		composite.setLayout(new FillLayout(SWT.VERTICAL));
-
 		for (String key : methods.keySet()) {
 			addRow(key);
 		}
-
 	}
 
 	private void addRow(String key) {
-		Composite c = new Composite(composite, SWT.NONE);
-		GridLayout gl_c = new GridLayout(2, false);
-		gl_c.verticalSpacing = 0;
-		gl_c.marginWidth = 0;
-		gl_c.marginHeight = 0;
-		gl_c.horizontalSpacing = 0;
-		c.setLayout(gl_c);
-		Label l = new Label(c, getStyle());
-		GridData gd_l = new GridData(SWT.RIGHT, SWT.FILL, false, true, 1, 1);
-		gd_l.widthHint = 101;
-		l.setLayoutData(gd_l);
+		Composite row = new Composite(composite, SWT.NONE);
+		row.setLayout(new GridLayout(2, false));
+		row.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		Label l = new Label(row, SWT.NONE);
+		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		l.setText(key);
-		//
+		l.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+
 		Method method = methods.get(key);
 		Object o = invokeGetMethod(method);
-		LEditorFactory e = editors.get(o.getClass());
+		LEditorFactory e = getEditor(o);
 		if (e != null) {
-			Control cc = e.add(key, c, o);
-			cc.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			Control cc = e.add(key, row, o);
+			cc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		} else {
-			Label la = new Label(c, getStyle());
-			la.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			Label la = new Label(row, getStyle());
+			la.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 			la.setText("unknown type");
 		}
 	}
@@ -266,8 +306,23 @@ public class ObjectViewer extends Composite {
 		return s;
 	}
 
+	private Control addCollectionView(String key, Composite c, Object o) {
+		Composite v = new Composite(c, SWT.None);
+		v.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		v.setLayout(new RowLayout());
+
+		Collection col = (Collection) o;
+		for (Object item : col) {
+			Label l = new Label(v, SWT.None);
+			l.setText("" + item);
+		}
+
+		return v;
+	}
+
 	public void setObject(Object o) {
 		objectShown = o;
+		lblObject.setText("" + o);
 		refresh();
 	}
 
@@ -286,4 +341,5 @@ public class ObjectViewer extends Composite {
 	private interface LEditorFactory {
 		public Control add(String key, Composite c, Object o);
 	}
+
 }

@@ -114,6 +114,10 @@ public class SearchView extends Composite implements LOTAppControl {
 
 	public void search(String searchitem) {
 		new Thread(() -> {
+			getDisplay().asyncExec(() -> {
+				text.setText(searchitem);
+			});
+
 			WClient client = app.getLClient().getClient();
 			List<String> list = client.getObjects().search(searchitem, 0, 1000);
 			log.info("search got list " + list);

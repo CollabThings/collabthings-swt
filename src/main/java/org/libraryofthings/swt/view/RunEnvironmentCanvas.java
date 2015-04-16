@@ -82,7 +82,7 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener, LO
 
 	@Override
 	public void setStroke(Stroke st) {
-		gc.setLineStyle(SWT.LINE_DASH);
+		gc.setLineStyle(SWT.LINE_DOT);
 	}
 
 	public void callRepaint() {
