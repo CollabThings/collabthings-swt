@@ -57,10 +57,12 @@ public class RunEnvironment4xView extends Composite {
 	}
 
 	public void doRepaint() {
-		ycanvas.callRepaint();
-		xcanvas.callRepaint();
-		zcanvas.callRepaint();
-		fcanvas.callRepaint();
+		getDisplay().asyncExec(() -> {
+			ycanvas.callRepaint();
+			xcanvas.callRepaint();
+			zcanvas.callRepaint();
+			fcanvas.callRepaint();
+		});
 	}
 
 	public void step(double dtime) {

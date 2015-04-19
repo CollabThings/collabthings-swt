@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
@@ -270,13 +269,16 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	private void updateFactory() {
 		updateFactoryHash();
 
-		LOTClient client = app.getLClient();
-		LOTEnvironment env = new LOTEnvironmentImpl(client);
-		LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view", factory)
-				.getRunEnvironment();
-		view.setRunEnvironment(runenv);
-		view.step(0);
-		view.doRepaint();
+		new Thread(
+				() -> {
+					LOTClient client = app.getLClient();
+					LOTEnvironment env = new LOTEnvironmentImpl(client);
+					LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view", factory)
+							.getRunEnvironment();
+					view.setRunEnvironment(runenv);
+					view.step(0);
+					view.doRepaint();
+				}).start();
 	}
 
 	private void createFactoryDataViewer(Composite c, LOTFactory f) {

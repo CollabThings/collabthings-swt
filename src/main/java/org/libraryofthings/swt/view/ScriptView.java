@@ -92,7 +92,8 @@ public class ScriptView extends Composite implements LOTAppControl {
 		if (sscripttext != null
 				&& (script.getScript() == null || !script.getScript().equals(sscripttext))) {
 			getDisplay().asyncExec(() -> {
-				boolean b = script.setScript(sscripttext);
+				script.setScript(sscripttext);
+				boolean b = script.isOK();
 				if (!b) {
 					String error = script.getError();
 					bottomtext.append("ERROR " + error + "\n");
