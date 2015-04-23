@@ -25,8 +25,9 @@ import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.client.WClient;
+import waazdoh.common.vo.UserVO;
 
-public class SearchView extends Composite implements LOTAppControl {
+public class UsersSearchView extends Composite implements LOTAppControl {
 	private AppWindow window;
 	private Text text;
 	private LOTApp app;
@@ -37,11 +38,11 @@ public class SearchView extends Composite implements LOTAppControl {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow) {
+	public UsersSearchView(Composite c, LOTApp app, AppWindow appWindow) {
 		this(c, app, appWindow, false);
 	}
 
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox) {
+	public UsersSearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox) {
 		super(c, SWT.NONE);
 		this.app = app;
 		this.window = appWindow;
@@ -109,25 +110,23 @@ public class SearchView extends Composite implements LOTAppControl {
 
 	private void searchSelected() {
 		String s = this.text.getText();
-		search(s, 0, 50);
+		search(s);
 	}
 
-	public void search(String searchitem, int start, int count) {
+	public void search(String searchitem) {
 		new Thread(() -> {
 			getDisplay().asyncExec(() -> {
-				if (text != null) {
-					text.setText(searchitem);
-				}
+				text.setText(searchitem);
 			});
 
 			WClient client = app.getLClient().getClient();
-			List<String> list = client.getObjects().search(searchitem, start, count);
+			List<UserVO> list = client.searchUsers(searchitem, 0);
 			log.info("search got list " + list);
 			handleResponse(list);
 		}).start();
 	}
 
-	private void handleResponse(List<String> list) {
+	private void handleResponse(List<UserVO> list) {
 		if (list != null) {
 			getDisplay().asyncExec(() -> {
 				addRows(list);
@@ -136,22 +135,22 @@ public class SearchView extends Composite implements LOTAppControl {
 		}
 	}
 
-	private void addRows(List<String> list) {
+	private void addRows(List<UserVO> list) {
 		Control[] cs = clist.getChildren();
 		for (Control control : cs) {
 			control.dispose();
 		}
 
-		for (String id : list) {
+		for (UserVO id : list) {
 			addRow(id);
 		}
 
 		updateLayout();
 	}
 
-	private void addRow(String id) {
+	private void addRow(UserVO user) {
 		clist.setLayout(new RowLayout(SWT.HORIZONTAL));
-		ObjectSmallView view = new ObjectSmallView(clist, this.app, this.window, id);
+		UserSmallView view = new UserSmallView(clist, this.app, this.window, user);
 	}
 
 	@Override

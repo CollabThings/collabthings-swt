@@ -386,11 +386,17 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		mifpublish.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				factory.publish();
+				publish();
 			}
+
 		});
 
 		return mifactory;
+	}
+
+	private void publish() {
+		factory.publish();
+		app.getLClient().publish("lastpublished/factory", factory);
 	}
 
 	private void initLocalMenu(Menu mAddLocalChild) {

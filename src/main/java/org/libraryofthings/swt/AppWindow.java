@@ -33,9 +33,11 @@ import org.libraryofthings.swt.view.PartView;
 import org.libraryofthings.swt.view.ScriptView;
 import org.libraryofthings.swt.view.SearchView;
 import org.libraryofthings.swt.view.UserView;
+import org.libraryofthings.swt.view.UsersSearchView;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
+import waazdoh.common.vo.UserVO;
 
 public final class AppWindow implements LOTInfo {
 	protected Shell shell;
@@ -86,8 +88,17 @@ public final class AppWindow implements LOTInfo {
 		}).start();
 	}
 
+	public void view(String text, UserVO user) {
+		setInfo(0, 0, 0, "View User " + user.getUsername());
+
+		shell.getDisplay().asyncExec(() -> {
+			UserView v = new UserView(tabFolder, app, this, user.getUserid());
+			addTab("" + user, v, user);
+		});
+	}
+
 	public void viewFactory(LOTFactory f) {
-		setInfo(0, 0, 0, "Viewing factory");
+		setInfo(0, 0, 0, "Viewing factory " + f.toString());
 
 		shell.getDisplay().asyncExec(() -> {
 			FactoryView v = new FactoryView(tabFolder, app, this, f);
@@ -105,10 +116,16 @@ public final class AppWindow implements LOTInfo {
 		});
 	}
 
+	public void viewSearchUsers(String seachitem) {
+		UsersSearchView v = new UsersSearchView(tabFolder, app, this);
+		addTab("users", v, seachitem);
+		v.search(seachitem);
+	}
+
 	public void viewSearch(String searchitem) {
 		SearchView s = new SearchView(tabFolder, app, this);
 		addTab("" + searchitem, s, searchitem);
-		s.search(searchitem);
+		s.search(searchitem, 0, 50);
 	}
 
 	public void viewScript(LOTScript script) {
@@ -151,6 +168,7 @@ public final class AppWindow implements LOTInfo {
 				// FIXME TODO REMOVE
 				// newFactory();
 				viewSearch("boxsetfactory");
+				viewSearchUsers("g");
 				//
 				while (!shell.isDisposed()) {
 					readAndDispatch(display);
@@ -185,9 +203,11 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	public void showError(String message) {
-		LLog.getLogger(this).info("ERROR " + message);
-		LOTMessageDialog d = new LOTMessageDialog(shell);
-		d.show("Error", message);
+		this.shell.getDisplay().asyncExec(() -> {
+			LLog.getLogger(this).info("ERROR " + message);
+			LOTMessageDialog d = new LOTMessageDialog(shell);
+			d.show("Error", message);
+		});
 	}
 
 	/**
@@ -250,9 +270,24 @@ public final class AppWindow implements LOTInfo {
 		MenuItem menulocaldate = new MenuItem(menulocal, SWT.NONE);
 		menulocaldate.setText("Date");
 
-		MenuItem mntmSearch = new MenuItem(menu, SWT.CASCADE);
-		mntmSearch.setText("Search");
-		mntmSearch.addSelectionListener(new SelectionAdapter() {
+		MenuItem msearchmenu = new MenuItem(menu, SWT.CASCADE);
+		msearchmenu.setText("Search");
+
+		Menu menu_1 = new Menu(msearchmenu);
+		msearchmenu.setMenu(menu_1);
+
+		MenuItem misearchobjects = new MenuItem(menu_1, SWT.CASCADE);
+		misearchobjects.setText("Objects");
+
+		MenuItem misearchusers = new MenuItem(menu_1, SWT.NONE);
+		misearchusers.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				viewSearchUsers("");
+			}
+		});
+		misearchusers.setText("Users");
+		misearchobjects.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				viewSearch("search");
@@ -304,13 +339,15 @@ public final class AppWindow implements LOTInfo {
 
 	private void initLocalMenu() {
 		LocalObjectsMenu localmenu = new LocalObjectsMenu(this, menulocal);
-		localmenu.addObjectHandler(
-				LOTFactoryImpl.BEANNAME,
-				(data) -> {
-					LOTFactory f = getApp().getLClient().getObjectFactory()
-							.getFactory(data.getIDValue("id"));
-					viewFactory(f);
-				});
+		localmenu.addObjectHandler(LOTFactoryImpl.BEANNAME, (data) -> {
+			MStringID id = data.getIDValue("id");
+			LOTFactory f = getApp().getLClient().getObjectFactory().getFactory(id);
+			if (f != null) {
+				viewFactory(f);
+			} else {
+				showError("Failed to open factory " + id);
+			}
+		});
 	}
 
 	protected void tabSelected() {

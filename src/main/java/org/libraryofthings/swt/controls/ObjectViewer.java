@@ -99,7 +99,7 @@ public class ObjectViewer extends Composite {
 		});
 
 		editors.put(Long.class, (key, c, o) -> {
-			if (key.equals("modifytime") || key.equals("creationtime")) {
+			if ("modifytime".equals(key) || "creationtime".equals(key)) {
 				return addDateField(key, c, (Long) o);
 			} else {
 				return addStringField(key, c, "WHAT IS THIS " + key + " " + o);

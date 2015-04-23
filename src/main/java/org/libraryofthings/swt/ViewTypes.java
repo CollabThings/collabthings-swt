@@ -20,7 +20,11 @@ public class ViewTypes {
 
 		views.put("factory", id -> {
 			LOTFactory factory = app.getObjectFactory().getFactory(id);
-			window.viewFactory(factory);
+			if (factory != null) {
+				window.viewFactory(factory);
+			} else {
+				window.showError("Failed to get factory " + id);
+			}
 		});
 	}
 
@@ -29,6 +33,11 @@ public class ViewTypes {
 	}
 
 	public void view(String type, MStringID id) {
-		views.get(type).view(id);
+		View view = views.get(type);
+		if (view != null) {
+			view.view(id);
+		} else {
+			window.showError("No viewer for type " + type);
+		}
 	}
 }

@@ -13,10 +13,10 @@ import org.libraryofthings.model.LOTScript;
 import waazdoh.client.WClientListener;
 import waazdoh.client.storage.BeanStorage;
 import waazdoh.client.storage.local.FileBeanStorage;
-import waazdoh.common.AppPreferences;
 import waazdoh.common.WPreferences;
 import waazdoh.common.client.RestServiceClient;
 import waazdoh.cp2p.P2PBinarySource;
+import waazdoh.swt.AppPreferences;
 
 public class LOTApp {
 	private static final String PREFERENCES_PREFIX = "lot";

@@ -23,6 +23,7 @@ import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.common.WData;
+import waazdoh.common.WLogger;
 import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.UserVO;
 
@@ -36,11 +37,14 @@ public class ObjectSmallView extends Composite {
 
 	private String id;
 	private Set<String> ignorelist;
+	private WLogger log = WLogger.getLogger(this);
 
 	public ObjectSmallView(Composite cc, LOTApp app, AppWindow window, String id) {
 		super(cc, SWT.NONE);
 		this.app = app;
 		this.id = id;
+
+		log.info("viewing " + id);
 
 		initIgnoreList();
 
@@ -212,6 +216,8 @@ public class ObjectSmallView extends Composite {
 
 			for (WData child : o.getChildren()) {
 				String name = child.getName();
+				log.info("addData " + name);
+
 				DataHandler dh = handlers.get(name);
 				if (dh != null) {
 					dh.handle(child);
