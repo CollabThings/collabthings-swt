@@ -168,7 +168,7 @@ public final class AppWindow implements LOTInfo {
 				// FIXME TODO REMOVE
 				// newFactory();
 				viewSearch("boxsetfactory");
-				viewSearchUsers("g");
+				viewSearchUsers("user");
 				//
 				while (!shell.isDisposed()) {
 					readAndDispatch(display);
