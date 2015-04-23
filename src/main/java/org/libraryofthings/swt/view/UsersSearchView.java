@@ -120,7 +120,7 @@ public class UsersSearchView extends Composite implements LOTAppControl {
 			});
 
 			WClient client = app.getLClient().getClient();
-			List<UserVO> list = client.searchUsers(searchitem, 0);
+			List<UserVO> list = client.searchUsers(searchitem, 50);
 			log.info("search got list " + list);
 			handleResponse(list);
 		}).start();
