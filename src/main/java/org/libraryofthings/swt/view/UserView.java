@@ -19,6 +19,7 @@ import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 
 import swing2swt.layout.FlowLayout;
+import waazdoh.common.WLogger;
 import waazdoh.common.vo.UserVO;
 
 public class UserView extends Composite implements LOTAppControl {
@@ -60,20 +61,23 @@ public class UserView extends Composite implements LOTAppControl {
 		cpublished.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Label lblPublished = new Label(cpublished, SWT.NONE);
+		lblPublished.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblPublished.setText("Published");
 
 		cpublisheditems = new Composite(cpublished, SWT.NONE);
 		cpublisheditems.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		cpublisheditems.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
 
-		addPublishedItem("test");
+		addPublishedItem("testitem");
 
 		List<String> published = app.getLClient().getStorage().getUserPublished(userid, 0, 50);
+		WLogger.getLogger(this).info("got published list " + published);
 		for (String string : published) {
 			addPublishedItem(string);
 		}
 
 		Label lblSearch = new Label(this, SWT.NONE);
+		lblSearch.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblSearch.setText("Search");
 
 		SearchView searchView = new SearchView(this, app, window, true);
