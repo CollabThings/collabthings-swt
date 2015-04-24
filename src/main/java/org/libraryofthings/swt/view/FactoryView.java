@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -396,7 +400,6 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private void publish() {
 		factory.publish();
-		app.getLClient().publish("lastpublished/factory", factory);
 	}
 
 	private void initLocalMenu(Menu mAddLocalChild) {
