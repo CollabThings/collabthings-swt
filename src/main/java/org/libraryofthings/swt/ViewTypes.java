@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.libraryofthings.model.LOTFactory;
+import org.libraryofthings.model.LOTRunEnvironmentBuilder;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.common.MStringID;
@@ -26,6 +27,16 @@ public class ViewTypes {
 				window.showError("Failed to get factory " + id);
 			}
 		});
+
+		views.put("builder", id -> {
+			LOTRunEnvironmentBuilder b = app.getObjectFactory().getRuntimeBuilder(id);
+			if (b != null) {
+				window.viewRuntimeBuilder(b);
+			} else {
+				window.showError("Failed to get factory " + id);
+			}
+		});
+
 	}
 
 	private interface View {

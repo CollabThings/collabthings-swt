@@ -1,10 +1,12 @@
 package org.libraryofthings.swt.view;
 
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -18,7 +20,6 @@ import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 
-import swing2swt.layout.FlowLayout;
 import waazdoh.common.WLogger;
 import waazdoh.common.vo.UserVO;
 
@@ -28,6 +29,8 @@ public class UserView extends Composite implements LOTAppControl {
 	private UserVO u;
 	private Composite cpublisheditems;
 	private AppWindow window;
+
+	private int publishedcount;
 
 	/**
 	 * Create the composite.
@@ -65,10 +68,15 @@ public class UserView extends Composite implements LOTAppControl {
 		lblPublished.setText("Published");
 
 		cpublisheditems = new Composite(cpublished, SWT.NONE);
-		cpublisheditems.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		cpublisheditems.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 1, 1));
+		GridLayout gl_cpublisheditems = new GridLayout(1, false);
+		gl_cpublisheditems.marginWidth = 0;
+		gl_cpublisheditems.verticalSpacing = 0;
+		gl_cpublisheditems.marginHeight = 0;
+		cpublisheditems.setLayout(gl_cpublisheditems);
+		cpublisheditems.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 
-		addPublishedItem("testitem");
+		addPublishedItem("testitem1");
+		addPublishedItem("testitem2");
 
 		List<String> published = app.getLClient().getStorage().getUserPublished(userid, 0, 50);
 		WLogger.getLogger(this).info("got published list " + published);
@@ -87,8 +95,16 @@ public class UserView extends Composite implements LOTAppControl {
 
 	private void addPublishedItem(String string) {
 		Composite item = new Composite(cpublisheditems, SWT.NONE);
-		item.setLayout(new GridLayout(2, false));
+
+		item.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_item = new GridLayout(2, false);
+		gl_item.verticalSpacing = 0;
+		gl_item.marginWidth = 0;
+		gl_item.marginHeight = 0;
+		gl_item.horizontalSpacing = 0;
+		item.setLayout(gl_item);
 		Label l = new Label(item, SWT.NONE);
+		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		l.setText(string);
 
 		Button btnView = new Button(item, SWT.NONE);
@@ -99,11 +115,20 @@ public class UserView extends Composite implements LOTAppControl {
 			}
 		});
 		btnView.setText("View");
+
+		if (publishedcount++ % 2 == 0) {
+			Color bgcolor = SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
+			l.setBackground(bgcolor);
+			item.setBackground(bgcolor);
+			btnView.setBackground(bgcolor);
+		}
 	}
 
 	private void viewPublished(String item) {
 		String itemdata = app.getLClient().getStorage().readStorage(u, item);
-		String type = item.substring(item.lastIndexOf('/') + 1);
+		StringTokenizer st = new StringTokenizer(item, "/");
+		st.nextToken(); // "published"
+		String type = st.nextToken();
 		window.view(type, itemdata);
 	}
 

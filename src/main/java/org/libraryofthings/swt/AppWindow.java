@@ -23,6 +23,7 @@ import org.libraryofthings.LOTClient;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTInfo;
 import org.libraryofthings.model.LOTPart;
+import org.libraryofthings.model.LOTRunEnvironmentBuilder;
 import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.model.impl.LOTFactoryImpl;
 import org.libraryofthings.swt.app.LOTApp;
@@ -30,6 +31,7 @@ import org.libraryofthings.swt.controls.LocalObjectsMenu;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.libraryofthings.swt.view.FactoryView;
 import org.libraryofthings.swt.view.PartView;
+import org.libraryofthings.swt.view.RunEnvironmentBuilderView;
 import org.libraryofthings.swt.view.ScriptView;
 import org.libraryofthings.swt.view.SearchView;
 import org.libraryofthings.swt.view.UserView;
@@ -94,6 +96,14 @@ public final class AppWindow implements LOTInfo {
 		shell.getDisplay().asyncExec(() -> {
 			UserView v = new UserView(tabFolder, app, this, user.getUserid());
 			addTab("" + user, v, user);
+		});
+	}
+
+	public void viewRuntimeBuilder(LOTRunEnvironmentBuilder b) {
+		setInfo(0, 0, 0, "Viewing Builder" + b.toString());
+		shell.getDisplay().asyncExec(() -> {
+			RunEnvironmentBuilderView v = new RunEnvironmentBuilderView(tabFolder, app, this, b);
+			addTab("" + b, v, b);
 		});
 	}
 
