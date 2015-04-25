@@ -22,9 +22,10 @@ import waazdoh.common.WLogger;
 import waazdoh.common.vo.UserVO;
 
 public class UserPublishedView extends Composite {
-	public LOTApp app;
+	public final LOTApp app;
+	public final AppWindow window;
+
 	public UserVO u;
-	public AppWindow window;
 
 	private int publishedcount;
 	private Text publishedfilter;
@@ -33,6 +34,9 @@ public class UserPublishedView extends Composite {
 
 	public UserPublishedView(Composite parent, LOTApp app2, AppWindow window2) {
 		super(parent, SWT.NONE);
+		app = app2;
+		window = window2;
+
 		setLayout(new GridLayout(1, false));
 
 		Composite composite = new Composite(this, SWT.NONE);
@@ -57,8 +61,6 @@ public class UserPublishedView extends Composite {
 			}
 		});
 		btnSearchPublished.setText("search");
-		new Label(composite, SWT.NONE);
-		new Label(composite, SWT.NONE);
 
 		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -70,6 +72,11 @@ public class UserPublishedView extends Composite {
 
 		addPublishedItem("testitem1");
 		addPublishedItem("testitem2");
+	}
+
+	public void setUser(UserVO u) {
+		this.u = u;
+		initPublishedList();
 	}
 
 	void initPublishedList() {

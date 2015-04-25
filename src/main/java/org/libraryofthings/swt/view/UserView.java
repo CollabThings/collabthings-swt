@@ -55,7 +55,7 @@ public class UserView extends Composite implements LOTAppControl {
 				lname.setText("" + u.getUsername());
 			});
 
-			dview.initPublishedList();
+			dview.setUser(u);
 		}).start();
 	}
 
