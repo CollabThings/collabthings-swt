@@ -31,6 +31,7 @@ import org.libraryofthings.swt.controls.LocalObjectsMenu;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.libraryofthings.swt.view.FactoryView;
 import org.libraryofthings.swt.view.PartView;
+import org.libraryofthings.swt.view.RunEnvironmentBuildRunView;
 import org.libraryofthings.swt.view.RunEnvironmentBuilderView;
 import org.libraryofthings.swt.view.ScriptView;
 import org.libraryofthings.swt.view.SearchView;
@@ -70,7 +71,7 @@ public final class AppWindow implements LOTInfo {
 	public void newPart() {
 		try {
 			LOTPart p = app.newPart();
-			PartView view = new PartView(tabFolder, app, p);
+			PartView view = new PartView(tabFolder, app, this, p);
 			addTab("part " + p, view, p);
 		} catch (Exception e) {
 			showError(e);
@@ -105,6 +106,11 @@ public final class AppWindow implements LOTInfo {
 			RunEnvironmentBuilderView v = new RunEnvironmentBuilderView(tabFolder, app, this, b);
 			addTab("" + b, v, b);
 		});
+	}
+
+	public void viewSimulation(LOTRunEnvironmentBuilder builder) {
+		RunEnvironmentBuildRunView v = new RunEnvironmentBuildRunView(tabFolder, app, this, builder);
+		addTab("" + builder, v, builder);
 	}
 
 	public void viewFactory(LOTFactory f) {
@@ -179,6 +185,12 @@ public final class AppWindow implements LOTInfo {
 				// newFactory();
 				viewSearch("boxsetfactory");
 				viewSearchUsers("user");
+				view("builder",
+						app.getLClient()
+								.getStorage()
+								.readStorage(
+										app.getLClient().getClient().getService()
+												.getUser("googgeli"), "/published/builder/latest"));
 				//
 				while (!shell.isDisposed()) {
 					readAndDispatch(display);
@@ -228,7 +240,7 @@ public final class AppWindow implements LOTInfo {
 	protected void createContents() {
 		shell = new Shell();
 		shell.setSize(589, 395);
-		shell.setText("SWT Application");
+		shell.setText("SWT Application - " + app.getLClient().getService().getUser().getUsername());
 		GridLayout gl_shell = new GridLayout(1, false);
 		gl_shell.verticalSpacing = 1;
 		gl_shell.horizontalSpacing = 1;

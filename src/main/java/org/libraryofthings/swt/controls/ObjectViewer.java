@@ -14,16 +14,20 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.libraryofthings.LLog;
+import org.libraryofthings.environment.impl.LOTFactoryState;
 import org.libraryofthings.math.LOrientation;
 import org.libraryofthings.math.LVector;
 import org.libraryofthings.model.LOTBoundingBox;
+import org.libraryofthings.model.LOTFactory;
+import org.libraryofthings.swt.AppWindow;
+import org.libraryofthings.swt.app.LOTApp;
+import org.libraryofthings.swt.view.ObjectSmallView;
 
 public class ObjectViewer extends Composite {
 	private LLog log = LLog.getLogger(this);
@@ -40,13 +44,21 @@ public class ObjectViewer extends Composite {
 	private Map<Class, LEditorFactory> editors = new HashMap<>();
 	private Label lblObject;
 	private final Set<String> ignoreset;
+	private AppWindow window;
+	private LOTApp app;
 
-	public ObjectViewer(Composite paranet, Object o) {
-		this(paranet, o, new String[0]);
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public ObjectViewer(LOTApp app, AppWindow window, Composite parent, Object o) {
+		this(app, window, parent, o, new String[0]);
 	}
 
-	public ObjectViewer(Composite parent, Object o, String ignore[]) {
+	public ObjectViewer(LOTApp app, AppWindow window, Composite parent, Object o, String ignore[]) {
 		super(parent, SWT.NONE);
+
+		this.app = app;
+		this.window = window;
 
 		this.ignoreset = new HashSet<String>();
 		for (String s : ignore) {
@@ -79,35 +91,41 @@ public class ObjectViewer extends Composite {
 
 	private void initOkTypes() {
 		editors.put(String.class, (key, c, o) -> {
-			return addStringField(key, c, (String) o);
+			addStringField(key, c, (String) o);
 		});
 
 		editors.put(LVector.class, (key, c, o) -> {
-			return addVectorField(key, c, (LVector) o);
+			addVectorField(key, c, (LVector) o);
 		});
 
 		editors.put(Double.class, (key, c, o) -> {
-			return addDoubleField(key, c, (Double) o);
+			addDoubleField(key, c, (Double) o);
 		});
 
 		editors.put(LOrientation.class, (key, c, o) -> {
-			return addOrientationField(key, c, (LOrientation) o);
+			addOrientationField(key, c, (LOrientation) o);
 		});
 
 		editors.put(LOTBoundingBox.class, (key, c, o) -> {
-			return addBoundingBoxField(key, c, (LOTBoundingBox) o);
+			addBoundingBoxField(key, c, (LOTBoundingBox) o);
+		});
+
+		editors.put(LOTFactoryState.class, (key, c, o) -> {
+			LOTFactoryState s = (LOTFactoryState) o;
+			LOTFactory f = s.getFactory();
+			new ObjectSmallView(c, app, window, f.getID().toString());
 		});
 
 		editors.put(Long.class, (key, c, o) -> {
 			if ("modifytime".equals(key) || "creationtime".equals(key)) {
-				return addDateField(key, c, (Long) o);
+				addDateField(key, c, (Long) o);
 			} else {
-				return addStringField(key, c, "WHAT IS THIS " + key + " " + o);
+				addStringField(key, c, "WHAT IS THIS " + key + " " + o);
 			}
 		});
 
 		editors.put(Set.class, (key, c, o) -> {
-			return addCollectionView(key, c, o);
+			addCollectionView(key, c, o);
 		});
 	}
 
@@ -225,25 +243,20 @@ public class ObjectViewer extends Composite {
 	}
 
 	private void addRow(String key) {
-		Composite row = new Composite(composite, SWT.NONE);
-		row.setLayout(new GridLayout(2, false));
-		row.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-		Label l = new Label(row, SWT.NONE);
-		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		l.setText(key);
-		l.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-
 		Method method = methods.get(key);
 		Object o = invokeGetMethod(method);
+
+		addValue(composite, key, o);
+	}
+
+	private void addValue(Composite parent, String key, Object o) {
 		LEditorFactory e = getEditor(o);
 		if (e != null) {
-			Control cc = e.add(key, row, o);
-			cc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			e.add(key, parent, o);
 		} else {
-			Label la = new Label(row, getStyle());
+			Label la = new Label(parent, getStyle());
 			la.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-			la.setText("unknown type");
+			la.setText("unknown type " + o.getClass().getName() + " " + key);
 		}
 	}
 
@@ -251,8 +264,11 @@ public class ObjectViewer extends Composite {
 		return addLabelField(key, c, "" + new Date(d));
 	}
 
-	private Composite addBoundingBoxField(String key, Composite c, LOTBoundingBox box) {
-		return new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
+	private Composite addBoundingBoxField(String key, Composite parent, LOTBoundingBox box) {
+		Composite c = getTwoRowsComposite(parent);
+		addLabel(key, c);
+		new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
+		return c;
 	}
 
 	private Composite addOrientationField(String key, Composite c, LOrientation orgo) {
@@ -270,8 +286,31 @@ public class ObjectViewer extends Composite {
 		});
 	}
 
-	private Composite addVectorField(String key, Composite c, LVector orgv) {
-		return new LOTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
+	private Composite addVectorField(String key, Composite parent, LVector orgv) {
+		Composite c = getRowComposite(parent);
+		addLabel(key, c);
+		LOTVectorEditor e = new LOTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
+		return e;
+	}
+
+	private Composite getRowComposite(Composite parent) {
+		Composite c = new Composite(parent, SWT.NONE);
+		c.setLayout(new GridLayout(2, false));
+		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		return c;
+	}
+
+	private Composite getTwoRowsComposite(Composite parent) {
+		Composite c = new Composite(parent, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.marginBottom = 0;
+		c.setLayout(gridLayout);
+		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		return c;
 	}
 
 	private Control addStringField(String key, Composite c, String s) {
@@ -290,14 +329,29 @@ public class ObjectViewer extends Composite {
 		return "" + t.getText();
 	}
 
-	private Control addLabelField(String key, Composite c, String text) {
+	private Control addLabelField(String key, Composite parent, String text) {
+		Composite c = getRowComposite(parent);
+
+		addLabel(key, c);
+
 		Label s = new Label(c, SWT.NONE);
 		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		s.setText(text);
 		return s;
 	}
 
-	private Control addTextField(Composite c, String text, ModifyListener listener) {
+	private void addLabel(String key, Composite c) {
+		Label l = new Label(c, SWT.NONE);
+		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		l.setText(key);
+		l.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+	}
+
+	private Control addTextField(Composite parent, String text, ModifyListener listener) {
+		Composite c = getRowComposite(parent);
+
+		addLabel(text, c);
+
 		Text s = new Text(c, SWT.NONE);
 		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		s.setEditable(true);
@@ -306,15 +360,20 @@ public class ObjectViewer extends Composite {
 		return s;
 	}
 
-	private Control addCollectionView(String key, Composite c, Object o) {
-		Composite v = new Composite(c, SWT.None);
-		v.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		v.setLayout(new RowLayout());
+	private Control addCollectionView(String key, Composite parent, Object o) {
+		log.info("addng " + key + " o:" + o);
+		Composite v = getTwoRowsComposite(parent);
+		addLabel(key, v);
 
-		Collection col = (Collection) o;
-		for (Object item : col) {
-			Label l = new Label(v, SWT.None);
+		Composite c = new Composite(v, SWT.None);
+		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		c.setLayout(new GridLayout());
+
+		for (Object item : (Collection) o) {
+			Label l = new Label(c, SWT.None);
 			l.setText("" + item);
+
+			addValue(c, "" + item, item);
 		}
 
 		return v;
@@ -339,7 +398,6 @@ public class ObjectViewer extends Composite {
 	}
 
 	private interface LEditorFactory {
-		public Control add(String key, Composite c, Object o);
+		public void add(String key, Composite c, Object o);
 	}
-
 }

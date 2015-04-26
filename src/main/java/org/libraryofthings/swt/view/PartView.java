@@ -34,18 +34,15 @@ public class PartView extends Composite implements LOTAppControl {
 	private ObjectViewer partobjectviewer;
 	private Model3DView partcanvas;
 	private LLog log = LLog.getLogger(this);
-	private LOTApp app;
+	private final LOTApp app;
+	private final AppWindow window;
 	private ObjectViewer modelobjectviewer;
 
-	public PartView(Composite composite, LOTApp app, LOTPart p) {
+	public PartView(Composite composite, LOTApp app, AppWindow window, LOTPart p) {
 		super(composite, SWT.None);
 		this.app = app;
+		this.window = window;
 		this.part = p;
-		init();
-	}
-
-	private PartView(Composite c, int i) {
-		super(c, i);
 		init();
 	}
 
@@ -127,7 +124,7 @@ public class PartView extends Composite implements LOTAppControl {
 	}
 
 	private void createModelDataViewer(Composite c_partproperties) {
-		this.modelobjectviewer = new ObjectViewer(c_partproperties, part.getModel());
+		this.modelobjectviewer = new ObjectViewer(app, window, c_partproperties, part.getModel());
 		this.modelobjectviewer.addListener(new ObjectViewerListener() {
 			@Override
 			public void valueChanged(String name, Object o) {
@@ -137,7 +134,7 @@ public class PartView extends Composite implements LOTAppControl {
 	}
 
 	private void createPartDataViewer(Composite c_partproperties) {
-		this.partobjectviewer = new ObjectViewer(c_partproperties, part);
+		this.partobjectviewer = new ObjectViewer(app, window, c_partproperties, part);
 		partobjectviewer.addListener(new ObjectViewerListener() {
 			@Override
 			public void valueChanged(String name, Object o) {

@@ -86,7 +86,9 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener, LO
 	}
 
 	public void callRepaint() {
-		redraw();
+		if (!isDisposed()) {
+			redraw();
+		}
 	}
 
 	public RunEnviromentDrawer getDrawer() {

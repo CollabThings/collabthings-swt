@@ -4,11 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Set;
-import java.util.UUID;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -18,12 +14,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -40,8 +34,6 @@ import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.controls.LocalObjectsMenu;
-import org.libraryofthings.swt.controls.ObjectViewer;
-import org.libraryofthings.swt.controls.ObjectViewerListener;
 
 public class FactoryView extends Composite implements LOTAppControl, ScriptUser {
 	private LOTFactory factory;
@@ -51,8 +43,9 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private Composite cchildrenlist;
 	private ScrolledComposite scrolledComposite;
-	private Composite composite;
 	private AppWindow window;
+	private FactoryInfoView infoview;
+
 	private int currentfactoryhash;
 
 	public FactoryView(Composite composite, LOTApp app, AppWindow w, LOTFactory f) {
@@ -83,19 +76,13 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		factory.addScript("script" + factory.getScripts().size() + " " + script.getName(), script);
 	}
 
+	private synchronized void updateFactoryHash() {
+		currentfactoryhash = factory.getBean().hashCode();
+	}
+
 	@Override
 	public void selected(AppWindow w) {
 		updateView();
-	}
-
-	private void addChild() {
-		this.factory.addFactory();
-		updateDataEditors();
-	}
-
-	private void addChild(LOTFactory f) {
-		this.factory.addFactory("child" + this.factory.getFactories().size(), f);
-		updateDataEditors();
 	}
 
 	private void viewChild(LOTFactory f) {
@@ -108,8 +95,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private void updateLayout() {
 		int w = scrolledComposite.getClientArea().width;
-		composite.pack();
-		scrolledComposite.setMinSize(w, composite.computeSize(w, SWT.DEFAULT).y);
+		infoview.pack();
+		scrolledComposite.setMinSize(w, infoview.computeSize(w, SWT.DEFAULT).y);
 	}
 
 	private void init() {
@@ -130,11 +117,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 			}
 		});
 
-		this.composite = new Composite(scrolledComposite, SWT.NONE);
-
-		createDataView();
-
-		scrolledComposite.setContent(composite);
+		this.infoview = new FactoryInfoView(scrolledComposite, app, window, factory);
+		scrolledComposite.setContent(infoview);
 
 		Composite c_view = new Composite(composite_main, SWT.NONE);
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -148,130 +132,10 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		setMenu(tempmenu);
 		createMenu(tempmenu);
 
-		updateFactory();
-		//
 		new Thread(() -> checkFactoryUpdate()).start();
 	}
 
-	private void createDataView() {
-		createDataEditors(composite, factory);
-
-		EnvironmentView ev = new EnvironmentView(composite, window, factory.getEnvironment());
-		ev.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-		Composite cchildren = new Composite(composite, SWT.NONE);
-		createChildrenComposite(cchildren);
-
-		updateLayout();
-	}
-
-	private void createChildrenComposite(Composite cchildren) {
-		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		GridLayout gl_cchildren = new GridLayout(1, false);
-		cchildren.setLayout(gl_cchildren);
-
-		Composite cchildrenpanel = new Composite(cchildren, SWT.NONE);
-		cchildrenpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		cchildrenpanel.setSize(65, 25);
-		GridLayout gl_cchildrenpanel = new GridLayout(2, false);
-		cchildrenpanel.setLayout(gl_cchildrenpanel);
-
-		Label lblChildren = new Label(cchildrenpanel, SWT.NONE);
-		lblChildren.setText("CHILDREN");
-
-		Button bnewchild = new Button(cchildrenpanel, SWT.NONE);
-		bnewchild.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				addChild();
-			}
-		});
-		bnewchild.setToolTipText("New Child factory");
-		bnewchild.setText("+");
-
-		this.cchildrenlist = new Composite(cchildren, SWT.NONE);
-		cchildrenlist.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
-		cchildrenlist.setSize(0, 0);
-		cchildrenlist.setLayout(new GridLayout(1, false));
-
-		Set<String> children = factory.getFactories();
-		for (String childname : children) {
-			LOTFactory child = factory.getFactory(childname);
-
-			Composite cc = new Composite(cchildrenlist, SWT.NONE);
-			cc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-			Composite childpanel = new Composite(cc, SWT.None);
-			GridLayout gridLayout = new GridLayout();
-
-			childpanel.setLayout(gridLayout);
-			Button b = new Button(childpanel, getStyle());
-			b.setText("view");
-			b.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			b.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					viewChild(child);
-				}
-			});
-			createDataEditors(cc, child);
-
-		}
-	}
-
-	private synchronized void checkFactoryUpdate() {
-		while (!isDisposed()) {
-			int nhash = factory.getBean().hashCode();
-			if (nhash != currentfactoryhash && !window.isSelected(this)) {
-				currentfactoryhash = nhash;
-				updateView();
-			} else {
-				try {
-					wait(100);
-				} catch (InterruptedException e) {
-					log.info("" + e);
-				}
-			}
-		}
-	}
-
-	private synchronized void updateView() {
-		getDisplay().asyncExec(() -> {
-			updateDataEditors();
-			updateFactory();
-
-			updateLayout();
-		});
-	}
-
-	private synchronized void updateDataEditors() {
-		updateDataEditors(composite);
-	}
-
-	private synchronized void updateDataEditors(Composite c) {
-		Control[] cc = c.getChildren();
-		for (Control control : cc) {
-			control.dispose();
-		}
-		//
-		window.updateObjectMenu(this);
-
-		createDataView();
-
-		updateFactoryHash();
-		updateLayout();
-	}
-
-	private synchronized void updateFactoryHash() {
-		currentfactoryhash = factory.getBean().hashCode();
-	}
-
-	private synchronized void createDataEditors(Composite c, LOTFactory f) {
-		createFactoryDataViewer(c, f);
-	}
-
 	private void updateFactory() {
-		updateFactoryHash();
 
 		new Thread(
 				() -> {
@@ -285,29 +149,19 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 				}).start();
 	}
 
-	private void createFactoryDataViewer(Composite c, LOTFactory f) {
-		GridLayout gl_c_factoryproperties_1 = new GridLayout(1, false);
-		gl_c_factoryproperties_1.marginTop = 5;
-		gl_c_factoryproperties_1.marginHeight = 0;
-		c.setLayout(gl_c_factoryproperties_1);
-		ObjectViewer factoryobjectviewer = new ObjectViewer(c, f);
+	private synchronized void updateView() {
+		getDisplay().asyncExec(() -> {
+			infoview.updateDataEditors();
+			updateFactory();
 
-		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
-		GridLayout gridLayout = (GridLayout) factoryobjectviewer.getLayout();
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
-		factoryobjectviewer.addListener(new ObjectViewerListener() {
-			@Override
-			public void valueChanged(String name, Object o) {
-				factoryObjectChanged(name, o);
-			}
+			updateLayout();
 		});
 	}
 
-	protected void factoryObjectChanged(String name, Object o) {
-		updateFactory();
+	private synchronized void updateDataEditors() {
+		window.updateObjectMenu(this);
+		infoview.updateDataEditors();
+		updateLayout();
 	}
 
 	protected void environmentObjectChanged(String name, Object o) {
@@ -384,9 +238,10 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		mifaddnewchild.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				addChild();
+				infoview.addChild();
 			}
 		});
+
 		mifpublish.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -409,8 +264,24 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 				(data) -> {
 					LOTFactory f = window.getApp().getLClient().getObjectFactory()
 							.getFactory(data.getIDValue("id"));
-					addChild(f);
+					infoview.addChild(f);
 				});
+	}
+
+	private synchronized void checkFactoryUpdate() {
+		while (!isDisposed()) {
+			int nhash = factory.getBean().hashCode();
+			if (nhash != currentfactoryhash && !window.isSelected(this)) {
+				currentfactoryhash = nhash;
+				updateView();
+			} else {
+				try {
+					wait(100);
+				} catch (InterruptedException e) {
+					window.showError(e);
+				}
+			}
+		}
 	}
 
 	protected void importSelected() {
@@ -435,4 +306,5 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	protected void scriptMenuSelected(String string) {
 		window.viewScript(factory.getScript(string));
 	}
+
 }
