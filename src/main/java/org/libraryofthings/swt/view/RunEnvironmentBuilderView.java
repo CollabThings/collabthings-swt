@@ -1,13 +1,15 @@
 package org.libraryofthings.swt.view;
 
+import java.util.Date;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -15,15 +17,19 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Text;
 import org.libraryofthings.LLog;
+import org.libraryofthings.PrintOut;
 import org.libraryofthings.environment.LOTRunEnvironment;
+import org.libraryofthings.environment.LOTRuntimeEvent;
+import org.libraryofthings.environment.LOTTask;
+import org.libraryofthings.environment.RunEnvironmentListener;
 import org.libraryofthings.model.LOTRunEnvironmentBuilder;
 import org.libraryofthings.simulation.LOTSimpleSimulation;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.controls.ObjectViewer;
-import org.eclipse.swt.widgets.Button;
 
 public class RunEnvironmentBuilderView extends Composite implements LOTAppControl {
 	private LOTRunEnvironmentBuilder builder;
@@ -37,9 +43,13 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 	private AppWindow window;
 	private int currentfactoryhash;
 
-	private RunEnvironment4xView eview;
-
 	private LOTSimpleSimulation s;
+	private Text text;
+	private PrintOut printout = new PrintOut();
+
+	private int printouthash;
+
+	private Label ltested;
 
 	public RunEnvironmentBuilderView(Composite composite, LOTApp app, AppWindow w,
 			LOTRunEnvironmentBuilder b) {
@@ -77,10 +87,7 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 	}
 
 	private void run() {
-		LOTRunEnvironment runEnvironment = builder.getRunEnvironment();
-		eview.setRunEnvironment(runEnvironment);
-		s = new LOTSimpleSimulation(runEnvironment);
-		s.run(60000);
+		window.viewSimulation(builder);
 	}
 
 	private void init() {
@@ -108,17 +115,90 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 		scrolledComposite.setContent(composite);
 
 		Composite c_view = new Composite(composite_main, SWT.NONE);
-		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);
+		c_view.setLayout(new GridLayout(1, false));
 
-		eview = new RunEnvironment4xView(c_view, SWT.NONE);
+		Composite composite_1 = new Composite(c_view, SWT.NONE);
+		composite_1.setLayout(new GridLayout(7, false));
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		Button btest = new Button(composite_1, SWT.NONE);
+		btest.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				testRun();
+			}
+		});
+		btest.setText("Test");
+
+		ltested = new Label(composite_1, SWT.NONE);
+		ltested.setText("date");
+		new Label(composite_1, SWT.NONE);
+		new Label(composite_1, SWT.NONE);
+		new Label(composite_1, SWT.NONE);
+		new Label(composite_1, SWT.NONE);
+		new Label(composite_1, SWT.NONE);
+
+		text = new Text(c_view, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Menu tempmenu = new Menu(this);
 		setMenu(tempmenu);
 		createMenu(tempmenu);
 		//
-		new Thread(() -> checkFactoryUpdate()).start();
+		new Thread(() -> checkBuilderUpdate()).start();
+		new Thread(() -> {
+			while (!isDisposed()) {
+				if (printouthash != printout.toText().hashCode()) {
+					getDisplay().asyncExec(() -> {
+						text.setText(printout.toText());
+					});
+				}
+
+				synchronized (this) {
+					try {
+						this.wait(300);
+					} catch (Exception e) {
+						window.showError(e);
+					}
+				}
+			}
+		}).start();
+		testRun();
+	}
+
+	private void testRun() {
+		LOTRunEnvironment runenv = builder.getRunEnvironment();
+		if (runenv != null) {
+			runenv.addListener(new RunEnvironmentListener() {
+
+				@Override
+				public void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
+					appendLog("FAILED " + task);
+					appendLog("ERROR " + task.getError());
+				}
+
+				@Override
+				public void event(LOTRuntimeEvent e) {
+					appendLog("" + e.getName());
+					appendLog("" + e.getObject());
+				}
+			});
+
+			new Thread(() -> {
+				LOTSimpleSimulation s = new LOTSimpleSimulation(runenv);
+				s.run(1000);
+			}).start();
+
+			ltested.setText("" + new Date());
+		} else {
+			appendLog("RunEnvironment null");
+		}
+	}
+
+	protected void appendLog(String string) {
+		printout.append(string);
 	}
 
 	private void createDataView() {
@@ -127,30 +207,14 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 		EnvironmentView ev = new EnvironmentView(composite, window, builder.getEnvironment());
 		ev.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Composite cchildren = new Composite(composite, SWT.NONE);
-		createChildrenComposite(cchildren);
+		ObjectViewer oview = new ObjectViewer(app, window, composite,
+				this.builder.getRunEnvironment());
+		oview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		updateLayout();
 	}
 
-	private void createChildrenComposite(Composite cchildren) {
-		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		GridLayout gl_cchildren = new GridLayout(1, false);
-		cchildren.setLayout(gl_cchildren);
-
-		Composite cchildrenpanel = new Composite(cchildren, SWT.NONE);
-		cchildrenpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		cchildrenpanel.setSize(65, 25);
-		GridLayout gl_cchildrenpanel = new GridLayout(2, false);
-		cchildrenpanel.setLayout(gl_cchildrenpanel);
-
-		Label lblChildren = new Label(cchildrenpanel, SWT.NONE);
-		lblChildren.setText("CHILDREN");
-		new Label(cchildrenpanel, SWT.NONE);
-
-	}
-
-	private synchronized void checkFactoryUpdate() {
+	private synchronized void checkBuilderUpdate() {
 		while (!isDisposed()) {
 			int nhash = builder.getBean().hashCode();
 			if (nhash != currentfactoryhash && !window.isSelected(this)) {
@@ -204,7 +268,7 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 		gl_c_factoryproperties_1.marginTop = 5;
 		gl_c_factoryproperties_1.marginHeight = 0;
 		c.setLayout(gl_c_factoryproperties_1);
-		ObjectViewer factoryobjectviewer = new ObjectViewer(c, builder2);
+		ObjectViewer factoryobjectviewer = new ObjectViewer(app, window, c, builder2);
 
 		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		GridLayout gridLayout = (GridLayout) factoryobjectviewer.getLayout();
@@ -262,5 +326,4 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 
 	private void initLocalMenu(Menu mAddLocalChild) {
 	}
-
 }
