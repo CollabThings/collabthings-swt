@@ -1,31 +1,26 @@
 package org.libraryofthings.swt.view;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
+import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.model.LOTRuntimeObject;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.jgraph.JGraph;
-import org.jgrapht.ListenableGraph;
-import org.jgrapht.ext.JGraphModelAdapter;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.ListenableDirectedGraph;
-import org.libraryofthings.environment.LOTRunEnvironment;
-import org.libraryofthings.model.LOTRuntimeObject;
+import org.eclipse.zest.core.widgets.Graph;
+import org.eclipse.zest.core.widgets.GraphConnection;
+import org.eclipse.zest.core.widgets.GraphNode;
+import org.eclipse.zest.layouts.LayoutStyles;
+import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
+
+import com.interactivemesh.jfx.importer.Viewpoint;
 
 public class MapView extends Composite {
-
-	private MapObject root;
 
 	public MapView(Composite parent) {
 		super(parent, SWT.NONE);
@@ -53,103 +48,24 @@ public class MapView extends Composite {
 			}
 		});
 
-		root = new MapObject("root");
-		root.add("test1");
-		MapObject test2 = root.add("test2");
-		test2.add("test21");
-		test2.add("test22");
+		Graph g = new Graph(composite, SWT.NONE);
+		GraphNode n1 = new GraphNode(g, SWT.NONE, "node1");
+		GraphNode n2 = new GraphNode(g, SWT.NONE, "node2");
+		GraphNode n3 = new GraphNode(g, SWT.NONE, "node3");
+		GraphNode n4 = new GraphNode(g, SWT.NONE, "node4");
+		new GraphConnection(g, SWT.NONE, n1, n2);
+		new GraphConnection(g, SWT.NONE, n1, n3);
+		new GraphConnection(g, SWT.NONE, n3, n4);
 
-		JGraph jgraph = new JGraph();
-		c.add(jgraph);
-	}
-
-	@Override
-	public void paintControl(PaintEvent e) {
-		GC gc = e.gc;
-		layout();
-		paint(gc, root);
-	}
-
-	private void layoutMapObject(MapObject o) {
-		if (o.parent != null) {
-			o.y = o.parent.y + 20;
-		}
-
-		if (o.cs != null) {
-			for (MapObject c : o.cs) {
-				layoutMapObject(c);
-			}
-		}
-
-	}
-
-	private void paint(GC gc, MapObject o) {
-		gc.drawText("" + o, o.x, o.y);
-
-		ListenableGraph g = new ListenableDirectedGraph(DefaultEdge.class);
-
-		g.addVertex("test");
-
-		if (o.cs != null) {
-			for (MapObject c : o.cs) {
-				paint(gc, c);
-			}
-		}
+		g.setLayoutAlgorithm(new SpringLayoutAlgorithm(
+				LayoutStyles.NO_LAYOUT_NODE_RESIZING), true);
+		
 	}
 
 	public void set(LOTRunEnvironment env) {
-		root = new MapObject("" + env);
-
 		Set<LOTRuntimeObject> rs = env.getRunObjects();
 		for (LOTRuntimeObject runo : rs) {
-			MapObject cmo = root.add("" + runo);
-		}
-
-		layoutMapObject(root);
-	}
-
-	class MapObject {
-		int x, y;
-		String text;
-		private LinkedList<MapObject> cs;
-		private MapObject parent;
-
-		private final String name;
-
-		public MapObject(String name) {
-			this.name = name;
-		}
-
-		@Override
-		public String toString() {
-			return name.toUpperCase();
-		}
-
-		public void add(MapObject c) {
-			getChildren().add(c);
-			c.setParent(this);
-		}
-
-		private void setParent(MapObject lotObject) {
-			this.parent = lotObject;
-		}
-
-		public List<MapObject> getChildren() {
-			if (cs == null) {
-				cs = new LinkedList<MapObject>();
-			}
-
-			return cs;
-		}
-
-		public MapObject add(String name) {
-			MapObject m = new MapObject(name);
-			add(m);
-			return m;
-		}
-
-		public String getName() {
-			return name;
 		}
 	}
+
 }
