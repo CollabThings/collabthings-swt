@@ -9,9 +9,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.libraryofthings.view.LOTGraphics;
 import org.libraryofthings.view.RunEnviromentDrawer;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class RunEnvironmentCanvas extends Composite implements PaintListener, LOTGraphics {
 

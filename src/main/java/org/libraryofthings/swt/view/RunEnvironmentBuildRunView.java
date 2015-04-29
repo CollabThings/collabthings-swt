@@ -1,6 +1,9 @@
 package org.libraryofthings.swt.view;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -11,10 +14,6 @@ import org.libraryofthings.simulation.LOTSimpleSimulation;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridData;
 
 public class RunEnvironmentBuildRunView extends Composite implements LOTAppControl {
 

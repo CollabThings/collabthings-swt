@@ -183,14 +183,24 @@ public final class AppWindow implements LOTInfo {
 				//
 				// FIXME TODO REMOVE
 				// newFactory();
-				viewSearch("boxsetfactory");
-				viewSearchUsers("user");
-				view("builder",
-						app.getLClient()
-								.getStorage()
-								.readStorage(
-										app.getLClient().getClient().getService()
-												.getUser("googgeli"), "/published/builder/latest"));
+				display.asyncExec(() -> {
+					viewSearch("boxsetfactory");
+				});
+
+				display.asyncExec(() -> {
+					viewSearchUsers("user");
+				});
+
+				display.asyncExec(() -> {
+					view("builder",
+							app.getLClient()
+									.getStorage()
+									.readStorage(
+											app.getLClient().getClient().getService()
+													.getUser("googgeli"),
+											"/published/builder/latest"));
+				});
+
 				//
 				while (!shell.isDisposed()) {
 					readAndDispatch(display);

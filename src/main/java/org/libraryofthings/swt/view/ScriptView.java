@@ -16,8 +16,6 @@ import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;
 
-import com.sun.corba.se.impl.orbutil.concurrent.Sync;
-
 public class ScriptView extends Composite implements LOTAppControl {
 
 	private AppWindow window;

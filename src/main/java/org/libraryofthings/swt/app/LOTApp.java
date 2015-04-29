@@ -8,7 +8,6 @@ import org.libraryofthings.impl.LOTClientImpl;
 import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.model.LOTObjectFactory;
 import org.libraryofthings.model.LOTPart;
-import org.libraryofthings.model.LOTScript;
 
 import waazdoh.client.WClientListener;
 import waazdoh.client.storage.BeanStorage;
