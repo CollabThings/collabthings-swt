@@ -1,0 +1,3 @@
+[submodule "zest"]
+	path = zest
+	url = https://github.com/eclipse/zest.git

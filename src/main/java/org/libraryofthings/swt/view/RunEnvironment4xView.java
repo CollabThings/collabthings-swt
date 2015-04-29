@@ -6,10 +6,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.libraryofthings.environment.LOTRunEnvironment;
 import org.libraryofthings.math.LTransformation;
 import org.libraryofthings.view.RunEnviromentDrawer;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class RunEnvironment4xView extends Composite {
 	private LTransformation freetransform;

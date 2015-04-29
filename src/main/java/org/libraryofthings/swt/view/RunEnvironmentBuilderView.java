@@ -51,6 +51,8 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 
 	private Label ltested;
 
+	private MapView mapview;
+
 	public RunEnvironmentBuilderView(Composite composite, LOTApp app, AppWindow w,
 			LOTRunEnvironmentBuilder b) {
 		super(composite, SWT.None);
@@ -119,7 +121,7 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 		c_view.setBounds(0, 0, 64, 64);
 		c_view.setLayout(new GridLayout(1, false));
 
-		Composite composite_1 = new Composite(c_view, SWT.NONE);
+		Composite composite_1 = new Composite(c_view, SWT.BORDER);
 		composite_1.setLayout(new GridLayout(7, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
@@ -141,7 +143,16 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 		new Label(composite_1, SWT.NONE);
 
 		text = new Text(c_view, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_text.heightHint = 128;
+		text.setLayoutData(gd_text);
+
+		mapview = new MapView(c_view);
+		mapview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		getDisplay().asyncExec(() -> {
+			mapview.set(this.builder.getRunEnvironment());
+		});
 
 		Menu tempmenu = new Menu(this);
 		setMenu(tempmenu);
