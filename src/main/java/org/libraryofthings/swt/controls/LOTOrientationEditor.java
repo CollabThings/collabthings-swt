@@ -1,10 +1,10 @@
 package org.libraryofthings.swt.controls;
 
+import org.collabthings.math.LOrientation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.libraryofthings.math.LOrientation;
 
 public class LOTOrientationEditor extends Composite {
 

@@ -1,5 +1,6 @@
 package org.libraryofthings.swt.view;
 
+import org.collabthings.model.LOTScript;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -11,7 +12,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
-import org.libraryofthings.model.LOTScript;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;

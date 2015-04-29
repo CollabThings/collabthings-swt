@@ -2,6 +2,7 @@ package org.libraryofthings.swt.view;
 
 import java.util.Set;
 
+import org.collabthings.model.LOTEnvironment;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -12,7 +13,6 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.libraryofthings.model.LOTEnvironment;
 import org.libraryofthings.swt.AppWindow;
 
 public class EnvironmentView extends Composite {

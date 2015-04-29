@@ -2,14 +2,14 @@ package org.libraryofthings.swt.view;
 
 import javax.vecmath.Vector3d;
 
+import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.math.LTransformation;
+import org.collabthings.view.RunEnviromentDrawer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.libraryofthings.environment.LOTRunEnvironment;
-import org.libraryofthings.math.LTransformation;
-import org.libraryofthings.view.RunEnviromentDrawer;
 
 public class RunEnvironment4xView extends Composite {
 	private LTransformation freetransform;

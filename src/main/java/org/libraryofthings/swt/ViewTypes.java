@@ -3,8 +3,8 @@ package org.libraryofthings.swt;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.libraryofthings.model.LOTFactory;
-import org.libraryofthings.model.LOTRunEnvironmentBuilder;
+import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTRunEnvironmentBuilder;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.common.MStringID;

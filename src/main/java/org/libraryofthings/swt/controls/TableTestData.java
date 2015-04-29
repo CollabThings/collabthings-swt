@@ -3,8 +3,8 @@ package org.libraryofthings.swt.controls;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.libraryofthings.math.LOrientation;
-import org.libraryofthings.math.LVector;
+import org.collabthings.math.LOrientation;
+import org.collabthings.math.LVector;
 
 public class TableTestData {
 	private String value1 = "value1";

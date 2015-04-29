@@ -13,6 +13,10 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 
+import org.collabthings.LLog;
+import org.collabthings.LOTClient;
+import org.collabthings.math.LVector;
+import org.collabthings.model.LOT3DModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.events.GestureListener;
@@ -21,10 +25,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.libraryofthings.LLog;
-import org.libraryofthings.LOTClient;
-import org.libraryofthings.math.LVector;
-import org.libraryofthings.model.LOT3DModel;
 import org.libraryofthings.swt.dialog.LOTMessageDialog;
 import org.xml.sax.SAXException;
 

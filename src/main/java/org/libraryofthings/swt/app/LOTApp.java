@@ -2,12 +2,12 @@ package org.libraryofthings.swt.app;
 
 import java.net.MalformedURLException;
 
-import org.libraryofthings.LLog;
-import org.libraryofthings.LOTClient;
-import org.libraryofthings.impl.LOTClientImpl;
-import org.libraryofthings.model.LOTFactory;
-import org.libraryofthings.model.LOTObjectFactory;
-import org.libraryofthings.model.LOTPart;
+import org.collabthings.LLog;
+import org.collabthings.LOTClient;
+import org.collabthings.impl.LOTClientImpl;
+import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTObjectFactory;
+import org.collabthings.model.LOTPart;
 
 import waazdoh.client.WClientListener;
 import waazdoh.client.storage.BeanStorage;

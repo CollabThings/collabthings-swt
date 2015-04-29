@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.collabthings.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
@@ -11,7 +12,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.libraryofthings.LLog;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.app.LOTApp;
 

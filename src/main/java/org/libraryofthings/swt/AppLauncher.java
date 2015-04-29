@@ -2,7 +2,7 @@ package org.libraryofthings.swt;
 
 import java.net.MalformedURLException;
 
-import org.libraryofthings.LLog;
+import org.collabthings.LLog;
 import org.libraryofthings.swt.app.LOTApp;
 
 import waazdoh.client.WClient;

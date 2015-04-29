@@ -2,6 +2,8 @@ package org.libraryofthings.swt.view;
 
 import java.awt.Stroke;
 
+import org.collabthings.view.LOTGraphics;
+import org.collabthings.view.RunEnviromentDrawer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -10,8 +12,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.libraryofthings.view.LOTGraphics;
-import org.libraryofthings.view.RunEnviromentDrawer;
 
 public class RunEnvironmentCanvas extends Composite implements PaintListener, LOTGraphics {
 

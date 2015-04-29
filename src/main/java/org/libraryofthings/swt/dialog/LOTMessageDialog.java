@@ -3,9 +3,9 @@ package org.libraryofthings.swt.dialog;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.collabthings.LLog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.libraryofthings.LLog;
 
 public class LOTMessageDialog {
 

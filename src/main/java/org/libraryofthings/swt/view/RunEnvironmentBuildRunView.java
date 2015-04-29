@@ -1,5 +1,8 @@
 package org.libraryofthings.swt.view;
 
+import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.model.LOTRunEnvironmentBuilder;
+import org.collabthings.simulation.LOTSimpleSimulation;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
@@ -8,9 +11,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.libraryofthings.environment.LOTRunEnvironment;
-import org.libraryofthings.model.LOTRunEnvironmentBuilder;
-import org.libraryofthings.simulation.LOTSimpleSimulation;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.app.LOTApp;

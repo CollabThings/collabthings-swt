@@ -1,6 +1,6 @@
 package org.libraryofthings.swt.view;
 
-import org.libraryofthings.model.LOTScript;
+import org.collabthings.model.LOTScript;
 
 public interface ScriptUser {
 

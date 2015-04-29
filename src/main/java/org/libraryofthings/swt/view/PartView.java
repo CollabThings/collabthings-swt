@@ -3,6 +3,8 @@ package org.libraryofthings.swt.view;
 import java.io.File;
 import java.io.IOException;
 
+import org.collabthings.LLog;
+import org.collabthings.model.LOTPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -17,8 +19,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.libraryofthings.LLog;
-import org.libraryofthings.model.LOTPart;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.LOTAppControl;
 import org.libraryofthings.swt.SWTResourceManager;

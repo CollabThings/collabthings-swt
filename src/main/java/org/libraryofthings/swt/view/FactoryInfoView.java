@@ -2,6 +2,7 @@ package org.libraryofthings.swt.view;
 
 import java.util.Set;
 
+import org.collabthings.model.LOTFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -11,7 +12,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.libraryofthings.model.LOTFactory;
 import org.libraryofthings.swt.AppWindow;
 import org.libraryofthings.swt.app.LOTApp;
 import org.libraryofthings.swt.controls.ObjectViewer;
