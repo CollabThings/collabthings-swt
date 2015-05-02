@@ -22,6 +22,7 @@ import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.SearchView;
 import org.collabthings.swt.view.UserView;
 import org.collabthings.swt.view.UsersSearchView;
+import org.collabthings.swt.view.ValueEditorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -102,14 +103,18 @@ public final class AppWindow implements LOTInfo {
 
 	public void viewRuntimeBuilder(LOTRunEnvironmentBuilder b) {
 		setInfo(0, 0, 0, "Viewing Builder" + b.toString());
-		shell.getDisplay().asyncExec(() -> {
-			RunEnvironmentBuilderView v = new RunEnvironmentBuilderView(tabFolder, app, this, b);
-			addTab("" + b, v, b);
-		});
+		shell.getDisplay()
+				.asyncExec(
+						() -> {
+							RunEnvironmentBuilderView v = new RunEnvironmentBuilderView(
+									tabFolder, app, this, b);
+							addTab("" + b, v, b);
+						});
 	}
 
 	public void viewSimulation(LOTRunEnvironmentBuilder builder) {
-		RunEnvironmentBuildRunView v = new RunEnvironmentBuildRunView(tabFolder, app, this, builder);
+		RunEnvironmentBuildRunView v = new RunEnvironmentBuildRunView(
+				tabFolder, app, this, builder);
 		addTab("" + builder, v, builder);
 	}
 
@@ -196,8 +201,9 @@ public final class AppWindow implements LOTInfo {
 							app.getLClient()
 									.getStorage()
 									.readStorage(
-											app.getLClient().getClient().getService()
-													.getUser("googgeli"),
+											app.getLClient().getClient()
+													.getService()
+													.getUser("juuso.vilmunen"),
 											"/published/builder/latest"));
 				});
 
@@ -250,7 +256,8 @@ public final class AppWindow implements LOTInfo {
 	protected void createContents() {
 		shell = new Shell();
 		shell.setSize(589, 395);
-		shell.setText("SWT Application - " + app.getLClient().getService().getUser().getUsername());
+		shell.setText("SWT Application - "
+				+ app.getLClient().getService().getUser().getUsername());
 		GridLayout gl_shell = new GridLayout(1, false);
 		gl_shell.verticalSpacing = 1;
 		gl_shell.horizontalSpacing = 1;
@@ -339,7 +346,8 @@ public final class AppWindow implements LOTInfo {
 		gl_composite.marginWidth = 0;
 		gl_composite.verticalSpacing = 0;
 		composite.setLayout(gl_composite);
-		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1);
 		gd_composite.widthHint = 216;
 		composite.setLayoutData(gd_composite);
 
@@ -350,20 +358,24 @@ public final class AppWindow implements LOTInfo {
 				tabSelected();
 			}
 		});
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
 
 		Composite composite_1 = new Composite(composite, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
+				false, 1, 1));
 		composite_1.setLayout(new GridLayout(2, false));
 
 		lblStatus = new Label(composite_1, SWT.NONE);
-		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+				1, 1));
 		lblStatus.setText("status");
 
 		progressBar = new ProgressBar(composite_1, SWT.NONE);
 
 		lblBottonInfo = new Label(composite, SWT.NONE);
-		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
+				false, 1, 1));
 		lblBottonInfo.setAlignment(SWT.RIGHT);
 
 		setBottomInfo();
@@ -371,15 +383,17 @@ public final class AppWindow implements LOTInfo {
 
 	private void initLocalMenu() {
 		LocalObjectsMenu localmenu = new LocalObjectsMenu(this, menulocal);
-		localmenu.addObjectHandler(LOTFactoryImpl.BEANNAME, (data) -> {
-			MStringID id = data.getIDValue("id");
-			LOTFactory f = getApp().getLClient().getObjectFactory().getFactory(id);
-			if (f != null) {
-				viewFactory(f);
-			} else {
-				showError("Failed to open factory " + id);
-			}
-		});
+		localmenu.addObjectHandler(LOTFactoryImpl.BEANNAME,
+				(data) -> {
+					MStringID id = data.getIDValue("id");
+					LOTFactory f = getApp().getLClient().getObjectFactory()
+							.getFactory(id);
+					if (f != null) {
+						viewFactory(f);
+					} else {
+						showError("Failed to open factory " + id);
+					}
+				});
 	}
 
 	protected void tabSelected() {
@@ -397,8 +411,10 @@ public final class AppWindow implements LOTInfo {
 				v.selected(this);
 				updateObjectMenu(v);
 			} else {
-				showError("Selected " + control + " that is not a LOTAppControl. Index "
-						+ selectionIndex + " Name:" + tabFolder.getSelection().getText());
+				showError("Selected " + control
+						+ " that is not a LOTAppControl. Index "
+						+ selectionIndex + " Name:"
+						+ tabFolder.getSelection().getText());
 			}
 		}
 	}
@@ -421,7 +437,8 @@ public final class AppWindow implements LOTInfo {
 			@Override
 			public void run() {
 				lblBottonInfo.setText("LOT:" + LOTClient.VERSION + " Waazdoh:"
-						+ WaazdohInfo.version + " environment: " + app.getLClient());
+						+ WaazdohInfo.version + " environment: "
+						+ app.getLClient());
 				//
 				setBottomInfo();
 			}
@@ -438,5 +455,11 @@ public final class AppWindow implements LOTInfo {
 
 	public boolean isSelected(LOTAppControl c) {
 		return selectedcontrol == c;
+	}
+
+	public String openValueEditorDialog(String name, String value) {
+		ValueEditorDialog e = new ValueEditorDialog(shell, name, value);
+		e.open();
+		return e.getValue();
 	}
 }

@@ -5,6 +5,8 @@ import java.util.Set;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.swt.AppWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -13,6 +15,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public class EnvironmentView extends Composite {
@@ -20,7 +23,8 @@ public class EnvironmentView extends Composite {
 	private LOTEnvironment environment;
 	private AppWindow window;
 
-	public EnvironmentView(Composite parent, AppWindow window, LOTEnvironment environment) {
+	public EnvironmentView(Composite parent, AppWindow window,
+			LOTEnvironment environment) {
 		super(parent, SWT.NONE);
 
 		this.window = window;
@@ -31,10 +35,68 @@ public class EnvironmentView extends Composite {
 
 		addScripts();
 		addTools();
+		addParameters();
+	}
+
+	private void addParameters() {
+		TitleComposite params = new TitleComposite(this, "PARAMETERS");
+		addParameterEditor(params, "test");
+
+		if (environment != null) {
+			Set<String> ps = environment.getParameters();
+			for (String name : ps) {
+				addParameterEditor(params, name);
+			}
+		}
+	}
+
+	private void addParameterEditor(TitleComposite params, String name) {
+		String value = environment != null ? ""
+				+ environment.getParameter(name) : "value";
+		Composite c = new Composite(params, SWT.NONE);
+		c.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_c = new GridLayout(2, false);
+		gl_c.verticalSpacing = 1;
+		gl_c.horizontalSpacing = 1;
+		c.setLayout(gl_c);
+
+		Label l = new Label(c, SWT.NONE);
+		l.setText(name);
+
+		if (value.length() > 20) {
+			Button b = new Button(c, SWT.NONE);
+			b.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+					1));
+			b.setText("edit");
+			b.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					String nvalue = window.openValueEditorDialog(name, value);
+					environment.setParameter(name, nvalue);
+				}
+			});
+		} else {
+			Text t = new Text(c, SWT.NONE);
+			t.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+					1));
+			t.setText("" + value);
+
+			t.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent arg0) {
+					environment.setParameter(name, t.getText());
+				}
+			});
+		}
 	}
 
 	private void addTools() {
 		TitleComposite ctools = new TitleComposite(this, "TOOLS");
+		GridLayout gl_c = new GridLayout(2, false);
+		gl_c.verticalSpacing = 1;
+		gl_c.horizontalSpacing = 1;
+		ctools.setLayout(gl_c);
+
 		if (environment != null) {
 			Set<String> tools = environment.getTools();
 			for (String string : tools) {
@@ -44,7 +106,8 @@ public class EnvironmentView extends Composite {
 				ctool.setLayout(gl_ctool);
 
 				Text tname = new Text(ctool, SWT.NONE);
-				GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+				GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false,
+						false, 1, 1);
 				gd_tname.widthHint = 146;
 				tname.setLayoutData(gd_tname);
 				tname.setText(string);
@@ -79,7 +142,8 @@ public class EnvironmentView extends Composite {
 		Composite cscripts = new TitleComposite(this, "SCRIPTS");
 		Composite cscriptslist = new Composite(cscripts, SWT.NONE);
 		cscriptslist.setLayout(new FillLayout(SWT.VERTICAL));
-		cscriptslist.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		cscriptslist.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 
 		if (environment != null) {
 			Set<String> scripts = environment.getScripts();
@@ -90,7 +154,8 @@ public class EnvironmentView extends Composite {
 				cscript.setLayout(gl_cscript);
 
 				Text tname = new Text(cscript, SWT.NONE);
-				GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+				GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false,
+						false, 1, 1);
 				gd_tname.widthHint = 146;
 				tname.setLayoutData(gd_tname);
 				tname.setText(string);
