@@ -51,26 +51,16 @@ public class RunEnvironmentBuildRunView extends Composite implements
 		eview = new RunEnvironment4xView(c_view, SWT.NONE);
 		eview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		eview.setRunEnvironment(runEnvironment);
-		sashForm.setWeights(new int[] { 1, 1 });
+		sashForm.setWeights(new int[] {143, 294});
 
 		new Thread(() -> {
 			s = new LOTSimpleSimulation(runEnvironment);
 			s.run(60000);
 		}).start();
 
-		new Thread(() -> {
-			while (!s.isDone()) {
-				eview.doRepaint();
-
-				synchronized (this) {
-					try {
-						this.wait(100);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}).start();
+		eview.runWhile(() -> {
+			return !s.isDone();
+		});
 	}
 
 	@Override

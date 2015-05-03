@@ -40,7 +40,6 @@ public class EnvironmentView extends Composite {
 
 	private void addParameters() {
 		TitleComposite params = new TitleComposite(this, "PARAMETERS");
-		addParameterEditor(params, "test");
 
 		if (environment != null) {
 			Set<String> ps = environment.getParameters();

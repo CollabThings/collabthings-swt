@@ -11,6 +11,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import waazdoh.client.utils.ConditionWaiter.Condition;
+
 public class RunEnvironment4xView extends Composite {
 	private LTransformation freetransform;
 	private double freeangle;
@@ -60,8 +62,8 @@ public class RunEnvironment4xView extends Composite {
 		step(0);
 	}
 
-	public void doRepaint() {
-		getDisplay().asyncExec(() -> {
+	public synchronized void doRepaint() {
+		getDisplay().syncExec(() -> {
 			ycanvas.callRepaint();
 			xcanvas.callRepaint();
 			zcanvas.callRepaint();
@@ -85,6 +87,28 @@ public class RunEnvironment4xView extends Composite {
 		xcanvas.getDrawer().setRunEnvironment(runenv);
 		zcanvas.getDrawer().setRunEnvironment(runenv);
 		fcanvas.getDrawer().setRunEnvironment(runenv);
+	}
+
+	public void runWhile(Condition c) {
+		new Thread(() -> {
+			long lasttime = System.currentTimeMillis();
+			while (c.test()) {
+				long dt = System.currentTimeMillis() - lasttime;
+				lasttime = System.currentTimeMillis();
+
+				step(dt);
+
+				doRepaint();
+
+				synchronized (this) {
+					try {
+						this.wait(60);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
 	}
 
 }
