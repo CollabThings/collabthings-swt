@@ -54,7 +54,8 @@ public class ObjectViewer extends Composite {
 		this(app, window, parent, o, new String[0]);
 	}
 
-	public ObjectViewer(LOTApp app, AppWindow window, Composite parent, Object o, String ignore[]) {
+	public ObjectViewer(LOTApp app, AppWindow window, Composite parent,
+			Object o, String ignore[]) {
 		super(parent, SWT.NONE);
 
 		this.app = app;
@@ -75,16 +76,19 @@ public class ObjectViewer extends Composite {
 		setLayout(gridLayout);
 
 		lblObject = new Label(this, SWT.NONE);
-		lblObject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblObject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+				1, 1));
 		lblObject.setAlignment(SWT.CENTER);
 		lblObject.setText("" + objectShown);
-		lblObject.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+		lblObject.setBackground(SWTResourceManager
+				.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
 		lblObject.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.BOLD));
 
 		composite = new Composite(this, SWT.BORDER);
 		composite.setBackground(SWTResourceManager.getColor(248, 248, 255));
 		composite.setLayout(new GridLayout(1, false));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
 
 		addRows();
 	}
@@ -113,7 +117,10 @@ public class ObjectViewer extends Composite {
 		editors.put(LOTFactoryState.class, (key, c, o) -> {
 			LOTFactoryState s = (LOTFactoryState) o;
 			LOTFactory f = s.getFactory();
-			new ObjectSmallView(c, app, window, f.getID().toString());
+			ObjectSmallView view = new ObjectSmallView(c, app, window, f
+					.getID().toString());
+			view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2,
+					1));
 		});
 
 		editors.put(Long.class, (key, c, o) -> {
@@ -165,7 +172,8 @@ public class ObjectViewer extends Composite {
 	}
 
 	private void invokeSetMethod(String name, Object value) {
-		String methodname = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+		String methodname = "set" + name.substring(0, 1).toUpperCase()
+				+ name.substring(1);
 		Method[] ms = objectShown.getClass().getMethods();
 		for (Method method : ms) {
 			if (method.getName().equals(methodname)) {
@@ -192,7 +200,8 @@ public class ObjectViewer extends Composite {
 		if (method != null) {
 			try {
 				return method.invoke(objectShown);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			} catch (IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException e) {
 				log.error(e, "invokeGetMethod", e);
 				return null;
 			}
@@ -264,15 +273,18 @@ public class ObjectViewer extends Composite {
 		return addLabelField(key, c, "" + new Date(d));
 	}
 
-	private Composite addBoundingBoxField(String key, Composite parent, LOTBoundingBox box) {
+	private Composite addBoundingBoxField(String key, Composite parent,
+			LOTBoundingBox box) {
 		Composite c = getTwoRowsComposite(parent);
 		addLabel(key, c);
 		new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
 		return c;
 	}
 
-	private Composite addOrientationField(String key, Composite c, LOrientation orgo) {
-		return new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key, orgo));
+	private Composite addOrientationField(String key, Composite c,
+			LOrientation orgo) {
+		return new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key,
+				orgo));
 	}
 
 	private Control addDoubleField(String key, Composite c, Double d) {
@@ -289,7 +301,8 @@ public class ObjectViewer extends Composite {
 	private Composite addVectorField(String key, Composite parent, LVector orgv) {
 		Composite c = getRowComposite(parent);
 		addLabel(key, c);
-		LOTVectorEditor e = new LOTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
+		LOTVectorEditor e = new LOTVectorEditor(c, orgv, v -> invokeSetMethod(
+				key, v));
 		return e;
 	}
 
@@ -347,7 +360,8 @@ public class ObjectViewer extends Composite {
 		l.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 	}
 
-	private Control addTextField(Composite parent, String text, ModifyListener listener) {
+	private Control addTextField(Composite parent, String text,
+			ModifyListener listener) {
 		Composite c = getRowComposite(parent);
 
 		addLabel(text, c);

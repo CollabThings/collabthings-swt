@@ -15,7 +15,7 @@ public class TableTestData {
 	private Set<String> somestrings = new HashSet<String>();
 
 	public TableTestData() {
-		while (somestrings.size() < 10) {
+		while (somestrings.size() < 3) {
 			somestrings.add("String" + somestrings.size());
 		}
 	}
