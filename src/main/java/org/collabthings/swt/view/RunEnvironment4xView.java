@@ -2,6 +2,7 @@ package org.collabthings.swt.view;
 
 import javax.vecmath.Vector3d;
 
+import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.math.LTransformation;
 import org.collabthings.view.RunEnviromentDrawer;
@@ -21,6 +22,8 @@ public class RunEnvironment4xView extends Composite {
 	private RunEnvironmentCanvas xcanvas;
 	private RunEnvironmentCanvas fcanvas;
 	private RunEnvironmentCanvas zcanvas;
+
+	private LLog log = LLog.getLogger(this);
 
 	public RunEnvironment4xView(Composite parent, int style) {
 		this(parent, style, null);
@@ -91,8 +94,10 @@ public class RunEnvironment4xView extends Composite {
 
 	public void runWhile(Condition c) {
 		new Thread(() -> {
+			log.info("Runwhile start");
+			
 			long lasttime = System.currentTimeMillis();
-			while (c.test()) {
+			while (c.test() && !isDisposed()) {
 				long dt = System.currentTimeMillis() - lasttime;
 				lasttime = System.currentTimeMillis();
 
@@ -108,6 +113,8 @@ public class RunEnvironment4xView extends Composite {
 					}
 				}
 			}
+
+			log.info("Runwhile out");
 		}).start();
 	}
 

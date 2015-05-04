@@ -55,13 +55,14 @@ public class RunEnvironmentBuildRunView extends Composite implements
 		eview.setRunEnvironment(runEnvironment);
 		sashForm.setWeights(new int[] { 143, 294 });
 
+		s = new LOTSimpleSimulation(runEnvironment);
+
 		new Thread(() -> {
-			s = new LOTSimpleSimulation(runEnvironment);
 			s.run(MAX_RUNTIME);
 		}).start();
 
 		eview.runWhile(() -> {
-			return !s.isDone();
+			return !s.isDone() && !isDisposed();
 		});
 	}
 

@@ -9,6 +9,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -40,10 +41,12 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 	public void paintControl(PaintEvent e) {
 		gc = e.gc;
 		if (drawer != null) {
+			Font font = new Font( getDisplay(), new FontData( "Arial", 9, SWT.NONE ) );
+			gc.setFont(font);
 			drawer.draw(this);
-			gc.drawText("" + drawer, 5, 20);
+			gc.drawText("" + drawer, 0, 0);
 		} else {
-			gc.drawText("drawer null", 5, 20);
+			gc.drawText("drawer null", 0, 0);
 		}
 	}
 
