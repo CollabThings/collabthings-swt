@@ -11,6 +11,7 @@ import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.environment.impl.LOTToolUser;
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTRuntimeObject;
 import org.collabthings.model.LOTTool;
 import org.eclipse.draw2d.SWTGraphics;
@@ -139,8 +140,8 @@ public class MapView extends Composite {
 
 		Set<String> fs = factory.getFactories();
 		for (String string : fs) {
-			LOTFactory childfactory = factory.getFactory(string);
-			addFactory(depth + 3, factorynode, childfactory);
+			LOTAttachedFactory childfactory = factory.getFactory(string);
+			addFactory(depth + 3, factorynode, childfactory.getFactory());
 		}
 
 		addEnvironment(depth + 1, factorynode, factory.getEnvironment());

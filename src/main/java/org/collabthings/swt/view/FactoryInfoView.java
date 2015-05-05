@@ -2,6 +2,7 @@ package org.collabthings.swt.view;
 
 import java.util.Set;
 
+import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.app.LOTApp;
@@ -25,7 +26,8 @@ public class FactoryInfoView extends Composite {
 
 	private Composite cchildrenlist;
 
-	public FactoryInfoView(Composite parent, LOTApp app, AppWindow window, LOTFactory factory) {
+	public FactoryInfoView(Composite parent, LOTApp app, AppWindow window,
+			LOTFactory factory) {
 		super(parent, SWT.NONE);
 
 		this.app = app;
@@ -39,8 +41,10 @@ public class FactoryInfoView extends Composite {
 		createDataEditors(this, factory);
 
 		if (factory != null) {
-			EnvironmentView ev = new EnvironmentView(this, window, factory.getEnvironment());
-			ev.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			EnvironmentView ev = new EnvironmentView(this, window,
+					factory.getEnvironment());
+			ev.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+					1));
 		}
 
 		Composite cchildren = new Composite(this, SWT.NONE);
@@ -48,12 +52,14 @@ public class FactoryInfoView extends Composite {
 	}
 
 	private void createChildrenComposite(Composite cchildren) {
-		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false,
+				1, 1));
 		GridLayout gl_cchildren = new GridLayout(1, false);
 		cchildren.setLayout(gl_cchildren);
 
 		Composite cchildrenpanel = new Composite(cchildren, SWT.NONE);
-		cchildrenpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		cchildrenpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		cchildrenpanel.setSize(65, 25);
 		GridLayout gl_cchildrenpanel = new GridLayout(2, false);
 		cchildrenpanel.setLayout(gl_cchildrenpanel);
@@ -72,17 +78,19 @@ public class FactoryInfoView extends Composite {
 		bnewchild.setText("+");
 
 		this.cchildrenlist = new Composite(cchildren, SWT.NONE);
-		cchildrenlist.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
+		cchildrenlist.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true,
+				1, 1));
 		cchildrenlist.setSize(0, 0);
 		cchildrenlist.setLayout(new GridLayout(1, false));
 
 		if (factory != null) {
 			Set<String> children = factory.getFactories();
 			for (String childname : children) {
-				LOTFactory child = factory.getFactory(childname);
+				LOTAttachedFactory child = factory.getFactory(childname);
 
 				Composite cc = new Composite(cchildrenlist, SWT.NONE);
-				cc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+				cc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+						false, 1, 1));
 
 				Composite childpanel = new Composite(cc, SWT.None);
 				GridLayout gridLayout = new GridLayout();
@@ -90,14 +98,15 @@ public class FactoryInfoView extends Composite {
 				childpanel.setLayout(gridLayout);
 				Button b = new Button(childpanel, getStyle());
 				b.setText("view");
-				b.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+				b.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+						1, 1));
 				b.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						window.viewFactory(child);
+						window.viewFactory(child.getFactory());
 					}
 				});
-				createDataEditors(cc, child);
+				createDataEditors(cc, child.getFactory());
 			}
 		}
 	}
@@ -117,7 +126,8 @@ public class FactoryInfoView extends Composite {
 	}
 
 	public void addChild(LOTFactory f) {
-		this.factory.addFactory("child" + this.factory.getFactories().size(), f);
+		this.factory
+				.addFactory("child" + this.factory.getFactories().size(), f);
 		updateDataEditors();
 	}
 
@@ -132,7 +142,8 @@ public class FactoryInfoView extends Composite {
 		c.setLayout(gl_c_factoryproperties_1);
 		ObjectViewer factoryobjectviewer = new ObjectViewer(app, window, c, f);
 
-		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
+				false, 1, 1));
 		GridLayout gridLayout = (GridLayout) factoryobjectviewer.getLayout();
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
