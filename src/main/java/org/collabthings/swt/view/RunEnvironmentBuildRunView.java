@@ -1,6 +1,9 @@
 package org.collabthings.swt.view;
 
 import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.environment.LOTRuntimeEvent;
+import org.collabthings.environment.LOTTask;
+import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.model.LOTRunEnvironmentBuilder;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
@@ -17,7 +20,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
 public class RunEnvironmentBuildRunView extends Composite implements
-		LOTAppControl {
+		LOTAppControl, RunEnvironmentListener {
 
 	// an hour
 	private static final int MAX_RUNTIME = 60 * 1000 * 60;
@@ -45,7 +48,8 @@ public class RunEnvironmentBuildRunView extends Composite implements
 		Composite composite = new Composite(sashForm, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
-		text = new Text(composite, SWT.BORDER);
+		text = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL
+				| SWT.MULTI);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite c_view = new Composite(sashForm, SWT.NONE);
@@ -55,6 +59,8 @@ public class RunEnvironmentBuildRunView extends Composite implements
 		eview.setRunEnvironment(runEnvironment);
 		sashForm.setWeights(new int[] { 143, 294 });
 
+		runEnvironment.addListener(this);
+
 		s = new LOTSimpleSimulation(runEnvironment);
 
 		new Thread(() -> {
@@ -63,6 +69,26 @@ public class RunEnvironmentBuildRunView extends Composite implements
 
 		eview.runWhile(() -> {
 			return !s.isDone() && !isDisposed();
+		});
+	}
+
+	@Override
+	public void event(LOTRuntimeEvent e) {
+		appendText("" + e.getTime() + " " + e.getName());
+		appendText(" --- " + e.getObject());
+		appendText(" --- " + e.getValues());
+		appendText("");
+	}
+
+	@Override
+	public void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
+		appendText("Task failed : " + task);
+	}
+
+	private void appendText(String string) {
+		getDisplay().asyncExec(() -> {
+			text.append(string);
+			text.append("\n");
 		});
 	}
 
