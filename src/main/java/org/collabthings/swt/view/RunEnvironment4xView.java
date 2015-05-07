@@ -75,7 +75,7 @@ public class RunEnvironment4xView extends Composite {
 	}
 
 	public void step(double dtime) {
-		freeangle += dtime * 0.00002;
+		freeangle += dtime * 0.00006;
 		LTransformation nfreetransform = new LTransformation();
 		nfreetransform.mult(LTransformation.getRotate(new Vector3d(1, 0, 0),
 				0.4));
