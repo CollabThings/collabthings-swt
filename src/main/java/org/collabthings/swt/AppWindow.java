@@ -256,7 +256,7 @@ public final class AppWindow implements LOTInfo {
 	protected void createContents() {
 		shell = new Shell();
 		shell.setSize(589, 395);
-		shell.setText("SWT Application - "
+		shell.setText("CollabThings - "
 				+ app.getLClient().getService().getUser().getUsername());
 		GridLayout gl_shell = new GridLayout(1, false);
 		gl_shell.verticalSpacing = 1;
