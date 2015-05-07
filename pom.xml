@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<name>collabthings.swt</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.collabthings</groupId>
@@ -199,7 +199,7 @@
 		<dependency>
 			<groupId>org.collabthings</groupId>
 			<artifactId>collabthings</artifactId>
-			<version>0.2.2-SNAPSHOT</version>
+			<version>0.2.2</version>
 		</dependency>
 
 		<dependency>
