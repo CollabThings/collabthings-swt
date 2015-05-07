@@ -11,6 +11,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -30,7 +31,7 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 	 */
 	public RunEnvironmentCanvas(Composite parent, int style,
 			RunEnviromentDrawer drawer) {
-		super(parent, style);
+		super(parent, SWT.NO_BACKGROUND);
 		setBackground(SWTResourceManager.getColor(248, 248, 255));
 		setLayout(new GridLayout(1, false));
 		addPaintListener(this);
@@ -39,15 +40,22 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 
 	@Override
 	public void paintControl(PaintEvent e) {
-		gc = e.gc;
+		Image bufferImage = new Image(getDisplay(), getWidth(), getHeight());
+
+		gc = new GC(bufferImage);
+		;
 		if (drawer != null) {
-			Font font = new Font( getDisplay(), new FontData( "Arial", 9, SWT.NONE ) );
+			Font font = new Font(getDisplay(), new FontData("Arial", 9,
+					SWT.NONE));
 			gc.setFont(font);
 			drawer.draw(this);
 			gc.drawText("" + drawer, 0, 0);
 		} else {
 			gc.drawText("drawer null", 0, 0);
 		}
+
+		e.gc.drawImage(bufferImage, 0, 0);
+		bufferImage.dispose();
 	}
 
 	@Override
