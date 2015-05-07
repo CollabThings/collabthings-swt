@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>libraryofthings.swt</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.libraryofthings</groupId>
@@ -217,7 +217,7 @@
 		<dependency>
 			<groupId>org.libraryofthings</groupId>
 			<artifactId>libraryofthings.client</artifactId>
-			<version>0.2.2-SNAPSHOT</version>
+			<version>0.2.3-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
