@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
+import org.collabthings.LOTStorage;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTInfo;
 import org.collabthings.model.LOTPart;
@@ -185,27 +186,7 @@ public final class AppWindow implements LOTInfo {
 				shell.open();
 				shell.layout();
 				shell.setMaximized(true);
-				//
-				// FIXME TODO REMOVE
-				// newFactory();
-				display.asyncExec(() -> {
-					viewSearch("boxsetfactory");
-				});
-
-				display.asyncExec(() -> {
-					viewSearchUsers("user");
-				});
-
-				display.asyncExec(() -> {
-					view("builder",
-							app.getLClient()
-									.getStorage()
-									.readStorage(
-											app.getLClient().getClient()
-													.getService()
-													.getUser("juuso.vilmunen"),
-											"/published/builder/latest"));
-				});
+				openTestViews(display);
 
 				//
 				while (!shell.isDisposed()) {
@@ -222,6 +203,28 @@ public final class AppWindow implements LOTInfo {
 			}
 			app.close();
 		}
+	}
+
+	private void openTestViews(Display display) {
+		//
+		// FIXME TODO REMOVE
+		// newFactory();
+		display.asyncExec(() -> {
+			viewSearch("boxsetfactory");
+		});
+
+		display.asyncExec(() -> {
+			viewSearchUsers("user");
+			newPart();
+		});
+
+		display.asyncExec(() -> {
+			LOTStorage storage = app.getLClient().getStorage();
+			String latestbuilder = storage.readStorage(app.getLClient()
+					.getClient().getService().getUser("juuso.vilmunen"),
+					"/published/builder/latest");
+			// view("builder", latestbuilder);
+		});
 	}
 
 	private void readAndDispatch(Display display) {
