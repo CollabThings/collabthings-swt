@@ -288,7 +288,7 @@ public class ObjectViewer extends Composite {
 	}
 
 	private Control addDoubleField(String key, Composite c, Double d) {
-		return addTextField(c, "" + d, new ModifyListener() {
+		return addTextField(c, key, "" + d, new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent arg0) {
@@ -327,7 +327,7 @@ public class ObjectViewer extends Composite {
 	}
 
 	private Control addStringField(String key, Composite c, String s) {
-		return addTextField(c, s, new ModifyListener() {
+		return addTextField(c, key, s, new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent arg0) {
@@ -360,11 +360,11 @@ public class ObjectViewer extends Composite {
 		l.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 	}
 
-	private Control addTextField(Composite parent, String text,
+	private Control addTextField(Composite parent, String name, String text,
 			ModifyListener listener) {
 		Composite c = getRowComposite(parent);
 
-		addLabel(text, c);
+		addLabel(name, c);
 
 		Text s = new Text(c, SWT.NONE);
 		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

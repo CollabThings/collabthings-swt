@@ -8,6 +8,7 @@ import org.collabthings.LOTClient;
 import org.collabthings.LOTStorage;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTInfo;
+import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTRunEnvironmentBuilder;
 import org.collabthings.model.LOTScript;
@@ -19,6 +20,7 @@ import org.collabthings.swt.view.FactoryView;
 import org.collabthings.swt.view.PartView;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
+import org.collabthings.swt.view.SCADView;
 import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.SearchView;
 import org.collabthings.swt.view.UserView;
@@ -160,6 +162,11 @@ public final class AppWindow implements LOTInfo {
 		addTab("" + name, v, userid);
 	}
 
+	public void viewOpenSCAD(LOTOpenSCAD scad) {
+		SCADView v = new SCADView(tabFolder, app, this, scad);
+		addTab("" + scad.getName(), v, scad);
+	}
+	
 	private void addTab(String name, LOTAppControl c, Object data) {
 		CTabItem i = new CTabItem(tabFolder, SWT.CLOSE);
 		i.setText(name);

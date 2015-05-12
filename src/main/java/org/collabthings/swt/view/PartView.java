@@ -150,7 +150,7 @@ public class PartView extends Composite implements LOTAppControl {
 				if (currenthash != hash) {
 					hash = currenthash;
 					getDisplay().asyncExec(() -> {
-						createDataViewers();
+						updateViewers();
 					});
 				}
 
@@ -165,9 +165,14 @@ public class PartView extends Composite implements LOTAppControl {
 		}).start();
 	}
 
+	private void updateViewers() {
+		partcanvas.refresh(part.getModel());
+		createDataViewers();
+	}
+
 	private void createDataViewers() {
 		log.info("Create dataviewers " + part);
-		
+
 		Control[] cs = c_partproperties.getChildren();
 		for (Control control : cs) {
 			control.dispose();
@@ -238,7 +243,7 @@ public class PartView extends Composite implements LOTAppControl {
 		Composite composite = new Composite(cscad, SWT.BORDER);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
-		composite.setLayout(new GridLayout(1, false));
+		composite.setLayout(new GridLayout(2, false));
 
 		Button bnewscad = new Button(composite, SWT.NONE);
 		bnewscad.addSelectionListener(new SelectionAdapter() {
@@ -251,6 +256,15 @@ public class PartView extends Composite implements LOTAppControl {
 				1, 1));
 		bnewscad.setBounds(0, 0, 75, 25);
 		bnewscad.setText("New");
+
+		Button btnOpen = new Button(composite, SWT.NONE);
+		btnOpen.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				window.viewOpenSCAD(part.getSCAD());
+			}
+		});
+		btnOpen.setText("Open");
 
 		if (scad != null) {
 			this.scadobjectviewer = new ObjectViewer(app, window, cscad, scad);
@@ -270,7 +284,8 @@ public class PartView extends Composite implements LOTAppControl {
 	}
 
 	protected void partObjectChanged(String name, Object o) {
-		// TODO Auto-generated method stub
+		partcanvas.clear();
+		updateViewers();
 	}
 
 	protected void importSelected() {
