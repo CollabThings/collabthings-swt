@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Label;
 
 public class SCADView extends Composite implements LOTAppControl {
 
@@ -92,7 +91,7 @@ public class SCADView extends Composite implements LOTAppControl {
 	private void setModel() {
 		LOT3DModel model = scad.getModel();
 		if (model != null) {
-			canvas.addModel(model);
+			canvas.addModel(null, model);
 		}
 	}
 
@@ -120,17 +119,16 @@ public class SCADView extends Composite implements LOTAppControl {
 				&& (scad.getScript() == null || !scad.getScript().equals(
 						sscripttext))) {
 
-			LOTOpenSCAD s = this.app.getObjectFactory().getSCAD();
-
-			s.setScript(sscripttext);
+			String oldscript = scad.getScript();
 			getDisplay().asyncExec(() -> {
-				if (s.getModel() != null && s.isOK()) {
-					scad.setScript(sscripttext);
+				scad.setScript(sscripttext);
+				if (scad.getModel() != null && scad.isOK()) {
 					boolean b = scad.isOK();
 					bottomtext.append("OK " + new Date() + "\n");
 				} else {
 					String error = scad.getError();
 					bottomtext.append("ERROR " + error + "\n");
+					scad.setScript(oldscript);
 				}
 			});
 		}

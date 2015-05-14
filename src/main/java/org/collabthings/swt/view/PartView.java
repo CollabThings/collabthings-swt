@@ -165,12 +165,12 @@ public class PartView extends Composite implements LOTAppControl {
 		}).start();
 	}
 
-	private void updateViewers() {
+	private synchronized void updateViewers() {
 		partcanvas.refresh(part.getModel());
 		createDataViewers();
 	}
 
-	private void createDataViewers() {
+	private synchronized void createDataViewers() {
 		log.info("Create dataviewers " + part);
 
 		Control[] cs = c_partproperties.getChildren();
@@ -257,16 +257,16 @@ public class PartView extends Composite implements LOTAppControl {
 		bnewscad.setBounds(0, 0, 75, 25);
 		bnewscad.setText("New");
 
-		Button btnOpen = new Button(composite, SWT.NONE);
-		btnOpen.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				window.viewOpenSCAD(part.getSCAD());
-			}
-		});
-		btnOpen.setText("Open");
-
 		if (scad != null) {
+			Button btnOpen = new Button(composite, SWT.NONE);
+			btnOpen.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					window.viewOpenSCAD(part.getSCAD());
+				}
+			});
+			btnOpen.setText("Open");
+
 			this.scadobjectviewer = new ObjectViewer(app, window, cscad, scad);
 			scadobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 					true, false, 1, 1));
@@ -276,6 +276,8 @@ public class PartView extends Composite implements LOTAppControl {
 					partObjectChanged(name, o);
 				}
 			});
+
+			addModel();
 		}
 	}
 
@@ -284,8 +286,12 @@ public class PartView extends Composite implements LOTAppControl {
 	}
 
 	protected void partObjectChanged(String name, Object o) {
+		addModel();
+	}
+
+	private void addModel() {
 		partcanvas.clear();
-		updateViewers();
+		partcanvas.addModel(part.getMaterial(), part.getModel());
 	}
 
 	protected void importSelected() {
@@ -310,7 +316,7 @@ public class PartView extends Composite implements LOTAppControl {
 	public void importFile(File file) throws SAXException, IOException {
 		log.info("loading model " + file);
 		part.importModel(file);
-		this.partcanvas.addModel(part.getModel());
+		this.partcanvas.addModel(part.getMaterial(), part.getModel());
 		modelobjectviewer.setObject(part.getModel());
 	}
 }

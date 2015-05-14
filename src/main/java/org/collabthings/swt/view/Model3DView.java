@@ -24,6 +24,7 @@ import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTMaterial;
 import org.collabthings.swt.dialog.LOTMessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.GestureEvent;
@@ -94,7 +95,7 @@ public class Model3DView extends Composite implements GestureListener {
 		this.lastmousey = e.y;
 		if (mousedown) {
 			this.rotatex += 0.3 * dx;
-			this.rotatey += 0.3 * dy;
+			this.rotatey -= 0.3 * dy;
 			updateRotation();
 		}
 	}
@@ -188,18 +189,22 @@ public class Model3DView extends Composite implements GestureListener {
 		scenegroup.getChildren().add(lightgroup);
 	}
 
-	public Group addModel(LOT3DModel lot3dModel) {
+	public Group getGroup(LOT3DModel model) {
+		return groups.get(model);
+	}
+
+	public Group addModel(LOTMaterial material, LOT3DModel model) {
 		Group ogroup = new Group();
 		getDisplay().asyncExec(() -> {
 			try {
 				createScene();
 
-				File modelFile = lot3dModel.getModelFile();
+				File modelFile = model.getModelFile();
 				log.info("reading " + modelFile);
 
-				groups.put(lot3dModel, ogroup);
+				groups.put(model, ogroup);
 
-				if (LOT3DModel.TYPE_X3D.equals(lot3dModel.getType())) {
+				if (LOT3DModel.TYPE_X3D.equals(model.getType())) {
 					X3dModelImporter x3dImporter = new X3dModelImporter();
 					x3dImporter.read(modelFile);
 
@@ -210,12 +215,21 @@ public class Model3DView extends Composite implements GestureListener {
 					}
 
 					objectgroup.getChildren().add(ogroup);
-				} else if (LOT3DModel.TYPE_STL.equals(lot3dModel.getType())) {
+				} else if (LOT3DModel.TYPE_STL.equals(model.getType())) {
 					StlMeshImporter i = new StlMeshImporter();
 					i.read(modelFile);
 					TriangleMesh mesh = i.getImport();
 					MeshView meshview = new MeshView(mesh);
-					Material m = new PhongMaterial(Color.ALICEBLUE);
+
+					Color c;
+					if (material != null) {
+						double rgb[] = material.getColor();
+						c = Color.color(rgb[0], rgb[1], rgb[2]);
+					} else {
+						c = Color.RED;
+					}
+
+					Material m = new PhongMaterial(c);
 					meshview.setMaterial(m);
 
 					ogroup.getChildren().add(meshview);
@@ -228,30 +242,31 @@ public class Model3DView extends Composite implements GestureListener {
 				d.show(e);
 			}
 
+			refresh(model);
 		});
-		
+
 		return ogroup;
 	}
 
 	public void refresh(LOT3DModel lot3dModel) {
 		Group group = groups.get(lot3dModel);
-		if (group == null) {
-			group = addModel(lot3dModel);
-		}
 
-		double s = lot3dModel.getScale();
-		group.setScaleX(s);
-		group.setScaleY(s);
-		group.setScaleZ(s);
-		//
-		LVector t = lot3dModel.getTranslation();
-		group.setTranslateX(t.x);
-		group.setTranslateY(t.y);
-		group.setTranslateZ(t.z);
+		if (group != null) {
+			double s = lot3dModel.getScale();
+			group.setScaleX(s);
+			group.setScaleY(s);
+			group.setScaleZ(s);
+			//
+			LVector t = lot3dModel.getTranslation();
+			group.setTranslateX(t.x);
+			group.setTranslateY(t.y);
+			group.setTranslateZ(t.z);
+		}
 	}
 
 	public void clear() {
 		ObservableList<Node> cs = objectgroup.getChildren();
-		cs.get(0).setDisable(true);
+		cs.clear();
+		// cs.get(0).setDisable(true);
 	}
 }
