@@ -239,7 +239,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 				try {
 					wait(100);
 				} catch (InterruptedException e) {
-					log.info("" + e);
+					log.error(this, "checkBuilderUpdate", e);
 				}
 			}
 		}

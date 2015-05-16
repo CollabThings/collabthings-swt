@@ -15,6 +15,7 @@ import org.collabthings.math.LOrientation;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTMaterial;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
@@ -133,6 +134,10 @@ public class ObjectViewer extends Composite {
 
 		editors.put(Set.class, (key, c, o) -> {
 			addCollectionView(key, c, o);
+		});
+
+		editors.put(LOTMaterial.class, (key, c, o) -> {
+			addMaterialView(key, c, (LOTMaterial) o);
 		});
 	}
 
@@ -285,6 +290,10 @@ public class ObjectViewer extends Composite {
 			LOrientation orgo) {
 		return new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key,
 				orgo));
+	}
+
+	private LOTMaterialEditor addMaterialView(String key, Composite c, LOTMaterial o) {
+		return new LOTMaterialEditor(c, o);
 	}
 
 	private Control addDoubleField(String key, Composite c, Double d) {
