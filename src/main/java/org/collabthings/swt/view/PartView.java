@@ -38,7 +38,7 @@ public class PartView extends Composite implements LOTAppControl {
 	private static final String DEFAULT_X3D_IMPORTPATH = "lot.gui.default.import_path";
 	private LOTPart part;
 	private ObjectViewer partobjectviewer;
-	private Model3DView partcanvas;
+	private Runenvironment3DView partcanvas;
 	private LLog log = LLog.getLogger(this);
 	private final LOTApp app;
 	private final AppWindow window;
@@ -140,7 +140,7 @@ public class PartView extends Composite implements LOTAppControl {
 		c_view.setBounds(0, 0, 64, 64);
 		//
 
-		partcanvas = new Model3DView(c_view, SWT.NONE);
+		partcanvas = new Runenvironment3DView(c_view, SWT.NONE);
 		composite_main.setWeights(new int[] { 136, 311 });
 
 		new Thread(() -> {

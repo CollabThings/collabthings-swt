@@ -30,7 +30,7 @@ public class SCADView extends Composite implements LOTAppControl {
 
 	private LOTApp app;
 	private SashForm sashForm_1;
-	private Model3DView canvas;
+	private Runenvironment3DView canvas;
 	private Composite composite;
 
 	public SCADView(Composite c, LOTApp app, AppWindow appWindow,
@@ -61,7 +61,7 @@ public class SCADView extends Composite implements LOTAppControl {
 
 		composite = new Composite(sashForm, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
-		canvas = new Model3DView(composite, SWT.NONE);
+		canvas = new Runenvironment3DView(composite, SWT.NONE);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL

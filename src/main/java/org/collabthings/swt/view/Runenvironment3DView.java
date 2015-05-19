@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
 import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
 import com.interactivemesh.jfx.importer.x3d.X3dModelImporter;
 
-public class Model3DView extends Composite implements GestureListener {
+public class Runenvironment3DView extends Composite implements GestureListener {
 	private LLog log = LLog.getLogger(this);
 	private LOTClient env;
 	private double zoom = 1.0;
@@ -55,8 +55,9 @@ public class Model3DView extends Composite implements GestureListener {
 	//
 	private Map<LOT3DModel, Group> groups = new HashMap<>();
 	private FXCanvas canvas;
+	private Scene scene;
 
-	public Model3DView(Composite c_view, int style) {
+	public Runenvironment3DView(Composite c_view, int style) {
 		super(c_view, style);
 
 		setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -145,13 +146,10 @@ public class Model3DView extends Composite implements GestureListener {
 		double red = bg.getRed() / 255.0 * 0.8f;
 		double green = bg.getGreen() / 255.0 * 0.8f;
 		double blue = bg.getBlue() / 255.0;
-		Scene scene = new Scene(scenegroup, new Color(red, green, blue, 1));// ,
-		// Color.rgb(getBackground().getRed(),
-		// getBackground().getGreen(),
-		// getBackground().getBlue()));
+
+		scene = new Scene(scenegroup, new Color(red, green, blue, 1));// ,
 		this.camera = new PerspectiveCamera(true);
 		scene.setCamera(camera);
-
 		//
 		this.cameraGroup = new Group();
 		cameraGroup.getChildren().add(camera);
@@ -160,14 +158,19 @@ public class Model3DView extends Composite implements GestureListener {
 		cameraGroup.setTranslateZ(-35);
 		this.objectgroup = new Group();
 		scenegroup.getChildren().add(objectgroup);
-
-		/* Attach an external stylesheet */
-		scene.getStylesheets().add("twobuttons/Buttons.css");
 		//
 		createLights();
 
 		updateRotation();
 		updateZoom();
+
+		updateScene();
+	}
+
+	private void updateScene() {
+		if (scene == null) {
+			createScene();
+		}
 
 		canvas.setScene(scene);
 	}
@@ -197,7 +200,7 @@ public class Model3DView extends Composite implements GestureListener {
 		Group ogroup = new Group();
 		getDisplay().asyncExec(() -> {
 			try {
-				createScene();
+				updateScene();
 
 				File modelFile = model.getModelFile();
 				log.info("reading " + modelFile);
