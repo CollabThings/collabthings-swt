@@ -1,7 +1,7 @@
 <project>
 	<import file="ant.xml" />
 
-	<property name="projectname" value="library-of-things-swt" />
+	<property name="projectname" value="collabthings-swt" />
 	<property name="staging.dir" value="target/staging" />
 
 
