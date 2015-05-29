@@ -23,7 +23,7 @@ import javafx.scene.transform.Rotate;
 import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTMaterial;
 import org.collabthings.swt.dialog.LOTMessageDialog;
 import org.eclipse.swt.SWT;
@@ -53,7 +53,7 @@ public class Model3DView extends Composite implements GestureListener {
 	private double rotatex;
 	private double rotatey;
 	//
-	private Map<LOT3DModel, Group> groups = new HashMap<>();
+	private Map<LOTBinaryModel, Group> groups = new HashMap<>();
 	private FXCanvas canvas;
 
 	public Model3DView(Composite c_view, int style) {
@@ -189,11 +189,11 @@ public class Model3DView extends Composite implements GestureListener {
 		scenegroup.getChildren().add(lightgroup);
 	}
 
-	public Group getGroup(LOT3DModel model) {
+	public Group getGroup(LOTBinaryModel model) {
 		return groups.get(model);
 	}
 
-	public Group addModel(LOTMaterial material, LOT3DModel model) {
+	public Group addModel(LOTMaterial material, LOTBinaryModel model) {
 		Group ogroup = new Group();
 		getDisplay().asyncExec(() -> {
 			try {
@@ -204,7 +204,7 @@ public class Model3DView extends Composite implements GestureListener {
 
 				groups.put(model, ogroup);
 
-				if (LOT3DModel.TYPE_X3D.equals(model.getType())) {
+				if (LOTBinaryModel.TYPE_X3D.equals(model.getType())) {
 					X3dModelImporter x3dImporter = new X3dModelImporter();
 					x3dImporter.read(modelFile);
 
@@ -215,7 +215,7 @@ public class Model3DView extends Composite implements GestureListener {
 					}
 
 					objectgroup.getChildren().add(ogroup);
-				} else if (LOT3DModel.TYPE_STL.equals(model.getType())) {
+				} else if (LOTBinaryModel.TYPE_STL.equals(model.getType())) {
 					StlMeshImporter i = new StlMeshImporter();
 					i.read(modelFile);
 					TriangleMesh mesh = i.getImport();
@@ -248,7 +248,7 @@ public class Model3DView extends Composite implements GestureListener {
 		return ogroup;
 	}
 
-	public void refresh(LOT3DModel lot3dModel) {
+	public void refresh(LOTBinaryModel lot3dModel) {
 		Group group = groups.get(lot3dModel);
 
 		if (group != null) {

@@ -64,6 +64,16 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 	}
 
 	@Override
+	public void drawLine(double ax, double ay, double az, double bx, double by,
+			double bz) {
+		int asx = (int) ax;
+		int asy = (int) ay;
+		int bsx = (int) bx;
+		int bsy = (int) by;
+		gc.drawLine(asx, asy, bsx, bsy);
+	}
+
+	@Override
 	public void drawOval(int x, int y, int w, int h) {
 		gc.drawOval(x, y, w, h);
 	}

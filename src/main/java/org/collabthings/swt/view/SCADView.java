@@ -2,7 +2,7 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
-import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
@@ -89,7 +89,7 @@ public class SCADView extends Composite implements LOTAppControl {
 	}
 
 	private void setModel() {
-		LOT3DModel model = scad.getModel();
+		LOTBinaryModel model = scad.getModel();
 		if (model != null) {
 			canvas.addModel(null, model);
 		}

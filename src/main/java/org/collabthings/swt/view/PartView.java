@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.collabthings.LLog;
-import org.collabthings.model.LOT3DModel;
+import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.swt.AppWindow;
@@ -196,7 +196,7 @@ public class PartView extends Composite implements LOTAppControl {
 	}
 
 	private void createModelDataViewer(Composite c_partproperties) {
-		LOT3DModel model = part.getModel();
+		LOTBinaryModel model = part.getModel();
 		this.modelobjectviewer = new ObjectViewer(app, window,
 				c_partproperties, model);
 		modelobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
