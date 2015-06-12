@@ -2,8 +2,8 @@ package org.collabthings.swt;
 
 import java.net.MalformedURLException;
 
-import org.collabthings.LLog;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.util.LLog;
 
 import waazdoh.client.WClient;
 import waazdoh.common.WPreferences;

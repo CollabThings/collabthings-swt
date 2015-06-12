@@ -2,12 +2,12 @@ package org.collabthings.swt.app;
 
 import java.net.MalformedURLException;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
+import org.collabthings.factory.LOTObjectFactory;
 import org.collabthings.impl.LOTClientImpl;
 import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTObjectFactory;
 import org.collabthings.model.LOTPart;
+import org.collabthings.util.LLog;
 
 import waazdoh.client.WClientListener;
 import waazdoh.client.storage.BeanStorage;

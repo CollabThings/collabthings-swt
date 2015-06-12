@@ -1,7 +1,5 @@
 package org.collabthings.swt.view;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,18 +12,14 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTMaterial;
-import org.collabthings.swt.dialog.LOTMessageDialog;
+import org.collabthings.model.LOTModel;
+import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.GestureEvent;
 import org.eclipse.swt.events.GestureListener;
@@ -34,10 +28,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.xml.sax.SAXException;
-
-import com.interactivemesh.jfx.importer.stl.StlMeshImporter;
-import com.interactivemesh.jfx.importer.x3d.X3dModelImporter;
 
 public class Model3DView extends Composite implements GestureListener {
 	private LLog log = LLog.getLogger(this);
@@ -193,62 +183,18 @@ public class Model3DView extends Composite implements GestureListener {
 		return groups.get(model);
 	}
 
-	public Group addModel(LOTMaterial material, LOTBinaryModel model) {
+	public Group addModel(LOTMaterial material, LOTModel model) {
 		Group ogroup = new Group();
 		getDisplay().asyncExec(() -> {
-			try {
-				createScene();
-
-				File modelFile = model.getModelFile();
-				log.info("reading " + modelFile);
-
-				groups.put(model, ogroup);
-
-				if (LOTBinaryModel.TYPE_X3D.equals(model.getType())) {
-					X3dModelImporter x3dImporter = new X3dModelImporter();
-					x3dImporter.read(modelFile);
-
-					Node[] rootNodes = x3dImporter.getImport();
-					log.info("imported nodes " + rootNodes);
-					for (Node node : rootNodes) {
-						ogroup.getChildren().add(node);
-					}
-
-					objectgroup.getChildren().add(ogroup);
-				} else if (LOTBinaryModel.TYPE_STL.equals(model.getType())) {
-					StlMeshImporter i = new StlMeshImporter();
-					i.read(modelFile);
-					TriangleMesh mesh = i.getImport();
-					MeshView meshview = new MeshView(mesh);
-
-					Color c;
-					if (material != null) {
-						double rgb[] = material.getColor();
-						c = Color.color(rgb[0], rgb[1], rgb[2]);
-					} else {
-						c = Color.RED;
-					}
-
-					Material m = new PhongMaterial(c);
-					meshview.setMaterial(m);
-
-					ogroup.getChildren().add(meshview);
-					objectgroup.getChildren().add(ogroup);
-				}
-
-			} catch (IOException | SAXException e) {
-				log.error(this, "importModel", e);
-				LOTMessageDialog d = new LOTMessageDialog(getShell());
-				d.show(e);
-			}
-
+			createScene();
+			model.addTo(ogroup);
 			refresh(model);
 		});
 
 		return ogroup;
 	}
 
-	public void refresh(LOTBinaryModel lot3dModel) {
+	public void refresh(LOTModel lot3dModel) {
 		Group group = groups.get(lot3dModel);
 
 		if (group != null) {

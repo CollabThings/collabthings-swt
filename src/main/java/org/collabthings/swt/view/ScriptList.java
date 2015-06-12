@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import waazdoh.common.MStringID;
 import waazdoh.common.WData;
 
 public class ScriptList extends Composite {
@@ -49,7 +50,8 @@ public class ScriptList extends Composite {
 		String id = scriptdata.getValue("id");
 		if (id != null && name != null) {
 			Composite cscript = new Composite(this, SWT.NONE);
-			cscript.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+			cscript.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
+					false, 1, 1));
 
 			cscript.setLayout(new GridLayout(4, false));
 			Label clname = new Label(cscript, SWT.NONE);
@@ -59,13 +61,15 @@ public class ScriptList extends Composite {
 			btnView.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					window.viewScript(app.getObjectFactory().getScript(id));
+					window.viewScript(app.getObjectFactory().getScript(
+							new MStringID(id)));
 				}
 			});
 			btnView.setText("View");
 
 			Button btnId = new Button(cscript, SWT.NONE);
-			btnId.addSelectionListener(new CopyToClipbardSelectionAdapter(cscript, id));
+			btnId.addSelectionListener(new CopyToClipbardSelectionAdapter(
+					cscript, id));
 			btnId.setText("ID");
 
 			Composite composite = new Composite(cscript, SWT.NONE);
@@ -77,7 +81,8 @@ public class ScriptList extends Composite {
 			Label lblAddTo = new Label(composite, SWT.NONE);
 			lblAddTo.setText("Add to");
 
-			Button btnAdd = new Button(composite, SWT.FLAT | SWT.ARROW | SWT.DOWN);
+			Button btnAdd = new Button(composite, SWT.FLAT | SWT.ARROW
+					| SWT.DOWN);
 			btnAdd.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
@@ -103,7 +108,8 @@ public class ScriptList extends Composite {
 				mcontrol.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						su.addScript(app.getObjectFactory().getScript(id));
+						su.addScript(app.getObjectFactory().getScript(
+								new MStringID(id)));
 					}
 				});
 			}

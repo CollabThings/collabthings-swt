@@ -89,10 +89,7 @@ public class SCADView extends Composite implements LOTAppControl {
 	}
 
 	private void setModel() {
-		LOTBinaryModel model = scad.getModel();
-		if (model != null) {
-			canvas.addModel(null, model);
-		}
+		canvas.addModel(null, scad);
 	}
 
 	protected synchronized void key(KeyEvent arg0) {

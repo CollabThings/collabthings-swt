@@ -3,8 +3,7 @@ package org.collabthings.swt.view;
 import java.io.File;
 import java.io.IOException;
 
-import org.collabthings.LLog;
-import org.collabthings.model.LOTBinaryModel;
+import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.swt.AppWindow;
@@ -14,6 +13,7 @@ import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.controls.ObjectViewerListener;
 import org.collabthings.swt.dialog.LOTMessageDialog;
+import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -178,7 +178,6 @@ public class PartView extends Composite implements LOTAppControl {
 			control.dispose();
 		}
 
-		createOpenSCADViewer(c_partproperties);
 		createPartDataViewer(c_partproperties);
 		createModelDataViewer(c_partproperties);
 
@@ -196,7 +195,7 @@ public class PartView extends Composite implements LOTAppControl {
 	}
 
 	private void createModelDataViewer(Composite c_partproperties) {
-		LOTBinaryModel model = part.getModel();
+		LOTModel model = part.getModel();
 		this.modelobjectviewer = new ObjectViewer(app, window,
 				c_partproperties, model);
 		modelobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
@@ -225,9 +224,8 @@ public class PartView extends Composite implements LOTAppControl {
 		});
 	}
 
-	private void createOpenSCADViewer(Composite c_partproperties) {
-		LOTOpenSCAD scad = part.getSCAD();
-		Composite cscad = new Composite(c_partproperties, SWT.NONE);
+	private void createOpenSCADViewer(Composite cparent, LOTOpenSCAD scad) {
+		Composite cscad = new Composite(cparent, SWT.NONE);
 		cscad.setLayout(new GridLayout(1, false));
 		cscad.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
@@ -262,7 +260,7 @@ public class PartView extends Composite implements LOTAppControl {
 			btnOpen.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					window.viewOpenSCAD(part.getSCAD());
+					window.viewOpenSCAD(scad);
 				}
 			});
 			btnOpen.setText("Open");

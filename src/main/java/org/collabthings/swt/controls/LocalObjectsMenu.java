@@ -4,9 +4,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.collabthings.LLog;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;

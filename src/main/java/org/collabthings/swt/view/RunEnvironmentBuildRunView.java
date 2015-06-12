@@ -4,7 +4,7 @@ import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentListener;
-import org.collabthings.model.LOTRunEnvironmentBuilder;
+import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;

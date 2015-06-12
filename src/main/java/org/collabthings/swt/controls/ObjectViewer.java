@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.collabthings.LLog;
 import org.collabthings.environment.impl.LOTFactoryState;
 import org.collabthings.math.LOrientation;
 import org.collabthings.math.LVector;
@@ -19,6 +18,7 @@ import org.collabthings.model.LOTMaterial;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
+import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;

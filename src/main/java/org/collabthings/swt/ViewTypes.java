@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTRunEnvironmentBuilder;
+import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.swt.app.LOTApp;
 
 import waazdoh.common.MStringID;
