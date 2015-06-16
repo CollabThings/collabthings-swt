@@ -2,7 +2,6 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
-import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
