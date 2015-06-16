@@ -42,7 +42,7 @@ public class ObjectViewer extends Composite {
 	//
 	private Map<String, Method> methods = new HashMap<>();
 	private Set<ObjectViewerListener> listeners = new HashSet<>();
-	private Map<Class, LEditorFactory> editors = new HashMap<>();
+	private Map<String, LEditorFactory> editors = new HashMap<>();
 	private Label lblObject;
 	private final Set<String> ignoreset;
 	private AppWindow window;
@@ -95,27 +95,27 @@ public class ObjectViewer extends Composite {
 	}
 
 	private void initOkTypes() {
-		editors.put(String.class, (key, c, o) -> {
+		editors.put(String.class.getName(), (key, c, o) -> {
 			addStringField(key, c, (String) o);
 		});
 
-		editors.put(LVector.class, (key, c, o) -> {
+		editors.put(LVector.class.getName(), (key, c, o) -> {
 			addVectorField(key, c, (LVector) o);
 		});
 
-		editors.put(Double.class, (key, c, o) -> {
+		editors.put(Double.class.getName(), (key, c, o) -> {
 			addDoubleField(key, c, (Double) o);
 		});
 
-		editors.put(LOrientation.class, (key, c, o) -> {
+		editors.put(LOrientation.class.getName(), (key, c, o) -> {
 			addOrientationField(key, c, (LOrientation) o);
 		});
 
-		editors.put(LOTBoundingBox.class, (key, c, o) -> {
+		editors.put(LOTBoundingBox.class.getName(), (key, c, o) -> {
 			addBoundingBoxField(key, c, (LOTBoundingBox) o);
 		});
 
-		editors.put(LOTFactoryState.class, (key, c, o) -> {
+		editors.put(LOTFactoryState.class.getName(), (key, c, o) -> {
 			LOTFactoryState s = (LOTFactoryState) o;
 			LOTFactory f = s.getFactory();
 			ObjectSmallView view = new ObjectSmallView(c, app, window, f
@@ -124,7 +124,7 @@ public class ObjectViewer extends Composite {
 					1));
 		});
 
-		editors.put(Long.class, (key, c, o) -> {
+		editors.put(Long.class.getName(), (key, c, o) -> {
 			if ("modifytime".equals(key) || "creationtime".equals(key)) {
 				addDateField(key, c, (Long) o);
 			} else {
@@ -132,11 +132,11 @@ public class ObjectViewer extends Composite {
 			}
 		});
 
-		editors.put(Set.class, (key, c, o) -> {
+		editors.put(Set.class.getName(), (key, c, o) -> {
 			addCollectionView(key, c, o);
 		});
 
-		editors.put(LOTMaterial.class, (key, c, o) -> {
+		editors.put(LOTMaterial.class.getName(), (key, c, o) -> {
 			addMaterialView(key, c, (LOTMaterial) o);
 		});
 	}
@@ -292,7 +292,8 @@ public class ObjectViewer extends Composite {
 				orgo));
 	}
 
-	private LOTMaterialEditor addMaterialView(String key, Composite c, LOTMaterial o) {
+	private LOTMaterialEditor addMaterialView(String key, Composite c,
+			LOTMaterial o) {
 		return new LOTMaterialEditor(c, o);
 	}
 
@@ -392,7 +393,7 @@ public class ObjectViewer extends Composite {
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c.setLayout(new GridLayout());
 
-		for (Object item : (Collection) o) {
+		for (Object item : (Collection<Object>) o) {
 			Label l = new Label(c, SWT.None);
 			l.setText("" + item);
 
