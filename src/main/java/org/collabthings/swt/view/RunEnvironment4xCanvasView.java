@@ -14,7 +14,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import waazdoh.client.utils.ConditionWaiter.Condition;
 
-public class RunEnvironment4xView extends Composite {
+public class RunEnvironment4xCanvasView extends Composite {
 	private LTransformation freetransform;
 	private double freeangle;
 	private LOTRunEnvironment runenv;
@@ -25,11 +25,11 @@ public class RunEnvironment4xView extends Composite {
 
 	private LLog log = LLog.getLogger(this);
 
-	public RunEnvironment4xView(Composite parent, int style) {
+	public RunEnvironment4xCanvasView(Composite parent, int style) {
 		this(parent, style, null);
 	}
 
-	public RunEnvironment4xView(Composite parent, int style,
+	public RunEnvironment4xCanvasView(Composite parent, int style,
 			LOTRunEnvironment nrunenv) {
 		super(parent, style);
 
