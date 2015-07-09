@@ -4,7 +4,6 @@ import javax.vecmath.Vector3d;
 
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.math.LTransformation;
-import org.collabthings.math.LVector;
 import org.collabthings.util.LLog;
 import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.eclipse.swt.SWT;
