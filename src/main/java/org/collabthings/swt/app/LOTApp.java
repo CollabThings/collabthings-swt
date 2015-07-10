@@ -10,8 +10,8 @@ import org.collabthings.model.LOTPart;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.WClientListener;
-import waazdoh.client.storage.BeanStorage;
 import waazdoh.client.storage.local.FileBeanStorage;
+import waazdoh.common.BeanStorage;
 import waazdoh.common.WPreferences;
 import waazdoh.common.client.RestServiceClient;
 import waazdoh.cp2p.P2PBinarySource;
@@ -42,7 +42,7 @@ public class LOTApp {
 	public LOTClient getLClient() {
 		if (client == null) {
 			client = new LOTClientImpl(preferences, binarysource, beanstorage,
-					new RestServiceClient(serviceurl));
+					new RestServiceClient(serviceurl, beanstorage));
 		}
 		return client;
 	}

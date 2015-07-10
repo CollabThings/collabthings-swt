@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.client.model.User;
-import waazdoh.client.storage.BeanStorage;
+import waazdoh.common.BeanStorage;
 import waazdoh.common.MStringID;
 import waazdoh.common.UserID;
 import waazdoh.common.WData;
