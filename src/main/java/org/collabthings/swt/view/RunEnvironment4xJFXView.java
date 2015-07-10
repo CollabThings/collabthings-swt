@@ -101,10 +101,10 @@ public class RunEnvironment4xJFXView extends Composite {
 		zview.setRunEnvironment(runenv);
 		fview.setRunEnvironment(runenv);
 
-		xview.getView().setSceneOrientation(100, 0, 0);
-		yview.getView().setSceneOrientation(100, 100, 0);
-		zview.getView().setSceneOrientation(0, 100, 100);
-		fview.getView().setSceneOrientation(100, 100, 100);
+		xview.getView().setSceneOrientation(0, 0, 0);
+		yview.getView().setSceneOrientation(90, 0, 0);
+		zview.getView().setSceneOrientation(0, 90, 0);
+		fview.getView().setSceneOrientation(30, 30, 30);
 	}
 
 	public void runWhile(Condition c) {
