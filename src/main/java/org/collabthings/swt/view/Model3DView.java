@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
-import org.collabthings.LOTClient;
 import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTMaterial;
@@ -31,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class Model3DView extends Composite implements GestureListener {
 	private LLog log = LLog.getLogger(this);
-	private LOTClient env;
+
 	private double zoom = 1.0;
 	private PerspectiveCamera camera;
 	private Group cameraGroup;

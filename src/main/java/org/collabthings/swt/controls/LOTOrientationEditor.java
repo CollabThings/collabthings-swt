@@ -14,7 +14,8 @@ public class LOTOrientationEditor extends Composite {
 	private LOTDoubleEditor ea;
 	private LOrientation o;
 
-	public LOTOrientationEditor(Composite c, LOrientation no, ChangeListener<LOrientation> listener) {
+	public LOTOrientationEditor(Composite c, LOrientation no,
+			ChangeListener<LOrientation> listener) {
 		super(c, SWT.None);
 		this.o = no;
 		this.listener = listener;
@@ -26,7 +27,8 @@ public class LOTOrientationEditor extends Composite {
 		gridLayout.horizontalSpacing = 4;
 		setLayout(gridLayout);
 
-		el = new LOTVectorEditor(this, o.getLocation(), v -> listener.changed(o));
+		el = new LOTVectorEditor(this, o.getLocation(),
+				v -> listener.changed(o));
 		el.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		en = new LOTVectorEditor(this, o.getNormal(), v -> {
 			if (en != null) {
@@ -35,14 +37,10 @@ public class LOTOrientationEditor extends Composite {
 				listener.changed(o);
 			}
 		});
-		en.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		ea = createField((Double) o.getAngle());
-	}
 
-	private LOTDoubleEditor createField(Double value) {
-		LOTDoubleEditor ley = new LOTDoubleEditor(this, value, e -> angleChanged(e));
-		ley.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		return ley;
+		en.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		ea = new LOTDoubleEditor(this, o.getAngle(), e -> angleChanged(e));
+		ea.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 	}
 
 	private void angleChanged(double na) {

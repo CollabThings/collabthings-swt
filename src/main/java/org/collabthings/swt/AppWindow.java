@@ -166,7 +166,7 @@ public final class AppWindow implements LOTInfo {
 		SCADView v = new SCADView(tabFolder, app, this, scad);
 		addTab("" + scad.getName(), v, scad);
 	}
-	
+
 	private void addTab(String name, LOTAppControl c, Object data) {
 		CTabItem i = new CTabItem(tabFolder, SWT.CLOSE);
 		i.setText(name);
@@ -227,10 +227,8 @@ public final class AppWindow implements LOTInfo {
 
 		display.asyncExec(() -> {
 			LOTStorage storage = app.getLClient().getStorage();
-			String latestbuilder = storage.readStorage(app.getLClient()
-					.getClient().getService().getUser("juuso.vilmunen"),
-					"/published/builder/latest");
-			// view("builder", latestbuilder);
+			storage.readStorage(app.getLClient().getClient().getService()
+					.getUser("juuso.vilmunen"), "/published/builder/latest");
 		});
 	}
 

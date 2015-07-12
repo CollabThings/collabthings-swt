@@ -18,7 +18,6 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LocalObjectsMenu;
-import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -38,10 +37,8 @@ import org.eclipse.swt.widgets.MenuItem;
 public class FactoryView extends Composite implements LOTAppControl, ScriptUser {
 	private LOTFactory factory;
 	private RunEnvironment4xJFXView view;
-	private LLog log = LLog.getLogger(this);
 	private LOTApp app;
 
-	private Composite cchildrenlist;
 	private ScrolledComposite scrolledComposite;
 	private AppWindow window;
 	private FactoryInfoView infoview;

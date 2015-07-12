@@ -27,16 +27,14 @@ public class SCADView extends Composite implements LOTAppControl {
 	private LOTOpenSCAD scad;
 	private Text bottomtext;
 
-	private LOTApp app;
 	private SashForm sashForm_1;
 	private Model3DView canvas;
 	private Composite composite;
 
-	public SCADView(Composite c, LOTApp app, AppWindow appWindow,
-			LOTOpenSCAD scad) {
+	public SCADView(final Composite c, final LOTApp app,
+			final AppWindow appWindow, final LOTOpenSCAD scad) {
 		super(c, SWT.NONE);
 		this.window = appWindow;
-		this.app = app;
 
 		setLayout(new GridLayout(1, false));
 		this.scad = scad;
@@ -119,7 +117,6 @@ public class SCADView extends Composite implements LOTAppControl {
 			getDisplay().asyncExec(() -> {
 				scad.setScript(sscripttext);
 				if (scad.getModel() != null && scad.isOK()) {
-					boolean b = scad.isOK();
 					bottomtext.append("OK " + new Date() + "\n");
 				} else {
 					String error = scad.getError();

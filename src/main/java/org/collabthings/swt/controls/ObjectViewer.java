@@ -141,10 +141,6 @@ public class ObjectViewer extends Composite {
 		});
 	}
 
-	private String getObjectValue(String name) {
-		return "" + invokeGetMethod(methods.get(name));
-	}
-
 	private void parse(Object o) {
 		if (o == null) {
 			o = new TableTestData();
@@ -384,6 +380,7 @@ public class ObjectViewer extends Composite {
 		return s;
 	}
 
+	@SuppressWarnings("unchecked")
 	private Control addCollectionView(String key, Composite parent, Object o) {
 		log.info("addng " + key + " o:" + o);
 		Composite v = getTwoRowsComposite(parent);

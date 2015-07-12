@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Text;
 
 public class ScriptView extends Composite implements LOTAppControl {
 
-	private AppWindow window;
 	private Text scripttext;
 	private LOTScript script;
 	private Text bottomtext;
@@ -32,7 +31,6 @@ public class ScriptView extends Composite implements LOTAppControl {
 	public ScriptView(Composite c, LOTApp app, AppWindow appWindow,
 			LOTScript script) {
 		super(c, SWT.NONE);
-		this.window = appWindow;
 		this.app = app;
 
 		setLayout(new GridLayout(1, false));
@@ -89,7 +87,6 @@ public class ScriptView extends Composite implements LOTAppControl {
 			getDisplay().asyncExec(() -> {
 				if (s.isOK()) {
 					script.setScript(sscripttext);
-					boolean b = script.isOK();
 					bottomtext.append("OK " + new Date() + "\n");
 				} else {
 					String error = script.getError();

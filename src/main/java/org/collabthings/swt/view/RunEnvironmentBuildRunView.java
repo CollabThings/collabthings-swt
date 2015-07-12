@@ -24,19 +24,13 @@ public class RunEnvironmentBuildRunView extends Composite implements
 
 	// an hour
 	private static final int MAX_RUNTIME = 60 * 1000 * 60;
-	private LOTRunEnvironmentBuilder builder;
 	private RunEnvironment4xJFXView eview;
 	private LOTSimpleSimulation s;
-	private AppWindow window;
-	private LOTApp app;
 	private Text text;
 
 	public RunEnvironmentBuildRunView(Composite parent, LOTApp app,
 			AppWindow appWindow, LOTRunEnvironmentBuilder builder) {
 		super(parent, SWT.NONE);
-		this.builder = builder;
-		this.app = app;
-		this.window = appWindow;
 		setLayout(new GridLayout(1, false));
 
 		LOTRunEnvironment runEnvironment = builder.getRunEnvironment();

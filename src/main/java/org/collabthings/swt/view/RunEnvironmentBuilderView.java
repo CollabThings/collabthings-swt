@@ -38,13 +38,11 @@ public class RunEnvironmentBuilderView extends Composite implements
 	private LLog log = LLog.getLogger(this);
 	private LOTApp app;
 
-	private Composite cchildrenlist;
 	private ScrolledComposite scrolledComposite;
 	private Composite composite;
 	private AppWindow window;
 	private int currentfactoryhash;
 
-	private LOTSimpleSimulation s;
 	private Text text;
 	private PrintOut printout = new PrintOut();
 
