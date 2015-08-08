@@ -112,7 +112,7 @@ public class EnvironmentView extends Composite {
 				tname.setText(string);
 				tname.setEditable(true);
 
-				Button btnrenametool = new Button(ctool, SWT.NONE);
+				new Button(ctool, SWT.NONE);
 				/*
 				 * btnrenametool.addSelectionListener(new SelectionAdapter() {
 				 * public void widgetSelected(SelectionEvent arg0) {

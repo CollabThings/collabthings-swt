@@ -37,28 +37,27 @@ public class RunEnvironment4xJFXView extends Composite {
 		setLayout(new GridLayout(2, false));
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 
-		RunEnvironmentDrawerImpl ydrawer = new RunEnvironmentDrawerImpl(runenv,
+		 new RunEnvironmentDrawerImpl(runenv,
 				(v, b) -> {
 					v.y = v.z;
 					v.z = 0;
 				}, "Y");
-		RunEnvironmentDrawerImpl xdrawer = new RunEnvironmentDrawerImpl(runenv,
+		new RunEnvironmentDrawerImpl(runenv,
 				(v, b) -> {
 					v.x = v.z;
 					v.z = 0;
 				}, "X");
-		RunEnvironmentDrawerImpl zdrawer = new RunEnvironmentDrawerImpl(runenv,
+		new RunEnvironmentDrawerImpl(runenv,
 				(v, b) -> {
 					v.z = 0;
 				}, "Z");
-		RunEnvironmentDrawerImpl freedrawer = new RunEnvironmentDrawerImpl(
-				runenv, (v, b) -> {
-					if (b) {
-						freetransform.transform(v);
-					} else {
-						freetransform.transformw0(v);
-					}
-				}, "Z");
+		new RunEnvironmentDrawerImpl(runenv, (v, b) -> {
+			if (b) {
+				freetransform.transform(v);
+			} else {
+				freetransform.transformw0(v);
+			}
+		}, "Z");
 
 		xview = new JFXSimulationComposite(this, nrunenv);
 		yview = new JFXSimulationComposite(this, nrunenv);
