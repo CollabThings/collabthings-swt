@@ -46,7 +46,7 @@ public class MapView extends Composite {
 		cupper.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
 
-		Label ltitle = new Label(cupper, SWT.NONE);
+		new Label(cupper, SWT.NONE);
 
 		Composite composite = new Composite(this, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));

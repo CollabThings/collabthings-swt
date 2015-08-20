@@ -151,7 +151,7 @@ public class SearchView extends Composite implements LOTAppControl {
 
 	private void addRow(String id) {
 		clist.setLayout(new RowLayout(SWT.HORIZONTAL));
-		ObjectSmallView view = new ObjectSmallView(clist, this.app, this.window, id);
+		new ObjectSmallView(clist, this.app, this.window, id);
 	}
 
 	@Override

@@ -42,7 +42,8 @@ public class UsersSearchView extends Composite implements LOTAppControl {
 		this(c, app, appWindow, false);
 	}
 
-	public UsersSearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox) {
+	public UsersSearchView(Composite c, LOTApp app, AppWindow appWindow,
+			boolean hidesearchbox) {
 		super(c, SWT.NONE);
 		this.app = app;
 		this.window = appWindow;
@@ -50,7 +51,8 @@ public class UsersSearchView extends Composite implements LOTAppControl {
 
 		if (!hidesearchbox) {
 			Composite composite = new Composite(this, SWT.NONE);
-			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+					false, 1, 1));
 			composite.setLayout(new GridLayout(2, false));
 
 			text = new Text(composite, SWT.BORDER);
@@ -63,7 +65,8 @@ public class UsersSearchView extends Composite implements LOTAppControl {
 					}
 				}
 			});
-			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1,
+					1));
 
 			Button bsearch = new Button(composite, SWT.NONE);
 			bsearch.addSelectionListener(new SelectionAdapter() {
@@ -76,8 +79,10 @@ public class UsersSearchView extends Composite implements LOTAppControl {
 			bsearch.setText("Search");
 		}
 
-		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
-		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		scrolledComposite = new ScrolledComposite(this, SWT.BORDER
+				| SWT.V_SCROLL);
+		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 1, 1));
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
@@ -150,7 +155,7 @@ public class UsersSearchView extends Composite implements LOTAppControl {
 
 	private void addRow(UserVO user) {
 		clist.setLayout(new RowLayout(SWT.HORIZONTAL));
-		UserSmallView view = new UserSmallView(clist, this.app, this.window, user);
+		new UserSmallView(clist, this.app, this.window, user);
 	}
 
 	@Override
@@ -169,7 +174,8 @@ public class UsersSearchView extends Composite implements LOTAppControl {
 			clist.pack();
 
 			int w = scrolledComposite.getClientArea().width;
-			scrolledComposite.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
+			scrolledComposite
+					.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
 		}
 	}
 
