@@ -28,6 +28,11 @@ public final class AppLauncher implements WSWTApp {
 	}
 
 	@Override
+	public boolean isClosed() {
+		return app.isClosed();
+	}
+
+	@Override
 	public void close() {
 		app.close();
 	}
