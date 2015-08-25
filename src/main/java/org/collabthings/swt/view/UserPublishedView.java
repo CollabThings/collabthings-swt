@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -16,7 +17,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import waazdoh.common.WLogger;
 import waazdoh.common.vo.UserVO;

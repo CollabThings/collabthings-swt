@@ -4,13 +4,13 @@ import javax.vecmath.Vector3d;
 
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.math.LTransformation;
+import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.util.LLog;
 import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import waazdoh.client.utils.ConditionWaiter.Condition;
 

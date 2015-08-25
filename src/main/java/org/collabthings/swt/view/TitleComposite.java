@@ -1,11 +1,11 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class TitleComposite extends Composite {
 

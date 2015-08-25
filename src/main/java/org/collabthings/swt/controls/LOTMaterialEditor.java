@@ -1,13 +1,13 @@
 package org.collabthings.swt.controls;
 
 import org.collabthings.model.LOTMaterial;
+import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.LOTDoubleEditor.ChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class LOTMaterialEditor extends Composite {
 	private LOTMaterial material;

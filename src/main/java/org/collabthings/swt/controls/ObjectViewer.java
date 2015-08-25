@@ -16,6 +16,7 @@ import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTMaterial;
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
 import org.collabthings.util.LLog;
@@ -28,7 +29,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class ObjectViewer extends Composite {
 	private LLog log = LLog.getLogger(this);

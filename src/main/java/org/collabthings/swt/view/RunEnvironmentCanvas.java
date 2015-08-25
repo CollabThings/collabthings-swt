@@ -3,6 +3,7 @@ package org.collabthings.swt.view;
 import java.awt.Stroke;
 
 import org.collabthings.math.LVector;
+import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.util.LOTGraphics;
 import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.eclipse.swt.SWT;
@@ -15,7 +16,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class RunEnvironmentCanvas extends Composite implements PaintListener,
 		LOTGraphics {
