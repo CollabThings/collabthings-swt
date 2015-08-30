@@ -51,8 +51,8 @@ public class RunEnvironment4xCanvasView extends Composite {
 				(v, b) -> {
 					v.z = 0;
 				}, "Z");
-		RunEnvironmentDrawerImpl freedrawer = new RunEnvironmentDrawerImpl(runenv,
-				(v, b) -> {
+		RunEnvironmentDrawerImpl freedrawer = new RunEnvironmentDrawerImpl(
+				runenv, (v, b) -> {
 					if (b) {
 						freetransform.transform(v);
 					} else {
@@ -101,23 +101,12 @@ public class RunEnvironment4xCanvasView extends Composite {
 
 	public void runWhile(Condition c) {
 		new Thread(() -> {
-			log.info("Runwhile start");
-
-			long lasttime = System.currentTimeMillis();
-			while (c.test() && !isDisposed()) {
-				long dt = System.currentTimeMillis() - lasttime;
-				lasttime = System.currentTimeMillis();
-
-				step(dt);
-
-				doRepaint();
-
-				synchronized (this) {
-					try {
-						this.wait(60);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			synchronized (this) {
+				try {
+					log.info("Runwhile start");
+					loop(c);
+				} catch (Exception e) {
+					log.error(this, "runWhile", e);
 				}
 			}
 
@@ -125,4 +114,16 @@ public class RunEnvironment4xCanvasView extends Composite {
 		}).start();
 	}
 
+	private void loop(Condition c) throws InterruptedException {
+		long lasttime = System.currentTimeMillis();
+		while (c.test() && !isDisposed()) {
+			long dt = System.currentTimeMillis() - lasttime;
+			lasttime = System.currentTimeMillis();
+
+			step(dt);
+			doRepaint();
+
+			this.wait(60);
+		}
+	}
 }
