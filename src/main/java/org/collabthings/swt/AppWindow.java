@@ -10,6 +10,7 @@ import org.collabthings.model.LOTInfo;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTScript;
+import org.collabthings.model.LOTTool;
 import org.collabthings.model.impl.LOTFactoryImpl;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.swt.app.LOTApp;
@@ -469,5 +470,9 @@ public final class AppWindow implements LOTInfo {
 		ValueEditorDialog e = new ValueEditorDialog(shell, name, value);
 		e.open();
 		return e.getValue();
+	}
+
+	public void viewTool(LOTTool tool) {
+		// TODO Auto-generated method stub
 	}
 }
