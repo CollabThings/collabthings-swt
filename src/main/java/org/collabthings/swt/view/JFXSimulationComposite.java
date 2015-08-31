@@ -57,7 +57,8 @@ public class JFXSimulationComposite extends Composite {
 	}
 
 	public void setRunEnvironment(LOTRunEnvironment runenv) {
-		view = new JFXSimulationView(runenv, new ViewCanvas() {
+		view = new JFXSimulationView(runenv);
+		view.setCanvas(new ViewCanvas() {
 			@Override
 			public void refresh() {
 				canvas.redraw();
