@@ -95,25 +95,20 @@ public class ObjectViewer extends Composite {
 	}
 
 	private void initOkTypes() {
-		editors.put(String.class.getName(), (key, c, o) -> {
-			addStringField(key, c, (String) o);
-		});
+		editors.put(String.class.getName(),
+				(key, c, o) -> addStringField(key, c, (String) o));
 
-		editors.put(LVector.class.getName(), (key, c, o) -> {
-			addVectorField(key, c, (LVector) o);
-		});
+		editors.put(LVector.class.getName(),
+				(key, c, o) -> addVectorField(key, c, (LVector) o));
 
-		editors.put(Double.class.getName(), (key, c, o) -> {
-			addDoubleField(key, c, (Double) o);
-		});
+		editors.put(Double.class.getName(),
+				(key, c, o) -> addDoubleField(key, c, (Double) o));
 
-		editors.put(LOrientation.class.getName(), (key, c, o) -> {
-			addOrientationField(key, c, (LOrientation) o);
-		});
+		editors.put(LOrientation.class.getName(),
+				(key, c, o) -> addOrientationField(key, c, (LOrientation) o));
 
-		editors.put(LOTBoundingBox.class.getName(), (key, c, o) -> {
-			addBoundingBoxField(key, c, (LOTBoundingBox) o);
-		});
+		editors.put(LOTBoundingBox.class.getName(),
+				(key, c, o) -> addBoundingBoxField(key, c, (LOTBoundingBox) o));
 
 		editors.put(LOTFactoryState.class.getName(), (key, c, o) -> {
 			LOTFactoryState s = (LOTFactoryState) o;
@@ -132,28 +127,26 @@ public class ObjectViewer extends Composite {
 			}
 		});
 
-		editors.put(Set.class.getName(), (key, c, o) -> {
-			addCollectionView(key, c, o);
-		});
+		editors.put(Set.class.getName(),
+				(key, c, o) -> addCollectionView(key, c, o));
 
-		editors.put(LOTMaterial.class.getName(), (key, c, o) -> {
-			addMaterialView(key, c, (LOTMaterial) o);
-		});
+		editors.put(LOTMaterial.class.getName(),
+				(key, c, o) -> addMaterialView(key, c, (LOTMaterial) o));
 	}
 
-	private void parse(Object o) {
-		if (o == null) {
-			o = new TableTestData();
+	private void parse(Object no) {
+		this.objectShown = no;
+		if (this.objectShown == null) {
+			this.objectShown = new TableTestData();
 		}
 
-		this.objectShown = o;
 		//
-		Method[] ms = o.getClass().getMethods();
+		Method[] ms = this.objectShown.getClass().getMethods();
 		for (Method method : ms) {
 			try {
 				parseMethod(method);
 			} catch (IllegalArgumentException e) {
-				log.error(this, "parse " + o, e);
+				log.error(this, "parse " + this.objectShown, e);
 			}
 		}
 	}
@@ -278,7 +271,12 @@ public class ObjectViewer extends Composite {
 			LOTBoundingBox box) {
 		Composite c = getTwoRowsComposite(parent);
 		addLabel(key, c);
-		new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
+
+		LOTBoundingBoxEditor bbeditor = new LOTBoundingBoxEditor(c, box,
+				o -> fireValueChanged(key, box));
+		bbeditor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false,
+				2, 1));
+
 		return c;
 	}
 

@@ -114,7 +114,7 @@ public class RunEnvironment4xCanvasView extends Composite {
 		}).start();
 	}
 
-	private void loop(Condition c) throws InterruptedException {
+	private synchronized void loop(Condition c) throws InterruptedException {
 		long lasttime = System.currentTimeMillis();
 		while (c.test() && !isDisposed()) {
 			long dt = System.currentTimeMillis() - lasttime;
