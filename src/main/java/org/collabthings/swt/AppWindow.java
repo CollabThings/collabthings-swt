@@ -446,7 +446,7 @@ public final class AppWindow implements LOTInfo {
 			@Override
 			public void run() {
 				lblBottonInfo.setText("LOT:" + LOTClient.VERSION + " Waazdoh:"
-						+ WaazdohInfo.version + " environment: "
+						+ WaazdohInfo.VERSION + " environment: "
 						+ app.getLClient());
 				//
 				setBottomInfo();
