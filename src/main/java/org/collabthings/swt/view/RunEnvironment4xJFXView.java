@@ -37,37 +37,11 @@ public class RunEnvironment4xJFXView extends Composite {
 		setLayout(new GridLayout(2, false));
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 
-		 new RunEnvironmentDrawerImpl(runenv,
-				(v, b) -> {
-					v.y = v.z;
-					v.z = 0;
-				}, "Y");
-		new RunEnvironmentDrawerImpl(runenv,
-				(v, b) -> {
-					v.x = v.z;
-					v.z = 0;
-				}, "X");
-		new RunEnvironmentDrawerImpl(runenv,
-				(v, b) -> {
-					v.z = 0;
-				}, "Z");
-		new RunEnvironmentDrawerImpl(runenv, (v, b) -> {
-			if (b) {
-				freetransform.transform(v);
-			} else {
-				freetransform.transformw0(v);
-			}
-		}, "Z");
-
 		xview = new JFXSimulationComposite(this, nrunenv);
 		yview = new JFXSimulationComposite(this, nrunenv);
 		zview = new JFXSimulationComposite(this, nrunenv);
 		fview = new JFXSimulationComposite(this, nrunenv);
 
-		// ycanvas = new RunEnvironmentCanvas(this, SWT.NONE, ydrawer);
-		// zcanvas = new RunEnvironmentCanvas(this, SWT.NONE, zdrawer);
-		// xcanvas = new RunEnvironmentCanvas(this, SWT.NONE, xdrawer);
-		// fcanvas = new RunEnvironmentCanvas(this, SWT.NONE, freedrawer);
 		yview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		zview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		xview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
