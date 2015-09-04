@@ -6,7 +6,6 @@ import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.math.LTransformation;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.util.LLog;
-import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -94,8 +93,8 @@ public class RunEnvironment4xJFXView extends Composite {
 				synchronized (this) {
 					try {
 						this.wait(60);
-					} catch (Exception e) {
-						e.printStackTrace();
+					} catch (InterruptedException e) {
+						log.error(this, "runWhile", e);
 					}
 				}
 			}
