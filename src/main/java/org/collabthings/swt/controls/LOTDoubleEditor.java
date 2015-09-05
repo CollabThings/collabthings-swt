@@ -8,6 +8,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 public class LOTDoubleEditor extends Composite {
+	private static final double MIN_POS_VALUE = 0.001;
+	private static final double MIN_NEG_VALUE = 0.001;
 	private Text s;
 	private ChangeListener<Double> listener;
 
@@ -43,14 +45,14 @@ public class LOTDoubleEditor extends Composite {
 	protected synchronized void this_keyPressed(KeyEvent arg0) {
 		if (arg0.keyCode == SWT.ARROW_UP) {
 			double nd = getDouble() + Math.abs(getDouble() * 0.01);
-			if (nd == 0.0) {
-				nd = 0.001;
+			if (nd >= 0.0 && nd < 0.001) {
+				nd = MIN_POS_VALUE;
 			}
 			setDouble(nd);
 		} else if (arg0.keyCode == SWT.ARROW_DOWN) {
 			double nd = getDouble() - Math.abs(getDouble() * 0.01);
-			if (nd == 0.0) {
-				nd = -0.001;
+			if (nd <= 0.0 && nd > -0.001) {
+				nd = -MIN_NEG_VALUE;
 			}
 			setDouble(nd);
 		}

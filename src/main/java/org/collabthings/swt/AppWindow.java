@@ -3,14 +3,16 @@ package org.collabthings.swt;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
+import org.collabthings.LOTStorage;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTInfo;
+import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTRunEnvironmentBuilder;
 import org.collabthings.model.LOTScript;
+import org.collabthings.model.LOTTool;
 import org.collabthings.model.impl.LOTFactoryImpl;
+import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.LOTMessageDialog;
@@ -18,11 +20,13 @@ import org.collabthings.swt.view.FactoryView;
 import org.collabthings.swt.view.PartView;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
+import org.collabthings.swt.view.SCADView;
 import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.SearchView;
 import org.collabthings.swt.view.UserView;
 import org.collabthings.swt.view.UsersSearchView;
 import org.collabthings.swt.view.ValueEditorDialog;
+import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -159,6 +163,11 @@ public final class AppWindow implements LOTInfo {
 		addTab("" + name, v, userid);
 	}
 
+	public void viewOpenSCAD(LOTOpenSCAD scad) {
+		SCADView v = new SCADView(tabFolder, app, this, scad);
+		addTab("" + scad.getName(), v, scad);
+	}
+
 	private void addTab(String name, LOTAppControl c, Object data) {
 		CTabItem i = new CTabItem(tabFolder, SWT.CLOSE);
 		i.setText(name);
@@ -185,27 +194,7 @@ public final class AppWindow implements LOTInfo {
 				shell.open();
 				shell.layout();
 				shell.setMaximized(true);
-				//
-				// FIXME TODO REMOVE
-				// newFactory();
-				display.asyncExec(() -> {
-					viewSearch("boxsetfactory");
-				});
-
-				display.asyncExec(() -> {
-					viewSearchUsers("user");
-				});
-
-				display.asyncExec(() -> {
-					view("builder",
-							app.getLClient()
-									.getStorage()
-									.readStorage(
-											app.getLClient().getClient()
-													.getService()
-													.getUser("juuso.vilmunen"),
-											"/published/builder/latest"));
-				});
+				openTestViews(display);
 
 				//
 				while (!shell.isDisposed()) {
@@ -222,6 +211,26 @@ public final class AppWindow implements LOTInfo {
 			}
 			app.close();
 		}
+	}
+
+	private void openTestViews(Display display) {
+		//
+		// FIXME TODO REMOVE
+		// newFactory();
+		display.asyncExec(() -> {
+			viewSearch("boxsetfactory");
+		});
+
+		display.asyncExec(() -> {
+			viewSearchUsers("user");
+			newPart();
+		});
+
+		display.asyncExec(() -> {
+			LOTStorage storage = app.getLClient().getStorage();
+			storage.readStorage(app.getLClient().getClient().getService()
+					.getUser("juuso.vilmunen"), "/published/builder/latest");
+		});
 	}
 
 	private void readAndDispatch(Display display) {
@@ -437,7 +446,7 @@ public final class AppWindow implements LOTInfo {
 			@Override
 			public void run() {
 				lblBottonInfo.setText("LOT:" + LOTClient.VERSION + " Waazdoh:"
-						+ WaazdohInfo.version + " environment: "
+						+ WaazdohInfo.VERSION + " environment: "
 						+ app.getLClient());
 				//
 				setBottomInfo();
@@ -461,5 +470,9 @@ public final class AppWindow implements LOTInfo {
 		ValueEditorDialog e = new ValueEditorDialog(shell, name, value);
 		e.open();
 		return e.getValue();
+	}
+
+	public void viewTool(LOTTool tool) {
+		// TODO Auto-generated method stub
 	}
 }

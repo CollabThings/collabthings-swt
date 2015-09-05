@@ -2,18 +2,18 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
-import org.collabthings.LLog;
-import org.collabthings.PrintOut;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
 import org.collabthings.environment.LOTTask;
 import org.collabthings.environment.RunEnvironmentListener;
-import org.collabthings.model.LOTRunEnvironmentBuilder;
+import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.ObjectViewer;
+import org.collabthings.util.LLog;
+import org.collabthings.util.PrintOut;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -38,13 +38,11 @@ public class RunEnvironmentBuilderView extends Composite implements
 	private LLog log = LLog.getLogger(this);
 	private LOTApp app;
 
-	private Composite cchildrenlist;
 	private ScrolledComposite scrolledComposite;
 	private Composite composite;
 	private AppWindow window;
 	private int currentfactoryhash;
 
-	private LOTSimpleSimulation s;
 	private Text text;
 	private PrintOut printout = new PrintOut();
 
@@ -239,7 +237,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 				try {
 					wait(100);
 				} catch (InterruptedException e) {
-					log.info("" + e);
+					log.error(this, "checkBuilderUpdate", e);
 				}
 			}
 		}

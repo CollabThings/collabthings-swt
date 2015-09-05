@@ -2,10 +2,10 @@ package org.collabthings.swt.view;
 
 import java.util.List;
 
-import org.collabthings.LLog;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -151,7 +151,7 @@ public class SearchView extends Composite implements LOTAppControl {
 
 	private void addRow(String id) {
 		clist.setLayout(new RowLayout(SWT.HORIZONTAL));
-		ObjectSmallView view = new ObjectSmallView(clist, this.app, this.window, id);
+		new ObjectSmallView(clist, this.app, this.window, id);
 	}
 
 	@Override

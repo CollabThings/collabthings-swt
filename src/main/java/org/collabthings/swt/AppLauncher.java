@@ -2,8 +2,8 @@ package org.collabthings.swt;
 
 import java.net.MalformedURLException;
 
-import org.collabthings.LLog;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.util.LLog;
 
 import waazdoh.client.WClient;
 import waazdoh.common.WPreferences;
@@ -28,6 +28,11 @@ public final class AppLauncher implements WSWTApp {
 	}
 
 	@Override
+	public boolean isClosed() {
+		return app.isClosed();
+	}
+
+	@Override
 	public void close() {
 		app.close();
 	}
@@ -45,6 +50,5 @@ public final class AppLauncher implements WSWTApp {
 	public static void main(String[] args) throws MalformedURLException {
 		AppLauncher l = new AppLauncher();
 		l.launch();
-		System.exit(0);
 	}
 }

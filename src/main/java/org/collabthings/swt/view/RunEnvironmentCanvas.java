@@ -2,8 +2,10 @@ package org.collabthings.swt.view;
 
 import java.awt.Stroke;
 
-import org.collabthings.view.LOTGraphics;
-import org.collabthings.view.RunEnviromentDrawer;
+import org.collabthings.math.LVector;
+import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.util.LOTGraphics;
+import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -14,12 +16,11 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 public class RunEnvironmentCanvas extends Composite implements PaintListener,
 		LOTGraphics {
 
-	private RunEnviromentDrawer drawer;
+	private RunEnvironmentDrawerImpl drawer;
 	private GC gc;
 
 	/**
@@ -30,7 +31,7 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 	 * @param drawer
 	 */
 	public RunEnvironmentCanvas(Composite parent, int style,
-			RunEnviromentDrawer drawer) {
+			RunEnvironmentDrawerImpl drawer) {
 		super(parent, SWT.NO_BACKGROUND);
 		setBackground(SWTResourceManager.getColor(248, 248, 255));
 		setLayout(new GridLayout(1, false));
@@ -61,6 +62,23 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 	@Override
 	public void drawLine(int asx, int asy, int bsx, int bsy) {
 		gc.drawLine(asx, asy, bsx, bsy);
+	}
+
+	@Override
+	public void drawLine(double ax, double ay, double az, double bx, double by,
+			double bz) {
+		int asx = (int) ax;
+		int asy = (int) ay;
+		int bsx = (int) bx;
+		int bsy = (int) by;
+		gc.drawLine(asx, asy, bsx, bsy);
+	}
+
+	@Override
+	public void drawTriangle(LVector ta, LVector tb, LVector tc, int color) {
+		drawLine(ta.x, ta.y, ta.z, tb.x, tb.y, tb.z);
+		drawLine(ta.x, ta.y, ta.z, tc.x, tc.y, tc.z);
+		drawLine(tc.x, tc.y, tc.z, tb.x, tb.y, tb.z);
 	}
 
 	@Override
@@ -106,7 +124,7 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 		}
 	}
 
-	public RunEnviromentDrawer getDrawer() {
+	public RunEnvironmentDrawerImpl getDrawer() {
 		return this.drawer;
 	}
 }

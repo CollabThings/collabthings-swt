@@ -3,7 +3,7 @@ package org.collabthings.swt.dialog;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.collabthings.LLog;
+import org.collabthings.util.LLog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 

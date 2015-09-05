@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>collabthings.swt</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.collabthings</groupId>
@@ -77,7 +77,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>org.libraryofthings.swt.AppLauncher</mainClass>
+									<mainClass>org.collabthings.swt.AppLauncher</mainClass>
 								</manifest>
 							</archive>
 							<outputDirectory>
@@ -161,7 +161,7 @@
 									<type>directory</type>
 									<mapper>
 										<type>perm</type>
-										<prefix>/usr/share/libraryofthings/lib</prefix>
+										<prefix>/usr/share/collabthings/lib</prefix>
 									</mapper>
 								</data>
 								<data>
@@ -169,7 +169,7 @@
 									<type>directory</type>
 									<mapper>
 										<type>perm</type>
-										<prefix>/usr/share/libraryofthings/img</prefix>
+										<prefix>/usr/share/collabthings/img</prefix>
 									</mapper>
 								</data>
 							</dataSet>
@@ -216,8 +216,8 @@
 
 		<dependency>
 			<groupId>org.collabthings</groupId>
-			<artifactId>collabthings</artifactId>
-			<version>0.2.2</version>
+			<artifactId>collabthings.client</artifactId>
+			<version>0.2.3-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -246,6 +246,43 @@
 			<systemPath>${project.basedir}/src/main/app/bin/jimX3dModelImporterJFX.jar
 			</systemPath>
 		</dependency>
+
+		<dependency>
+			<groupId>com.interactivemesh</groupId>
+			<artifactId>jfx</artifactId>
+			<version>2.2.3</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/app/bin/jimStlMeshImporterJFX.jar
+			</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>zest</artifactId>
+			<version>1.5</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/app/bin/org.eclipse.zest.core_1.5.100.201408150207.jar
+			</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>zest.layouts</artifactId>
+			<version>1.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/app/bin/org.eclipse.zest.layouts_1.1.100.201408150207.jar
+			</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>draw2d</artifactId>
+			<version>3.9.101</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/app/bin/org.eclipse.draw2d_3.9.101.201408150207.jar
+			</systemPath>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.oracle</groupId>

@@ -2,7 +2,7 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
-import org.collabthings.model.LOTScript;
+import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
@@ -20,29 +20,30 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class ScriptView extends Composite implements LOTAppControl {
+public class SCADView extends Composite implements LOTAppControl {
 
+	private AppWindow window;
 	private Text scripttext;
-	private LOTScript script;
+	private LOTOpenSCAD scad;
 	private Text bottomtext;
 
-	private LOTApp app;
+	private SashForm sashForm_1;
+	private Model3DView canvas;
+	private Composite composite;
 
-	public ScriptView(Composite c, LOTApp app, AppWindow appWindow,
-			LOTScript script) {
+	public SCADView(final Composite c, final LOTApp app,
+			final AppWindow appWindow, final LOTOpenSCAD scad) {
 		super(c, SWT.NONE);
-		this.app = app;
+		this.window = appWindow;
 
 		setLayout(new GridLayout(1, false));
-		this.script = script;
+		this.scad = scad;
 
-		SashForm sashForm = new SashForm(this, SWT.VERTICAL);
-		GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1);
-		gd_sashForm.heightHint = 200;
-		sashForm.setLayoutData(gd_sashForm);
+		sashForm_1 = new SashForm(this, SWT.NONE);
+		sashForm_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
+				1, 1));
 
-		scripttext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
+		scripttext = new Text(sashForm_1, SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		scripttext.addKeyListener(new KeyAdapter() {
 			@Override
@@ -51,11 +52,41 @@ public class ScriptView extends Composite implements LOTAppControl {
 			}
 		});
 
-		scripttext.setText("" + script.getScript());
+		scripttext.setText("" + scad.getScript());
+
+		SashForm sashForm = new SashForm(sashForm_1, SWT.VERTICAL);
+
+		composite = new Composite(sashForm, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
+		canvas = new Model3DView(composite, SWT.NONE);
+		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		sashForm.setWeights(new int[] { 3, 1 });
+		sashForm.setWeights(new int[] { 1, 1 });
+		sashForm_1.setWeights(new int[] { 1, 1 });
+
+		new Thread(() -> {
+			int hash = 0;
+			while (!canvas.isDisposed()) {
+				if (scad.hashCode() != hash) {
+					hash = scad.hashCode();
+					setModel();
+				}
+
+				synchronized (this) {
+					try {
+						this.wait(200);
+					} catch (Exception e) {
+						window.showError(e);
+					}
+				}
+			}
+		}).start();
+	}
+
+	private void setModel() {
+		canvas.addModel(null, scad);
 	}
 
 	protected synchronized void key(KeyEvent arg0) {
@@ -74,23 +105,23 @@ public class ScriptView extends Composite implements LOTAppControl {
 
 	@Override
 	public String getControlName() {
-		return "Script: " + script;
+		return "Script: " + scad;
 	}
 
 	private void save(String sscripttext) {
 		if (sscripttext != null
-				&& (script.getScript() == null || !script.getScript().equals(
+				&& (scad.getScript() == null || !scad.getScript().equals(
 						sscripttext))) {
 
-			LOTScript s = this.app.getObjectFactory().getScript();
-			s.setScript(sscripttext);
+			String oldscript = scad.getScript();
 			getDisplay().asyncExec(() -> {
-				if (s.isOK()) {
-					script.setScript(sscripttext);
+				scad.setScript(sscripttext);
+				if (scad.getModel() != null && scad.isOK()) {
 					bottomtext.append("OK " + new Date() + "\n");
 				} else {
-					String error = script.getError();
+					String error = scad.getError();
 					bottomtext.append("ERROR " + error + "\n");
+					scad.setScript(oldscript);
 				}
 			});
 		}

@@ -2,19 +2,19 @@ package org.collabthings.swt.view;
 
 import javax.vecmath.Vector3d;
 
-import org.collabthings.LLog;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.math.LTransformation;
-import org.collabthings.view.RunEnviromentDrawer;
+import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.util.LLog;
+import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import waazdoh.client.utils.ConditionWaiter.Condition;
 
-public class RunEnvironment4xView extends Composite {
+public class RunEnvironment4xCanvasView extends Composite {
 	private LTransformation freetransform;
 	private double freeangle;
 	private LOTRunEnvironment runenv;
@@ -25,11 +25,11 @@ public class RunEnvironment4xView extends Composite {
 
 	private LLog log = LLog.getLogger(this);
 
-	public RunEnvironment4xView(Composite parent, int style) {
+	public RunEnvironment4xCanvasView(Composite parent, int style) {
 		this(parent, style, null);
 	}
 
-	public RunEnvironment4xView(Composite parent, int style,
+	public RunEnvironment4xCanvasView(Composite parent, int style,
 			LOTRunEnvironment nrunenv) {
 		super(parent, style);
 
@@ -37,20 +37,27 @@ public class RunEnvironment4xView extends Composite {
 		setLayout(new GridLayout(2, false));
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 
-		RunEnviromentDrawer ydrawer = new RunEnviromentDrawer(runenv, (v) -> {
-			v.y = v.z;
-			v.z = 0;
-		}, "Y");
-		RunEnviromentDrawer xdrawer = new RunEnviromentDrawer(runenv, (v) -> {
-			v.x = v.z;
-			v.z = 0;
-		}, "X");
-		RunEnviromentDrawer zdrawer = new RunEnviromentDrawer(runenv, (v) -> {
-			v.z = 0;
-		}, "Z");
-		RunEnviromentDrawer freedrawer = new RunEnviromentDrawer(runenv,
-				(v) -> {
-					freetransform.transform(v);
+		RunEnvironmentDrawerImpl ydrawer = new RunEnvironmentDrawerImpl(runenv,
+				(v, b) -> {
+					v.y = v.z;
+					v.z = 0;
+				}, "Y");
+		RunEnvironmentDrawerImpl xdrawer = new RunEnvironmentDrawerImpl(runenv,
+				(v, b) -> {
+					v.x = v.z;
+					v.z = 0;
+				}, "X");
+		RunEnvironmentDrawerImpl zdrawer = new RunEnvironmentDrawerImpl(runenv,
+				(v, b) -> {
+					v.z = 0;
+				}, "Z");
+		RunEnvironmentDrawerImpl freedrawer = new RunEnvironmentDrawerImpl(
+				runenv, (v, b) -> {
+					if (b) {
+						freetransform.transform(v);
+					} else {
+						freetransform.transformw0(v);
+					}
 				}, "Z");
 
 		ycanvas = new RunEnvironmentCanvas(this, SWT.NONE, ydrawer);
@@ -94,23 +101,12 @@ public class RunEnvironment4xView extends Composite {
 
 	public void runWhile(Condition c) {
 		new Thread(() -> {
-			log.info("Runwhile start");
-			
-			long lasttime = System.currentTimeMillis();
-			while (c.test() && !isDisposed()) {
-				long dt = System.currentTimeMillis() - lasttime;
-				lasttime = System.currentTimeMillis();
-
-				step(dt);
-
-				doRepaint();
-
-				synchronized (this) {
-					try {
-						this.wait(60);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			synchronized (this) {
+				try {
+					log.info("Runwhile start");
+					loop(c);
+				} catch (Exception e) {
+					log.error(this, "runWhile", e);
 				}
 			}
 
@@ -118,4 +114,16 @@ public class RunEnvironment4xView extends Composite {
 		}).start();
 	}
 
+	private synchronized void loop(Condition c) throws InterruptedException {
+		long lasttime = System.currentTimeMillis();
+		while (c.test() && !isDisposed()) {
+			long dt = System.currentTimeMillis() - lasttime;
+			lasttime = System.currentTimeMillis();
+
+			step(dt);
+			doRepaint();
+
+			this.wait(60);
+		}
+	}
 }

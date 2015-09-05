@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Set;
 
-import org.collabthings.LLog;
 import org.collabthings.LOTClient;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.impl.LOTFactoryState;
@@ -37,18 +36,17 @@ import org.eclipse.swt.widgets.MenuItem;
 
 public class FactoryView extends Composite implements LOTAppControl, ScriptUser {
 	private LOTFactory factory;
-	private RunEnvironment4xView view;
-	private LLog log = LLog.getLogger(this);
+	private RunEnvironment4xJFXView view;
 	private LOTApp app;
 
-	private Composite cchildrenlist;
 	private ScrolledComposite scrolledComposite;
 	private AppWindow window;
 	private FactoryInfoView infoview;
 
 	private int currentfactoryhash;
 
-	public FactoryView(Composite composite, LOTApp app, AppWindow w, LOTFactory f) {
+	public FactoryView(Composite composite, LOTApp app, AppWindow w,
+			LOTFactory f) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;
@@ -73,7 +71,9 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	@Override
 	public void addScript(LOTScript script) {
-		factory.addScript("script" + factory.getScripts().size() + " " + script.getName(), script);
+		factory.addScript(
+				"script" + factory.getScripts().size() + " " + script.getName(),
+				script);
 	}
 
 	private synchronized void updateFactoryHash() {
@@ -104,10 +104,11 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		setLayout(gridLayout);
 
 		SashForm composite_main = new SashForm(this, SWT.NONE);
-		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 1, 1));
 
-		this.scrolledComposite = new ScrolledComposite(composite_main, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL);
+		this.scrolledComposite = new ScrolledComposite(composite_main,
+				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.addListener(SWT.Resize, new Listener() {
@@ -117,7 +118,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 			}
 		});
 
-		this.infoview = new FactoryInfoView(scrolledComposite, app, window, factory);
+		this.infoview = new FactoryInfoView(scrolledComposite, app, window,
+				factory);
 		scrolledComposite.setContent(infoview);
 
 		Composite c_view = new Composite(composite_main, SWT.NONE);
@@ -125,7 +127,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);
 
-		view = new RunEnvironment4xView(c_view, SWT.NONE);
+		view = new RunEnvironment4xJFXView(c_view, SWT.NONE);
 		composite_main.setWeights(new int[] { 275, 421 });
 
 		Menu tempmenu = new Menu(this);
@@ -137,16 +139,16 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private void updateFactory() {
 
-		new Thread(
-				() -> {
-					LOTClient client = app.getLClient();
-					LOTEnvironment env = new LOTEnvironmentImpl(client);
-					LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view", factory)
-							.getRunEnvironment();
-					view.setRunEnvironment(runenv);
-					view.step(0);
-					view.doRepaint();
-				}).start();
+		new Thread(() -> {
+			LOTClient client = app.getLClient();
+			LOTEnvironment env = new LOTEnvironmentImpl(client);
+			LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view",
+					factory).getRunEnvironment();
+			view.setRunEnvironment(runenv);
+			view.step(0);
+			view.stop();
+			// view.doRepaint();
+			}).start();
 	}
 
 	private synchronized void updateView() {
@@ -186,7 +188,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		mfsaddnew.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				addScript("script" + factory.getEnvironment().getScripts().size());
+				addScript("script"
+						+ factory.getEnvironment().getScripts().size());
 			}
 		});
 
@@ -259,13 +262,11 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private void initLocalMenu(Menu mAddLocalChild) {
 		LocalObjectsMenu m = new LocalObjectsMenu(window, mAddLocalChild);
-		m.addObjectHandler(
-				LOTFactoryImpl.BEANNAME,
-				(data) -> {
-					LOTFactory f = window.getApp().getLClient().getObjectFactory()
-							.getFactory(data.getIDValue("id"));
-					infoview.addChild(f);
-				});
+		m.addObjectHandler(LOTFactoryImpl.BEANNAME, (data) -> {
+			LOTFactory f = window.getApp().getLClient().getObjectFactory()
+					.getFactory(data.getIDValue("id"));
+			infoview.addChild(f);
+		});
 	}
 
 	private synchronized void checkFactoryUpdate() {
@@ -285,22 +286,24 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	}
 
 	protected void importSelected() {
-		getDisplay().asyncExec(() -> {
-			try {
-				FileDialog fd = new FileDialog(getShell(), SWT.MULTI);
-				fd.open();
+		getDisplay().asyncExec(
+				() -> {
+					try {
+						FileDialog fd = new FileDialog(getShell(), SWT.MULTI);
+						fd.open();
 
-				String fpath = fd.getFilterPath();
-				String[] fns = fd.getFileNames();
-				for (String string : fns) {
-					LOTScript s = addScript(string);
-					byte[] bs = Files.readAllBytes(Paths.get(fpath + File.separator + string));
-					s.setScript(new String(bs));
-				}
-			} catch (IOException e) {
-				window.showError(e);
-			}
-		});
+						String fpath = fd.getFilterPath();
+						String[] fns = fd.getFileNames();
+						for (String string : fns) {
+							LOTScript s = addScript(string);
+							byte[] bs = Files.readAllBytes(Paths.get(fpath
+									+ File.separator + string));
+							s.setScript(new String(bs));
+						}
+					} catch (IOException e) {
+						window.showError(e);
+					}
+				});
 	}
 
 	protected void scriptMenuSelected(String string) {

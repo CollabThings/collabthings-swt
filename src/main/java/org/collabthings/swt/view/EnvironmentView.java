@@ -113,26 +113,32 @@ public class EnvironmentView extends Composite {
 				tname.setEditable(true);
 
 				Button btnrenametool = new Button(ctool, SWT.NONE);
-				/*
-				 * btnrenametool.addSelectionListener(new SelectionAdapter() {
-				 * public void widgetSelected(SelectionEvent arg0) {
-				 * environment.renametool(string, tname.getText()); } });
-				 * btnrenametool.setText("rename");
-				 * 
-				 * Button btnopentool = new Button(ctool, SWT.NONE);
-				 * btnopentool.addSelectionListener(new SelectionAdapter() {
-				 * public void widgetSelected(SelectionEvent arg0) {
-				 * window.viewtool(environment.gettool(string)); } });
-				 * 
-				 * btnopentool.setText("open");
-				 * 
-				 * Button btndeletetool = new Button(ctool, SWT.NONE);
-				 * btndeletetool.addSelectionListener(new SelectionAdapter() {
-				 * 
-				 * @Override public void widgetSelected(SelectionEvent arg0) {
-				 * environment.deletetool(string); } });
-				 * btndeletetool.setText("delete");
-				 */
+				btnrenametool.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent arg0) {
+						environment.renameTool(string, tname.getText());
+					}
+				});
+				btnrenametool.setText("rename");
+
+				Button btnopentool = new Button(ctool, SWT.NONE);
+				btnopentool.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent arg0) {
+						window.viewTool(environment.getTool(string));
+					}
+				});
+
+				btnopentool.setText("open");
+
+				Button btndeletetool = new Button(ctool, SWT.NONE);
+				btndeletetool.addSelectionListener(new SelectionAdapter() {
+
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						environment.deleteTool(string);
+					}
+				});
+				btndeletetool.setText("delete");
+
 			}
 		}
 	}
