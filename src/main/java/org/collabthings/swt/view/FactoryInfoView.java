@@ -5,6 +5,7 @@ import java.util.Set;
 import org.collabthings.model.LOTAttachedFactory;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.controls.ObjectViewerListener;
@@ -55,10 +56,7 @@ public class FactoryInfoView extends Composite {
 		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false,
 				1, 1));
 		GridLayout gl_cchildren = new GridLayout(1, false);
-		gl_cchildren.horizontalSpacing = 1;
-		gl_cchildren.verticalSpacing = 1;
-		gl_cchildren.marginWidth = 1;
-		gl_cchildren.marginHeight = 1;
+		LOTSWT.setDefaults(gl_cchildren);
 		cchildren.setLayout(gl_cchildren);
 
 		Composite cchildrenpanel = new Composite(cchildren, SWT.NONE);
@@ -66,10 +64,7 @@ public class FactoryInfoView extends Composite {
 				false, 1, 1));
 		cchildrenpanel.setSize(65, 25);
 		GridLayout gl_cchildrenpanel = new GridLayout(2, false);
-		gl_cchildrenpanel.horizontalSpacing = 0;
-		gl_cchildrenpanel.marginHeight = 0;
-		gl_cchildrenpanel.marginWidth = 0;
-		gl_cchildrenpanel.verticalSpacing = 0;
+		LOTSWT.setDefaults(gl_cchildrenpanel);
 		cchildrenpanel.setLayout(gl_cchildrenpanel);
 
 		Label lblChildren = new Label(cchildrenpanel, SWT.NONE);
@@ -90,10 +85,8 @@ public class FactoryInfoView extends Composite {
 				1, 1));
 		cchildrenlist.setSize(0, 0);
 		GridLayout gl_cchildrenlist = new GridLayout(1, false);
-		gl_cchildrenlist.verticalSpacing = 0;
-		gl_cchildrenlist.marginWidth = 0;
-		gl_cchildrenlist.marginHeight = 0;
-		gl_cchildrenlist.horizontalSpacing = 0;
+		LOTSWT.setDefaults(gl_cchildrenlist);
+
 		cchildrenlist.setLayout(gl_cchildrenlist);
 
 		if (factory != null) {
@@ -150,23 +143,15 @@ public class FactoryInfoView extends Composite {
 
 	private void createFactoryDataViewer(Composite c, LOTFactory f) {
 		GridLayout gl_c_factoryproperties_1 = new GridLayout(1, false);
-		gl_c_factoryproperties_1.horizontalSpacing = 0;
-		gl_c_factoryproperties_1.verticalSpacing = 0;
-		gl_c_factoryproperties_1.marginWidth = 0;
-		gl_c_factoryproperties_1.marginHeight = 0;
+		LOTSWT.setDefaults(gl_c_factoryproperties_1);
+
 		c.setLayout(gl_c_factoryproperties_1);
 		ObjectViewer factoryobjectviewer = new ObjectViewer(app, window, c, f);
 
 		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
 				false, 1, 1));
 		GridLayout gridLayout = (GridLayout) factoryobjectviewer.getLayout();
-		gridLayout.marginTop = 0;
-		gridLayout.marginRight = 0;
-		gridLayout.marginLeft = 0;
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
+		LOTSWT.setDefaults(gridLayout);
 
 		factoryobjectviewer.addListener(new ObjectViewerListener() {
 			@Override

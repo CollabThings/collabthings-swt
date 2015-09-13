@@ -16,6 +16,7 @@ import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTMaterial;
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
@@ -71,10 +72,7 @@ public class ObjectViewer extends Composite {
 		parse(o);
 
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
+		LOTSWT.setDefaults(gridLayout);
 		setLayout(gridLayout);
 
 		lblObject = new Label(this, SWT.NONE);
@@ -89,10 +87,7 @@ public class ObjectViewer extends Composite {
 		composite = new Composite(this, SWT.BORDER);
 		composite.setBackground(SWTResourceManager.getColor(248, 248, 255));
 		GridLayout gl_composite = new GridLayout(1, false);
-		gl_composite.verticalSpacing = 0;
-		gl_composite.marginWidth = 0;
-		gl_composite.marginHeight = 0;
-		gl_composite.horizontalSpacing = 0;
+		LOTSWT.setDefaults(gl_composite);
 		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
@@ -327,11 +322,7 @@ public class ObjectViewer extends Composite {
 	private Composite getTwoRowsComposite(Composite parent) {
 		Composite c = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.marginBottom = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
+		LOTSWT.setDefaults(gridLayout);
 
 		c.setLayout(gridLayout);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -396,10 +387,7 @@ public class ObjectViewer extends Composite {
 		Composite c = new Composite(v, SWT.None);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl = new GridLayout();
-		gl.verticalSpacing = 0;
-		gl.marginWidth = 0;
-		gl.marginHeight = 0;
-		gl.horizontalSpacing = 0;
+		LOTSWT.setDefaults(gl);
 
 		c.setLayout(gl);
 

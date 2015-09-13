@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.LOTSWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -46,9 +47,7 @@ public class EnvironmentView extends Composite {
 	private void addParameters() {
 		TitleComposite params = new TitleComposite(this, "PARAMETERS");
 		GridLayout gridLayout = (GridLayout) params.getLayout();
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
+		LOTSWT.setDefaults(gridLayout);
 
 		if (environment != null) {
 			Set<String> ps = environment.getParameters();
@@ -101,10 +100,8 @@ public class EnvironmentView extends Composite {
 	private void addTools() {
 		TitleComposite ctools = new TitleComposite(this, "TOOLS");
 		GridLayout gl_c = new GridLayout(2, false);
-		gl_c.marginHeight = 0;
-		gl_c.marginWidth = 0;
-		gl_c.verticalSpacing = 0;
-		gl_c.horizontalSpacing = 0;
+		LOTSWT.setDefaults(gl_c);
+
 		ctools.setLayout(gl_c);
 		new Label(ctools, SWT.NONE);
 
@@ -158,9 +155,8 @@ public class EnvironmentView extends Composite {
 	private void addScripts() {
 		Composite cscripts = new TitleComposite(this, "SCRIPTS");
 		GridLayout gridLayout = (GridLayout) cscripts.getLayout();
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
+		LOTSWT.setDefaults(gridLayout);
+
 		Composite cscriptslist = new Composite(cscripts, SWT.NONE);
 		cscriptslist.setLayout(new FillLayout(SWT.VERTICAL));
 		cscriptslist.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -171,11 +167,7 @@ public class EnvironmentView extends Composite {
 			for (String string : scripts) {
 				Composite cscript = new Composite(cscriptslist, SWT.NONE);
 				GridLayout gl_cscript = new GridLayout();
-				gl_cscript.horizontalSpacing = 0;
-				gl_cscript.marginHeight = 0;
-				gl_cscript.marginWidth = 0;
-				gl_cscript.verticalSpacing = 0;
-				
+
 				gl_cscript.numColumns = 4;
 				cscript.setLayout(gl_cscript);
 

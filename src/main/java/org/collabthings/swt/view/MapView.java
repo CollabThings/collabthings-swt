@@ -76,20 +76,22 @@ public class MapView extends Composite {
 	public void set(LOTRunEnvironment env) {
 		clear();
 
-		GraphNode envnode = new GraphNode(graph, SWT.NONE, "Env " + env);
+		if (env != null) {
+			GraphNode envnode = new GraphNode(graph, SWT.NONE, "Env " + env);
 
-		Set<LOTRuntimeObject> rs = env.getRunObjects();
-		for (LOTRuntimeObject runo : rs) {
-			if (runo instanceof LOTFactoryState) {
-				LOTFactoryState state = (LOTFactoryState) runo;
-				addFactoryState(1, envnode, state);
+			Set<LOTRuntimeObject> rs = env.getRunObjects();
+			for (LOTRuntimeObject runo : rs) {
+				if (runo instanceof LOTFactoryState) {
+					LOTFactoryState state = (LOTFactoryState) runo;
+					addFactoryState(1, envnode, state);
+				}
 			}
+
+			SpringLayoutAlgorithm springLayoutAlgorithm = new MapLayout();
+			// springLayoutAlgorithm.setSpringGravitation(10);
+
+			graph.setLayoutAlgorithm(springLayoutAlgorithm, true);
 		}
-
-		SpringLayoutAlgorithm springLayoutAlgorithm = new MapLayout();
-		// springLayoutAlgorithm.setSpringGravitation(10);
-
-		graph.setLayoutAlgorithm(springLayoutAlgorithm, true);
 	}
 
 	private void addFactoryState(int depth, GraphNode envnode,
