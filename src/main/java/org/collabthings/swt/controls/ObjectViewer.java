@@ -71,9 +71,10 @@ public class ObjectViewer extends Composite {
 		parse(o);
 
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.marginTop = 5;
-		gridLayout.marginRight = 5;
-		gridLayout.marginLeft = 5;
+		gridLayout.verticalSpacing = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.horizontalSpacing = 0;
 		setLayout(gridLayout);
 
 		lblObject = new Label(this, SWT.NONE);
@@ -87,7 +88,12 @@ public class ObjectViewer extends Composite {
 
 		composite = new Composite(this, SWT.BORDER);
 		composite.setBackground(SWTResourceManager.getColor(248, 248, 255));
-		composite.setLayout(new GridLayout(1, false));
+		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.verticalSpacing = 0;
+		gl_composite.marginWidth = 0;
+		gl_composite.marginHeight = 0;
+		gl_composite.horizontalSpacing = 0;
+		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 
@@ -215,14 +221,14 @@ public class ObjectViewer extends Composite {
 	private LEditorFactory getEditor(Object o) {
 		if (o != null) {
 			Class<? extends Object> class1 = o.getClass();
-			LEditorFactory e = editors.get(class1);
+			LEditorFactory e = editors.get(class1.getName());
 			if (e != null) {
 				return e;
 			}
 
 			Class<?>[] cs = class1.getDeclaredClasses();
 			for (Class<?> class2 : cs) {
-				e = editors.get(class2);
+				e = editors.get(class2.getName());
 				if (e != null) {
 					return e;
 				}
@@ -230,7 +236,7 @@ public class ObjectViewer extends Composite {
 
 			Class<?>[] ics = class1.getInterfaces();
 			for (Class<?> class2 : ics) {
-				e = editors.get(class2);
+				e = editors.get(class2.getName());
 				if (e != null) {
 					return e;
 				}
@@ -324,6 +330,9 @@ public class ObjectViewer extends Composite {
 		gridLayout.verticalSpacing = 0;
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.marginBottom = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+
 		c.setLayout(gridLayout);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
@@ -382,11 +391,17 @@ public class ObjectViewer extends Composite {
 	private Control addCollectionView(String key, Composite parent, Object o) {
 		log.info("addng " + key + " o:" + o);
 		Composite v = getTwoRowsComposite(parent);
-		addLabel(key, v);
+		addLabel("Collection " + key, v);
 
 		Composite c = new Composite(v, SWT.None);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		c.setLayout(new GridLayout());
+		GridLayout gl = new GridLayout();
+		gl.verticalSpacing = 0;
+		gl.marginWidth = 0;
+		gl.marginHeight = 0;
+		gl.horizontalSpacing = 0;
+
+		c.setLayout(gl);
 
 		for (Object item : (Collection<Object>) o) {
 			Label l = new Label(c, SWT.None);

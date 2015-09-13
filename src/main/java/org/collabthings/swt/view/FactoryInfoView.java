@@ -55,6 +55,10 @@ public class FactoryInfoView extends Composite {
 		cchildren.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false,
 				1, 1));
 		GridLayout gl_cchildren = new GridLayout(1, false);
+		gl_cchildren.horizontalSpacing = 1;
+		gl_cchildren.verticalSpacing = 1;
+		gl_cchildren.marginWidth = 1;
+		gl_cchildren.marginHeight = 1;
 		cchildren.setLayout(gl_cchildren);
 
 		Composite cchildrenpanel = new Composite(cchildren, SWT.NONE);
@@ -62,6 +66,10 @@ public class FactoryInfoView extends Composite {
 				false, 1, 1));
 		cchildrenpanel.setSize(65, 25);
 		GridLayout gl_cchildrenpanel = new GridLayout(2, false);
+		gl_cchildrenpanel.horizontalSpacing = 0;
+		gl_cchildrenpanel.marginHeight = 0;
+		gl_cchildrenpanel.marginWidth = 0;
+		gl_cchildrenpanel.verticalSpacing = 0;
 		cchildrenpanel.setLayout(gl_cchildrenpanel);
 
 		Label lblChildren = new Label(cchildrenpanel, SWT.NONE);
@@ -81,7 +89,12 @@ public class FactoryInfoView extends Composite {
 		cchildrenlist.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true,
 				1, 1));
 		cchildrenlist.setSize(0, 0);
-		cchildrenlist.setLayout(new GridLayout(1, false));
+		GridLayout gl_cchildrenlist = new GridLayout(1, false);
+		gl_cchildrenlist.verticalSpacing = 0;
+		gl_cchildrenlist.marginWidth = 0;
+		gl_cchildrenlist.marginHeight = 0;
+		gl_cchildrenlist.horizontalSpacing = 0;
+		cchildrenlist.setLayout(gl_cchildrenlist);
 
 		if (factory != null) {
 			Set<String> children = factory.getFactories();
@@ -137,7 +150,9 @@ public class FactoryInfoView extends Composite {
 
 	private void createFactoryDataViewer(Composite c, LOTFactory f) {
 		GridLayout gl_c_factoryproperties_1 = new GridLayout(1, false);
-		gl_c_factoryproperties_1.marginTop = 5;
+		gl_c_factoryproperties_1.horizontalSpacing = 0;
+		gl_c_factoryproperties_1.verticalSpacing = 0;
+		gl_c_factoryproperties_1.marginWidth = 0;
 		gl_c_factoryproperties_1.marginHeight = 0;
 		c.setLayout(gl_c_factoryproperties_1);
 		ObjectViewer factoryobjectviewer = new ObjectViewer(app, window, c, f);
@@ -145,6 +160,9 @@ public class FactoryInfoView extends Composite {
 		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
 				false, 1, 1));
 		GridLayout gridLayout = (GridLayout) factoryobjectviewer.getLayout();
+		gridLayout.marginTop = 0;
+		gridLayout.marginRight = 0;
+		gridLayout.marginLeft = 0;
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
