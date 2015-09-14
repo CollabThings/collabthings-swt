@@ -40,14 +40,18 @@ public class TitleComposite extends Composite {
 		lblScripts.setText(title);
 	}
 
-	public void addButton(String string, Runnable action) {
+	public void addButton(String string, ButtonAction action) {
 		Button b = new Button(ctitle, SWT.None);
 		b.setText(string);
 		b.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				action.run();
+				action.action();
 			}
 		});
+	}
+	
+	public interface ButtonAction {
+		public void action();
 	}
 }
