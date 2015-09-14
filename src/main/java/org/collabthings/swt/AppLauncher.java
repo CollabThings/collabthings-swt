@@ -25,6 +25,8 @@ public final class AppLauncher implements WSWTApp {
 		WSWTAppLauncher l = new WSWTAppLauncher();
 		app = new LOTApp();
 		l.launch(this);
+		//
+		System.exit(0);
 	}
 
 	@Override

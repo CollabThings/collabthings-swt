@@ -206,7 +206,7 @@ public final class AppWindow implements LOTInfo {
 				//
 				while (!shell.isDisposed()) {
 					readAndDispatch(display);
-				}
+				}				
 			} catch (Exception e) {
 				// TODO shouldn't catch Exception, but didn't come up with
 				// anything better.
