@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.eclipse.swt.SWT;
@@ -40,18 +41,21 @@ public class UserPublishedView extends Composite {
 		setLayout(new GridLayout(1, false));
 
 		Composite composite = new Composite(this, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false,
+				1, 1));
 		composite.setLayout(new GridLayout(6, false));
 
 		Label lblPublished = new Label(composite, SWT.NONE);
-		lblPublished.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		lblPublished.setFont(SWTResourceManager
+				.getFont("Segoe UI", 9, SWT.BOLD));
 		lblPublished.setText("Published");
 
 		Label lblFilter = new Label(composite, SWT.NONE);
 		lblFilter.setText("Filter");
 
 		publishedfilter = new Text(composite, SWT.BORDER);
-		publishedfilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		publishedfilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 
 		Button btnSearchPublished = new Button(composite, SWT.NONE);
 		btnSearchPublished.addSelectionListener(new SelectionAdapter() {
@@ -62,8 +66,10 @@ public class UserPublishedView extends Composite {
 		});
 		btnSearchPublished.setText("search");
 
-		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		scrolledComposite = new ScrolledComposite(this, SWT.BORDER
+				| SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 1, 1));
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		clist = new Composite(scrolledComposite, SWT.NONE);
@@ -85,10 +91,12 @@ public class UserPublishedView extends Composite {
 					() -> {
 						List<String> published = app.getLClient().getStorage()
 								.getUserPublished(u.getUserid(), 0, 50);
-						WLogger.getLogger(this).info("got published list " + published);
+						WLogger.getLogger(this).info(
+								"got published list " + published);
 						String filter = "" + publishedfilter.getText();
 						for (String string : published) {
-							if (string.indexOf(filter) > 0 || filter.length() < 2) {
+							if (string.indexOf(filter) > 0
+									|| filter.length() < 2) {
 								addPublishedItem(string);
 							}
 						}
@@ -102,10 +110,8 @@ public class UserPublishedView extends Composite {
 		Composite item = new Composite(clist, SWT.NONE);
 		item.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_item = new GridLayout(2, false);
-		gl_item.verticalSpacing = 0;
-		gl_item.marginWidth = 0;
-		gl_item.marginHeight = 0;
-		gl_item.horizontalSpacing = 0;
+		LOTSWT.setDefaults(gl_item);
+
 		item.setLayout(gl_item);
 		Label l = new Label(item, SWT.NONE);
 		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -122,7 +128,8 @@ public class UserPublishedView extends Composite {
 		btnView.setText("View");
 
 		if (publishedcount++ % 2 == 0) {
-			Color bgcolor = SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
+			Color bgcolor = SWTResourceManager
+					.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
 			l.setBackground(bgcolor);
 			item.setBackground(bgcolor);
 			btnView.setBackground(bgcolor);
@@ -142,7 +149,8 @@ public class UserPublishedView extends Composite {
 			clist.pack();
 
 			int w = scrolledComposite.getClientArea().width;
-			scrolledComposite.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
+			scrolledComposite
+					.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
 		}
 	}
 

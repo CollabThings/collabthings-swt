@@ -16,6 +16,7 @@ import org.collabthings.model.LOTBoundingBox;
 import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTMaterial;
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
@@ -71,9 +72,7 @@ public class ObjectViewer extends Composite {
 		parse(o);
 
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.marginTop = 5;
-		gridLayout.marginRight = 5;
-		gridLayout.marginLeft = 5;
+		LOTSWT.setDefaults(gridLayout);
 		setLayout(gridLayout);
 
 		lblObject = new Label(this, SWT.NONE);
@@ -87,7 +86,9 @@ public class ObjectViewer extends Composite {
 
 		composite = new Composite(this, SWT.BORDER);
 		composite.setBackground(SWTResourceManager.getColor(248, 248, 255));
-		composite.setLayout(new GridLayout(1, false));
+		GridLayout gl_composite = new GridLayout(1, false);
+		LOTSWT.setDefaults(gl_composite);
+		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 
@@ -215,14 +216,14 @@ public class ObjectViewer extends Composite {
 	private LEditorFactory getEditor(Object o) {
 		if (o != null) {
 			Class<? extends Object> class1 = o.getClass();
-			LEditorFactory e = editors.get(class1);
+			LEditorFactory e = editors.get(class1.getName());
 			if (e != null) {
 				return e;
 			}
 
 			Class<?>[] cs = class1.getDeclaredClasses();
 			for (Class<?> class2 : cs) {
-				e = editors.get(class2);
+				e = editors.get(class2.getName());
 				if (e != null) {
 					return e;
 				}
@@ -230,7 +231,7 @@ public class ObjectViewer extends Composite {
 
 			Class<?>[] ics = class1.getInterfaces();
 			for (Class<?> class2 : ics) {
-				e = editors.get(class2);
+				e = editors.get(class2.getName());
 				if (e != null) {
 					return e;
 				}
@@ -321,9 +322,8 @@ public class ObjectViewer extends Composite {
 	private Composite getTwoRowsComposite(Composite parent) {
 		Composite c = new Composite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.verticalSpacing = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.marginBottom = 0;
+		LOTSWT.setDefaults(gridLayout);
+
 		c.setLayout(gridLayout);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
@@ -382,11 +382,14 @@ public class ObjectViewer extends Composite {
 	private Control addCollectionView(String key, Composite parent, Object o) {
 		log.info("addng " + key + " o:" + o);
 		Composite v = getTwoRowsComposite(parent);
-		addLabel(key, v);
+		addLabel("Collection " + key, v);
 
 		Composite c = new Composite(v, SWT.None);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		c.setLayout(new GridLayout());
+		GridLayout gl = new GridLayout();
+		LOTSWT.setDefaults(gl);
+
+		c.setLayout(gl);
 
 		for (Object item : (Collection<Object>) o) {
 			Label l = new Label(c, SWT.None);

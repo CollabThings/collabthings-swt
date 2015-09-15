@@ -10,6 +10,7 @@ import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.simulation.LOTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.util.LLog;
@@ -289,10 +290,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
 				false, 1, 1));
 		GridLayout gridLayout = (GridLayout) factoryobjectviewer.getLayout();
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.horizontalSpacing = 0;
+		LOTSWT.setDefaults(gridLayout);
 	}
 
 	public MenuItem createMenu(Menu menu) {

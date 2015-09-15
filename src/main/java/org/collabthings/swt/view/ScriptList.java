@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.eclipse.swt.SWT;
@@ -74,8 +75,7 @@ public class ScriptList extends Composite {
 
 			Composite composite = new Composite(cscript, SWT.NONE);
 			GridLayout gl_composite = new GridLayout(2, false);
-			gl_composite.verticalSpacing = 0;
-			gl_composite.horizontalSpacing = 0;
+			LOTSWT.setDefaults(gl_composite);
 			composite.setLayout(gl_composite);
 
 			Label lblAddTo = new Label(composite, SWT.NONE);

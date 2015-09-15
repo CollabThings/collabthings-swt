@@ -13,6 +13,7 @@ import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 import org.collabthings.model.impl.LOTFactoryImpl;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
+import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.LOTMessageDialog;
@@ -86,6 +87,12 @@ public final class AppWindow implements LOTInfo {
 	public void newFactory() {
 		LOTFactory f = app.newFactory();
 		viewFactory(f);
+	}
+
+	public void newRunEnvBuilder() {
+		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(
+				this.app.getLClient());
+		viewRuntimeBuilder(b);
 	}
 
 	public void view(String type, String id) {
@@ -199,7 +206,7 @@ public final class AppWindow implements LOTInfo {
 				//
 				while (!shell.isDisposed()) {
 					readAndDispatch(display);
-				}
+				}				
 			} catch (Exception e) {
 				// TODO shouldn't catch Exception, but didn't come up with
 				// anything better.
@@ -223,7 +230,7 @@ public final class AppWindow implements LOTInfo {
 
 		display.asyncExec(() -> {
 			viewSearchUsers("user");
-			newPart();
+			newFactory();
 		});
 
 		display.asyncExec(() -> {
@@ -307,6 +314,15 @@ public final class AppWindow implements LOTInfo {
 		});
 		mntmNewPart.setText("Part");
 
+		MenuItem mntmRunenvBuilder = new MenuItem(menu_new, SWT.NONE);
+		mntmRunenvBuilder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				newRunEnvBuilder();
+			}
+		});
+		mntmRunenvBuilder.setText("RunEnv Builder");
+
 		MenuItem menulocalitem = new MenuItem(menufile, SWT.CASCADE);
 		menulocalitem.setText("Local");
 
@@ -350,10 +366,8 @@ public final class AppWindow implements LOTInfo {
 
 		Composite composite = new Composite(shell, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
-		gl_composite.horizontalSpacing = 0;
-		gl_composite.marginHeight = 0;
-		gl_composite.marginWidth = 0;
-		gl_composite.verticalSpacing = 0;
+		LOTSWT.setDefaults(gl_composite);
+
 		composite.setLayout(gl_composite);
 		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1);

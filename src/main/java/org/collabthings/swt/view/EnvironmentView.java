@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.collabthings.model.LOTEnvironment;
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.LOTSWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -16,12 +17,16 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
 public class EnvironmentView extends Composite {
 
 	private LOTEnvironment environment;
 	private AppWindow window;
+	private Composite cscriptslist;
+	private TitleComposite ctools;
+	private Composite ctoolslist;
 
 	public EnvironmentView(Composite parent, AppWindow window,
 			LOTEnvironment environment) {
@@ -29,9 +34,10 @@ public class EnvironmentView extends Composite {
 
 		this.window = window;
 		this.environment = environment;
-		RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
-		rowLayout.fill = true;
-		setLayout(rowLayout);
+
+		GridLayout gridLayout_1 = new GridLayout(1, false);
+		setLayout(gridLayout_1);
+		LOTSWT.setDefaults(gridLayout_1);
 
 		addScripts();
 		addTools();
@@ -40,6 +46,11 @@ public class EnvironmentView extends Composite {
 
 	private void addParameters() {
 		TitleComposite params = new TitleComposite(this, "PARAMETERS");
+		params.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+				1));
+		GridLayout gridLayout = (GridLayout) params.getLayout();
+		LOTSWT.setDefaults(gridLayout);
+		Table t = new Table(params, SWT.NONE);
 
 		if (environment != null) {
 			Set<String> ps = environment.getParameters();
@@ -54,9 +65,8 @@ public class EnvironmentView extends Composite {
 				+ environment.getParameter(name) : "value";
 		Composite c = new Composite(params, SWT.NONE);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_c = new GridLayout(2, false);
-		gl_c.verticalSpacing = 1;
-		gl_c.horizontalSpacing = 1;
+		GridLayout gl_c = new GridLayout(1, false);
+		LOTSWT.setDefaults(gl_c);
 		c.setLayout(gl_c);
 
 		Label l = new Label(c, SWT.NONE);
@@ -90,108 +100,157 @@ public class EnvironmentView extends Composite {
 	}
 
 	private void addTools() {
-		TitleComposite ctools = new TitleComposite(this, "TOOLS");
-		GridLayout gl_c = new GridLayout(2, false);
-		gl_c.verticalSpacing = 1;
-		gl_c.horizontalSpacing = 1;
-		ctools.setLayout(gl_c);
+		ctools = new TitleComposite(this, "TOOLS");
+		ctools.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+				1));
+		GridLayout gridLayout = (GridLayout) ctools.getLayout();
+		LOTSWT.setDefaults(gridLayout);
+
+		ctoolslist = new Composite(ctools, SWT.NONE);
+		ctoolslist.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1,
+				1));
+		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+		fillLayout.marginHeight = 0;
+		fillLayout.marginWidth = 0;
+		ctoolslist.setLayout(fillLayout);
 
 		if (environment != null) {
+			ctools.addButton(
+					"+",
+					() -> {
+						String toolname = "tool"
+								+ environment.getTools().size();
+						this.environment.addTool(toolname, this.window.getApp()
+								.getLClient().getObjectFactory().getTool());
+						addTool(toolname);
+						getParent().layout();
+					});
+
 			Set<String> tools = environment.getTools();
 			for (String string : tools) {
-				Composite ctool = new Composite(ctools, SWT.NONE);
-				GridLayout gl_ctool = new GridLayout();
-				gl_ctool.numColumns = 4;
-				ctool.setLayout(gl_ctool);
-
-				Text tname = new Text(ctool, SWT.NONE);
-				GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false,
-						false, 1, 1);
-				gd_tname.widthHint = 146;
-				tname.setLayoutData(gd_tname);
-				tname.setText(string);
-				tname.setEditable(true);
-
-				Button btnrenametool = new Button(ctool, SWT.NONE);
-				btnrenametool.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent arg0) {
-						environment.renameTool(string, tname.getText());
-					}
-				});
-				btnrenametool.setText("rename");
-
-				Button btnopentool = new Button(ctool, SWT.NONE);
-				btnopentool.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent arg0) {
-						window.viewTool(environment.getTool(string));
-					}
-				});
-
-				btnopentool.setText("open");
-
-				Button btndeletetool = new Button(ctool, SWT.NONE);
-				btndeletetool.addSelectionListener(new SelectionAdapter() {
-
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						environment.deleteTool(string);
-					}
-				});
-				btndeletetool.setText("delete");
-
+				addTool(string);
 			}
 		}
 	}
 
+	private void addTool(String string) {
+		Composite ctool = new Composite(ctoolslist, SWT.NONE);
+		GridLayout gl_ctool = new GridLayout();
+		gl_ctool.numColumns = 4;
+		ctool.setLayout(gl_ctool);
+
+		Text tname = new Text(ctool, SWT.NONE);
+		GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1,
+				1);
+		gd_tname.widthHint = 146;
+		tname.setLayoutData(gd_tname);
+		tname.setText(string);
+		tname.setEditable(true);
+
+		Button btnrenametool = new Button(ctool, SWT.NONE);
+		btnrenametool.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				environment.renameTool(string, tname.getText());
+			}
+		});
+		btnrenametool.setText("rename");
+
+		Button btnopentool = new Button(ctool, SWT.NONE);
+		btnopentool.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				window.viewTool(environment.getTool(string));
+			}
+		});
+
+		btnopentool.setText("open");
+
+		Button btndeletetool = new Button(ctool, SWT.NONE);
+		btndeletetool.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				environment.deleteTool(string);
+			}
+		});
+		btndeletetool.setText("delete");
+	}
+
 	private void addScripts() {
-		Composite cscripts = new TitleComposite(this, "SCRIPTS");
-		Composite cscriptslist = new Composite(cscripts, SWT.NONE);
-		cscriptslist.setLayout(new FillLayout(SWT.VERTICAL));
+		TitleComposite cscripts = new TitleComposite(this, "SCRIPTS");
+		cscripts.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+				1, 1));
+		GridLayout gridLayout = (GridLayout) cscripts.getLayout();
+		LOTSWT.setDefaults(gridLayout);
+
+		cscriptslist = new Composite(cscripts, SWT.NONE);
+
+		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+		fillLayout.marginHeight = 0;
+		fillLayout.marginWidth = 0;
+
+		cscriptslist.setLayout(fillLayout);
 		cscriptslist.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
 
 		if (environment != null) {
+			cscripts.addButton(
+					"+",
+					() -> {
+						String scriptname = "script"
+								+ environment.getScripts().size();
+						this.environment.addScript(scriptname, this.window
+								.getApp().getLClient().getObjectFactory()
+								.getScript());
+						addScript(scriptname);
+						getParent().layout();
+					});
+
 			Set<String> scripts = environment.getScripts();
 			for (String string : scripts) {
-				Composite cscript = new Composite(cscriptslist, SWT.NONE);
-				GridLayout gl_cscript = new GridLayout();
-				gl_cscript.numColumns = 4;
-				cscript.setLayout(gl_cscript);
-
-				Text tname = new Text(cscript, SWT.NONE);
-				GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false,
-						false, 1, 1);
-				gd_tname.widthHint = 146;
-				tname.setLayoutData(gd_tname);
-				tname.setText(string);
-				tname.setEditable(true);
-
-				Button btnrenamescript = new Button(cscript, SWT.NONE);
-				btnrenamescript.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent arg0) {
-						environment.renameScript(string, tname.getText());
-					}
-				});
-				btnrenamescript.setText("rename");
-
-				Button btnopenscript = new Button(cscript, SWT.NONE);
-				btnopenscript.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent arg0) {
-						window.viewScript(environment.getScript(string));
-					}
-				});
-
-				btnopenscript.setText("open");
-
-				Button btndeletescript = new Button(cscript, SWT.NONE);
-				btndeletescript.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						environment.deleteScript(string);
-					}
-				});
-				btndeletescript.setText("delete");
+				addScript(string);
 			}
 		}
+	}
+
+	private void addScript(String string) {
+		Composite cscript = new Composite(cscriptslist, SWT.NONE);
+		GridLayout gl_cscript = new GridLayout();
+
+		gl_cscript.numColumns = 4;
+		cscript.setLayout(gl_cscript);
+
+		Text tname = new Text(cscript, SWT.NONE);
+		GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1,
+				1);
+		gd_tname.widthHint = 146;
+		tname.setLayoutData(gd_tname);
+		tname.setText(string);
+		tname.setEditable(true);
+
+		Button btnrenamescript = new Button(cscript, SWT.NONE);
+		btnrenamescript.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				environment.renameScript(string, tname.getText());
+			}
+		});
+		btnrenamescript.setText("rename");
+
+		Button btnopenscript = new Button(cscript, SWT.NONE);
+		btnopenscript.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				window.viewScript(environment.getScript(string));
+			}
+		});
+
+		btnopenscript.setText("open");
+
+		Button btndeletescript = new Button(cscript, SWT.NONE);
+		btndeletescript.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				environment.deleteScript(string);
+			}
+		});
+		btndeletescript.setText("delete");
 	}
 }
