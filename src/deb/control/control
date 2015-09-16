@@ -5,5 +5,5 @@ Priority: optional
 Architecture: all
 Depends: jdk (>= 1.8)
 Maintainer: Juuso Vilmunen <juuso@vilmunen.net>
-Description: Library of things
+Description: CollabThings
 Distribution: development

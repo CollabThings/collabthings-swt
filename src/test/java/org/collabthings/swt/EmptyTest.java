@@ -1,4 +1,4 @@
-package org.libraryofthings.swt;
+package org.collabthings.swt;
 
 import junit.framework.TestCase;
 
