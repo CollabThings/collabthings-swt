@@ -33,6 +33,7 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -44,6 +45,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.UserVO;
@@ -206,7 +208,7 @@ public final class AppWindow implements LOTInfo {
 				//
 				while (!shell.isDisposed()) {
 					readAndDispatch(display);
-				}				
+				}
 			} catch (Exception e) {
 				// TODO shouldn't catch Exception, but didn't come up with
 				// anything better.
@@ -271,6 +273,11 @@ public final class AppWindow implements LOTInfo {
 	 */
 	protected void createContents() {
 		shell = new Shell();
+
+		Image small = new Image(shell.getDisplay(),
+				ClassLoader.getSystemResourceAsStream("logo.png"));
+		shell.setImage(small);
+
 		shell.setSize(589, 395);
 		shell.setText("CollabThings - "
 				+ app.getLClient().getService().getUser().getUsername());
