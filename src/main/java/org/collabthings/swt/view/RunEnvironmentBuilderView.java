@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class RunEnvironmentBuilderView extends Composite implements
 		LOTAppControl {
@@ -220,6 +221,15 @@ public class RunEnvironmentBuilderView extends Composite implements
 				builder.getEnvironment());
 		ev.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
+		Label label = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+				1));
+
+		Label l = new Label(composite, SWT.NONE);
+		l.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
+		l.setAlignment(SWT.CENTER);
+		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		l.setText("Created runenvironment");
 		ObjectViewer oview = new ObjectViewer(app, window, composite,
 				this.builder.getRunEnvironment(), new String[] { "info" });
 		oview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
