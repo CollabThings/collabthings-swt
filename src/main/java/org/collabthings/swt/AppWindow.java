@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.UserVO;
