@@ -228,8 +228,8 @@ public final class AppWindow implements LOTInfo {
 
 		display.asyncExec(() -> {
 			viewSearchUsers("user");
-			// newFactory();
-			 newRunEnvBuilder();
+			newFactory();
+			newRunEnvBuilder();
 		});
 
 		display.asyncExec(() -> {
