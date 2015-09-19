@@ -222,17 +222,14 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	private void openTestViews(Display display) {
-		//
-		// FIXME TODO REMOVE
-		// newFactory();
 		display.asyncExec(() -> {
 			viewSearch("boxsetfactory");
 		});
 
 		display.asyncExec(() -> {
 			viewSearchUsers("user");
-			newFactory();
-			newRunEnvBuilder();
+			// newFactory();
+			 newRunEnvBuilder();
 		});
 
 		display.asyncExec(() -> {
@@ -450,6 +447,7 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	public void updateObjectMenu(LOTAppControl v) {
+		log.info("updating object menu " + v);
 		disposeObjectMenu();
 		objectmenu = v.createMenu(menu);
 	}
