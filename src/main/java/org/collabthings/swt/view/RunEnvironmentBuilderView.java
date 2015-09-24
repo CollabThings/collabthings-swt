@@ -91,6 +91,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 	}
 
 	private void run() {
+		log.info("Launhing simulation " + builder);
 		window.viewSimulation(builder);
 	}
 
@@ -350,7 +351,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 				run();
 			}
 		});
-		mirun.setText("Run");
+		mirun.setText("Run " + builder);
 
 		mifpublish.addSelectionListener(new SelectionAdapter() {
 			@Override
