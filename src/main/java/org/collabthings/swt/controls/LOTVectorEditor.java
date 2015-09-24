@@ -5,6 +5,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 public class LOTVectorEditor extends Composite {
 
@@ -13,13 +14,14 @@ public class LOTVectorEditor extends Composite {
 	private LOTDoubleEditor ez;
 	private LOTDoubleEditor ex;
 	private LVector v;
+	private Label lname;
 
 	public LOTVectorEditor(Composite c, LVector nv, ChangeListener<LVector> listener) {
 		super(c, SWT.None);
 		this.v = nv;
 		this.listener = listener;
 		//
-		GridLayout gridLayout = new GridLayout(3, false);
+		GridLayout gridLayout = new GridLayout(4, false);
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
@@ -30,6 +32,8 @@ public class LOTVectorEditor extends Composite {
 			v = new LVector();
 		}
 
+		lname = new Label(this, SWT.None);
+		
 		ex = new LOTDoubleEditor(this, (Double) v.x, d -> {
 			v.x = d;
 			changed();
@@ -49,6 +53,10 @@ public class LOTVectorEditor extends Composite {
 		updateValues();
 	}
 
+	public void setName(String name) {
+		lname.setText(name);
+	}
+	
 	private void changed() {
 		listener.changed(getV());
 	}
