@@ -138,7 +138,6 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	}
 
 	private void updateFactory() {
-
 		new Thread(() -> {
 			LOTClient client = app.getLClient();
 			LOTEnvironment env = new LOTEnvironmentImpl(client);
@@ -223,7 +222,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		mifpublish.setText("Publish");
 
 		MenuItem mntmAddChild = new MenuItem(mfactory, SWT.CASCADE);
-		mntmAddChild.setText("Add  child");
+		mntmAddChild.setText("Add child");
 
 		Menu mAddChild = new Menu(mntmAddChild);
 		mntmAddChild.setMenu(mAddChild);
