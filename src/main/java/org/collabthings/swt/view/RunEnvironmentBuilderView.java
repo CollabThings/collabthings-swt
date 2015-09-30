@@ -259,7 +259,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 
 	private synchronized void checkBuilderUpdate() {
 		while (!isDisposed()) {
-			int nhash = builder.getBean().hashCode();
+			int nhash = builder.getObject().hashCode();
 			if (nhash != currentfactoryhash && window.isSelected(this)) {
 				currentfactoryhash = nhash;
 				updateView();
@@ -299,7 +299,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 	}
 
 	private synchronized void updateFactoryHash() {
-		currentfactoryhash = builder.getBean().hashCode();
+		currentfactoryhash = builder.getObject().hashCode();
 	}
 
 	private synchronized void createDataEditors(Composite c,

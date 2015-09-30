@@ -146,7 +146,7 @@ public class PartView extends Composite implements LOTAppControl {
 		new Thread(() -> {
 			int hash = 0;
 			while (!c_partproperties.isDisposed()) {
-				int currenthash = part.getBean().hashCode();
+				int currenthash = part.getObject().hashCode();
 				if (currenthash != hash) {
 					hash = currenthash;
 					getDisplay().asyncExec(() -> {

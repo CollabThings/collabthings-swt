@@ -77,7 +77,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	}
 
 	private synchronized void updateFactoryHash() {
-		currentfactoryhash = factory.getBean().hashCode();
+		currentfactoryhash = factory.getObject().hashCode();
 	}
 
 	@Override
@@ -270,7 +270,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private synchronized void checkFactoryUpdate() {
 		while (!isDisposed()) {
-			int nhash = factory.getBean().hashCode();
+			int nhash = factory.getObject().hashCode();
 			if (nhash != currentfactoryhash && !window.isSelected(this)) {
 				currentfactoryhash = nhash;
 				updateView();
