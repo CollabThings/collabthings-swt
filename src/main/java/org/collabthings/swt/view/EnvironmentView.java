@@ -6,6 +6,8 @@ import org.collabthings.model.LOTEnvironment;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -13,7 +15,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public class EnvironmentView extends Composite {
@@ -46,9 +48,52 @@ public class EnvironmentView extends Composite {
 				1));
 		GridLayout gridLayout = (GridLayout) params.getLayout();
 		LOTSWT.setDefaults(gridLayout);
-		Table t = new Table(params, SWT.NONE);
-		t.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		t.setLinesVisible(true);
+
+		if (environment != null) {
+			Set<String> ps = environment.getParameters();
+			for (String name : ps) {
+				addParameterEditor(params, name);
+			}
+		}
+	}
+
+	private void addParameterEditor(TitleComposite params, String name) {
+		String value = environment != null ? ""
+				+ environment.getParameter(name) : "value";
+		Composite c = new Composite(params, SWT.NONE);
+		c.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gl_c = new GridLayout(1, false);
+		LOTSWT.setDefaults(gl_c);
+		c.setLayout(gl_c);
+
+		Label l = new Label(c, SWT.NONE);
+		l.setText(name);
+
+		if (value.length() > 20) {
+			Button b = new Button(c, SWT.NONE);
+			b.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+					1));
+			b.setText("edit");
+			b.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					String nvalue = window.openValueEditorDialog(name, value);
+					environment.setParameter(name, nvalue);
+				}
+			});
+		} else {
+			Text t = new Text(c, SWT.NONE);
+			t.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+					1));
+			t.setText("" + value);
+
+			t.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent arg0) {
+					environment.setParameter(name, t.getText());
+				}
+			});
+		}
 	}
 
 	private void addTools() {

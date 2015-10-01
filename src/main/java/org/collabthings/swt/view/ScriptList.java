@@ -19,17 +19,19 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.common.MStringID;
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public class ScriptList extends Composite {
 
 	private AppWindow window;
 	private LOTApp app;
+	private WObject o;
 
-	public ScriptList(Composite parent, LOTApp app, AppWindow window, WData d) {
+	public ScriptList(Composite parent, LOTApp app, AppWindow window, WObject d) {
 		super(parent, SWT.NONE);
 		this.window = window;
 		this.app = app;
+		this.o = d;
 
 		setLayout(new GridLayout(1, false));
 
@@ -38,16 +40,15 @@ public class ScriptList extends Composite {
 		l.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		l.setText("Scripts");
 
-		addRow(new WData("scripts"));
+		addRow("scripts");
 
-		List<WData> cs = d.getChildren();
-		for (WData scriptdata : cs) {
-			addRow(scriptdata);
+		for (String name : d.getChildren()) {
+			addRow(name);
 		}
 	}
 
-	private void addRow(WData scriptdata) {
-		String name = scriptdata.getValue("name");
+	private void addRow(String name) {
+		WObject scriptdata = o.get(name);
 		String id = scriptdata.getValue("id");
 		if (id != null && name != null) {
 			Composite cscript = new Composite(this, SWT.NONE);

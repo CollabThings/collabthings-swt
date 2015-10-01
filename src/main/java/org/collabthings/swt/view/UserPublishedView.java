@@ -76,8 +76,10 @@ public class UserPublishedView extends Composite {
 		clist.setLayout(new GridLayout(1, false));
 		scrolledComposite.setContent(clist);
 
-		addPublishedItem("testitem1");
-		addPublishedItem("testitem2");
+		if (window2 == null) {
+			addPublishedItem("testitem1");
+			addPublishedItem("testitem2");
+		}
 	}
 
 	public void setUser(UserVO u) {

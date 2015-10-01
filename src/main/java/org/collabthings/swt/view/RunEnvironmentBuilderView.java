@@ -91,6 +91,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 	}
 
 	private void run() {
+		log.info("Launhing simulation " + builder);
 		window.viewSimulation(builder);
 	}
 
@@ -153,7 +154,11 @@ public class RunEnvironmentBuilderView extends Composite implements
 		mapview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		getDisplay().asyncExec(() -> {
-			mapview.set(this.builder.getRunEnvironment());
+			try {
+				mapview.set(this.builder.getRunEnvironment());
+			} catch (Exception e) {
+				log.error(this, "mapview", e);
+			}
 		});
 
 		Menu tempmenu = new Menu(this);
@@ -182,31 +187,37 @@ public class RunEnvironmentBuilderView extends Composite implements
 	}
 
 	private void testRun() {
-		LOTRunEnvironment runenv = builder.getRunEnvironment();
-		if (runenv != null) {
-			runenv.addListener(new RunEnvironmentListener() {
+		try {
+			LOTRunEnvironment runenv = builder.getRunEnvironment();
+			if (runenv != null) {
+				runenv.addListener(new RunEnvironmentListener() {
 
-				@Override
-				public void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
-					appendLog("FAILED " + task);
-					appendLog("ERROR " + task.getError());
-				}
+					@Override
+					public void taskFailed(LOTRunEnvironment runenv,
+							LOTTask task) {
+						appendLog("FAILED " + task);
+						appendLog("ERROR " + task.getError());
+					}
 
-				@Override
-				public void event(LOTRuntimeEvent e) {
-					appendLog("" + e.getName());
-					appendLog("" + e.getObject());
-				}
-			});
+					@Override
+					public void event(LOTRuntimeEvent e) {
+						appendLog("" + e.getName());
+						appendLog("" + e.getObject());
+					}
+				});
 
-			new Thread(() -> {
-				LOTSimpleSimulation s = new LOTSimpleSimulation(runenv);
-				s.run(1000);
-			}).start();
+				new Thread(() -> {
+					LOTSimpleSimulation s = new LOTSimpleSimulation(runenv);
+					s.run(1000);
+				}).start();
 
-			ltested.setText("" + new Date());
-		} else {
-			appendLog("RunEnvironment null");
+				ltested.setText("" + new Date());
+			} else {
+				appendLog("RunEnvironment null");
+			}
+		} catch (Exception e) {
+			appendLog("Exception " + e);
+			log.error(this, "testRun", e);
 		}
 	}
 
@@ -230,18 +241,26 @@ public class RunEnvironmentBuilderView extends Composite implements
 		l.setAlignment(SWT.CENTER);
 		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		l.setText("Created runenvironment");
-		ObjectViewer oview = new ObjectViewer(app, window, composite,
-				this.builder.getRunEnvironment(), new String[] { "info" });
-		oview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
-				1));
+
+		try {
+			LOTRunEnvironment runEnvironment = this.builder.getRunEnvironment();
+			ObjectViewer oview = new ObjectViewer(app, window, composite,
+					runEnvironment, new String[] { "info" });
+			oview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+					1, 1));
+		} catch (Exception e) {
+			log.error(this, "view", e);
+			Label error = new Label(composite, SWT.ERROR);
+			error.setText("Loading runenvironment failed");
+		}
 
 		updateLayout();
 	}
 
 	private synchronized void checkBuilderUpdate() {
 		while (!isDisposed()) {
-			int nhash = builder.getBean().hashCode();
-			if (nhash != currentfactoryhash && !window.isSelected(this)) {
+			int nhash = builder.getObject().hashCode();
+			if (nhash != currentfactoryhash && window.isSelected(this)) {
 				currentfactoryhash = nhash;
 				updateView();
 			} else {
@@ -280,7 +299,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 	}
 
 	private synchronized void updateFactoryHash() {
-		currentfactoryhash = builder.getBean().hashCode();
+		currentfactoryhash = builder.getObject().hashCode();
 	}
 
 	private synchronized void createDataEditors(Composite c,
@@ -332,7 +351,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 				run();
 			}
 		});
-		mirun.setText("Run");
+		mirun.setText("Run " + builder);
 
 		mifpublish.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -349,6 +368,4 @@ public class RunEnvironmentBuilderView extends Composite implements
 		builder.publish();
 	}
 
-	private void initLocalMenu(Menu mAddLocalChild) {
-	}
 }

@@ -81,6 +81,7 @@ public class FactoryInfoView extends Composite {
 		bnewchild.setText("+");
 
 		this.cchildrenlist = new Composite(cchildren, SWT.NONE);
+
 		cchildrenlist.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true,
 				1, 1));
 		cchildrenlist.setSize(0, 0);
@@ -112,6 +113,11 @@ public class FactoryInfoView extends Composite {
 						window.viewFactory(child.getFactory());
 					}
 				});
+				
+				ObjectViewer cov = new ObjectViewer(app, window, cc, child);
+				cov.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true,
+						1, 1));
+
 				createDataEditors(cc, child.getFactory());
 			}
 		}

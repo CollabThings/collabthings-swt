@@ -222,9 +222,6 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	private void openTestViews(Display display) {
-		//
-		// FIXME TODO REMOVE
-		// newFactory();
 		display.asyncExec(() -> {
 			viewSearch("boxsetfactory");
 		});
@@ -430,8 +427,7 @@ public final class AppWindow implements LOTInfo {
 		if (lblBottonInfo != null) {
 			disposeObjectMenu();
 
-			int selectionIndex = tabFolder.getSelectionIndex() + 1;
-			Control control = tabFolder.getTabList()[selectionIndex];
+			Control control = tabFolder.getSelection().getControl();
 
 			if (control instanceof LOTAppControl) {
 				LOTAppControl v = (LOTAppControl) control;
@@ -442,14 +438,14 @@ public final class AppWindow implements LOTInfo {
 				updateObjectMenu(v);
 			} else {
 				showError("Selected " + control
-						+ " that is not a LOTAppControl. Index "
-						+ selectionIndex + " Name:"
+						+ " that is not a LOTAppControl. Name:"
 						+ tabFolder.getSelection().getText());
 			}
 		}
 	}
 
 	public void updateObjectMenu(LOTAppControl v) {
+		log.info("updating object menu " + v);
 		disposeObjectMenu();
 		objectmenu = v.createMenu(menu);
 	}

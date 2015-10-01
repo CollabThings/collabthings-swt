@@ -19,7 +19,7 @@ import waazdoh.client.model.User;
 import waazdoh.common.BeanStorage;
 import waazdoh.common.MStringID;
 import waazdoh.common.UserID;
-import waazdoh.common.WData;
+import waazdoh.common.WObject;
 
 public class LocalObjectsMenu {
 	private static final String MAX_LOCALMENU_OBJECTS = "lot.gui.local.menuobjects.max";
@@ -60,7 +60,7 @@ public class LocalObjectsMenu {
 
 		int count = 0;
 		for (MStringID id : ids) {
-			WData bean = storage.getBean(id);
+			WObject bean = storage.getBean(id);
 			// modified -value should be in every bean.
 			if (bean != null) {
 				if (openobjecthandlers.get(bean.getName()) != null
@@ -81,7 +81,7 @@ public class LocalObjectsMenu {
 		}
 	}
 
-	private void addObjectMenu(MStringID id, WData bean) {
+	private void addObjectMenu(MStringID id, WObject bean) {
 		MenuItem i = new MenuItem(menulocal, SWT.NONE);
 		i.setText(getLocalBeanInfo(bean));
 		i.setData(id);
@@ -93,7 +93,7 @@ public class LocalObjectsMenu {
 		});
 	}
 
-	private String getLocalBeanInfo(WData bean) {
+	private String getLocalBeanInfo(WObject bean) {
 		StringBuilder sb = new StringBuilder();
 		String userid = bean.getValue("creator");
 		if (userid != null) {
@@ -116,7 +116,7 @@ public class LocalObjectsMenu {
 	}
 
 	protected void openLocal(MStringID id) {
-		WData b = appwindow.getApp().getBeanStorage().getBean(id);
+		WObject b = appwindow.getApp().getBeanStorage().getBean(id);
 		log.info("opening " + b);
 
 		OpenObjectHandler h = openobjecthandlers.get(b.getName());
@@ -128,6 +128,6 @@ public class LocalObjectsMenu {
 	}
 
 	public interface OpenObjectHandler {
-		void open(WData b);
+		void open(WObject b);
 	}
 }
