@@ -19,6 +19,8 @@ import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,6 +30,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
@@ -107,8 +110,16 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true, 1, 1));
 
-		this.scrolledComposite = new ScrolledComposite(composite_main,
-				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		CTabFolder tabFolder = new CTabFolder(composite_main, SWT.BORDER);
+		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+
+		CTabItem tbtmEditor = new CTabItem(tabFolder, SWT.NONE);
+		tbtmEditor.setText("Editor");
+
+		this.scrolledComposite = new ScrolledComposite(tabFolder, SWT.BORDER
+				| SWT.H_SCROLL | SWT.V_SCROLL);
+		tbtmEditor.setControl(scrolledComposite);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		scrolledComposite.addListener(SWT.Resize, new Listener() {
@@ -122,13 +133,20 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 				factory);
 		scrolledComposite.setContent(infoview);
 
+		CTabItem tabItem_2 = new CTabItem(tabFolder, SWT.NONE);
+		tabItem_2.setText("Yaml");
+
+		YamlEditor yamleditor = new YamlEditor(tabFolder, SWT.NONE);
+		tabItem_2.setControl(yamleditor);
+		yamleditor.setObject(this.factory);
+		
 		Composite c_view = new Composite(composite_main, SWT.NONE);
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);
 
 		view = new RunEnvironment4xJFXView(c_view, SWT.NONE);
-		composite_main.setWeights(new int[] { 275, 421 });
+		composite_main.setWeights(new int[] { 348, 421 });
 
 		Menu tempmenu = new Menu(this);
 		setMenu(tempmenu);
