@@ -139,7 +139,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		YamlEditor yamleditor = new YamlEditor(tabFolder, SWT.NONE);
 		tabItem_2.setControl(yamleditor);
 		yamleditor.setObject(this.factory);
-		
+
 		Composite c_view = new Composite(composite_main, SWT.NONE);
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -289,7 +289,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	private synchronized void checkFactoryUpdate() {
 		while (!isDisposed()) {
 			int nhash = factory.getObject().hashCode();
-			if (nhash != currentfactoryhash && !window.isSelected(this)) {
+			if (nhash != currentfactoryhash) {
 				currentfactoryhash = nhash;
 				updateView();
 			} else {
