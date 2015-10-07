@@ -16,24 +16,23 @@ import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.model.impl.LOTFactoryImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -42,11 +41,11 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	private RunEnvironment4xJFXView view;
 	private LOTApp app;
 
-	private ScrolledComposite scrolledComposite;
 	private AppWindow window;
-	private FactoryInfoView infoview;
 
 	private int currentfactoryhash;
+	private YamlEditor yamleditor;
+	private YamlEditor enveditor;
 
 	public FactoryView(Composite composite, LOTApp app, AppWindow w,
 			LOTFactory f) {
@@ -97,48 +96,59 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	}
 
 	private void updateLayout() {
-		int w = scrolledComposite.getClientArea().width;
-		infoview.pack();
-		scrolledComposite.setMinSize(w, infoview.computeSize(w, SWT.DEFAULT).y);
+
 	}
 
 	private void init() {
 		GridLayout gridLayout = new GridLayout(1, false);
+		LOTSWT.setDefaults(gridLayout);
 		setLayout(gridLayout);
 
 		SashForm composite_main = new SashForm(this, SWT.NONE);
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true, 1, 1));
 
-		CTabFolder tabFolder = new CTabFolder(composite_main, SWT.BORDER);
+		Composite composite = new Composite(composite_main, SWT.NONE);
+		GridLayout gl_composite = new GridLayout(1, false);
+		LOTSWT.setDefaults(gl_composite);
+		composite.setLayout(gl_composite);
+
+		Composite cpanel = new Composite(composite, SWT.NONE);
+		GridLayout gl_cpanel = new GridLayout(1, false);
+		LOTSWT.setDefaults(gl_cpanel);
+		cpanel.setLayout(gl_cpanel);
+		cpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
+				1));
+
+		Button btnAddChild = new Button(cpanel, SWT.NONE);
+		btnAddChild.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				addChild();
+			}
+		});
+		btnAddChild.setText("add child");
+
+		CTabFolder tabFolder = new CTabFolder(composite, SWT.BORDER);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
 		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 
-		CTabItem tbtmEditor = new CTabItem(tabFolder, SWT.NONE);
-		tbtmEditor.setText("Editor");
+		CTabItem tbtmMain = new CTabItem(tabFolder, SWT.NONE);
+		tbtmMain.setText("main");
 
-		this.scrolledComposite = new ScrolledComposite(tabFolder, SWT.BORDER
-				| SWT.H_SCROLL | SWT.V_SCROLL);
-		tbtmEditor.setControl(scrolledComposite);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		scrolledComposite.addListener(SWT.Resize, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				updateLayout();
-			}
-		});
-
-		this.infoview = new FactoryInfoView(scrolledComposite, app, window,
-				factory);
-		scrolledComposite.setContent(infoview);
-
-		CTabItem tabItem_2 = new CTabItem(tabFolder, SWT.NONE);
-		tabItem_2.setText("Yaml");
-
-		YamlEditor yamleditor = new YamlEditor(tabFolder, SWT.NONE);
-		tabItem_2.setControl(yamleditor);
+		yamleditor = new YamlEditor(tabFolder, SWT.NONE, "Factory");
+		tbtmMain.setControl(yamleditor);
 		yamleditor.setObject(this.factory);
+		tabFolder.setSelection(tbtmMain);
+
+		CTabItem tbtmEnv = new CTabItem(tabFolder, SWT.NONE);
+		tbtmEnv.setText("env");
+
+		enveditor = new YamlEditor(tabFolder, SWT.NONE, "Environment");
+		tbtmEnv.setControl(enveditor);
+		enveditor.setObject(factory.getEnvironment());
 
 		Composite c_view = new Composite(composite_main, SWT.NONE);
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -146,7 +156,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		c_view.setBounds(0, 0, 64, 64);
 
 		view = new RunEnvironment4xJFXView(c_view, SWT.NONE);
-		composite_main.setWeights(new int[] { 348, 421 });
+		composite_main.setWeights(new int[] { 384, 421 });
 
 		Menu tempmenu = new Menu(this);
 		setMenu(tempmenu);
@@ -170,16 +180,13 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private synchronized void updateView() {
 		getDisplay().asyncExec(() -> {
-			infoview.updateDataEditors();
-			updateFactory();
-
-			updateLayout();
+			updateDataEditors();
 		});
 	}
 
 	private synchronized void updateDataEditors() {
 		window.updateObjectMenu(this);
-		infoview.updateDataEditors();
+		updateFactory();
 		updateLayout();
 	}
 
@@ -258,7 +265,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		mifaddnewchild.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				infoview.addChild();
+				addChild();
 			}
 		});
 
@@ -282,14 +289,25 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		m.addObjectHandler(LOTFactoryImpl.BEANNAME, (data) -> {
 			LOTFactory f = window.getApp().getLClient().getObjectFactory()
 					.getFactory(data.getIDValue("id"));
-			infoview.addChild(f);
+			addChild(f);
 		});
+	}
+
+	private void addChild() {
+		this.factory.addFactory();
+	}
+
+	private void addChild(LOTFactory f) {
+		this.factory.addFactory("factory" + this.factory.getFactories().size(),
+				f);
 	}
 
 	private synchronized void checkFactoryUpdate() {
 		while (!isDisposed()) {
 			int nhash = factory.getObject().hashCode();
 			if (nhash != currentfactoryhash) {
+				yamleditor.setText(factory.getObject().toText());
+				enveditor.setText(factory.getEnvironment().getObject().toText());
 				currentfactoryhash = nhash;
 				updateView();
 			} else {
@@ -326,5 +344,4 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	protected void scriptMenuSelected(String string) {
 		window.viewScript(factory.getScript(string));
 	}
-
 }

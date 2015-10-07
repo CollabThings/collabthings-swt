@@ -1,6 +1,7 @@
 package org.collabthings.swt.view;
 
 import org.collabthings.model.LOTObject;
+import org.collabthings.swt.LOTSWT;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -11,21 +12,26 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import waazdoh.common.WObject;
 
 public class YamlEditor extends Composite {
 	private LOTObject o;
-	private Text text_1;
+	private Text text;
 	private Text error;
 	private Button btnSave;
 
-	public YamlEditor(Composite parent, int style) {
+	public YamlEditor(Composite parent, int style, String title) {
 		super(parent, style);
-		setLayout(new GridLayout(1, false));
+		GridLayout gridLayout = new GridLayout(1, false);
+		LOTSWT.setDefaults(gridLayout);
+		setLayout(gridLayout);
 
 		Composite top = new Composite(this, SWT.NONE);
-		top.setLayout(new GridLayout(2, false));
+		GridLayout gl_top = new GridLayout(2, false);
+		LOTSWT.setDefaults(gl_top);
+		top.setLayout(gl_top);
 		top.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		btnSave = new Button(top, SWT.NONE);
@@ -38,13 +44,15 @@ public class YamlEditor extends Composite {
 		btnSave.setText("save");
 
 		Label ltitle = new Label(top, SWT.NONE);
-		ltitle.setText("Title");
+		ltitle.setText(title);
 
-		text_1 = new Text(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL
+		text = new Text(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL
 				| SWT.MULTI);
-		text_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		text.setFont(SWTResourceManager.getFont("Open Sans", 10, SWT.NORMAL));
+		text.setText("testing\ntestintintit");
+		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		text_1.addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
+		text.addKeyListener(new org.eclipse.swt.events.KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				textChange();
@@ -54,19 +62,20 @@ public class YamlEditor extends Composite {
 		error = new Text(this, SWT.MULTI);
 		error.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
+
 	}
 
 	private void save() {
-		WObject o = new WObject();
-		o.parse(text_1.getText());
-		this.o.parse(o);
+		WObject no = new WObject();
+		no.parse(text.getText());
+		this.o.parse(no);
 	}
 
 	private void textChange() {
 		try {
-			String text = text_1.getText();
+			String stext = text.getText();
 			WObject o = new WObject();
-			o.parse(text);
+			o.parse(stext);
 			error.setText("OK");
 			btnSave.setEnabled(true);
 		} catch (Exception e) {
@@ -80,7 +89,9 @@ public class YamlEditor extends Composite {
 		setText(o.getObject().toText());
 	}
 
-	private void setText(String text) {
-		text_1.setText(text);
+	void setText(String stext) {
+		getDisplay().asyncExec(() -> {
+			this.text.setText(stext);
+		});
 	}
 }
