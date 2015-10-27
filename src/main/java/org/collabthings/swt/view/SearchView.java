@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
 import waazdoh.client.WClient;
+import waazdoh.common.vo.ObjectVO;
 
 public class SearchView extends Composite implements LOTAppControl {
 	private AppWindow window;
@@ -41,7 +42,8 @@ public class SearchView extends Composite implements LOTAppControl {
 		this(c, app, appWindow, false);
 	}
 
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox) {
+	public SearchView(Composite c, LOTApp app, AppWindow appWindow,
+			boolean hidesearchbox) {
 		super(c, SWT.NONE);
 		this.app = app;
 		this.window = appWindow;
@@ -49,7 +51,8 @@ public class SearchView extends Composite implements LOTAppControl {
 
 		if (!hidesearchbox) {
 			Composite composite = new Composite(this, SWT.NONE);
-			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+					false, 1, 1));
 			composite.setLayout(new GridLayout(2, false));
 
 			text = new Text(composite, SWT.BORDER);
@@ -62,7 +65,8 @@ public class SearchView extends Composite implements LOTAppControl {
 					}
 				}
 			});
-			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1,
+					1));
 
 			Button bsearch = new Button(composite, SWT.NONE);
 			bsearch.addSelectionListener(new SelectionAdapter() {
@@ -75,8 +79,10 @@ public class SearchView extends Composite implements LOTAppControl {
 			bsearch.setText("Search");
 		}
 
-		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
-		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		scrolledComposite = new ScrolledComposite(this, SWT.BORDER
+				| SWT.V_SCROLL);
+		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 1, 1));
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
@@ -121,7 +127,8 @@ public class SearchView extends Composite implements LOTAppControl {
 			});
 
 			WClient client = app.getLClient().getClient();
-			List<String> list = client.getObjects().search(searchitem, start, count);
+			List<String> list = client.getObjects().search(searchitem, start,
+					count);
 			log.info("search got list " + list);
 			handleResponse(list);
 		}).start();
@@ -150,8 +157,15 @@ public class SearchView extends Composite implements LOTAppControl {
 	}
 
 	private void addRow(String id) {
-		clist.setLayout(new RowLayout(SWT.HORIZONTAL));
-		new ObjectSmallView(clist, this.app, this.window, id);
+		try {
+			clist.setLayout(new RowLayout(SWT.HORIZONTAL));
+			new ObjectSmallView(clist, this.app, this.window, id);
+		} catch (ClassCastException e) {
+			log.error(this, "addRow " + id, e);
+			ObjectVO o = this.app.getLClient().getService().getObjects()
+					.read(id);
+			log.info("failed object " + o.getObject());
+		}
 	}
 
 	@Override
@@ -170,7 +184,8 @@ public class SearchView extends Composite implements LOTAppControl {
 			clist.pack();
 
 			int w = scrolledComposite.getClientArea().width;
-			scrolledComposite.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
+			scrolledComposite
+					.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
 		}
 	}
 
