@@ -16,8 +16,9 @@ import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -25,9 +26,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
@@ -40,7 +40,6 @@ public class RunEnvironmentBuilderView extends Composite implements
 	private LLog log = LLog.getLogger(this);
 	private LOTApp app;
 
-	private ScrolledComposite scrolledComposite;
 	private Composite composite;
 	private AppWindow window;
 	private int currentfactoryhash;
@@ -53,6 +52,10 @@ public class RunEnvironmentBuilderView extends Composite implements
 	private Label ltested;
 
 	private MapView mapview;
+
+	private YamlEditor maineditor;
+
+	private YamlEditor enveditor;
 
 	public RunEnvironmentBuilderView(Composite composite, LOTApp app,
 			AppWindow w, LOTRunEnvironmentBuilder b) {
@@ -83,13 +86,6 @@ public class RunEnvironmentBuilderView extends Composite implements
 		updateView();
 	}
 
-	private void updateLayout() {
-		int w = scrolledComposite.getClientArea().width;
-		composite.pack();
-		scrolledComposite
-				.setMinSize(w, composite.computeSize(w, SWT.DEFAULT).y);
-	}
-
 	private void run() {
 		log.info("Launhing simulation " + builder);
 		window.viewSimulation(builder);
@@ -103,22 +99,29 @@ public class RunEnvironmentBuilderView extends Composite implements
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true, 1, 1));
 
-		this.scrolledComposite = new ScrolledComposite(composite_main,
-				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-		scrolledComposite.addListener(SWT.Resize, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				updateLayout();
-			}
-		});
+		CTabFolder tabFolder = new CTabFolder(composite_main, SWT.BORDER);
+		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 
-		this.composite = new Composite(scrolledComposite, SWT.NONE);
+		// main yaml editor
+		CTabItem maintab = new CTabItem(tabFolder, SWT.NONE);
+		maintab.setText("Main");
+		this.maineditor = new YamlEditor(tabFolder, SWT.NONE, "main");
+		maineditor.setObject(builder);
+		maintab.setControl(maineditor);
+		tabFolder.setSelection(maintab);
 
-		createDataView();
+		// environment yaml editor
+		CTabItem eeditor = new CTabItem(tabFolder, SWT.NONE);
+		eeditor.setText("Env");
+		this.enveditor = new YamlEditor(tabFolder, SWT.NONE, "env");
+		enveditor.setObject(builder.getEnvironment());
+		eeditor.setControl(enveditor);
 
-		scrolledComposite.setContent(composite);
+		CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
+		tabItem.setText("Builder");
+		this.composite = new Composite(tabFolder, SWT.NONE);
+		tabItem.setControl(composite);
 
 		Composite c_view = new Composite(composite_main, SWT.NONE);
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -152,6 +155,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 
 		mapview = new MapView(c_view);
 		mapview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		composite_main.setWeights(new int[] { 1, 1 });
 
 		getDisplay().asyncExec(() -> {
 			try {
@@ -253,8 +257,6 @@ public class RunEnvironmentBuilderView extends Composite implements
 			Label error = new Label(composite, SWT.ERROR);
 			error.setText("Loading runenvironment failed");
 		}
-
-		updateLayout();
 	}
 
 	private synchronized void checkBuilderUpdate() {
@@ -276,7 +278,6 @@ public class RunEnvironmentBuilderView extends Composite implements
 	private synchronized void updateView() {
 		getDisplay().asyncExec(() -> {
 			updateDataEditors();
-			updateLayout();
 		});
 	}
 
@@ -295,7 +296,6 @@ public class RunEnvironmentBuilderView extends Composite implements
 		createDataView();
 
 		updateFactoryHash();
-		updateLayout();
 	}
 
 	private synchronized void updateFactoryHash() {
