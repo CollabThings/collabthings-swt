@@ -213,7 +213,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 				new Thread(() -> {
 					LOTSimpleSimulation s = new LOTSimpleSimulation(runenv);
 					s.run(1000);
-				}).start();
+				}, "Test run " + this).start();
 
 				ltested.setText("" + new Date());
 			} else {

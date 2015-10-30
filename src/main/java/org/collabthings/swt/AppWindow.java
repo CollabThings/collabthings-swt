@@ -228,8 +228,18 @@ public final class AppWindow implements LOTInfo {
 
 		display.asyncExec(() -> {
 			viewSearchUsers("user");
-			newFactory();
-			// newRunEnvBuilder();
+			// newFactory();
+
+			String latest = app.getLClient().getService().getStorageArea()
+					.read("ugoogle", "published/builder/latest");
+			if (latest != null) {
+				LOTRunEnvironmentBuilder b = app.getObjectFactory()
+						.getRuntimeBuilder(new MStringID(latest));
+				viewRuntimeBuilder(b);
+			} else {
+				newRunEnvBuilder();
+
+			}
 		});
 
 		display.asyncExec(() -> {
