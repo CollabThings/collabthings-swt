@@ -233,7 +233,7 @@ public class ObjectSmallView extends Composite {
 		WObject o;
 
 		if (vo != null && (o = vo.getObject()) != null) {
-			ltype.setText(o.getName());
+			ltype.setText(o.getType());
 
 			for (String name : o.getChildren()) {
 				log.info("addData " + name);

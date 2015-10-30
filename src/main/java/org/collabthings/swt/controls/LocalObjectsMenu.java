@@ -63,7 +63,7 @@ public class LocalObjectsMenu {
 			WObject bean = storage.getBean(id);
 			// modified -value should be in every bean.
 			if (bean != null) {
-				if (openobjecthandlers.get(bean.getName()) != null
+				if (openobjecthandlers.get(bean.getType()) != null
 						&& bean.getValue("modified") != null) {
 					addObjectMenu(id, bean);
 
@@ -74,7 +74,7 @@ public class LocalObjectsMenu {
 						break;
 					}
 				} else {
-					log.info("Not showing " + bean.getName() + " "
+					log.info("Not showing " + bean.getType() + " "
 							+ bean.getValue("name") + " in menu");
 				}
 			}
@@ -119,11 +119,11 @@ public class LocalObjectsMenu {
 		WObject b = appwindow.getApp().getBeanStorage().getBean(id);
 		log.info("opening " + b);
 
-		OpenObjectHandler h = openobjecthandlers.get(b.getName());
+		OpenObjectHandler h = openobjecthandlers.get(b.getType());
 		if (h != null) {
 			h.open(b);
 		} else {
-			log.info("No handler for " + b.getName());
+			log.info("No handler for " + b.getType());
 		}
 	}
 
