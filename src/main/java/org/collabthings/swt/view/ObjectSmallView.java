@@ -232,7 +232,7 @@ public class ObjectSmallView extends Composite {
 
 		WObject o;
 
-		if (vo != null && (o = vo.getObject()) != null) {
+		if (vo != null && (o = vo.getObject()) != null && o.getType() != null) {
 			ltype.setText(o.getType());
 
 			for (String name : o.getChildren()) {
@@ -249,7 +249,7 @@ public class ObjectSmallView extends Composite {
 			}
 		} else {
 			Label nulll = new Label(items, getStyle());
-			nulll.setText("Null id or app is not initialized");
+			nulll.setText("Null id, missing type or app is not initialized");
 		}
 	}
 
