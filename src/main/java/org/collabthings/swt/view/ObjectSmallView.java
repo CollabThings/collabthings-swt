@@ -232,24 +232,31 @@ public class ObjectSmallView extends Composite {
 
 		WObject o;
 
-		if (vo != null && (o = vo.getObject()) != null && o.getType() != null) {
-			ltype.setText(o.getType());
+		if (vo != null && (o = vo.getObject()) != null) {
+			if (o.getType() != null) {
+				ltype.setText(o.getType());
 
-			for (String name : o.getChildren()) {
-				log.info("addData " + name);
+				for (String name : o.getChildren()) {
+					log.info("addData " + name);
 
-				DataHandler dh = handlers.get(name);
-				if (dh != null) {
-					dh.handle(name, o);
-				} else if (!ignorelist.contains(name)) {
-					Label l = new Label(items, getStyle());
-					l.setText("NAME " + name + " " + name);
-					setListLayoutData(l);
+					DataHandler dh = handlers.get(name);
+					if (dh != null) {
+						dh.handle(name, o);
+					} else if (!ignorelist.contains(name)) {
+						Label l = new Label(items, getStyle());
+						l.setText("NAME " + name + " " + name);
+						setListLayoutData(l);
+					}
 				}
+			} else {
+				Label nulll = new Label(items, getStyle());
+				nulll.setText("Missing type");
+				this.app.getLClient().getService().getObjects()
+						.error(id, "missing type");
 			}
 		} else {
 			Label nulll = new Label(items, getStyle());
-			nulll.setText("Null id, missing type or app is not initialized");
+			nulll.setText("Null id or app is not initialized");
 		}
 	}
 
