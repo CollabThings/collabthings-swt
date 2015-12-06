@@ -130,38 +130,40 @@ public class Model3DView extends Composite implements GestureListener {
 	}
 
 	private void createScene() {
-		/* Create a JavaFX Group node */
-		this.scenegroup = new Group();
-		/* Create the Scene instance and set the group node as root */
-		org.eclipse.swt.graphics.Color bg = getBackground();
-		double red = bg.getRed() / 255.0 * 0.8f;
-		double green = bg.getGreen() / 255.0 * 0.8f;
-		double blue = bg.getBlue() / 255.0;
-		Scene scene = new Scene(scenegroup, new Color(red, green, blue, 1));// ,
-		// Color.rgb(getBackground().getRed(),
-		// getBackground().getGreen(),
-		// getBackground().getBlue()));
-		this.camera = new PerspectiveCamera(true);
-		scene.setCamera(camera);
+		if (scenegroup == null) {
+			/* Create a JavaFX Group node */
+			this.scenegroup = new Group();
+			/* Create the Scene instance and set the group node as root */
+			org.eclipse.swt.graphics.Color bg = getBackground();
+			double red = bg.getRed() / 255.0 * 0.8f;
+			double green = bg.getGreen() / 255.0 * 0.8f;
+			double blue = bg.getBlue() / 255.0;
+			Scene scene = new Scene(scenegroup, new Color(red, green, blue, 1));// ,
+			// Color.rgb(getBackground().getRed(),
+			// getBackground().getGreen(),
+			// getBackground().getBlue()));
+			this.camera = new PerspectiveCamera(true);
+			scene.setCamera(camera);
 
-		//
-		this.cameraGroup = new Group();
-		cameraGroup.getChildren().add(camera);
-		scenegroup.getChildren().add(cameraGroup);
-		//
-		cameraGroup.setTranslateZ(-35);
-		this.objectgroup = new Group();
-		scenegroup.getChildren().add(objectgroup);
+			//
+			this.cameraGroup = new Group();
+			cameraGroup.getChildren().add(camera);
+			scenegroup.getChildren().add(cameraGroup);
+			//
+			cameraGroup.setTranslateZ(-35);
+			this.objectgroup = new Group();
+			scenegroup.getChildren().add(objectgroup);
 
-		/* Attach an external stylesheet */
-		scene.getStylesheets().add("twobuttons/Buttons.css");
-		//
-		createLights();
+			/* Attach an external stylesheet */
+			scene.getStylesheets().add("twobuttons/Buttons.css");
+			//
+			createLights();
 
-		updateRotation();
-		updateZoom();
+			updateRotation();
+			updateZoom();
 
-		canvas.setScene(scene);
+			canvas.setScene(scene);
+		}
 	}
 
 	private void createLights() {
@@ -191,6 +193,7 @@ public class Model3DView extends Composite implements GestureListener {
 			createScene();
 			model.addTo(ogroup);
 			groups.put(model, ogroup);
+			objectgroup.getChildren().add(ogroup);
 			refresh(model);
 		});
 
