@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTPart;
 import org.collabthings.model.LOTPartBuilder;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.swt.app.LOTApp;
@@ -45,6 +46,15 @@ public class ViewTypes {
 				window.viewPartBuilder(b);
 			} else {
 				window.showError("Failed to get partbuilder " + id);
+			}
+		});
+
+		views.put("part", id -> {
+			LOTPart b = app.getObjectFactory().getPart(id);
+			if (b != null) {
+				window.viewPart(b);
+			} else {
+				window.showError("Failed to get part " + id);
 			}
 		});
 

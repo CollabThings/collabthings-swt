@@ -18,6 +18,7 @@ import org.collabthings.math.LVector;
 import org.collabthings.model.LOTBinaryModel;
 import org.collabthings.model.LOTMaterial;
 import org.collabthings.model.LOTModel;
+import org.collabthings.model.impl.LOTMaterialImpl;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.GestureEvent;
@@ -27,6 +28,8 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+
+/* TODO this need to rewritten */
 
 public class Model3DView extends Composite implements GestureListener {
 	private LLog log = LLog.getLogger(this);
@@ -42,7 +45,7 @@ public class Model3DView extends Composite implements GestureListener {
 	private double rotatex;
 	private double rotatey;
 	//
-	private Map<LOTBinaryModel, Group> groups = new HashMap<>();
+	private Map<LOTModel, Group> groups = new HashMap<>();
 	private FXCanvas canvas;
 
 	public Model3DView(Composite c_view, int style) {
@@ -187,25 +190,32 @@ public class Model3DView extends Composite implements GestureListener {
 		getDisplay().asyncExec(() -> {
 			createScene();
 			model.addTo(ogroup);
+			groups.put(model, ogroup);
 			refresh(model);
 		});
 
 		return ogroup;
 	}
 
-	public void refresh(LOTModel lot3dModel) {
-		Group group = groups.get(lot3dModel);
+	public void refresh(LOTModel model) {
+		if (model != null) {
+			Group group = groups.get(model);
 
-		if (group != null) {
-			double s = lot3dModel.getScale();
+			if (group == null) {
+				group = addModel(new LOTMaterialImpl(), model);
+			}
+
+			double s = model.getScale();
 			group.setScaleX(s);
 			group.setScaleY(s);
 			group.setScaleZ(s);
 			//
-			LVector t = lot3dModel.getTranslation();
+			LVector t = model.getTranslation();
 			group.setTranslateX(t.x);
 			group.setTranslateY(t.y);
 			group.setTranslateZ(t.z);
+		} else {
+			log.info("model null");
 		}
 	}
 

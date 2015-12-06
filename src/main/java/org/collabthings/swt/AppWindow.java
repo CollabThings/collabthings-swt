@@ -172,8 +172,10 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	public void viewScript(LOTScript script) {
-		ScriptView v = new ScriptView(tabFolder, app, this, script);
-		addTab("" + script, v, script);
+		shell.getDisplay().asyncExec(() -> {
+			ScriptView v = new ScriptView(tabFolder, app, this, script);
+			addTab("" + script, v, script);
+		});
 	}
 
 	public void viewUser(String name, String userid) {
@@ -182,8 +184,17 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	public void viewOpenSCAD(LOTOpenSCAD scad) {
-		SCADView v = new SCADView(tabFolder, app, this, scad);
-		addTab("" + scad.getName(), v, scad);
+		shell.getDisplay().asyncExec(() -> {
+			SCADView v = new SCADView(tabFolder, app, this, scad);
+			addTab("" + scad.getName(), v, scad);
+		});
+	}
+
+	public void viewPart(LOTPart part) {
+		shell.getDisplay().asyncExec(() -> {
+			PartView pv = new PartView(tabFolder, app, this, part);
+			addTab("" + part.getName(), pv, part);
+		});
 	}
 
 	private void addTab(String name, LOTAppControl c, Object data) {
@@ -257,6 +268,16 @@ public final class AppWindow implements LOTInfo {
 				LOTPartBuilder b = app.getObjectFactory().getPartBuilder(
 						new MStringID(latestpartbuilder));
 				viewPartBuilder(b);
+			} else {
+				// newRunEnvBuilder();
+			}
+
+			String latestscadpart = app.getLClient().getService()
+					.getStorageArea().read("juusoface", "published/part/scad");
+			if (latestscadpart != null) {
+				LOTPart b = app.getObjectFactory().getPart(
+						new MStringID(latestscadpart));
+				viewPart(b);
 			} else {
 				// newRunEnvBuilder();
 			}
@@ -522,4 +543,5 @@ public final class AppWindow implements LOTInfo {
 	public void viewTool(LOTTool tool) {
 		// TODO Auto-generated method stub
 	}
+
 }
