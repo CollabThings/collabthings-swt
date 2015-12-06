@@ -9,6 +9,7 @@ import org.collabthings.model.LOTFactory;
 import org.collabthings.model.LOTInfo;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
+import org.collabthings.model.LOTPartBuilder;
 import org.collabthings.model.LOTScript;
 import org.collabthings.model.LOTTool;
 import org.collabthings.model.impl.LOTFactoryImpl;
@@ -18,6 +19,7 @@ import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.LOTMessageDialog;
 import org.collabthings.swt.view.FactoryView;
+import org.collabthings.swt.view.PartBuilderView;
 import org.collabthings.swt.view.PartView;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
@@ -139,6 +141,14 @@ public final class AppWindow implements LOTInfo {
 		});
 	}
 
+	public void viewPartBuilder(LOTPartBuilder pb) {
+		setInfo(0, 0, 0, "Viewing partbuilder " + pb);
+		shell.getDisplay().asyncExec(() -> {
+			PartBuilderView v = new PartBuilderView(tabFolder, app, this, pb);
+			addTab("" + pb, v, pb);
+		});
+	}
+
 	private void setInfo(int current, int min, int max, String string) {
 		shell.getDisplay().asyncExec(() -> {
 			progressBar.setMaximum(max);
@@ -235,10 +245,20 @@ public final class AppWindow implements LOTInfo {
 			if (latest != null) {
 				LOTRunEnvironmentBuilder b = app.getObjectFactory()
 						.getRuntimeBuilder(new MStringID(latest));
-				viewRuntimeBuilder(b);
+				// viewRuntimeBuilder(b);
 			} else {
-				newRunEnvBuilder();
+				// newRunEnvBuilder();
+			}
 
+			String latestpartbuilder = app.getLClient().getService()
+					.getStorageArea()
+					.read("juusoface", "published/partbuilder/latest");
+			if (latestpartbuilder != null) {
+				LOTPartBuilder b = app.getObjectFactory().getPartBuilder(
+						new MStringID(latestpartbuilder));
+				viewPartBuilder(b);
+			} else {
+				// newRunEnvBuilder();
 			}
 		});
 

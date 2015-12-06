@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.collabthings.model.LOTFactory;
+import org.collabthings.model.LOTPartBuilder;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.swt.app.LOTApp;
 
@@ -29,11 +30,21 @@ public class ViewTypes {
 		});
 
 		views.put("builder", id -> {
-			LOTRunEnvironmentBuilder b = app.getObjectFactory().getRuntimeBuilder(id);
+			LOTRunEnvironmentBuilder b = app.getObjectFactory()
+					.getRuntimeBuilder(id);
 			if (b != null) {
 				window.viewRuntimeBuilder(b);
 			} else {
-				window.showError("Failed to get factory " + id);
+				window.showError("Failed to get envbuilder " + id);
+			}
+		});
+
+		views.put("partbuilder", id -> {
+			LOTPartBuilder b = app.getObjectFactory().getPartBuilder(id);
+			if (b != null) {
+				window.viewPartBuilder(b);
+			} else {
+				window.showError("Failed to get partbuilder " + id);
 			}
 		});
 

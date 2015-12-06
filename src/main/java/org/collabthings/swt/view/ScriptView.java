@@ -51,7 +51,11 @@ public class ScriptView extends Composite implements LOTAppControl {
 			}
 		});
 
-		scripttext.setText("" + script.getScript());
+		if (script != null) {
+			scripttext.setText("" + script.getScript());
+		} else {
+			scripttext.setText("Script null");
+		}
 
 		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
@@ -62,9 +66,9 @@ public class ScriptView extends Composite implements LOTAppControl {
 
 	}
 
-	private synchronized void startSave() {
+	public synchronized void save() {
 		String sstring = this.scripttext.getText();
-		save(sstring);
+		doSave(sstring);
 	}
 
 	@Override
@@ -77,7 +81,7 @@ public class ScriptView extends Composite implements LOTAppControl {
 		return "Script: " + script;
 	}
 
-	private void save(String sscripttext) {
+	private void doSave(String sscripttext) {
 		if (sscripttext != null
 				&& (script.getScript() == null || !script.getScript().equals(
 						sscripttext))) {
@@ -89,7 +93,7 @@ public class ScriptView extends Composite implements LOTAppControl {
 					script.setScript(sscripttext);
 					bottomtext.append("OK " + new Date() + "\n");
 				} else {
-					String error = script.getError();
+					String error = s.getError();
 					bottomtext.append("ERROR " + error + "\n");
 				}
 			});
@@ -114,7 +118,7 @@ public class ScriptView extends Composite implements LOTAppControl {
 		msave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				startSave();
+				save();
 			}
 		});
 
