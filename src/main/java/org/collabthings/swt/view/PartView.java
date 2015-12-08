@@ -196,16 +196,20 @@ public class PartView extends Composite implements LOTAppControl {
 
 	private void createModelDataViewer(Composite c_partproperties) {
 		LOTModel model = part.getModel();
-		this.modelobjectviewer = new ObjectViewer(app, window,
-				c_partproperties, model);
-		modelobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 1, 1));
-		this.modelobjectviewer.addListener(new ObjectViewerListener() {
-			@Override
-			public void valueChanged(String name, Object o) {
-				modelObjectChanged(name, o);
-			}
-		});
+		if (model.getModelType().equals(LOTModel.SCAD)) {
+			createOpenSCADViewer(c_partproperties, (LOTOpenSCAD) model);
+		} else {
+			this.modelobjectviewer = new ObjectViewer(app, window,
+					c_partproperties, model);
+			modelobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+					true, false, 1, 1));
+			this.modelobjectviewer.addListener(new ObjectViewerListener() {
+				@Override
+				public void valueChanged(String name, Object o) {
+					modelObjectChanged(name, o);
+				}
+			});
+		}
 	}
 
 	private void createPartDataViewer(Composite c_partproperties) {
@@ -275,7 +279,6 @@ public class PartView extends Composite implements LOTAppControl {
 				}
 			});
 
-			addModel();
 		}
 	}
 
