@@ -2,6 +2,7 @@ package org.collabthings.swt.view;
 
 import org.collabthings.model.LOTObject;
 import org.collabthings.swt.LOTSWT;
+import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -21,6 +22,8 @@ public class YamlEditor extends Composite {
 	private Text text;
 	private Text error;
 	private Button btnSave;
+	private int currenthash;
+	private Thread t;
 
 	public YamlEditor(Composite parent, int style, String title) {
 		super(parent, style);
@@ -86,12 +89,32 @@ public class YamlEditor extends Composite {
 
 	public void setObject(LOTObject o) {
 		this.o = o;
-		setText(o.getObject().toText());
+
+		if (t == null) {
+			t = new Thread(() -> checkObjectUpdate());
+			t.start();
+		}
 	}
 
-	void setText(String stext) {
+	private void setText(String stext) {
 		getDisplay().asyncExec(() -> {
 			this.text.setText(stext);
 		});
+	}
+
+	private synchronized void checkObjectUpdate() {
+		while (!isDisposed()) {
+			int nhash = this.o.getObject().hashCode();
+			if (nhash != currenthash) {
+				setText(this.o.getObject().toText());
+				currenthash = nhash;
+			} else {
+				try {
+					wait(100);
+				} catch (InterruptedException e) {
+					LLog.getLogger(this).error(this, "checkObjectUpdate", e);
+				}
+			}
+		}
 	}
 }

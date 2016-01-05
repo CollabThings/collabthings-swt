@@ -273,7 +273,7 @@ public final class AppWindow implements LOTInfo {
 			}
 
 			String latestscadpart = app.getLClient().getService()
-					.getStorageArea().read("juusoface", "published/part/scad");
+					.getStorageArea().read("juusoface", "published/part/latest");
 			if (latestscadpart != null) {
 				LOTPart b = app.getObjectFactory().getPart(
 						new MStringID(latestscadpart));

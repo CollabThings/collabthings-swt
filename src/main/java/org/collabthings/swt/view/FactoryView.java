@@ -306,8 +306,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		while (!isDisposed()) {
 			int nhash = factory.getObject().hashCode();
 			if (nhash != currentfactoryhash) {
-				yamleditor.setText(factory.getObject().toText());
-				enveditor.setText(factory.getEnvironment().getObject().toText());
+				yamleditor.setObject(factory);
+				enveditor.setObject(factory.getEnvironment());
 				currentfactoryhash = nhash;
 				updateView();
 			} else {
