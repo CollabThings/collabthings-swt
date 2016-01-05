@@ -1,6 +1,7 @@
 package org.collabthings.swt.view;
 
 import javafx.embed.swt.FXCanvas;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 
 import org.collabthings.environment.LOTRunEnvironment;
@@ -10,19 +11,19 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 public class JFXSimulationComposite extends Composite {
 
-	private LOTRunEnvironment env;
 	private FXCanvas canvas;
 	private JFXSimulationView view;
 
-	public JFXSimulationComposite(Composite parent, LOTRunEnvironment env) {
+	public JFXSimulationComposite(Composite parent) {
 		super(parent, SWT.NONE);
-		this.env = env;
+
 		setLayout(new GridLayout(1, false));
 		canvas = new FXCanvas(this, SWT.BORDER);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -62,6 +63,12 @@ public class JFXSimulationComposite extends Composite {
 			@Override
 			public void refresh() {
 				canvas.redraw();
+			}
+
+			@Override
+			public Point2D getUpperLeft() {
+				Point d = canvas.toDisplay(1, 1);
+				return new Point2D(d.x, d.y);
 			}
 
 			@Override

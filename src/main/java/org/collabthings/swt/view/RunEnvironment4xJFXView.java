@@ -36,10 +36,10 @@ public class RunEnvironment4xJFXView extends Composite {
 		setLayout(new GridLayout(2, false));
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 
-		xview = new JFXSimulationComposite(this, nrunenv);
-		yview = new JFXSimulationComposite(this, nrunenv);
-		zview = new JFXSimulationComposite(this, nrunenv);
-		fview = new JFXSimulationComposite(this, nrunenv);
+		xview = new JFXSimulationComposite(this);
+		yview = new JFXSimulationComposite(this);
+		zview = new JFXSimulationComposite(this);
+		fview = new JFXSimulationComposite(this);
 
 		yview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		zview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

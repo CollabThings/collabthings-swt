@@ -3,9 +3,15 @@ package org.collabthings.swt.view;
 import java.io.File;
 import java.io.IOException;
 
+import org.collabthings.LOTClient;
+import org.collabthings.environment.LOTRunEnvironment;
+import org.collabthings.environment.impl.LOTPartState;
+import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
+import org.collabthings.model.LOTEnvironment;
 import org.collabthings.model.LOTModel;
 import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
+import org.collabthings.model.impl.LOTEnvironmentImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.SWTResourceManager;
@@ -32,13 +38,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.xml.sax.SAXException;
 
 public class PartView extends Composite implements LOTAppControl {
 	private static final String DEFAULT_X3D_IMPORTPATH = "lot.gui.default.import_path";
 	private LOTPart part;
 	private ObjectViewer partobjectviewer;
-	private Model3DView partcanvas;
+
 	private LLog log = LLog.getLogger(this);
 	private final LOTApp app;
 	private final AppWindow window;
@@ -46,6 +54,8 @@ public class PartView extends Composite implements LOTAppControl {
 	private ScrolledComposite sc;
 	private Composite c_partproperties;
 	private ObjectViewer scadobjectviewer;
+	private JFXSimulationComposite scomposite;
+	private LOTRunEnvironmentImpl rune;
 
 	public PartView(Composite composite, LOTApp app, AppWindow window, LOTPart p) {
 		super(composite, SWT.None);
@@ -112,7 +122,15 @@ public class PartView extends Composite implements LOTAppControl {
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true, 1, 1));
 
-		sc = new ScrolledComposite(composite_main, SWT.V_SCROLL);
+		createDataViewers();
+
+		TabFolder tabFolder = new TabFolder(composite_main, SWT.NONE);
+
+		TabItem tieditor = new TabItem(tabFolder, SWT.NONE);
+		tieditor.setText("Editor");
+
+		sc = new ScrolledComposite(tabFolder, SWT.V_SCROLL);
+		tieditor.setControl(sc);
 		sc.setExpandHorizontal(true);
 		sc.setExpandVertical(true);
 		sc.addListener(SWT.Resize, new Listener() {
@@ -131,8 +149,27 @@ public class PartView extends Composite implements LOTAppControl {
 		c_partproperties.setLayout(gl_c_partproperties);
 
 		sc.setContent(c_partproperties);
+		this.partobjectviewer = new ObjectViewer(app, window, c_partproperties,
+				part);
 
-		createDataViewers();
+		TabItem titext = new TabItem(tabFolder, SWT.NONE);
+		titext.setText("Text");
+
+		YamlEditor yamleditor = new YamlEditor(tabFolder, SWT.NONE, "YAML");
+		titext.setControl(yamleditor);
+		yamleditor.setObject(this.part);
+
+		GridLayout gridLayout_1 = (GridLayout) partobjectviewer.getLayout();
+		gridLayout_1.marginWidth = 0;
+		gridLayout_1.marginHeight = 0;
+		partobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
+		partobjectviewer.addListener(new ObjectViewerListener() {
+			@Override
+			public void valueChanged(String name, Object o) {
+				partObjectChanged(name, o);
+			}
+		});
 
 		Composite c_view = new Composite(composite_main, SWT.NONE);
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -140,8 +177,9 @@ public class PartView extends Composite implements LOTAppControl {
 		c_view.setBounds(0, 0, 64, 64);
 		//
 
-		partcanvas = new Model3DView(c_view, SWT.NONE);
-		composite_main.setWeights(new int[] { 136, 311 });
+		scomposite = new JFXSimulationComposite(c_view);
+		scomposite.setRunEnvironment(getRunEnv());
+		composite_main.setWeights(new int[] { 223, 311 });
 
 		new Thread(() -> {
 			int hash = 0;
@@ -163,25 +201,54 @@ public class PartView extends Composite implements LOTAppControl {
 				}
 			}
 		}).start();
+
+		new Thread(() -> {
+			long lasttime = System.currentTimeMillis();
+			while (!c_partproperties.isDisposed()) {
+				long time = System.currentTimeMillis();
+				long dtime = time - lasttime;
+				lasttime = time;
+
+				scomposite.getView().step(dtime / 1000.0);
+
+				synchronized (part) {
+					try {
+						part.wait(100);
+					} catch (Exception e) {
+						log.error(this, "waitpart", e);
+					}
+				}
+			}
+		}).start();
+	}
+
+	private LOTRunEnvironment getRunEnv() {
+		LOTClient client = app.getLClient();
+		LOTEnvironment e = new LOTEnvironmentImpl(client);
+		rune = new LOTRunEnvironmentImpl(client, e);
+		LOTPartState state = new LOTPartState(rune, null, part);
+		rune.addRunObject("part", state);
+		return rune;
 	}
 
 	private synchronized void updateViewers() {
-		partcanvas.refresh(part.getModel());
 		createDataViewers();
 	}
 
 	private synchronized void createDataViewers() {
 		log.info("Create dataviewers " + part);
 
-		Control[] cs = c_partproperties.getChildren();
-		for (Control control : cs) {
-			control.dispose();
+		if (c_partproperties != null) {
+			Control[] cs = c_partproperties.getChildren();
+			for (Control control : cs) {
+				control.dispose();
+			}
+
+			createPartDataViewer(c_partproperties);
+			createModelDataViewer(c_partproperties);
+
+			updateLayout();
 		}
-
-		createPartDataViewer(c_partproperties);
-		createModelDataViewer(c_partproperties);
-
-		updateLayout();
 	}
 
 	private void updateLayout() {
@@ -196,36 +263,27 @@ public class PartView extends Composite implements LOTAppControl {
 
 	private void createModelDataViewer(Composite c_partproperties) {
 		LOTModel model = part.getModel();
-		if (model.getModelType().equals(LOTModel.SCAD)) {
-			createOpenSCADViewer(c_partproperties, (LOTOpenSCAD) model);
+		if (model != null) {
+			if (model.getModelType().equals(LOTModel.SCAD)) {
+				createOpenSCADViewer(c_partproperties, (LOTOpenSCAD) model);
+			} else {
+				this.modelobjectviewer = new ObjectViewer(app, window,
+						c_partproperties, model);
+				modelobjectviewer.setLayoutData(new GridData(SWT.FILL,
+						SWT.CENTER, true, false, 1, 1));
+				this.modelobjectviewer.addListener(new ObjectViewerListener() {
+					@Override
+					public void valueChanged(String name, Object o) {
+						modelObjectChanged(name, o);
+					}
+				});
+			}
 		} else {
-			this.modelobjectviewer = new ObjectViewer(app, window,
-					c_partproperties, model);
-			modelobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-					true, false, 1, 1));
-			this.modelobjectviewer.addListener(new ObjectViewerListener() {
-				@Override
-				public void valueChanged(String name, Object o) {
-					modelObjectChanged(name, o);
-				}
-			});
+			log.info("model null");
 		}
 	}
 
 	private void createPartDataViewer(Composite c_partproperties) {
-		this.partobjectviewer = new ObjectViewer(app, window, c_partproperties,
-				part);
-		GridLayout gridLayout = (GridLayout) partobjectviewer.getLayout();
-		gridLayout.marginWidth = 0;
-		gridLayout.marginHeight = 0;
-		partobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
-		partobjectviewer.addListener(new ObjectViewerListener() {
-			@Override
-			public void valueChanged(String name, Object o) {
-				partObjectChanged(name, o);
-			}
-		});
 	}
 
 	private void createOpenSCADViewer(Composite cparent, LOTOpenSCAD scad) {
@@ -283,16 +341,10 @@ public class PartView extends Composite implements LOTAppControl {
 	}
 
 	private void modelObjectChanged(String name, Object value) {
-		this.partcanvas.refresh(part.getModel());
+
 	}
 
 	protected void partObjectChanged(String name, Object o) {
-		addModel();
-	}
-
-	private void addModel() {
-		partcanvas.clear();
-		partcanvas.addModel(part.getMaterial(), part.getModel());
 	}
 
 	protected void importSelected() {
@@ -317,7 +369,7 @@ public class PartView extends Composite implements LOTAppControl {
 	public void importFile(File file) throws SAXException, IOException {
 		log.info("loading model " + file);
 		part.importModel(file);
-		this.partcanvas.addModel(part.getMaterial(), part.getModel());
+
 		modelobjectviewer.setObject(part.getModel());
 	}
 }
