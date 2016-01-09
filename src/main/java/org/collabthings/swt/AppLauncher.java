@@ -25,8 +25,6 @@ public final class AppLauncher implements WSWTApp {
 		WSWTAppLauncher l = new WSWTAppLauncher();
 		app = new LOTApp();
 		l.launch(this);
-		//
-		System.exit(0);
 	}
 
 	@Override
@@ -52,5 +50,6 @@ public final class AppLauncher implements WSWTApp {
 	public static void main(String[] args) throws MalformedURLException {
 		AppLauncher l = new AppLauncher();
 		l.launch();
+		System.exit(0);
 	}
 }
