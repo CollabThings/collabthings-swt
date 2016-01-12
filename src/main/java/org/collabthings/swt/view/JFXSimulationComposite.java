@@ -61,6 +61,11 @@ public class JFXSimulationComposite extends Composite {
 		view = new JFXSimulationView(runenv);
 		view.setCanvas(new ViewCanvas() {
 			@Override
+			public boolean isVisible() {
+				return canvas.isVisible();
+			}
+
+			@Override
 			public void refresh() {
 				canvas.redraw();
 			}
