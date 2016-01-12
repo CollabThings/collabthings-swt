@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTTask;
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.simulation.LOTSimpleSimulation;
@@ -198,7 +198,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 
 					@Override
 					public void taskFailed(LOTRunEnvironment runenv,
-							LOTTask task) {
+							LOTEnvironmentTask task) {
 						appendLog("FAILED " + task);
 						appendLog("ERROR " + task.getError());
 					}

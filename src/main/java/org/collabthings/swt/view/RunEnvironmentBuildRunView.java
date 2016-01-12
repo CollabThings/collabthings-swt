@@ -2,7 +2,7 @@ package org.collabthings.swt.view;
 
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTTask;
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.simulation.LOTSimpleSimulation;
@@ -75,7 +75,7 @@ public class RunEnvironmentBuildRunView extends Composite implements
 	}
 
 	@Override
-	public void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
+	public void taskFailed(LOTRunEnvironment runenv, LOTEnvironmentTask task) {
 		appendText("Task failed : " + task);
 	}
 
