@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
+import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.UserVO;
 
 public final class AppWindow implements LOTInfo {
@@ -71,6 +72,7 @@ public final class AppWindow implements LOTInfo {
 	private LOTAppControl selectedcontrol;
 	private Label lblStatus;
 	private ProgressBar progressBar;
+	private Menu mbookmarkslist;
 
 	public AppWindow(LOTApp app) {
 		this.app = app;
@@ -96,6 +98,19 @@ public final class AppWindow implements LOTInfo {
 		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(
 				this.app.getLClient());
 		viewRuntimeBuilder(b);
+	}
+
+	public void view(String id) {
+		setInfo(0, 0, 0, "View id:" + id);
+
+		new Thread(() -> {
+			ObjectVO o = app.getLClient().getClient().getObjects().read(id);
+			if (o != null) {
+				String type = o.getObject().getType();
+				viewtypes.view(type, new MStringID(id));
+			}
+		}).start();
+
 	}
 
 	public void view(String type, String id) {
@@ -208,6 +223,7 @@ public final class AppWindow implements LOTInfo {
 		controls.add(c);
 		i.addDisposeListener(e -> {
 			controls.remove(c);
+			c.getControl().dispose();
 		});
 	}
 
@@ -217,6 +233,8 @@ public final class AppWindow implements LOTInfo {
 	public void open() {
 		try {
 			try {
+				Thread.currentThread().setName("App open");
+
 				Display display = Display.getDefault();
 				createContents();
 				//
@@ -273,7 +291,8 @@ public final class AppWindow implements LOTInfo {
 			}
 
 			String latestscadpart = app.getLClient().getService()
-					.getStorageArea().read("juusoface", "published/part/latest");
+					.getStorageArea()
+					.read("juusoface", "published/part/latest");
 			if (latestscadpart != null) {
 				LOTPart b = app.getObjectFactory().getPart(
 						new MStringID(latestscadpart));
@@ -389,16 +408,16 @@ public final class AppWindow implements LOTInfo {
 		MenuItem menulocaldate = new MenuItem(menulocal, SWT.NONE);
 		menulocaldate.setText("Date");
 
-		MenuItem msearchmenu = new MenuItem(menu, SWT.CASCADE);
-		msearchmenu.setText("Search");
+		MenuItem misearch = new MenuItem(menu, SWT.CASCADE);
+		misearch.setText("Search");
 
-		Menu menu_1 = new Menu(msearchmenu);
-		msearchmenu.setMenu(menu_1);
+		Menu msearch = new Menu(misearch);
+		misearch.setMenu(msearch);
 
-		MenuItem misearchobjects = new MenuItem(menu_1, SWT.CASCADE);
+		MenuItem misearchobjects = new MenuItem(msearch, SWT.CASCADE);
 		misearchobjects.setText("Objects");
 
-		MenuItem misearchusers = new MenuItem(menu_1, SWT.NONE);
+		MenuItem misearchusers = new MenuItem(msearch, SWT.NONE);
 		misearchusers.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -418,6 +437,28 @@ public final class AppWindow implements LOTInfo {
 
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
 		mntmHelp.setText("Help");
+
+		MenuItem mibookmarks = new MenuItem(menu, SWT.CASCADE);
+		mibookmarks.setText("Bookmarks");
+
+		Menu mbookmarks = new Menu(mibookmarks);
+		mibookmarks.setMenu(mbookmarks);
+
+		MenuItem miBookmarkCurrent = new MenuItem(mbookmarks, SWT.CASCADE);
+		miBookmarkCurrent.setText("Current");
+
+		new MenuItem(mbookmarks, SWT.SEPARATOR);
+
+		mbookmarkslist = new Menu(mibookmarks);
+		MenuItem miBookmarksList = new MenuItem(mbookmarks, SWT.CASCADE);
+		miBookmarksList.setText("Bookmarks");
+		miBookmarksList.setMenu(mbookmarkslist);
+
+		this.app.addTask(() -> {
+			this.shell.getDisplay().asyncExec(() -> {
+				initBookmarks();
+			});
+		});
 
 		Composite composite = new Composite(shell, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -457,6 +498,40 @@ public final class AppWindow implements LOTInfo {
 		lblBottonInfo.setAlignment(SWT.RIGHT);
 
 		setBottomInfo();
+	}
+
+	private void initBookmarks() {
+		Menu bookmarkmenu = mbookmarkslist;
+		String path = "";
+		initBookmarks(bookmarkmenu, path);
+	}
+
+	private void initBookmarks(Menu bookmarkmenu, String path) {
+		List<String> bookmarklist = this.app.getLClient().getBookmarks()
+				.list(path);
+
+		for (String bm : bookmarklist) {
+			String value = this.app.getLClient().getBookmarks()
+					.get(path + "/" + bm);
+			if (value != null) {
+				MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
+				mi.setText(bm);
+				mi.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						view(value);
+					}
+
+				});
+			} else {
+				MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
+				mi.setText(bm);
+				Menu m = new Menu(mi);
+				mi.setMenu(m);
+
+				initBookmarks(m, path + "/" + bm);
+			}
+		}
 	}
 
 	private void initLocalMenu() {
@@ -543,5 +618,4 @@ public final class AppWindow implements LOTInfo {
 	public void viewTool(LOTTool tool) {
 		// TODO Auto-generated method stub
 	}
-
 }

@@ -94,6 +94,8 @@ public class YamlEditor extends Composite {
 			t = new Thread(() -> checkObjectUpdate());
 			t.start();
 		}
+
+		t.setName("YamlEditor " + o);
 	}
 
 	private void setText(String stext) {

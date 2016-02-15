@@ -39,6 +39,8 @@ public class ObjectSmallView extends Composite {
 	private Set<String> ignorelist;
 	private WLogger log = WLogger.getLogger(this);
 
+	private Button btnBookmark;
+
 	public ObjectSmallView(Composite cc, LOTApp app, AppWindow window, String id) {
 		super(cc, SWT.NONE);
 		this.app = app;
@@ -83,7 +85,7 @@ public class ObjectSmallView extends Composite {
 		Composite ctools = new Composite(cvalues, SWT.NONE);
 		ctools.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false,
 				1, 1));
-		ctools.setLayout(new GridLayout(2, false));
+		ctools.setLayout(new GridLayout(3, false));
 
 		Button bview = new Button(ctools, SWT.NONE);
 		bview.addSelectionListener(new SelectionAdapter() {
@@ -98,6 +100,9 @@ public class ObjectSmallView extends Composite {
 		bcopyid.addSelectionListener(new CopyToClipbardSelectionAdapter(this,
 				id));
 		bcopyid.setText("ID");
+
+		this.btnBookmark = new Button(ctools, SWT.NONE);
+		btnBookmark.setText("Bookmark");
 
 		Composite cdates = new Composite(cvalues, SWT.NONE);
 		cdates.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
@@ -233,11 +238,33 @@ public class ObjectSmallView extends Composite {
 		WObject o;
 
 		if (vo != null && (o = vo.getObject()) != null) {
+
+			btnBookmark.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					WObject content = o.get("content");
+					if (content == null) {
+						content = o;
+					}
+
+					String namevalue = content.getValue("name");
+					String name;
+					if (namevalue != null) {
+						name = namevalue;
+					} else {
+						name = "unknown";
+					}
+
+					app.getLClient().getBookmarks()
+							.add("" + o.getType() + "/" + name, id);
+				}
+			});
+
 			if (o.getType() != null) {
 				ltype.setText(o.getType());
 
 				for (String name : o.getChildren()) {
-					log.info("addData " + name);
+					log.debug("addData " + name);
 
 					DataHandler dh = handlers.get(name);
 					if (dh != null) {
