@@ -97,7 +97,7 @@ public final class AppWindow implements LOTInfo {
 	public void newRunEnvBuilder() {
 		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(
 				this.app.getLClient());
-		viewRuntimeBuilder(b);
+		viewRunEnvironmentBuilder(b);
 	}
 
 	public void view(String id) {
@@ -130,7 +130,7 @@ public final class AppWindow implements LOTInfo {
 		});
 	}
 
-	public void viewRuntimeBuilder(LOTRunEnvironmentBuilder b) {
+	public void viewRunEnvironmentBuilder(LOTRunEnvironmentBuilder b) {
 		setInfo(0, 0, 0, "Viewing Builder" + b.toString());
 		shell.getDisplay()
 				.asyncExec(

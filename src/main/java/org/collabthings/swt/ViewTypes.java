@@ -34,7 +34,7 @@ public class ViewTypes {
 			LOTRunEnvironmentBuilder b = app.getObjectFactory()
 					.getRuntimeBuilder(id);
 			if (b != null) {
-				window.viewRuntimeBuilder(b);
+				window.viewRunEnvironmentBuilder(b);
 			} else {
 				window.showError("Failed to get envbuilder " + id);
 			}
@@ -58,6 +58,15 @@ public class ViewTypes {
 			}
 		});
 
+		views.put("runenvbuilder", id -> {
+			LOTRunEnvironmentBuilder b = app.getObjectFactory()
+					.getRuntimeBuilder(id);
+			if (b != null) {
+				window.viewRunEnvironmentBuilder(b);
+			} else {
+				window.showError("Failed to get part " + id);
+			}
+		});
 	}
 
 	private interface View {
