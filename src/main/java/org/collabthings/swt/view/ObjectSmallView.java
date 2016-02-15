@@ -174,11 +174,13 @@ public class ObjectSmallView extends Composite {
 					new Thread(() -> {
 						UserVO u = app.getLClient().getService().getUsers()
 								.getUser(userid);
-						lcreated.getDisplay().syncExec(() -> {
-							if (!lcreated.isDisposed()) {
-								lcreator.setText("" + u.getUsername());
-							}
-						});
+						if (!lcreated.isDisposed()) {
+							lcreated.getDisplay().syncExec(() -> {
+								if (!lcreated.isDisposed()) {
+									lcreator.setText("" + u.getUsername());
+								}
+							});
+						}
 					}).start();
 				});
 

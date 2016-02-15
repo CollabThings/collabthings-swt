@@ -62,7 +62,7 @@ public class JFXSimulationComposite extends Composite {
 		view.setCanvas(new ViewCanvas() {
 			@Override
 			public boolean isVisible() {
-				return canvas.isVisible();
+				return !canvas.isDisposed() && canvas.isVisible();
 			}
 
 			@Override
