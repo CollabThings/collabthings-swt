@@ -24,6 +24,7 @@ public class RunEnvironment4xCanvasView extends Composite {
 	private RunEnvironmentCanvas zcanvas;
 
 	private LLog log = LLog.getLogger(this);
+	private boolean stopped;
 
 	public RunEnvironment4xCanvasView(Composite parent, int style) {
 		this(parent, style, null);
@@ -116,7 +117,7 @@ public class RunEnvironment4xCanvasView extends Composite {
 
 	private synchronized void loop(Condition c) throws InterruptedException {
 		long lasttime = System.currentTimeMillis();
-		while (c.test() && !isDisposed()) {
+		while (c.test() && !isDisposed() && !stopped) {
 			long dt = System.currentTimeMillis() - lasttime;
 			lasttime = System.currentTimeMillis();
 
@@ -125,5 +126,9 @@ public class RunEnvironment4xCanvasView extends Composite {
 
 			this.wait(60);
 		}
+	}
+
+	public void stop() {
+		stopped = true;
 	}
 }

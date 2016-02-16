@@ -1,5 +1,7 @@
 package org.collabthings.swt.view;
 
+import javafx.application.Platform;
+
 import javax.vecmath.Vector3d;
 
 import org.collabthings.environment.LOTRunEnvironment;
@@ -12,6 +14,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import waazdoh.client.utils.ConditionWaiter.Condition;
+import waazdoh.common.MTimedFlag;
 
 public class RunEnvironment4xJFXView extends Composite {
 	private LTransformation freetransform;
@@ -68,15 +71,24 @@ public class RunEnvironment4xJFXView extends Composite {
 
 	public void setRunEnvironment(LOTRunEnvironment runenv2) {
 		this.runenv = runenv2;
-		yview.setRunEnvironment(runenv);
-		xview.setRunEnvironment(runenv);
-		zview.setRunEnvironment(runenv);
-		fview.setRunEnvironment(runenv);
 
-		xview.getView().setSceneOrientation(0, 0, 0);
-		yview.getView().setSceneOrientation(90, 0, 0);
-		zview.getView().setSceneOrientation(0, 90, 0);
-		fview.getView().setSceneOrientation(30, 30, 30);
+		MTimedFlag flag = new MTimedFlag(1000);
+
+		Platform.runLater(() -> {
+			yview.setRunEnvironment(runenv);
+			xview.setRunEnvironment(runenv);
+			zview.setRunEnvironment(runenv);
+			fview.setRunEnvironment(runenv);
+
+			xview.getView().setSceneOrientation(0, 0, 0);
+			yview.getView().setSceneOrientation(90, 0, 0);
+			zview.getView().setSceneOrientation(0, 90, 0);
+			fview.getView().setSceneOrientation(30, 30, 30);
+
+			flag.trigger();
+		});
+
+		flag.waitTimer();
 	}
 
 	public void runWhile(Condition c) {

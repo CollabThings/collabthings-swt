@@ -270,36 +270,29 @@ public final class AppWindow implements LOTInfo {
 			// newFactory();
 
 			String latest = app.getLClient().getService().getStorageArea()
-					.read("ugoogle", "published/builder/latest");
+					.read("juusoface", "published/factory/latest");
 			if (latest != null) {
-				LOTRunEnvironmentBuilder b = app.getObjectFactory()
-						.getRuntimeBuilder(new MStringID(latest));
-				// viewRuntimeBuilder(b);
+				LOTFactory f = app.getObjectFactory().getFactory(
+						new MStringID(latest));
+				viewFactory(f);
 			} else {
 				// newRunEnvBuilder();
 			}
 
-			String latestpartbuilder = app.getLClient().getService()
-					.getStorageArea()
-					.read("juusoface", "published/partbuilder/latest");
-			if (latestpartbuilder != null) {
-				LOTPartBuilder b = app.getObjectFactory().getPartBuilder(
-						new MStringID(latestpartbuilder));
-				viewPartBuilder(b);
-			} else {
-				// newRunEnvBuilder();
-			}
-
-			String latestscadpart = app.getLClient().getService()
-					.getStorageArea()
-					.read("juusoface", "published/part/latest");
-			if (latestscadpart != null) {
-				LOTPart b = app.getObjectFactory().getPart(
-						new MStringID(latestscadpart));
-				viewPart(b);
-			} else {
-				// newRunEnvBuilder();
-			}
+			/*
+			 * String latestpartbuilder = app.getLClient().getService()
+			 * .getStorageArea() .read("juusoface",
+			 * "published/partbuilder/latest"); if (latestpartbuilder != null) {
+			 * LOTPartBuilder b = app.getObjectFactory().getPartBuilder( new
+			 * MStringID(latestpartbuilder)); viewPartBuilder(b); } else { //
+			 * newRunEnvBuilder(); }
+			 * 
+			 * String latestscadpart = app.getLClient().getService()
+			 * .getStorageArea() .read("juusoface", "published/part/latest"); if
+			 * (latestscadpart != null) { LOTPart b =
+			 * app.getObjectFactory().getPart( new MStringID(latestscadpart));
+			 * viewPart(b); } else { // newRunEnvBuilder(); }
+			 */
 		});
 
 		display.asyncExec(() -> {

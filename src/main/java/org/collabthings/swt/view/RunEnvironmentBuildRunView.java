@@ -1,8 +1,8 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTEnvironmentTask;
 import org.collabthings.environment.RunEnvironmentListener;
 import org.collabthings.model.run.LOTRunEnvironmentBuilder;
 import org.collabthings.simulation.LOTSimpleSimulation;
@@ -24,7 +24,7 @@ public class RunEnvironmentBuildRunView extends Composite implements
 
 	// an hour
 	private static final int MAX_RUNTIME = 60 * 1000 * 60;
-	private RunEnvironment4xJFXView eview;
+	private RunEnvironment4xCanvasView eview;
 	private LOTSimpleSimulation s;
 	private Text text;
 
@@ -48,7 +48,7 @@ public class RunEnvironmentBuildRunView extends Composite implements
 
 		Composite c_view = new Composite(sashForm, SWT.NONE);
 		c_view.setLayout(new GridLayout(1, false));
-		eview = new RunEnvironment4xJFXView(c_view, SWT.NONE);
+		eview = new RunEnvironment4xCanvasView(c_view, SWT.NONE);
 		eview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		eview.setRunEnvironment(runEnvironment);
 		sashForm.setWeights(new int[] { 143, 294 });

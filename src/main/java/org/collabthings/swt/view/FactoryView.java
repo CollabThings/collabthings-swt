@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.MenuItem;
 
 public class FactoryView extends Composite implements LOTAppControl, ScriptUser {
 	private LOTFactory factory;
-	private RunEnvironment4xJFXView view;
+	private RunEnvironment4xCanvasView view;
 	private LOTApp app;
 
 	private AppWindow window;
@@ -155,7 +155,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);
 
-		view = new RunEnvironment4xJFXView(c_view, SWT.NONE);
+		view = new RunEnvironment4xCanvasView(c_view, SWT.NONE);
 		composite_main.setWeights(new int[] { 384, 421 });
 
 		Menu tempmenu = new Menu(this);

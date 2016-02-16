@@ -7,6 +7,8 @@ import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.util.LOTGraphics;
 import org.collabthings.view.RunEnvironmentDrawerImpl;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -23,6 +25,8 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 	private RunEnvironmentDrawerImpl drawer;
 	private GC gc;
 
+	private int w = 100, h = 100;
+
 	/**
 	 * Create the composite.
 	 * 
@@ -37,6 +41,21 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 		setLayout(new GridLayout(1, false));
 		addPaintListener(this);
 		this.drawer = drawer;
+
+		addControlListener(new ControlListener() {
+
+			@Override
+			public void controlResized(ControlEvent arg0) {
+				w = getSize().x;
+				h = getSize().y;
+			}
+
+			@Override
+			public void controlMoved(ControlEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 	}
 
 	@Override
@@ -98,12 +117,12 @@ public class RunEnvironmentCanvas extends Composite implements PaintListener,
 
 	@Override
 	public int getHeight() {
-		return getSize().y;
+		return h;
 	}
 
 	@Override
 	public int getWidth() {
-		return getSize().x;
+		return w;
 	}
 
 	@Override
