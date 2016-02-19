@@ -80,10 +80,12 @@ public class RunEnvironmentBuildRunView extends Composite implements
 	}
 
 	private void appendText(String string) {
-		getDisplay().asyncExec(() -> {
-			text.append(string);
-			text.append("\n");
-		});
+		if (!isDisposed()) {
+			getDisplay().asyncExec(() -> {
+				text.append(string);
+				text.append("\n");
+			});
+		}
 	}
 
 	@Override
