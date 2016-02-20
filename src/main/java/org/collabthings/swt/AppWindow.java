@@ -20,7 +20,7 @@ import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.LOTMessageDialog;
 import org.collabthings.swt.view.FactoryView;
 import org.collabthings.swt.view.PartBuilderView;
-import org.collabthings.swt.view.PartView;
+import org.collabthings.swt.view.PartEditor;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
 import org.collabthings.swt.view.SCADView;
@@ -82,7 +82,7 @@ public final class AppWindow implements LOTInfo {
 	public void newPart() {
 		try {
 			LOTPart p = app.newPart();
-			PartView view = new PartView(tabFolder, app, this, p);
+			PartEditor view = new PartEditor(tabFolder, app, this, p);
 			addTab("part " + p, view, p);
 		} catch (Exception e) {
 			showError(e);
@@ -207,7 +207,7 @@ public final class AppWindow implements LOTInfo {
 
 	public void viewPart(LOTPart part) {
 		shell.getDisplay().asyncExec(() -> {
-			PartView pv = new PartView(tabFolder, app, this, part);
+			PartEditor pv = new PartEditor(tabFolder, app, this, part);
 			addTab("" + part.getName(), pv, part);
 		});
 	}
@@ -270,7 +270,7 @@ public final class AppWindow implements LOTInfo {
 			// newFactory();
 
 			String latest = app.getLClient().getService().getStorageArea()
-					.read("juusoface", "published/factory/latest");
+					.read("juusoface", "DERP_published/factory/latest");
 			if (latest != null) {
 				LOTFactory f = app.getObjectFactory().getFactory(
 						new MStringID(latest));
@@ -286,13 +286,17 @@ public final class AppWindow implements LOTInfo {
 			 * LOTPartBuilder b = app.getObjectFactory().getPartBuilder( new
 			 * MStringID(latestpartbuilder)); viewPartBuilder(b); } else { //
 			 * newRunEnvBuilder(); }
-			 * 
-			 * String latestscadpart = app.getLClient().getService()
-			 * .getStorageArea() .read("juusoface", "published/part/latest"); if
-			 * (latestscadpart != null) { LOTPart b =
-			 * app.getObjectFactory().getPart( new MStringID(latestscadpart));
-			 * viewPart(b); } else { // newRunEnvBuilder(); }
 			 */
+			String latestscadpart = app.getLClient().getService()
+					.getStorageArea()
+					.read("juusoface", "published/part/latest");
+			if (latestscadpart != null) {
+				LOTPart b = app.getObjectFactory().getPart(
+						new MStringID(latestscadpart));
+				viewPart(b);
+			} else {
+				newPart();
+			}
 		});
 
 		display.asyncExec(() -> {
