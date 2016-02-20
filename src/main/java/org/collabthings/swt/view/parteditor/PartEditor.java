@@ -1,4 +1,4 @@
-package org.collabthings.swt.view;
+package org.collabthings.swt.view.parteditor;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +19,7 @@ import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.controls.ObjectViewerListener;
 import org.collabthings.swt.dialog.LOTMessageDialog;
+import org.collabthings.swt.view.JFXSimulationComposite;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
