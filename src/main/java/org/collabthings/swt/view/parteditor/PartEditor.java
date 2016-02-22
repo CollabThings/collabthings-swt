@@ -1,6 +1,7 @@
 package org.collabthings.swt.view.parteditor;
 
 import java.util.List;
+import java.util.Stack;
 
 import javafx.embed.swt.FXCanvas;
 import javafx.geometry.Point2D;
@@ -58,6 +59,8 @@ public class PartEditor extends Composite implements LOTAppControl {
 	private Composite csubparts;
 	private Text tpartname;
 
+	private Stack<LOTPart> parts = new Stack<LOTPart>();
+
 	public PartEditor(Composite composite, LOTApp app, AppWindow window,
 			LOTPart p) {
 		super(composite, SWT.None);
@@ -87,6 +90,20 @@ public class PartEditor extends Composite implements LOTAppControl {
 
 	}
 
+	private void goBack() {
+		if (!parts.isEmpty()) {
+			LOTPart p = parts.pop();
+			setPart(p);
+		}
+	}
+
+	private void pushPart(LOTPart p) {
+		if (this.part != null) {
+			parts.push(part);
+		}
+		setPart(p);
+	}
+
 	public void setPart(LOTPart p) {
 		this.part = p;
 		view.setPart(part);
@@ -104,6 +121,15 @@ public class PartEditor extends Composite implements LOTAppControl {
 		RowLayout rl_c_toolbar = new RowLayout(SWT.HORIZONTAL);
 		rl_c_toolbar.center = true;
 		c_toolbar.setLayout(rl_c_toolbar);
+
+		Button button_1 = new Button(c_toolbar, SWT.NONE);
+		button_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				goBack();
+			}
+		});
+		button_1.setText("<");
 
 		Button button = new Button(c_toolbar, SWT.FLAT);
 		button.setText("A");
@@ -195,6 +221,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 			addSubpartToList(subpart);
 		}
 
+		csubparts.layout();
 		// addSubpartToList(null);
 	}
 
@@ -246,7 +273,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 	}
 
 	private void view(LOTSubPart p) {
-		setPart(p.getPart());
+		pushPart(p.getPart());
 	}
 
 	private void startView() {
