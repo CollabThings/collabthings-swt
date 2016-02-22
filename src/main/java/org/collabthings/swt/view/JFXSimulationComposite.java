@@ -5,8 +5,9 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 
 import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.view.JFXSimulationView;
-import org.collabthings.view.JFXSimulationView.ViewCanvas;
+import org.collabthings.swt.app.LOTApp;
+import org.collabthings.view.JFXRunEnvironmentView;
+import org.collabthings.view.JFXRunEnvironmentView.ViewCanvas;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -19,10 +20,12 @@ import org.eclipse.swt.widgets.Composite;
 public class JFXSimulationComposite extends Composite {
 
 	private FXCanvas canvas;
-	private JFXSimulationView view;
+	private JFXRunEnvironmentView view;
+	private LOTApp app;
 
-	public JFXSimulationComposite(Composite parent) {
+	public JFXSimulationComposite(LOTApp app, Composite parent) {
 		super(parent, SWT.NONE);
+		this.app = app;
 
 		setLayout(new GridLayout(1, false));
 		canvas = new FXCanvas(this, SWT.BORDER);
@@ -58,38 +61,40 @@ public class JFXSimulationComposite extends Composite {
 	}
 
 	public void setRunEnvironment(LOTRunEnvironment runenv) {
-		view = new JFXSimulationView(runenv);
-		view.setCanvas(new ViewCanvas() {
-			@Override
-			public boolean isVisible() {
-				return !canvas.isDisposed() && canvas.isVisible();
-			}
+		view = new JFXRunEnvironmentView(runenv);
+		app.addTask(() -> {
+			view.setCanvas(new ViewCanvas() {
+				@Override
+				public boolean isVisible() {
+					return !canvas.isDisposed() && canvas.isVisible();
+				}
 
-			@Override
-			public void refresh() {
-				canvas.redraw();
-			}
+				@Override
+				public void refresh() {
+					canvas.redraw();
+				}
 
-			@Override
-			public Point2D getUpperLeft() {
-				Point d = canvas.toDisplay(1, 1);
-				return new Point2D(d.x, d.y);
-			}
+				@Override
+				public Point2D getUpperLeft() {
+					Point d = canvas.toDisplay(1, 1);
+					return new Point2D(d.x, d.y);
+				}
 
-			@Override
-			public void setScene(Scene scene) {
-				canvas.setScene(scene);
-			}
+				@Override
+				public void setScene(Scene scene) {
+					canvas.setScene(scene);
+				}
 
-			@Override
-			public double getWidth() {
-				return canvas.getSize().x;
-			}
+				@Override
+				public double getWidth() {
+					return canvas.getSize().x;
+				}
 
-			@Override
-			public double getHeight() {
-				return canvas.getSize().y;
-			}
+				@Override
+				public double getHeight() {
+					return canvas.getSize().y;
+				}
+			});
 		});
 	}
 
@@ -97,7 +102,7 @@ public class JFXSimulationComposite extends Composite {
 		view.stop();
 	}
 
-	public JFXSimulationView getView() {
+	public JFXRunEnvironmentView getView() {
 		return this.view;
 	}
 

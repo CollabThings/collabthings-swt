@@ -1,31 +1,33 @@
 package org.collabthings.swt.view.parteditor;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
-import org.collabthings.LOTClient;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.impl.LOTPartState;
+import javafx.embed.swt.FXCanvas;
+import javafx.geometry.Point2D;
+import javafx.scene.Scene;
+
 import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
-import org.collabthings.model.LOTEnvironment;
-import org.collabthings.model.LOTModel;
-import org.collabthings.model.LOTOpenSCAD;
 import org.collabthings.model.LOTPart;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
+import org.collabthings.model.LOTSubPart;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.ObjectViewer;
-import org.collabthings.swt.controls.ObjectViewerListener;
-import org.collabthings.swt.dialog.LOTMessageDialog;
-import org.collabthings.swt.view.JFXSimulationComposite;
+import org.collabthings.swt.controls.LOTDoubleEditor;
+import org.collabthings.swt.controls.LOTVectorEditor;
 import org.collabthings.util.LLog;
+import org.collabthings.view.JFXPartView;
+import org.collabthings.view.JFXPartView.ViewCanvas;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -33,29 +35,28 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
-import org.xml.sax.SAXException;
+import org.eclipse.swt.widgets.Text;
+
+import swing2swt.layout.FlowLayout;
 
 public class PartEditor extends Composite implements LOTAppControl {
-	private static final String DEFAULT_X3D_IMPORTPATH = "lot.gui.default.import_path";
 	private LOTPart part;
-	private ObjectViewer partobjectviewer;
 
 	private LLog log = LLog.getLogger(this);
 	private final LOTApp app;
 	private final AppWindow window;
-	private ObjectViewer modelobjectviewer;
-	private Composite c_partproperties;
-	private ObjectViewer scadobjectviewer;
-	private JFXSimulationComposite scomposite;
+
+	private JFXPartView view;
+
 	private LOTRunEnvironmentImpl rune;
+
+	private Composite c_view;
+
+	private Composite csubparts;
+	private Text tpartname;
 
 	public PartEditor(Composite composite, LOTApp app, AppWindow window,
 			LOTPart p) {
@@ -86,6 +87,13 @@ public class PartEditor extends Composite implements LOTAppControl {
 
 	}
 
+	public void setPart(LOTPart p) {
+		this.part = p;
+		view.setPart(part);
+		updatePartInfo();
+		updateSubpartList();
+	}
+
 	private void init() {
 		GridLayout gridLayout = new GridLayout(1, false);
 		setLayout(gridLayout);
@@ -96,17 +104,6 @@ public class PartEditor extends Composite implements LOTAppControl {
 		RowLayout rl_c_toolbar = new RowLayout(SWT.HORIZONTAL);
 		rl_c_toolbar.center = true;
 		c_toolbar.setLayout(rl_c_toolbar);
-
-		Button btnImport = new Button(c_toolbar, SWT.FLAT);
-		btnImport.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				importSelected();
-			}
-		});
-		btnImport
-				.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
-		btnImport.setText("+");
 
 		Button button = new Button(c_toolbar, SWT.FLAT);
 		button.setText("A");
@@ -121,244 +118,208 @@ public class PartEditor extends Composite implements LOTAppControl {
 		});
 		btnPublish.setText("Publish");
 
-		Label lname = new Label(c_toolbar, SWT.NONE);
-		lname.setText("Name");
-
 		SashForm composite_main = new SashForm(this, SWT.NONE);
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true, 1, 1));
 
-		createDataViewers();
+		ScrolledComposite scrolledComposite = new ScrolledComposite(
+				composite_main, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
 
-		c_partproperties = new Composite(composite_main, SWT.NONE);
-		c_partproperties.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
-				true, 1, 1));
-		GridLayout gl_c_partproperties = new GridLayout();
-		gl_c_partproperties.marginWidth = 0;
-		gl_c_partproperties.marginHeight = 0;
-		c_partproperties.setLayout(gl_c_partproperties);
-		this.partobjectviewer = new ObjectViewer(app, window, c_partproperties,
-				part);
+		Composite cinfo = new Composite(scrolledComposite, SWT.NONE);
+		cinfo.setLayout(new GridLayout(2, false));
 
-		GridLayout gridLayout_1 = (GridLayout) partobjectviewer.getLayout();
-		gridLayout_1.marginWidth = 0;
-		gridLayout_1.marginHeight = 0;
-		partobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+		Label lpartname = new Label(cinfo, SWT.NONE);
+		lpartname.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
 				false, 1, 1));
-		partobjectviewer.addListener(new ObjectViewerListener() {
-			@Override
-			public void valueChanged(String name, Object o) {
-				partObjectChanged(name, o);
-			}
-		});
+		lpartname.setText("Name");
 
-		Composite c_view = new Composite(composite_main, SWT.NONE);
+		tpartname = new Text(cinfo, SWT.BORDER);
+		tpartname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+				1, 1));
+		scrolledComposite.setContent(cinfo);
+		scrolledComposite.setMinSize(cinfo
+				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+		c_view = new Composite(composite_main, SWT.NONE);
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);
-		//
 
-		scomposite = new JFXSimulationComposite(c_view);
-		scomposite.setRunEnvironment(getRunEnv());
-		composite_main.setWeights(new int[] { 267, 311 });
+		view = new JFXPartView();
+		view.setPart(part);
+
+		composite_main.setWeights(new int[] { 1, 1 });
 
 		Composite cbottom = new Composite(this, SWT.NONE);
+		GridLayout gl_cbottom = new GridLayout(3, false);
+		gl_cbottom.marginHeight = 1;
+		gl_cbottom.verticalSpacing = 1;
+		gl_cbottom.marginWidth = 1;
+		gl_cbottom.horizontalSpacing = 1;
+		cbottom.setLayout(gl_cbottom);
 		cbottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1,
 				1));
-		
-		Button btnNewButton = new Button(cbottom, SWT.NONE);
-		btnNewButton.setBounds(63, 10, 75, 25);
-		btnNewButton.setText("New Button");
 
-		new Thread(() -> {
-			int hash = 0;
-			while (!c_partproperties.isDisposed()) {
-				int currenthash = part.getObject().hashCode();
-				if (currenthash != hash) {
-					hash = currenthash;
-					getDisplay().asyncExec(() -> {
-						updateViewers();
-					});
-				}
+		Button bleft = new Button(cbottom, SWT.NONE);
+		bleft.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+		bleft.setText("<");
 
-				synchronized (part) {
-					try {
-						part.wait(1000);
-					} catch (Exception e) {
-						log.error(this, "waitpart", e);
-					}
-				}
-			}
-		}).start();
+		csubparts = new Composite(cbottom, SWT.NONE);
+		csubparts.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		csubparts.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
 
-		new Thread(() -> {
-			long lasttime = System.currentTimeMillis();
-			while (!c_partproperties.isDisposed()) {
-				long time = System.currentTimeMillis();
-				long dtime = time - lasttime;
-				lasttime = time;
+		Button bright = new Button(cbottom, SWT.NONE);
+		bright.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1,
+				1));
+		bright.setText(">");
 
-				scomposite.getView().step(dtime / 1000.0);
-
-				synchronized (part) {
-					try {
-						part.wait(100);
-					} catch (Exception e) {
-						log.error(this, "waitpart", e);
-					}
-				}
-			}
-		}).start();
+		startView();
+		updatePartInfo();
+		updateSubpartList();
 	}
 
-	private LOTRunEnvironment getRunEnv() {
-		LOTClient client = app.getLClient();
-		LOTEnvironment e = new LOTEnvironmentImpl(client);
-		rune = new LOTRunEnvironmentImpl(client, e);
-		LOTPartState state = new LOTPartState(rune, null, part);
-		rune.addRunObject("part", state);
-		return rune;
+	private void updatePartInfo() {
+		tpartname.setText("" + part.getName());
 	}
 
-	private synchronized void updateViewers() {
-		createDataViewers();
-	}
-
-	private synchronized void createDataViewers() {
-		log.info("Create dataviewers " + part);
-
-		if (c_partproperties != null) {
-			Control[] cs = c_partproperties.getChildren();
-			for (Control control : cs) {
-				control.dispose();
-			}
-
-			createPartDataViewer(c_partproperties);
-			createModelDataViewer(c_partproperties);
-
-			updateLayout();
+	private void updateSubpartList() {
+		for (Control c : csubparts.getChildren()) {
+			c.dispose();
 		}
+
+		List<LOTSubPart> sps = part.getSubParts();
+		for (LOTSubPart subpart : sps) {
+			addSubpartToList(subpart);
+		}
+
+		// addSubpartToList(null);
 	}
 
-	private void updateLayout() {
-		// int w = sc.getClientArea().width;
-		c_partproperties.pack();
-		// sc.setMinSize(w, c_partproperties.computeSize(w, SWT.DEFAULT).y);
+	private void addSubpartToList(LOTSubPart subpart) {
+
+		Composite composite = new Composite(csubparts, SWT.NONE);
+		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.verticalSpacing = 1;
+		gl_composite.marginWidth = 0;
+		gl_composite.marginHeight = 0;
+		gl_composite.horizontalSpacing = 0;
+		composite.setLayout(gl_composite);
+
+		Label lsubname = new Label(composite, SWT.NONE);
+		lsubname.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 1,
+				1));
+		lsubname.setText("" + subpart);
+
+		LOTVectorEditor elocation = new LOTVectorEditor(composite,
+				subpart.getLocation(), (e) -> {
+					subpart.setOrientation(e, subpart.getNormal(),
+							subpart.getAngle());
+				});
+		elocation.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
+		LOTVectorEditor enormal = new LOTVectorEditor(composite,
+				subpart.getNormal(), (e) -> {
+					subpart.setOrientation(subpart.getLocation(), e,
+							subpart.getAngle());
+				});
+		enormal.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		LOTDoubleEditor eangle = new LOTDoubleEditor(composite,
+				subpart.getAngle(), d -> {
+					subpart.setAngle(d);
+				});
+		FillLayout fl_eangle = (FillLayout) eangle.getLayout();
+		eangle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1,
+				1));
+
+		Button b = new Button(composite, SWT.NONE);
+		b.setText("view");
+		b.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				view(subpart);
+			}
+		});
+	}
+
+	private void view(LOTSubPart p) {
+		setPart(p.getPart());
+	}
+
+	private void startView() {
+		FXCanvas canvas = new FXCanvas(c_view, SWT.BORDER);
+		canvas.addMouseWheelListener(new MouseWheelListener() {
+
+			@Override
+			public void mouseScrolled(MouseEvent m) {
+				view.mouseScrolled(m.count);
+			}
+		});
+		canvas.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseUp(MouseEvent m) {
+				view.mouseUp(m.x, m.y, m.button);
+			}
+
+			@Override
+			public void mouseDown(MouseEvent m) {
+				view.mouseDown(m.x, m.y, m.button);
+			}
+
+			@Override
+			public void mouseDoubleClick(MouseEvent m) {
+
+			}
+		});
+		canvas.addMouseMoveListener(new MouseMoveListener() {
+
+			@Override
+			public void mouseMove(MouseEvent m) {
+				view.mouseMove(m.x, m.y, m.button);
+			}
+		});
+
+		app.addTask(() -> {
+			view.setCanvas(new ViewCanvas() {
+				@Override
+				public boolean isVisible() {
+					return !canvas.isDisposed() && canvas.isVisible();
+				}
+
+				@Override
+				public void refresh() {
+					canvas.redraw();
+				}
+
+				@Override
+				public Point2D getUpperLeft() {
+					Point d = canvas.toDisplay(1, 1);
+					return new Point2D(d.x, d.y);
+				}
+
+				@Override
+				public void setScene(Scene scene) {
+					canvas.setScene(scene);
+				}
+
+				@Override
+				public double getWidth() {
+					return canvas.getSize().x;
+				}
+
+				@Override
+				public double getHeight() {
+					return canvas.getSize().y;
+				}
+			});
+		});
 	}
 
 	protected void publish() {
 		this.part.publish();
-	}
-
-	private void createModelDataViewer(Composite c_partproperties) {
-		LOTModel model = part.getModel();
-		if (model != null) {
-			if (model.getModelType().equals(LOTModel.SCAD)) {
-				createOpenSCADViewer(c_partproperties, (LOTOpenSCAD) model);
-			} else {
-				this.modelobjectviewer = new ObjectViewer(app, window,
-						c_partproperties, model);
-				modelobjectviewer.setLayoutData(new GridData(SWT.FILL,
-						SWT.CENTER, true, false, 1, 1));
-				this.modelobjectviewer.addListener(new ObjectViewerListener() {
-					@Override
-					public void valueChanged(String name, Object o) {
-						modelObjectChanged(name, o);
-					}
-				});
-			}
-		} else {
-			log.info("model null");
-		}
-	}
-
-	private void createPartDataViewer(Composite c_partproperties) {
-	}
-
-	private void createOpenSCADViewer(Composite cparent, LOTOpenSCAD scad) {
-		Composite cscad = new Composite(cparent, SWT.NONE);
-		cscad.setLayout(new GridLayout(1, false));
-		cscad.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
-				1));
-
-		Label lscad = new Label(cscad, SWT.NONE);
-		lscad.setText("OpenSCAD");
-		lscad.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
-				1));
-		lscad.setBackground(SWTResourceManager
-				.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
-		lscad.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.BOLD));
-
-		Composite composite = new Composite(cscad, SWT.BORDER);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-				1, 1));
-		composite.setLayout(new GridLayout(2, false));
-
-		Button bnewscad = new Button(composite, SWT.NONE);
-		bnewscad.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				part.newSCAD();
-			}
-		});
-		bnewscad.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false,
-				1, 1));
-		bnewscad.setBounds(0, 0, 75, 25);
-		bnewscad.setText("New");
-
-		if (scad != null) {
-			Button btnOpen = new Button(composite, SWT.NONE);
-			btnOpen.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					window.viewOpenSCAD(scad);
-				}
-			});
-			btnOpen.setText("Open");
-
-			this.scadobjectviewer = new ObjectViewer(app, window, cscad, scad);
-			scadobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-					true, false, 1, 1));
-			scadobjectviewer.addListener(new ObjectViewerListener() {
-				@Override
-				public void valueChanged(String name, Object o) {
-					partObjectChanged(name, o);
-				}
-			});
-
-		}
-	}
-
-	private void modelObjectChanged(String name, Object value) {
-
-	}
-
-	protected void partObjectChanged(String name, Object o) {
-	}
-
-	protected void importSelected() {
-		FileDialog dialog = new FileDialog(getShell(), SWT.OPEN);
-		dialog.setFilterExtensions(new String[] { "*.x3d" });
-		String path = app.getLClient().getPreferences()
-				.get(DEFAULT_X3D_IMPORTPATH, "");
-		dialog.setFilterPath(path);
-		String result = dialog.open();
-
-		try {
-			File file = new File(result);
-			app.getLClient().getPreferences()
-					.set(DEFAULT_X3D_IMPORTPATH, file.getParent());
-			importFile(file);
-		} catch (SAXException | IOException e) {
-			LOTMessageDialog d = new LOTMessageDialog(getShell());
-			d.show(e);
-		}
-	}
-
-	public void importFile(File file) throws SAXException, IOException {
-		log.info("loading model " + file);
-		part.importModel(file);
-
-		modelobjectviewer.setObject(part.getModel());
 	}
 }

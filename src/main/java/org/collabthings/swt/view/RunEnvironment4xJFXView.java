@@ -7,6 +7,7 @@ import javax.vecmath.Vector3d;
 import org.collabthings.environment.LOTRunEnvironment;
 import org.collabthings.math.LTransformation;
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.app.LOTApp;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -27,11 +28,11 @@ public class RunEnvironment4xJFXView extends Composite {
 
 	private LLog log = LLog.getLogger(this);
 
-	public RunEnvironment4xJFXView(Composite parent, int style) {
-		this(parent, style, null);
+	public RunEnvironment4xJFXView(LOTApp app, Composite parent, int style) {
+		this(app, parent, style, null);
 	}
 
-	public RunEnvironment4xJFXView(Composite parent, int style,
+	public RunEnvironment4xJFXView(LOTApp app, Composite parent, int style,
 			LOTRunEnvironment nrunenv) {
 		super(parent, style);
 
@@ -39,10 +40,10 @@ public class RunEnvironment4xJFXView extends Composite {
 		setLayout(new GridLayout(2, false));
 		setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
 
-		xview = new JFXSimulationComposite(this);
-		yview = new JFXSimulationComposite(this);
-		zview = new JFXSimulationComposite(this);
-		fview = new JFXSimulationComposite(this);
+		xview = new JFXSimulationComposite(app, this);
+		yview = new JFXSimulationComposite(app, this);
+		zview = new JFXSimulationComposite(app, this);
+		fview = new JFXSimulationComposite(app, this);
 
 		yview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		zview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

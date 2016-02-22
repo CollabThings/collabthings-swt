@@ -177,7 +177,7 @@ public class PartView extends Composite implements LOTAppControl {
 		c_view.setBounds(0, 0, 64, 64);
 		//
 
-		scomposite = new JFXSimulationComposite(c_view);
+		scomposite = new JFXSimulationComposite(app, c_view);
 		scomposite.setRunEnvironment(getRunEnv());
 		composite_main.setWeights(new int[] { 223, 311 });
 
@@ -209,7 +209,7 @@ public class PartView extends Composite implements LOTAppControl {
 				long dtime = time - lasttime;
 				lasttime = time;
 
-				scomposite.getView().step(dtime / 1000.0);
+				scomposite.getView().update();
 
 				synchronized (part) {
 					try {
