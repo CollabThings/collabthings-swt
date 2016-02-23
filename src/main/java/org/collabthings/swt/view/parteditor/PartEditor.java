@@ -41,8 +41,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-import swing2swt.layout.FlowLayout;
-
 public class PartEditor extends Composite implements LOTAppControl {
 	private LOTPart part;
 
@@ -193,7 +191,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 		bleft.setText("<");
 
 		csubparts = new Composite(cbottom, SWT.NONE);
-		csubparts.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		csubparts.setLayout(new RowLayout(SWT.HORIZONTAL));
 		csubparts.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 
