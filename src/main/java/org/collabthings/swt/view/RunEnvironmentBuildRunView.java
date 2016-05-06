@@ -19,38 +19,32 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class RunEnvironmentBuildRunView extends Composite implements
-		LOTAppControl, RunEnvironmentListener {
+public class RunEnvironmentBuildRunView extends Composite implements LOTAppControl, RunEnvironmentListener {
 
 	// an hour
 	private static final int MAX_RUNTIME = 60 * 1000 * 60;
-	private RunEnvironment4xCanvasView eview;
 	private LOTSimpleSimulation s;
 	private Text text;
 
-	public RunEnvironmentBuildRunView(Composite parent, LOTApp app,
-			AppWindow appWindow, LOTRunEnvironmentBuilder builder) {
+	public RunEnvironmentBuildRunView(Composite parent, LOTApp app, AppWindow appWindow,
+			LOTRunEnvironmentBuilder builder) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));
 
 		LOTRunEnvironment runEnvironment = builder.getRunEnvironment();
 
 		SashForm sashForm = new SashForm(this, SWT.NONE);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1));
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite composite = new Composite(sashForm, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
-		text = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL
-				| SWT.MULTI);
+		text = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite c_view = new Composite(sashForm, SWT.NONE);
 		c_view.setLayout(new GridLayout(1, false));
-		eview = new RunEnvironment4xCanvasView(c_view, SWT.NONE);
-		eview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		eview.setRunEnvironment(runEnvironment);
+
 		sashForm.setWeights(new int[] { 143, 294 });
 
 		runEnvironment.addListener(this);
@@ -61,9 +55,6 @@ public class RunEnvironmentBuildRunView extends Composite implements
 			s.run(MAX_RUNTIME);
 		}).start();
 
-		eview.runWhile(() -> {
-			return !s.isDone() && !isDisposed();
-		});
 	}
 
 	@Override

@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.MenuItem;
 
 public class FactoryView extends Composite implements LOTAppControl, ScriptUser {
 	private LOTFactory factory;
-	private RunEnvironment4xCanvasView view;
 	private LOTApp app;
 
 	private AppWindow window;
@@ -47,8 +46,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	private YamlEditor yamleditor;
 	private YamlEditor enveditor;
 
-	public FactoryView(Composite composite, LOTApp app, AppWindow w,
-			LOTFactory f) {
+	public FactoryView(Composite composite, LOTApp app, AppWindow w, LOTFactory f) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;
@@ -73,9 +71,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	@Override
 	public void addScript(LOTScript script) {
-		factory.addScript(
-				"script" + factory.getScripts().size() + " " + script.getName(),
-				script);
+		factory.addScript("script" + factory.getScripts().size() + " " + script.getName(), script);
 	}
 
 	private synchronized void updateFactoryHash() {
@@ -105,8 +101,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		setLayout(gridLayout);
 
 		SashForm composite_main = new SashForm(this, SWT.NONE);
-		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true, 1, 1));
+		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite composite = new Composite(composite_main, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -117,8 +112,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		GridLayout gl_cpanel = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_cpanel);
 		cpanel.setLayout(gl_cpanel);
-		cpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
-				1));
+		cpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		Button btnAddChild = new Button(cpanel, SWT.NONE);
 		btnAddChild.addSelectionListener(new SelectionAdapter() {
@@ -130,10 +124,9 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		btnAddChild.setText("add child");
 
 		CTabFolder tabFolder = new CTabFolder(composite, SWT.BORDER);
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1));
-		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tabFolder.setSelectionBackground(
+				Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 
 		CTabItem tbtmMain = new CTabItem(tabFolder, SWT.NONE);
 		tbtmMain.setText("main");
@@ -155,7 +148,6 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);
 
-		view = new RunEnvironment4xCanvasView(c_view, SWT.NONE);
 		composite_main.setWeights(new int[] { 384, 421 });
 
 		Menu tempmenu = new Menu(this);
@@ -169,13 +161,9 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		new Thread(() -> {
 			LOTClient client = app.getLClient();
 			LOTEnvironment env = new LOTEnvironmentImpl(client);
-			LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view",
-					factory).getRunEnvironment();
-			view.setRunEnvironment(runenv);
-			view.step(0);
-			view.stop();
+			LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view", factory).getRunEnvironment();
 			// view.doRepaint();
-			}).start();
+		}).start();
 	}
 
 	private synchronized void updateView() {
@@ -212,8 +200,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		mfsaddnew.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				addScript("script"
-						+ factory.getEnvironment().getScripts().size());
+				addScript("script" + factory.getEnvironment().getScripts().size());
 			}
 		});
 
@@ -287,8 +274,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	private void initLocalMenu(Menu mAddLocalChild) {
 		LocalObjectsMenu m = new LocalObjectsMenu(window, mAddLocalChild);
 		m.addObjectHandler(LOTFactoryImpl.BEANNAME, (data) -> {
-			LOTFactory f = window.getApp().getLClient().getObjectFactory()
-					.getFactory(data.getIDValue("id"));
+			LOTFactory f = window.getApp().getLClient().getObjectFactory().getFactory(data.getIDValue("id"));
 			addChild(f);
 		});
 	}
@@ -298,8 +284,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	}
 
 	private void addChild(LOTFactory f) {
-		this.factory.addFactory("factory" + this.factory.getFactories().size(),
-				f);
+		this.factory.addFactory("factory" + this.factory.getFactories().size(), f);
 	}
 
 	private synchronized void checkFactoryUpdate() {
@@ -321,24 +306,22 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	}
 
 	protected void importSelected() {
-		getDisplay().asyncExec(
-				() -> {
-					try {
-						FileDialog fd = new FileDialog(getShell(), SWT.MULTI);
-						fd.open();
+		getDisplay().asyncExec(() -> {
+			try {
+				FileDialog fd = new FileDialog(getShell(), SWT.MULTI);
+				fd.open();
 
-						String fpath = fd.getFilterPath();
-						String[] fns = fd.getFileNames();
-						for (String string : fns) {
-							LOTScript s = addScript(string);
-							byte[] bs = Files.readAllBytes(Paths.get(fpath
-									+ File.separator + string));
-							s.setScript(new String(bs));
-						}
-					} catch (IOException e) {
-						window.showError(e);
-					}
-				});
+				String fpath = fd.getFilterPath();
+				String[] fns = fd.getFileNames();
+				for (String string : fns) {
+					LOTScript s = addScript(string);
+					byte[] bs = Files.readAllBytes(Paths.get(fpath + File.separator + string));
+					s.setScript(new String(bs));
+				}
+			} catch (IOException e) {
+				window.showError(e);
+			}
+		});
 	}
 
 	protected void scriptMenuSelected(String string) {
