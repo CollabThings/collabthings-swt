@@ -12,7 +12,7 @@ import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTVectorEditor;
-import org.collabthings.swt.view.GLPartView;
+import org.collabthings.swt.view.GLSceneView;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -37,7 +37,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 	private LLog log = LLog.getLogger(this);
 	private final LOTApp app;
 
-	private GLPartView view;
+	private GLSceneView view;
 
 	private LOTRunEnvironmentImpl rune;
 
@@ -146,7 +146,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 		scrolledComposite.setContent(cinfo);
 		scrolledComposite.setMinSize(cinfo.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
-		view = new GLPartView(composite_main);
+		view = new GLSceneView(composite_main);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		view.setBounds(0, 0, 64, 64);
 
