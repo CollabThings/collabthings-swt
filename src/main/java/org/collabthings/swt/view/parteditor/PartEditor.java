@@ -3,9 +3,9 @@ package org.collabthings.swt.view.parteditor;
 import java.util.List;
 import java.util.Stack;
 
-import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
-import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTSubPart;
+import org.collabthings.environment.impl.CTRunEnvironmentImpl;
+import org.collabthings.model.CTPart;
+import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.SWTResourceManager;
@@ -32,21 +32,21 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
 public class PartEditor extends Composite implements LOTAppControl {
-	private LOTPart part;
+	private CTPart part;
 
 	private LLog log = LLog.getLogger(this);
 	private final LOTApp app;
 
 	private GLSceneView view;
 
-	private LOTRunEnvironmentImpl rune;
+	private CTRunEnvironmentImpl rune;
 
 	private Composite csubparts;
 	private Text tpartname;
 
-	private Stack<LOTPart> parts = new Stack<LOTPart>();
+	private Stack<CTPart> parts = new Stack<CTPart>();
 
-	public PartEditor(Composite composite, LOTApp app, LOTPart p) {
+	public PartEditor(Composite composite, LOTApp app, CTPart p) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.part = p;
@@ -75,19 +75,19 @@ public class PartEditor extends Composite implements LOTAppControl {
 
 	private void goBack() {
 		if (!parts.isEmpty()) {
-			LOTPart p = parts.pop();
+			CTPart p = parts.pop();
 			setPart(p);
 		}
 	}
 
-	private void pushPart(LOTPart p) {
+	private void pushPart(CTPart p) {
 		if (this.part != null) {
 			parts.push(part);
 		}
 		setPart(p);
 	}
 
-	public void setPart(LOTPart p) {
+	public void setPart(CTPart p) {
 		this.part = p;
 		view.setPart(part);
 		updatePartInfo();
@@ -186,8 +186,8 @@ public class PartEditor extends Composite implements LOTAppControl {
 			c.dispose();
 		}
 
-		List<LOTSubPart> sps = part.getSubParts();
-		for (LOTSubPart subpart : sps) {
+		List<CTSubPart> sps = part.getSubParts();
+		for (CTSubPart subpart : sps) {
 			addSubpartToList(subpart);
 		}
 
@@ -195,7 +195,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 		// addSubpartToList(null);
 	}
 
-	private void addSubpartToList(LOTSubPart subpart) {
+	private void addSubpartToList(CTSubPart subpart) {
 
 		Composite composite = new Composite(csubparts, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
@@ -234,7 +234,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 		});
 	}
 
-	private void view(LOTSubPart p) {
+	private void view(CTSubPart p) {
 		pushPart(p.getPart());
 	}
 

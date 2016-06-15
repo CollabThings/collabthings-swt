@@ -2,12 +2,12 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTEnvironmentTask;
+import org.collabthings.environment.CTEnvironmentTask;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.environment.RunEnvironmentListener;
-import org.collabthings.model.run.LOTRunEnvironmentBuilder;
-import org.collabthings.simulation.LOTSimpleSimulation;
+import org.collabthings.model.run.CTRunEnvironmentBuilder;
+import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.LOTSWT;
@@ -35,7 +35,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class RunEnvironmentBuilderView extends Composite implements
 		LOTAppControl {
-	private LOTRunEnvironmentBuilder builder;
+	private CTRunEnvironmentBuilder builder;
 
 	private LLog log = LLog.getLogger(this);
 	private LOTApp app;
@@ -58,7 +58,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 	private YamlEditor enveditor;
 
 	public RunEnvironmentBuilderView(Composite composite, LOTApp app,
-			AppWindow w, LOTRunEnvironmentBuilder b) {
+			AppWindow w, CTRunEnvironmentBuilder b) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;
@@ -192,26 +192,26 @@ public class RunEnvironmentBuilderView extends Composite implements
 
 	private void testRun() {
 		try {
-			LOTRunEnvironment runenv = builder.getRunEnvironment();
+			CTRunEnvironment runenv = builder.getRunEnvironment();
 			if (runenv != null) {
 				runenv.addListener(new RunEnvironmentListener() {
 
 					@Override
-					public void taskFailed(LOTRunEnvironment runenv,
-							LOTEnvironmentTask task) {
+					public void taskFailed(CTRunEnvironment runenv,
+							CTEnvironmentTask task) {
 						appendLog("FAILED " + task);
 						appendLog("ERROR " + task.getError());
 					}
 
 					@Override
-					public void event(LOTRuntimeEvent e) {
+					public void event(CTRuntimeEvent e) {
 						appendLog("" + e.getName());
 						appendLog("" + e.getObject());
 					}
 				});
 
 				new Thread(() -> {
-					LOTSimpleSimulation s = new LOTSimpleSimulation(runenv);
+					CTSimpleSimulation s = new CTSimpleSimulation(runenv);
 					s.run(1000);
 				}, "Test run " + this).start();
 
@@ -247,7 +247,7 @@ public class RunEnvironmentBuilderView extends Composite implements
 		l.setText("Created runenvironment");
 
 		try {
-			LOTRunEnvironment runEnvironment = this.builder.getRunEnvironment();
+			CTRunEnvironment runEnvironment = this.builder.getRunEnvironment();
 			ObjectViewer oview = new ObjectViewer(app, window, composite,
 					runEnvironment, new String[] { "info" });
 			oview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
@@ -303,12 +303,12 @@ public class RunEnvironmentBuilderView extends Composite implements
 	}
 
 	private synchronized void createDataEditors(Composite c,
-			LOTRunEnvironmentBuilder builder2) {
+			CTRunEnvironmentBuilder builder2) {
 		createFactoryDataViewer(c, builder2);
 	}
 
 	private void createFactoryDataViewer(Composite c,
-			LOTRunEnvironmentBuilder builder2) {
+			CTRunEnvironmentBuilder builder2) {
 		GridLayout gl_c_factoryproperties_1 = new GridLayout(1, false);
 		gl_c_factoryproperties_1.marginTop = 5;
 		gl_c_factoryproperties_1.marginHeight = 0;

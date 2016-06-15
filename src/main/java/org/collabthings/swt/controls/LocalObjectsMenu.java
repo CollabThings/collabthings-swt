@@ -22,7 +22,7 @@ import waazdoh.common.UserID;
 import waazdoh.common.WObject;
 
 public class LocalObjectsMenu {
-	private static final String MAX_LOCALMENU_OBJECTS = "lot.gui.local.menuobjects.max";
+	private static final String MAX_LOCALMENU_OBJECTS = "ct.gui.local.menuobjects.max";
 
 	private LLog log = LLog.getLogger(this);
 	private AppWindow appwindow;

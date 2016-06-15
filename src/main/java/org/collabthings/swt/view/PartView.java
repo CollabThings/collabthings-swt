@@ -3,15 +3,15 @@ package org.collabthings.swt.view;
 import java.io.File;
 import java.io.IOException;
 
-import org.collabthings.LOTClient;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.impl.LOTPartState;
-import org.collabthings.environment.impl.LOTRunEnvironmentImpl;
-import org.collabthings.model.LOTEnvironment;
-import org.collabthings.model.LOTModel;
-import org.collabthings.model.LOTOpenSCAD;
-import org.collabthings.model.LOTPart;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
+import org.collabthings.CTClient;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.impl.CTPartState;
+import org.collabthings.environment.impl.CTRunEnvironmentImpl;
+import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTModel;
+import org.collabthings.model.CTOpenSCAD;
+import org.collabthings.model.CTPart;
+import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.SWTResourceManager;
@@ -44,8 +44,8 @@ import org.eclipse.swt.widgets.TabItem;
 import org.xml.sax.SAXException;
 
 public class PartView extends Composite implements LOTAppControl {
-	private static final String DEFAULT_X3D_IMPORTPATH = "lot.gui.default.import_path";
-	private LOTPart part;
+	private static final String DEFAULT_X3D_IMPORTPATH = "ct.gui.default.import_path";
+	private CTPart part;
 	private ObjectViewer partobjectviewer;
 
 	private LLog log = LLog.getLogger(this);
@@ -56,9 +56,9 @@ public class PartView extends Composite implements LOTAppControl {
 	private Composite c_partproperties;
 	private ObjectViewer scadobjectviewer;
 	private PartEditor scomposite;
-	private LOTRunEnvironmentImpl rune;
+	private CTRunEnvironmentImpl rune;
 
-	public PartView(Composite composite, LOTApp app, AppWindow window, LOTPart p) {
+	public PartView(Composite composite, LOTApp app, AppWindow window, CTPart p) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = window;
@@ -197,15 +197,15 @@ public class PartView extends Composite implements LOTAppControl {
 		}).start();
 	}
 
-	private LOTPart getPart() {
+	private CTPart getPart() {
 		return part;
 	}
 
-	private LOTRunEnvironment getRunEnv() {
-		LOTClient client = app.getLClient();
-		LOTEnvironment e = new LOTEnvironmentImpl(client);
-		rune = new LOTRunEnvironmentImpl(client, e);
-		LOTPartState state = new LOTPartState(rune, null, part);
+	private CTRunEnvironment getRunEnv() {
+		CTClient client = app.getLClient();
+		CTEnvironment e = new CTEnvironmentImpl(client);
+		rune = new CTRunEnvironmentImpl(client, e);
+		CTPartState state = new CTPartState(rune, null, part);
 		rune.addRunObject("part", state);
 		return rune;
 	}
@@ -241,10 +241,10 @@ public class PartView extends Composite implements LOTAppControl {
 	}
 
 	private void createModelDataViewer(Composite c_partproperties) {
-		LOTModel model = part.getModel();
+		CTModel model = part.getModel();
 		if (model != null) {
-			if (model.getModelType().equals(LOTModel.SCAD)) {
-				createOpenSCADViewer(c_partproperties, (LOTOpenSCAD) model);
+			if (model.getModelType().equals(CTModel.SCAD)) {
+				createOpenSCADViewer(c_partproperties, (CTOpenSCAD) model);
 			} else {
 				this.modelobjectviewer = new ObjectViewer(app, window, c_partproperties, model);
 				modelobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -263,7 +263,7 @@ public class PartView extends Composite implements LOTAppControl {
 	private void createPartDataViewer(Composite c_partproperties) {
 	}
 
-	private void createOpenSCADViewer(Composite cparent, LOTOpenSCAD scad) {
+	private void createOpenSCADViewer(Composite cparent, CTOpenSCAD scad) {
 		Composite cscad = new Composite(cparent, SWT.NONE);
 		cscad.setLayout(new GridLayout(1, false));
 		cscad.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

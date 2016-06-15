@@ -2,7 +2,7 @@ package org.collabthings.swt.view;
 
 import java.util.Set;
 
-import org.collabthings.model.LOTEnvironment;
+import org.collabthings.model.CTEnvironment;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.eclipse.swt.SWT;
@@ -20,14 +20,14 @@ import org.eclipse.swt.widgets.Text;
 
 public class EnvironmentView extends Composite {
 
-	private LOTEnvironment environment;
+	private CTEnvironment environment;
 	private AppWindow window;
 	private Composite cscriptslist;
 	private TitleComposite ctools;
 	private Composite ctoolslist;
 
 	public EnvironmentView(Composite parent, AppWindow window,
-			LOTEnvironment environment) {
+			CTEnvironment environment) {
 		super(parent, SWT.NONE);
 
 		this.window = window;

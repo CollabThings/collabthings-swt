@@ -2,6 +2,11 @@ package org.collabthings.swt.view;
 
 import java.awt.Frame;
 
+import org.collabthings.model.CTModel;
+import org.collabthings.model.CTOpenSCAD;
+import org.collabthings.model.CTPart;
+import org.collabthings.ogl.LOTGLScene;
+import org.collabthings.ogl.LOTGLSceneImpl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
@@ -10,15 +15,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLContext;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.Animator;
 
 public class GLSceneView extends Composite {
@@ -34,8 +36,6 @@ public class GLSceneView extends Composite {
 		super(parent, SWT.NONE);
 
 		scene = new LOTGLSceneImpl();
-
-		Composite cthis = this;
 
 		GridLayout gridLayout = new GridLayout(1, true);
 		this.setLayout(gridLayout);
@@ -82,6 +82,14 @@ public class GLSceneView extends Composite {
 			}
 		});
 
+	}
+
+	public void setPart(CTPart part) {
+		scene.setModel(part.getModel());
+	}
+
+	public void setModelView(CTModel model) {
+		scene.setModel(model);
 	}
 
 }

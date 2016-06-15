@@ -2,7 +2,7 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
-import org.collabthings.model.LOTScript;
+import org.collabthings.model.CTScript;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
@@ -23,13 +23,13 @@ import org.eclipse.swt.widgets.Text;
 public class ScriptView extends Composite implements LOTAppControl {
 
 	private Text scripttext;
-	private LOTScript script;
+	private CTScript script;
 	private Text bottomtext;
 
 	private LOTApp app;
 
 	public ScriptView(Composite c, LOTApp app, AppWindow appWindow,
-			LOTScript script) {
+			CTScript script) {
 		super(c, SWT.NONE);
 		this.app = app;
 
@@ -86,7 +86,7 @@ public class ScriptView extends Composite implements LOTAppControl {
 				&& (script.getScript() == null || !script.getScript().equals(
 						sscripttext))) {
 
-			LOTScript s = this.app.getObjectFactory().getScript();
+			CTScript s = this.app.getObjectFactory().getScript();
 			s.setScript(sscripttext);
 			getDisplay().asyncExec(() -> {
 				if (s.isOK()) {

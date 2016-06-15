@@ -1,6 +1,6 @@
 package org.collabthings.swt.controls;
 
-import org.collabthings.model.LOTMaterial;
+import org.collabthings.model.CTMaterial;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.LOTDoubleEditor.ChangeListener;
 import org.eclipse.swt.SWT;
@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 public class LOTMaterialEditor extends Composite {
-	private LOTMaterial material;
+	private CTMaterial material;
 	private LOTDoubleEditor ered;
 	private LOTDoubleEditor egreen;
 	private LOTDoubleEditor eblue;
@@ -18,7 +18,7 @@ public class LOTMaterialEditor extends Composite {
 	private Label lmaterial;
 	private Label lcolor;
 
-	public LOTMaterialEditor(Composite c, LOTMaterial m) {
+	public LOTMaterialEditor(Composite c, CTMaterial m) {
 		super(c, SWT.None);
 		this.material = m;
 

@@ -4,13 +4,13 @@ import java.net.MalformedURLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.LOTClient;
-import org.collabthings.factory.LOTObjectFactory;
-import org.collabthings.impl.LOTClientImpl;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTPart;
+import org.collabthings.CTClient;
+import org.collabthings.factory.CTObjectFactory;
+import org.collabthings.impl.CTClientImpl;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTPart;
 import org.collabthings.util.LLog;
-import org.collabthings.util.LOTTask;
+import org.collabthings.util.CTTask;
 
 import waazdoh.client.WClientListener;
 import waazdoh.client.storage.local.FileBeanStorage;
@@ -21,8 +21,8 @@ import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.swt.AppPreferences;
 
 public class LOTApp {
-	private static final String PREFERENCES_PREFIX = "lot";
-	private LOTClient client;
+	private static final String PREFERENCES_PREFIX = "ct";
+	private CTClient client;
 	//
 	private LLog log = LLog.getLogger(this);
 	private AppPreferences preferences;
@@ -31,7 +31,7 @@ public class LOTApp {
 	private boolean closed;
 	private FileBeanStorage beanstorage;
 
-	private List<LOTTask> tasks = new LinkedList<LOTTask>();
+	private List<CTTask> tasks = new LinkedList<CTTask>();
 
 	public LOTApp() throws MalformedURLException {
 		preferences = new AppPreferences(LOTApp.PREFERENCES_PREFIX);
@@ -56,9 +56,9 @@ public class LOTApp {
 		getLClient().getClient().addListener(listener);
 	}
 
-	public synchronized LOTClient getLClient() {
+	public synchronized CTClient getLClient() {
 		if (client == null) {
-			client = new LOTClientImpl(preferences, binarysource, beanstorage,
+			client = new CTClientImpl(preferences, binarysource, beanstorage,
 					new RestServiceClient(serviceurl, beanstorage));
 		}
 		return client;
@@ -75,7 +75,7 @@ public class LOTApp {
 		return closed;
 	}
 
-	public LOTPart newPart() {
+	public CTPart newPart() {
 		return getLClient().getObjectFactory().getPart();
 	}
 
@@ -83,7 +83,7 @@ public class LOTApp {
 		return getLClient().getClient().isRunning();
 	}
 
-	public LOTFactory newFactory() {
+	public CTFactory newFactory() {
 		return getLClient().getObjectFactory().getFactory();
 	}
 
@@ -91,7 +91,7 @@ public class LOTApp {
 		return this.beanstorage;
 	}
 
-	public LOTObjectFactory getObjectFactory() {
+	public CTObjectFactory getObjectFactory() {
 		return getLClient().getObjectFactory();
 	}
 
@@ -106,7 +106,7 @@ public class LOTApp {
 
 			while (!isClosed()) {
 				if (tasks.size() > 0) {
-					LOTTask task = tasks.remove(0);
+					CTTask task = tasks.remove(0);
 					task.run();
 				} else {
 					tasks.wait(100);
@@ -115,7 +115,7 @@ public class LOTApp {
 		}
 	}
 
-	public void addTask(LOTTask task) {
+	public void addTask(CTTask task) {
 		synchronized (tasks) {
 			tasks.add(task);
 		}

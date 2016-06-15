@@ -1,6 +1,6 @@
 package org.collabthings.swt.view;
 
-import org.collabthings.model.LOTObject;
+import org.collabthings.model.CTObject;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
@@ -18,7 +18,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import waazdoh.common.WObject;
 
 public class YamlEditor extends Composite {
-	private LOTObject o;
+	private CTObject o;
 	private Text text;
 	private Text error;
 	private Button btnSave;
@@ -87,7 +87,7 @@ public class YamlEditor extends Composite {
 		}
 	}
 
-	public void setObject(LOTObject o) {
+	public void setObject(CTObject o) {
 		this.o = o;
 
 		if (t == null) {

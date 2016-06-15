@@ -115,7 +115,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
+				<version>1.8</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>
@@ -221,9 +221,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>waazdoh</groupId>
-			<artifactId>waazdoh.swt</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<groupId>org.waazdoh</groupId>
+			<artifactId>swt</artifactId>
+			<version>0.0.5-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -236,24 +236,6 @@
 			<groupId>org.eclipse.jface</groupId>
 			<artifactId>org.eclipse.jface</artifactId>
 			<version>3.8.0.v20120521-2329</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>jfx</artifactId>
-			<version>2.2.3</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/app/bin/jimX3dModelImporterJFX.jar
-			</systemPath>
-		</dependency>
-
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>jfx</artifactId>
-			<version>2.2.3</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/app/bin/jimStlMeshImporterJFX.jar
-			</systemPath>
 		</dependency>
 
 		<dependency>
@@ -281,15 +263,6 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/app/bin/org.eclipse.draw2d_3.9.101.201408150207.jar
 			</systemPath>
-		</dependency>
-
-
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>javafx</artifactId>
-			<version>2.2.3</version>
-			<scope>system</scope>
-			<systemPath>${env.JAVA_HOME}/jre/lib/jfxswt.jar</systemPath>
 		</dependency>
 
 		<dependency>

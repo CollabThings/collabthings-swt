@@ -3,18 +3,18 @@ package org.collabthings.swt;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTStorage;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTInfo;
-import org.collabthings.model.LOTOpenSCAD;
-import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTPartBuilder;
-import org.collabthings.model.LOTScript;
-import org.collabthings.model.LOTTool;
-import org.collabthings.model.impl.LOTFactoryImpl;
-import org.collabthings.model.run.LOTRunEnvironmentBuilder;
-import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
+import org.collabthings.CTClient;
+import org.collabthings.CTStorage;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTInfo;
+import org.collabthings.model.CTOpenSCAD;
+import org.collabthings.model.CTPart;
+import org.collabthings.model.CTPartBuilder;
+import org.collabthings.model.CTScript;
+import org.collabthings.model.CTTool;
+import org.collabthings.model.impl.CTFactoryImpl;
+import org.collabthings.model.run.CTRunEnvironmentBuilder;
+import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.LOTMessageDialog;
@@ -52,7 +52,7 @@ import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.UserVO;
 
-public final class AppWindow implements LOTInfo {
+public final class AppWindow implements CTInfo {
 	protected Shell shell;
 	//
 	private LOTApp app;
@@ -81,7 +81,7 @@ public final class AppWindow implements LOTInfo {
 
 	public void newPart() {
 		try {
-			LOTPart p = app.newPart();
+			CTPart p = app.newPart();
 			PartEditor view = new PartEditor(tabFolder, app, p);
 			addTab("part " + p, view, p);
 		} catch (Exception e) {
@@ -90,12 +90,12 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	public void newFactory() {
-		LOTFactory f = app.newFactory();
+		CTFactory f = app.newFactory();
 		viewFactory(f);
 	}
 
 	public void newRunEnvBuilder() {
-		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(this.app.getLClient());
+		CTRunEnvironmentBuilder b = new CTRunEnvironmentBuilderImpl(this.app.getLClient());
 		viewRunEnvironmentBuilder(b);
 	}
 
@@ -129,7 +129,7 @@ public final class AppWindow implements LOTInfo {
 		});
 	}
 
-	public void viewRunEnvironmentBuilder(LOTRunEnvironmentBuilder b) {
+	public void viewRunEnvironmentBuilder(CTRunEnvironmentBuilder b) {
 		setInfo(0, 0, 0, "Viewing Builder" + b.toString());
 		shell.getDisplay().asyncExec(() -> {
 			RunEnvironmentBuilderView v = new RunEnvironmentBuilderView(tabFolder, app, this, b);
@@ -137,12 +137,12 @@ public final class AppWindow implements LOTInfo {
 		});
 	}
 
-	public void viewSimulation(LOTRunEnvironmentBuilder builder) {
+	public void viewSimulation(CTRunEnvironmentBuilder builder) {
 		RunEnvironmentBuildRunView v = new RunEnvironmentBuildRunView(tabFolder, app, this, builder);
 		addTab("" + builder, v, builder);
 	}
 
-	public void viewFactory(LOTFactory f) {
+	public void viewFactory(CTFactory f) {
 		setInfo(0, 0, 0, "Viewing factory " + f.toString());
 
 		shell.getDisplay().asyncExec(() -> {
@@ -151,7 +151,7 @@ public final class AppWindow implements LOTInfo {
 		});
 	}
 
-	public void viewPartBuilder(LOTPartBuilder pb) {
+	public void viewPartBuilder(CTPartBuilder pb) {
 		setInfo(0, 0, 0, "Viewing partbuilder " + pb);
 		shell.getDisplay().asyncExec(() -> {
 			PartBuilderView v = new PartBuilderView(tabFolder, app, this, pb);
@@ -181,7 +181,7 @@ public final class AppWindow implements LOTInfo {
 		s.search(searchitem, 0, 50);
 	}
 
-	public void viewScript(LOTScript script) {
+	public void viewScript(CTScript script) {
 		shell.getDisplay().asyncExec(() -> {
 			ScriptView v = new ScriptView(tabFolder, app, this, script);
 			addTab("" + script, v, script);
@@ -193,14 +193,14 @@ public final class AppWindow implements LOTInfo {
 		addTab("" + name, v, userid);
 	}
 
-	public void viewOpenSCAD(LOTOpenSCAD scad) {
+	public void viewOpenSCAD(CTOpenSCAD scad) {
 		shell.getDisplay().asyncExec(() -> {
 			SCADView v = new SCADView(tabFolder, app, this, scad);
 			addTab("" + scad.getName(), v, scad);
 		});
 	}
 
-	public void viewPart(LOTPart part) {
+	public void viewPart(CTPart part) {
 		shell.getDisplay().asyncExec(() -> {
 			PartEditor pv = new PartEditor(tabFolder, app, part);
 			addTab("" + part.getName(), pv, part);
@@ -267,7 +267,7 @@ public final class AppWindow implements LOTInfo {
 			String latest = app.getLClient().getService().getStorageArea().read("juusoface",
 					"DERP_published/factory/latest");
 			if (latest != null) {
-				LOTFactory f = app.getObjectFactory().getFactory(new MStringID(latest));
+				CTFactory f = app.getObjectFactory().getFactory(new MStringID(latest));
 				viewFactory(f);
 			} else {
 				// newRunEnvBuilder();
@@ -284,7 +284,7 @@ public final class AppWindow implements LOTInfo {
 			String latestscadpart = app.getLClient().getService().getStorageArea().read("juusoface",
 					"published/part/latest");
 			if (latestscadpart != null) {
-				LOTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
+				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
 				viewPart(b);
 			} else {
 				newPart();
@@ -292,7 +292,7 @@ public final class AppWindow implements LOTInfo {
 		});
 
 		display.asyncExec(() -> {
-			LOTStorage storage = app.getLClient().getStorage();
+			CTStorage storage = app.getLClient().getStorage();
 			storage.readStorage(app.getLClient().getClient().getService().getUser("juuso.vilmunen"),
 					"/published/builder/latest");
 		});
@@ -516,9 +516,9 @@ public final class AppWindow implements LOTInfo {
 
 	private void initLocalMenu() {
 		LocalObjectsMenu localmenu = new LocalObjectsMenu(this, menulocal);
-		localmenu.addObjectHandler(LOTFactoryImpl.BEANNAME, (data) -> {
+		localmenu.addObjectHandler(CTFactoryImpl.BEANNAME, (data) -> {
 			MStringID id = data.getIDValue("id");
-			LOTFactory f = getApp().getLClient().getObjectFactory().getFactory(id);
+			CTFactory f = getApp().getLClient().getObjectFactory().getFactory(id);
 			if (f != null) {
 				viewFactory(f);
 			} else {
@@ -565,7 +565,7 @@ public final class AppWindow implements LOTInfo {
 
 			@Override
 			public void run() {
-				lblBottonInfo.setText("LOT:" + LOTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: "
+				lblBottonInfo.setText("CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: "
 						+ app.getLClient());
 				//
 				setBottomInfo();
@@ -591,7 +591,7 @@ public final class AppWindow implements LOTInfo {
 		return e.getValue();
 	}
 
-	public void viewTool(LOTTool tool) {
+	public void viewTool(CTTool tool) {
 		// TODO Auto-generated method stub
 	}
 }

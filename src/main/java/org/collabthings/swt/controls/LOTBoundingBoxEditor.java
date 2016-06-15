@@ -1,6 +1,6 @@
 package org.collabthings.swt.controls;
 
-import org.collabthings.model.LOTBoundingBox;
+import org.collabthings.model.CTBoundingBox;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -10,10 +10,10 @@ public class LOTBoundingBoxEditor extends Composite {
 
 	private LOTVectorEditor el;
 	private LOTVectorEditor en;
-	private LOTBoundingBox box;
+	private CTBoundingBox box;
 
-	public LOTBoundingBoxEditor(final Composite c, final LOTBoundingBox no,
-			final ChangeListener<LOTBoundingBox> listener) {
+	public LOTBoundingBoxEditor(final Composite c, final CTBoundingBox no,
+			final ChangeListener<CTBoundingBox> listener) {
 		super(c, SWT.None);
 		this.box = no;
 		//

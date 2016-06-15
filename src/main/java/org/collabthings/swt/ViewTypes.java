@@ -3,10 +3,10 @@ package org.collabthings.swt;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTPartBuilder;
-import org.collabthings.model.run.LOTRunEnvironmentBuilder;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTPart;
+import org.collabthings.model.CTPartBuilder;
+import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.swt.app.LOTApp;
 
 import waazdoh.common.MStringID;
@@ -22,7 +22,7 @@ public class ViewTypes {
 		app.getObjectFactory().addInfoListener(appWindow);
 
 		views.put("factory", id -> {
-			LOTFactory factory = app.getObjectFactory().getFactory(id);
+			CTFactory factory = app.getObjectFactory().getFactory(id);
 			if (factory != null) {
 				window.viewFactory(factory);
 			} else {
@@ -31,7 +31,7 @@ public class ViewTypes {
 		});
 
 		views.put("builder", id -> {
-			LOTRunEnvironmentBuilder b = app.getObjectFactory()
+			CTRunEnvironmentBuilder b = app.getObjectFactory()
 					.getRuntimeBuilder(id);
 			if (b != null) {
 				window.viewRunEnvironmentBuilder(b);
@@ -41,7 +41,7 @@ public class ViewTypes {
 		});
 
 		views.put("partbuilder", id -> {
-			LOTPartBuilder b = app.getObjectFactory().getPartBuilder(id);
+			CTPartBuilder b = app.getObjectFactory().getPartBuilder(id);
 			if (b != null) {
 				window.viewPartBuilder(b);
 			} else {
@@ -50,7 +50,7 @@ public class ViewTypes {
 		});
 
 		views.put("part", id -> {
-			LOTPart b = app.getObjectFactory().getPart(id);
+			CTPart b = app.getObjectFactory().getPart(id);
 			if (b != null) {
 				window.viewPart(b);
 			} else {
@@ -59,7 +59,7 @@ public class ViewTypes {
 		});
 
 		views.put("runenvbuilder", id -> {
-			LOTRunEnvironmentBuilder b = app.getObjectFactory()
+			CTRunEnvironmentBuilder b = app.getObjectFactory()
 					.getRuntimeBuilder(id);
 			if (b != null) {
 				window.viewRunEnvironmentBuilder(b);

@@ -6,14 +6,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Set;
 
-import org.collabthings.LOTClient;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.impl.LOTFactoryState;
-import org.collabthings.model.LOTEnvironment;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTScript;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
-import org.collabthings.model.impl.LOTFactoryImpl;
+import org.collabthings.CTClient;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTScript;
+import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.LOTSWT;
@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 public class FactoryView extends Composite implements LOTAppControl, ScriptUser {
-	private LOTFactory factory;
+	private CTFactory factory;
 	private LOTApp app;
 
 	private AppWindow window;
@@ -46,7 +46,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	private YamlEditor yamleditor;
 	private YamlEditor enveditor;
 
-	public FactoryView(Composite composite, LOTApp app, AppWindow w, LOTFactory f) {
+	public FactoryView(Composite composite, LOTApp app, AppWindow w, CTFactory f) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;
@@ -70,7 +70,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	}
 
 	@Override
-	public void addScript(LOTScript script) {
+	public void addScript(CTScript script) {
 		factory.addScript("script" + factory.getScripts().size() + " " + script.getName(), script);
 	}
 
@@ -83,11 +83,11 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		updateView();
 	}
 
-	private void viewChild(LOTFactory f) {
+	private void viewChild(CTFactory f) {
 		window.viewFactory(f);
 	}
 
-	LOTScript addScript(String name) {
+	CTScript addScript(String name) {
 		return factory.addScript(name);
 	}
 
@@ -159,9 +159,9 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private void updateFactory() {
 		new Thread(() -> {
-			LOTClient client = app.getLClient();
-			LOTEnvironment env = new LOTEnvironmentImpl(client);
-			LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view", factory).getRunEnvironment();
+			CTClient client = app.getLClient();
+			CTEnvironment env = new CTEnvironmentImpl(client);
+			CTRunEnvironment runenv = new CTFactoryState(client, env, "view", factory).getRunEnvironment();
 			// view.doRepaint();
 		}).start();
 	}
@@ -273,8 +273,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private void initLocalMenu(Menu mAddLocalChild) {
 		LocalObjectsMenu m = new LocalObjectsMenu(window, mAddLocalChild);
-		m.addObjectHandler(LOTFactoryImpl.BEANNAME, (data) -> {
-			LOTFactory f = window.getApp().getLClient().getObjectFactory().getFactory(data.getIDValue("id"));
+		m.addObjectHandler(CTFactoryImpl.BEANNAME, (data) -> {
+			CTFactory f = window.getApp().getLClient().getObjectFactory().getFactory(data.getIDValue("id"));
 			addChild(f);
 		});
 	}
@@ -283,7 +283,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		this.factory.addFactory();
 	}
 
-	private void addChild(LOTFactory f) {
+	private void addChild(CTFactory f) {
 		this.factory.addFactory("factory" + this.factory.getFactories().size(), f);
 	}
 
@@ -314,7 +314,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 				String fpath = fd.getFilterPath();
 				String[] fns = fd.getFileNames();
 				for (String string : fns) {
-					LOTScript s = addScript(string);
+					CTScript s = addScript(string);
 					byte[] bs = Files.readAllBytes(Paths.get(fpath + File.separator + string));
 					s.setScript(new String(bs));
 				}

@@ -9,12 +9,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.collabthings.environment.impl.LOTFactoryState;
+import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.math.LOrientation;
 import org.collabthings.math.LVector;
-import org.collabthings.model.LOTBoundingBox;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTMaterial;
+import org.collabthings.model.CTBoundingBox;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTMaterial;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
@@ -108,12 +108,12 @@ public class ObjectViewer extends Composite {
 		editors.put(LOrientation.class.getName(),
 				(key, c, o) -> addOrientationField(key, c, (LOrientation) o));
 
-		editors.put(LOTBoundingBox.class.getName(),
-				(key, c, o) -> addBoundingBoxField(key, c, (LOTBoundingBox) o));
+		editors.put(CTBoundingBox.class.getName(),
+				(key, c, o) -> addBoundingBoxField(key, c, (CTBoundingBox) o));
 
-		editors.put(LOTFactoryState.class.getName(), (key, c, o) -> {
-			LOTFactoryState s = (LOTFactoryState) o;
-			LOTFactory f = s.getFactory();
+		editors.put(CTFactoryState.class.getName(), (key, c, o) -> {
+			CTFactoryState s = (CTFactoryState) o;
+			CTFactory f = s.getFactory();
 			ObjectSmallView view = new ObjectSmallView(c, app, window, f
 					.getID().toString());
 			view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2,
@@ -131,8 +131,8 @@ public class ObjectViewer extends Composite {
 		editors.put(Set.class.getName(),
 				(key, c, o) -> addCollectionView(key, c, o));
 
-		editors.put(LOTMaterial.class.getName(),
-				(key, c, o) -> addMaterialView(key, c, (LOTMaterial) o));
+		editors.put(CTMaterial.class.getName(),
+				(key, c, o) -> addMaterialView(key, c, (CTMaterial) o));
 	}
 
 	private void parse(Object no) {
@@ -269,7 +269,7 @@ public class ObjectViewer extends Composite {
 	}
 
 	private Composite addBoundingBoxField(String key, Composite parent,
-			LOTBoundingBox box) {
+			CTBoundingBox box) {
 		Composite c = getTwoRowsComposite(parent);
 		addLabel(key, c);
 
@@ -288,7 +288,7 @@ public class ObjectViewer extends Composite {
 	}
 
 	private LOTMaterialEditor addMaterialView(String key, Composite c,
-			LOTMaterial o) {
+			CTMaterial o) {
 		return new LOTMaterialEditor(c, o);
 	}
 

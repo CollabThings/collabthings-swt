@@ -1,11 +1,11 @@
 package org.collabthings.swt.view;
 
-import org.collabthings.environment.LOTEnvironmentTask;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.LOTRuntimeEvent;
+import org.collabthings.environment.CTEnvironmentTask;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.environment.RunEnvironmentListener;
-import org.collabthings.model.run.LOTRunEnvironmentBuilder;
-import org.collabthings.simulation.LOTSimpleSimulation;
+import org.collabthings.model.run.CTRunEnvironmentBuilder;
+import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
@@ -23,15 +23,15 @@ public class RunEnvironmentBuildRunView extends Composite implements LOTAppContr
 
 	// an hour
 	private static final int MAX_RUNTIME = 60 * 1000 * 60;
-	private LOTSimpleSimulation s;
+	private CTSimpleSimulation s;
 	private Text text;
 
 	public RunEnvironmentBuildRunView(Composite parent, LOTApp app, AppWindow appWindow,
-			LOTRunEnvironmentBuilder builder) {
+			CTRunEnvironmentBuilder builder) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));
 
-		LOTRunEnvironment runEnvironment = builder.getRunEnvironment();
+		CTRunEnvironment runEnvironment = builder.getRunEnvironment();
 
 		SashForm sashForm = new SashForm(this, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -49,7 +49,7 @@ public class RunEnvironmentBuildRunView extends Composite implements LOTAppContr
 
 		runEnvironment.addListener(this);
 
-		s = new LOTSimpleSimulation(runEnvironment);
+		s = new CTSimpleSimulation(runEnvironment);
 
 		new Thread(() -> {
 			s.run(MAX_RUNTIME);
@@ -58,7 +58,7 @@ public class RunEnvironmentBuildRunView extends Composite implements LOTAppContr
 	}
 
 	@Override
-	public void event(LOTRuntimeEvent e) {
+	public void event(CTRuntimeEvent e) {
 		appendText("" + e.getTime() + " " + e.getName());
 		appendText(" --- " + e.getObject());
 		appendText(" --- " + e.getValues());
@@ -66,7 +66,7 @@ public class RunEnvironmentBuildRunView extends Composite implements LOTAppContr
 	}
 
 	@Override
-	public void taskFailed(LOTRunEnvironment runenv, LOTEnvironmentTask task) {
+	public void taskFailed(CTRunEnvironment runenv, CTEnvironmentTask task) {
 		appendText("Task failed : " + task);
 	}
 
