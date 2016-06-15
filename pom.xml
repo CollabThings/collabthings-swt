@@ -216,8 +216,14 @@
 
 		<dependency>
 			<groupId>org.collabthings</groupId>
-			<artifactId>collabthings.client</artifactId>
+			<artifactId>client</artifactId>
 			<version>0.2.3-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.collabthings</groupId>
+			<artifactId>ogl</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
