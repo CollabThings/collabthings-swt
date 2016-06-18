@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.collabthings.util.LLog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 public class LOTMessageDialog {
@@ -26,8 +25,6 @@ public class LOTMessageDialog {
 	}
 
 	public void show(String title, String message) {
-		MessageDialog dialog = new MessageDialog(shell, title, null, message,
-				MessageDialog.ERROR, new String[] { "OK" }, 0);
-		dialog.open();
+		// TODO
 	}
 }
