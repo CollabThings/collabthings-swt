@@ -281,7 +281,7 @@ public final class AppWindow implements CTInfo {
 			 * MStringID(latestpartbuilder)); viewPartBuilder(b); } else { //
 			 * newRunEnvBuilder(); }
 			 */
-			String latestscadpart = app.getLClient().getService().getStorageArea().read("juusoface",
+			String latestscadpart = app.getLClient().getService().getStorageArea().read("jeukkugoogle",
 					"published/part/latest");
 			if (latestscadpart != null) {
 				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));

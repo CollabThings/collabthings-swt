@@ -3,7 +3,6 @@ package org.collabthings.swt.view;
 import java.awt.Frame;
 
 import org.collabthings.model.CTModel;
-import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.ogl.LOTGLScene;
 import org.collabthings.ogl.LOTGLSceneImpl;
@@ -15,6 +14,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLContext;
@@ -22,6 +22,7 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.Animator;
+import com.jogamp.opengl.util.FPSAnimator;
 
 public class GLSceneView extends Composite {
 
@@ -53,7 +54,7 @@ public class GLSceneView extends Composite {
 		Frame f = SWT_AWT.new_Frame(c);
 		f.add(glcanvas);
 
-		Animator a = new Animator(glcanvas);
+		FPSAnimator a = new FPSAnimator(glcanvas, 10);
 		a.start();
 
 		glcanvas.addGLEventListener(new GLEventListener() {
@@ -64,9 +65,13 @@ public class GLSceneView extends Composite {
 			}
 
 			@Override
-			public void init(GLAutoDrawable arg0) {
-				// TODO Auto-generated method stub
+			public void init(GLAutoDrawable drawable) {
+				GL gl = drawable.getGL();
 
+				// Global settings.
+				gl.glEnable(GL.GL_DEPTH_TEST);
+				gl.glDepthFunc(GL.GL_LEQUAL);
+				gl.glClearColor(0f, 0f, 0f, 1f);
 			}
 
 			@Override

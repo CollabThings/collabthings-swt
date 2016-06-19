@@ -49,8 +49,11 @@ public class PartEditor extends Composite implements LOTAppControl {
 	public PartEditor(Composite composite, LOTApp app, CTPart p) {
 		super(composite, SWT.None);
 		this.app = app;
-		this.part = p;
 		init();
+
+		getDisplay().asyncExec(() -> {
+			setPart(p);
+		});
 	}
 
 	@Override
@@ -150,7 +153,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		view.setBounds(0, 0, 64, 64);
 
-//		composite_main.setWeights(new int[] { 1, 1 });
+		// composite_main.setWeights(new int[] { 1, 1 });
 
 		Composite cbottom = new Composite(this, SWT.NONE);
 		GridLayout gl_cbottom = new GridLayout(3, false);
@@ -178,7 +181,11 @@ public class PartEditor extends Composite implements LOTAppControl {
 	}
 
 	private void updatePartInfo() {
-		tpartname.setText("" + part.getName());
+		if (part != null) {
+			tpartname.setText("" + part.getName());
+		} else {
+			tpartname.setText("unknown");
+		}
 	}
 
 	private void updateSubpartList() {
@@ -186,9 +193,11 @@ public class PartEditor extends Composite implements LOTAppControl {
 			c.dispose();
 		}
 
-		List<CTSubPart> sps = part.getSubParts();
-		for (CTSubPart subpart : sps) {
-			addSubpartToList(subpart);
+		if (part != null) {
+			List<CTSubPart> sps = part.getSubParts();
+			for (CTSubPart subpart : sps) {
+				addSubpartToList(subpart);
+			}
 		}
 
 		csubparts.layout();
