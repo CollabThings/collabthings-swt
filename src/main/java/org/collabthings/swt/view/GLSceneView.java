@@ -3,6 +3,7 @@ package org.collabthings.swt.view;
 import java.awt.Frame;
 
 import org.collabthings.model.CTModel;
+import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.ogl.LOTGLScene;
 import org.collabthings.ogl.LOTGLSceneImpl;
@@ -90,11 +91,11 @@ public class GLSceneView extends Composite {
 	}
 
 	public void setPart(CTPart part) {
-		scene.setModel(part.getModel());
+		scene.setPart(part);
 	}
 
-	public void setModelView(CTModel model) {
-		scene.setModel(model);
+	public void setModelView(CTOpenSCAD scad) {
+		scene.setModel(scad);
 	}
 
 }

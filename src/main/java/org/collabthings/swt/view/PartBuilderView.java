@@ -79,7 +79,7 @@ public class PartBuilderView extends Composite implements LOTAppControl {
 	private void updateView() {
 		CTPart p = this.app.getLClient().getObjectFactory().getPart();
 		builder.run(p);
-		partview.setModelView(p.getModel());
+		partview.setPart(p);
 	}
 
 	@Override
