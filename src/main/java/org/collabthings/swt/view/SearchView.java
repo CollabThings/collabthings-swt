@@ -164,7 +164,7 @@ public class SearchView extends Composite implements LOTAppControl {
 			log.error(this, "addRow " + id, e);
 			ObjectVO o = this.app.getLClient().getService().getObjects()
 					.read(id);
-			log.info("failed object " + o.getObject());
+			log.info("failed object " + o.toObject());
 		}
 	}
 

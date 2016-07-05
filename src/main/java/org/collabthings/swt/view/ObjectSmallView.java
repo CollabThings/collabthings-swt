@@ -239,7 +239,7 @@ public class ObjectSmallView extends Composite {
 
 		WObject o;
 
-		if (vo != null && (o = vo.getObject()) != null) {
+		if (vo != null && (o = vo.toObject()) != null) {
 
 			btnBookmark.addSelectionListener(new SelectionAdapter() {
 				@Override

@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.ObjectVO;
+import waazdoh.common.vo.StorageAreaVO;
 import waazdoh.common.vo.UserVO;
 
 public final class AppWindow implements CTInfo {
@@ -105,7 +106,7 @@ public final class AppWindow implements CTInfo {
 		new Thread(() -> {
 			ObjectVO o = app.getLClient().getClient().getObjects().read(id);
 			if (o != null) {
-				String type = o.getObject().getType();
+				String type = o.toObject().getType();
 				viewtypes.view(type, new MStringID(id));
 			}
 		}).start();
@@ -264,8 +265,8 @@ public final class AppWindow implements CTInfo {
 			viewSearchUsers("user");
 			// newFactory();
 
-			String latest = app.getLClient().getService().getStorageArea().read("juusoface",
-					"DERP_published/factory/latest");
+			String latest = app.getLClient().getService().getStorageArea()
+					.read(new StorageAreaVO("juusoface", "DERP_published/factory/latest", null));
 			if (latest != null) {
 				CTFactory f = app.getObjectFactory().getFactory(new MStringID(latest));
 				viewFactory(f);
@@ -281,8 +282,8 @@ public final class AppWindow implements CTInfo {
 			 * MStringID(latestpartbuilder)); viewPartBuilder(b); } else { //
 			 * newRunEnvBuilder(); }
 			 */
-			String latestscadpart = app.getLClient().getService().getStorageArea().read("juusoface",
-					"published/part/latest");
+			String latestscadpart = app.getLClient().getService().getStorageArea()
+					.read(new StorageAreaVO("juusoface", "published/part/latest", null));
 			if (latestscadpart != null) {
 				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
 				viewPart(b);
@@ -565,7 +566,7 @@ public final class AppWindow implements CTInfo {
 
 			@Override
 			public void run() {
-				lblBottonInfo.setText("CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: "
+				lblBottonInfo.setText(" CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: "
 						+ app.getLClient());
 				//
 				setBottomInfo();
