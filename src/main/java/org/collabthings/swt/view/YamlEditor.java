@@ -49,8 +49,7 @@ public class YamlEditor extends Composite {
 		Label ltitle = new Label(top, SWT.NONE);
 		ltitle.setText(title);
 
-		text = new Text(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL
-				| SWT.MULTI);
+		text = new Text(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		text.setFont(SWTResourceManager.getFont("Open Sans", 10, SWT.NORMAL));
 		text.setText("testing\ntestintintit");
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -63,8 +62,7 @@ public class YamlEditor extends Composite {
 		});
 
 		error = new Text(this, SWT.MULTI);
-		error.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
-				1));
+		error.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	}
 
@@ -91,7 +89,7 @@ public class YamlEditor extends Composite {
 		this.o = o;
 
 		if (t == null) {
-			t = new Thread(() -> checkObjectUpdate());
+			t = new Thread(() -> checkObjectUpdate(), "Yamleditor checker");
 			t.start();
 		}
 
@@ -106,17 +104,25 @@ public class YamlEditor extends Composite {
 
 	private synchronized void checkObjectUpdate() {
 		while (!isDisposed()) {
-			int nhash = this.o.getObject().hashCode();
-			if (nhash != currenthash) {
-				setText(this.o.getObject().toText());
-				currenthash = nhash;
-			} else {
-				try {
-					wait(100);
-				} catch (InterruptedException e) {
-					LLog.getLogger(this).error(this, "checkObjectUpdate", e);
+			if (this.o != null) {
+				int nhash = this.o.getObject().hashCode();
+				if (nhash != currenthash) {
+					setText(this.o.getObject().toText());
+					currenthash = nhash;
+				} else {
+					doWait(100);
 				}
+			} else {
+				doWait(1000);
 			}
+		}
+	}
+
+	private void doWait(int timeout) {
+		try {
+			wait(timeout);
+		} catch (InterruptedException e) {
+			LLog.getLogger(this).error(this, "checkObjectUpdate", e);
 		}
 	}
 }

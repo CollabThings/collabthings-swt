@@ -13,6 +13,7 @@ import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTVectorEditor;
 import org.collabthings.swt.view.GLSceneView;
+import org.collabthings.swt.view.YamlEditor;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -30,6 +31,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 
 public class PartEditor extends Composite implements LOTAppControl {
 	private CTPart part;
@@ -46,9 +49,15 @@ public class PartEditor extends Composite implements LOTAppControl {
 
 	private Stack<CTPart> parts = new Stack<CTPart>();
 
+	private YamlEditor csource;
+
 	public PartEditor(Composite composite, LOTApp app, CTPart p) {
 		super(composite, SWT.None);
 		this.app = app;
+		this.part = p;
+		
+		log.info("init " + p.toString());
+		
 		init();
 
 		getDisplay().asyncExec(() -> {
@@ -132,8 +141,14 @@ public class PartEditor extends Composite implements LOTAppControl {
 		SashForm composite_main = new SashForm(this, SWT.NONE);
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		ScrolledComposite scrolledComposite = new ScrolledComposite(composite_main,
+		TabFolder tabFolder = new TabFolder(composite_main, SWT.NONE);
+
+		TabItem tabProperties = new TabItem(tabFolder, SWT.NONE);
+		tabProperties.setText("Properties");
+
+		ScrolledComposite scrolledComposite = new ScrolledComposite(tabFolder,
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		tabProperties.setControl(scrolledComposite);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
@@ -149,9 +164,17 @@ public class PartEditor extends Composite implements LOTAppControl {
 		scrolledComposite.setContent(cinfo);
 		scrolledComposite.setMinSize(cinfo.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
+		TabItem tabSource = new TabItem(tabFolder, SWT.NONE);
+		tabSource.setText("Source");
+
+		csource = new YamlEditor(tabFolder, SWT.NONE, "source");
+		tabSource.setControl(csource);
+		csource.setObject(this.part);
+
 		view = new GLSceneView(composite_main);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		view.setBounds(0, 0, 64, 64);
+		composite_main.setWeights(new int[] { 1, 1 });
 
 		// composite_main.setWeights(new int[] { 1, 1 });
 
