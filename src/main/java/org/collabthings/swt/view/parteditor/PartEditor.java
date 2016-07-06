@@ -12,6 +12,7 @@ import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTVectorEditor;
+import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.view.GLSceneView;
 import org.collabthings.swt.view.YamlEditor;
 import org.collabthings.util.LLog;
@@ -51,13 +52,15 @@ public class PartEditor extends Composite implements LOTAppControl {
 
 	private YamlEditor csource;
 
+	private AppWindow window;
+
 	public PartEditor(Composite composite, LOTApp app, CTPart p) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.part = p;
-		
+
 		log.info("init " + p.toString());
-		
+
 		init();
 
 		getDisplay().asyncExec(() -> {
@@ -102,8 +105,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 	public void setPart(CTPart p) {
 		this.part = p;
 		view.setPart(part);
-		updatePartInfo();
-		updateSubpartList();
+		updateInfo();
 	}
 
 	private void init() {
@@ -126,8 +128,25 @@ public class PartEditor extends Composite implements LOTAppControl {
 		button_1.setText("<");
 
 		Button button = new Button(c_toolbar, SWT.FLAT);
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				part.newSubPart();
+			}
+		});
 		button.setText("A");
 		button.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
+
+		Button bnewscad = new Button(c_toolbar, SWT.FLAT);
+		bnewscad.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				part.save();
+				part.newSCAD();
+			}
+		});
+		bnewscad.setText("set SCAD");
+		bnewscad.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 
 		Button btnPublish = new Button(c_toolbar, SWT.NONE);
 		btnPublish.addSelectionListener(new SelectionAdapter() {
@@ -152,17 +171,10 @@ public class PartEditor extends Composite implements LOTAppControl {
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
-		Composite cinfo = new Composite(scrolledComposite, SWT.NONE);
-		cinfo.setLayout(new GridLayout(2, false));
+		ObjectViewer viewer = new ObjectViewer(app, window, scrolledComposite, part);
 
-		Label lpartname = new Label(cinfo, SWT.NONE);
-		lpartname.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lpartname.setText("Name");
-
-		tpartname = new Text(cinfo, SWT.BORDER);
-		tpartname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		scrolledComposite.setContent(cinfo);
-		scrolledComposite.setMinSize(cinfo.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		scrolledComposite.setContent(viewer);
+		scrolledComposite.setMinSize(viewer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
 		TabItem tabSource = new TabItem(tabFolder, SWT.NONE);
 		tabSource.setText("Source");
@@ -199,8 +211,14 @@ public class PartEditor extends Composite implements LOTAppControl {
 		bright.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		bright.setText(">");
 
-		updatePartInfo();
-		updateSubpartList();
+		updateInfo();
+	}
+
+	private void updateInfo() {
+		getDisplay().asyncExec(() -> {
+			updatePartInfo();
+			updateSubpartList();
+		});
 	}
 
 	private void updatePartInfo() {
