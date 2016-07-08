@@ -18,6 +18,8 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -31,12 +33,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class FactoryView extends Composite implements LOTAppControl, ScriptUser {
+public class FactoryView extends CTComposite implements LOTAppControl, ScriptUser {
 	private CTFactory factory;
 	private LOTApp app;
 
@@ -103,12 +104,12 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		SashForm composite_main = new SashForm(this, SWT.NONE);
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite composite = new Composite(composite_main, SWT.NONE);
+		Composite composite = new CTComposite(composite_main, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_composite);
 		composite.setLayout(gl_composite);
 
-		Composite cpanel = new Composite(composite, SWT.NONE);
+		Composite cpanel = new CTComposite(composite, SWT.NONE);
 		GridLayout gl_cpanel = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_cpanel);
 		cpanel.setLayout(gl_cpanel);
@@ -123,10 +124,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		});
 		btnAddChild.setText("add child");
 
-		CTabFolder tabFolder = new CTabFolder(composite, SWT.BORDER);
+		CTabFolder tabFolder = new CTTabFolder(composite, SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tabFolder.setSelectionBackground(
-				Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
 
 		CTabItem tbtmMain = new CTabItem(tabFolder, SWT.NONE);
 		tbtmMain.setText("main");
@@ -143,7 +142,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		tbtmEnv.setControl(enveditor);
 		enveditor.setObject(factory.getEnvironment());
 
-		Composite c_view = new Composite(composite_main, SWT.NONE);
+		Composite c_view = new CTComposite(composite_main, SWT.NONE);
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);

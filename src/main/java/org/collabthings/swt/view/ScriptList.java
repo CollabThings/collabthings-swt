@@ -5,8 +5,9 @@ import java.util.List;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.LOTSWT;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -14,14 +15,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WObject;
 
-public class ScriptList extends Composite {
+public class ScriptList extends CTComposite {
 
 	private AppWindow window;
 	private LOTApp app;
@@ -35,9 +35,8 @@ public class ScriptList extends Composite {
 
 		setLayout(new GridLayout(1, false));
 
-		Label l = new Label(this, SWT.NONE);
+		CTLabel l = new CTLabel(this, SWT.NONE);
 		l.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		l.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		l.setText("Scripts");
 
 		addRow("scripts");
@@ -51,39 +50,35 @@ public class ScriptList extends Composite {
 		WObject scriptdata = o.get(name);
 		String id = scriptdata.getValue("id");
 		if (id != null && name != null) {
-			Composite cscript = new Composite(this, SWT.NONE);
-			cscript.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
-					false, 1, 1));
+			Composite cscript = new CTComposite(this, SWT.NONE);
+			cscript.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 
 			cscript.setLayout(new GridLayout(4, false));
-			Label clname = new Label(cscript, SWT.NONE);
+			CTLabel clname = new CTLabel(cscript, SWT.NONE);
 			clname.setText("" + name);
 
 			Button btnView = new Button(cscript, SWT.NONE);
 			btnView.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					window.viewScript(app.getObjectFactory().getScript(
-							new MStringID(id)));
+					window.viewScript(app.getObjectFactory().getScript(new MStringID(id)));
 				}
 			});
 			btnView.setText("View");
 
 			Button btnId = new Button(cscript, SWT.NONE);
-			btnId.addSelectionListener(new CopyToClipbardSelectionAdapter(
-					cscript, id));
+			btnId.addSelectionListener(new CopyToClipbardSelectionAdapter(cscript, id));
 			btnId.setText("ID");
 
-			Composite composite = new Composite(cscript, SWT.NONE);
+			Composite composite = new CTComposite(cscript, SWT.NONE);
 			GridLayout gl_composite = new GridLayout(2, false);
 			LOTSWT.setDefaults(gl_composite);
 			composite.setLayout(gl_composite);
 
-			Label lblAddTo = new Label(composite, SWT.NONE);
+			CTLabel lblAddTo = new CTLabel(composite, SWT.NONE);
 			lblAddTo.setText("Add to");
 
-			Button btnAdd = new Button(composite, SWT.FLAT | SWT.ARROW
-					| SWT.DOWN);
+			Button btnAdd = new Button(composite, SWT.FLAT | SWT.ARROW | SWT.DOWN);
 			btnAdd.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
@@ -109,8 +104,7 @@ public class ScriptList extends Composite {
 				mcontrol.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent arg0) {
-						su.addScript(app.getObjectFactory().getScript(
-								new MStringID(id)));
+						su.addScript(app.getObjectFactory().getScript(new MStringID(id)));
 					}
 				});
 			}

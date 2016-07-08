@@ -2,6 +2,9 @@ package org.collabthings.swt.view;
 
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.LOTSWT;
+import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -11,13 +14,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import waazdoh.common.WObject;
 
-public class YamlEditor extends Composite {
+public class YamlEditor extends CTComposite {
 	private CTObject o;
 	private Text text;
 	private Text error;
@@ -31,7 +32,7 @@ public class YamlEditor extends Composite {
 		LOTSWT.setDefaults(gridLayout);
 		setLayout(gridLayout);
 
-		Composite top = new Composite(this, SWT.NONE);
+		Composite top = new CTComposite(this, SWT.NONE);
 		GridLayout gl_top = new GridLayout(2, false);
 		LOTSWT.setDefaults(gl_top);
 		top.setLayout(gl_top);
@@ -46,7 +47,7 @@ public class YamlEditor extends Composite {
 		});
 		btnSave.setText("save");
 
-		Label ltitle = new Label(top, SWT.NONE);
+		CTLabel ltitle = new CTLabel(top, SWT.NONE);
 		ltitle.setText(title);
 
 		text = new Text(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);

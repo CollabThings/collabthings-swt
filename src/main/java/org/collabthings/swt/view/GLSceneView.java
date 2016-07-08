@@ -12,6 +12,7 @@ import org.collabthings.model.CTPart;
 import org.collabthings.ogl.LOTGLScene;
 import org.collabthings.ogl.LOTGLSceneImpl;
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -29,7 +30,7 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
-public class GLSceneView extends Composite {
+public class GLSceneView extends CTComposite {
 
 	private GLCanvas glcanvas;
 	private GLContext glcontext;
@@ -46,7 +47,7 @@ public class GLSceneView extends Composite {
 		GridLayout gridLayout = new GridLayout(1, true);
 		this.setLayout(gridLayout);
 
-		Composite c = new Composite(this, SWT.EMBEDDED);
+		Composite c = new CTComposite(this, SWT.EMBEDDED);
 		c.setBackground(SWTResourceManager.getColor(248, 100, 100));
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 

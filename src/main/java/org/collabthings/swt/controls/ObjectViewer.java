@@ -17,7 +17,6 @@ import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.impl.CTOpenSCADImpl;
-import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
@@ -35,15 +34,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class ObjectViewer extends Composite {
+public class ObjectViewer extends CTComposite {
 	private LLog log = LLog.getLogger(this);
 	//
 	public Object objectShown;
-	public Label className;
-	public Label superClassName;
+	public CTLabel className;
+	public CTLabel superClassName;
 	public Text toString;
 	private Composite composite;
 
@@ -51,7 +49,7 @@ public class ObjectViewer extends Composite {
 	private Map<String, Method> methods = new HashMap<>();
 	private Set<ObjectViewerListener> listeners = new HashSet<>();
 	private Map<String, LEditorFactory> editors = new HashMap<>();
-	private Label lblObject;
+	private CTLabel lblObject;
 	private final Set<String> ignoreset;
 	private AppWindow window;
 	private LOTApp app;
@@ -65,6 +63,9 @@ public class ObjectViewer extends Composite {
 
 	public ObjectViewer(LOTApp app, AppWindow window, Composite parent, CTObject o, String ignore[]) {
 		super(parent, SWT.NONE);
+
+		setBackground(SWTResourceManager.getControlBg());
+		setFont(SWTResourceManager.getDefaultFont());
 
 		this.app = app;
 		this.window = window;
@@ -85,19 +86,21 @@ public class ObjectViewer extends Composite {
 		LOTSWT.setDefaults(gridLayout);
 		setLayout(gridLayout);
 
-		lblObject = new Label(this, SWT.NONE);
+		lblObject = new CTLabel(this, SWT.NONE);
 		lblObject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblObject.setAlignment(SWT.CENTER);
 		lblObject.setText("" + objectShown);
 		lblObject.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
-		lblObject.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.BOLD));
+		lblObject.setFont(10, SWT.BOLD);
 
-		composite = new Composite(this, SWT.BORDER);
-		composite.setBackground(SWTResourceManager.getColor(248, 248, 255));
+		composite = new CTComposite(this, SWT.BORDER);
+
 		GridLayout gl_composite = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_composite);
 		composite.setLayout(gl_composite);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_composite.heightHint = 314;
+		composite.setLayoutData(gd_composite);
 
 		new CTObjectListener(o, () -> {
 			return !isDisposed();
@@ -148,8 +151,8 @@ public class ObjectViewer extends Composite {
 	private void parse(Object no) {
 		this.objectShown = no;
 		if (this.objectShown == null) {
-			// this.objectShown = new TableTestData();
-			this.objectShown = new CTPartImpl(null);
+			this.objectShown = new TableTestData();
+			// this.objectShown = new CTPartImpl(null);
 		}
 
 		//
@@ -266,14 +269,14 @@ public class ObjectViewer extends Composite {
 		if (e != null) {
 			e.add(key, parent, o);
 		} else {
-			Label la = new Label(parent, getStyle());
+			CTLabel la = new CTLabel(parent, getStyle());
 			la.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 			la.setText("unknown type " + o.getClass().getName() + " " + key);
 		}
 	}
 
 	private Control addDateField(String key, Composite c, Long d) {
-		return addLabelField(key, c, "" + new Date(d));
+		return addLabelField(key, c, "" + new Date(d)).getControl();
 	}
 
 	private Composite addBoundingBoxField(String key, Composite parent, CTBoundingBox box) {
@@ -315,7 +318,7 @@ public class ObjectViewer extends Composite {
 	}
 
 	private Composite getRowComposite(Composite parent) {
-		Composite c = new Composite(parent, SWT.NONE);
+		Composite c = new CTComposite(parent, SWT.NONE);
 		c.setLayout(new GridLayout(2, false));
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
@@ -323,7 +326,7 @@ public class ObjectViewer extends Composite {
 	}
 
 	private Composite getTwoRowsComposite(Composite parent) {
-		Composite c = new Composite(parent, SWT.NONE);
+		Composite c = new CTComposite(parent, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, false);
 		LOTSWT.setDefaults(gridLayout);
 
@@ -349,22 +352,21 @@ public class ObjectViewer extends Composite {
 		return "" + t.getText();
 	}
 
-	private Control addLabelField(String key, Composite parent, String text) {
+	private CTLabel addLabelField(String key, Composite parent, String text) {
 		Composite c = getRowComposite(parent);
 
 		addLabel(key, c);
 
-		Label s = new Label(c, SWT.NONE);
+		CTLabel s = new CTLabel(c, SWT.NONE);
 		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		s.setText(text);
 		return s;
 	}
 
 	private void addLabel(String key, Composite c) {
-		Label l = new Label(c, SWT.NONE);
+		CTLabel l = new CTLabel(c, SWT.NONE);
 		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		l.setText(key);
-		l.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 	}
 
 	private Control addTextField(Composite parent, String name, String text, ModifyListener listener) {
@@ -386,7 +388,7 @@ public class ObjectViewer extends Composite {
 		Composite v = getTwoRowsComposite(parent);
 		addLabel("Collection " + key, v);
 
-		Composite c = new Composite(v, SWT.None);
+		Composite c = new CTComposite(v, SWT.None);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl = new GridLayout();
 		LOTSWT.setDefaults(gl);
@@ -394,7 +396,7 @@ public class ObjectViewer extends Composite {
 		c.setLayout(gl);
 
 		for (Object item : (Collection<Object>) o) {
-			Label l = new Label(c, SWT.None);
+			CTLabel l = new CTLabel(c, SWT.None);
 			l.setText("" + item);
 
 			addValue(c, "" + item, item);
@@ -404,13 +406,13 @@ public class ObjectViewer extends Composite {
 	}
 
 	private Control addOpenScadField(String key, Composite parent, CTOpenSCADImpl o) {
-		Composite c = new Composite(parent, SWT.NONE);
+		Composite c = new CTComposite(parent, SWT.NONE);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		GridLayout gridLayout = new GridLayout(1, false);
 		c.setLayout(gridLayout);
 
-		Label l = new Label(c, SWT.NONE);
+		CTLabel l = new CTLabel(c, SWT.NONE);
 		l.setText("Openscad model");
 		l.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 

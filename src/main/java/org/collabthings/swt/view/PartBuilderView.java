@@ -5,6 +5,7 @@ import org.collabthings.model.CTPartBuilder;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -18,7 +19,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class PartBuilderView extends Composite implements LOTAppControl {
+public class PartBuilderView extends CTComposite implements LOTAppControl {
 
 	private LOTApp app;
 	private AppWindow window;
@@ -36,17 +37,17 @@ public class PartBuilderView extends Composite implements LOTAppControl {
 		SashForm sashForm = new SashForm(this, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite left = new Composite(sashForm, SWT.NONE);
+		Composite left = new CTComposite(sashForm, SWT.NONE);
 		left.setLayout(new GridLayout(1, false));
 
-		Composite composite = new Composite(left, SWT.NONE);
+		Composite composite = new CTComposite(left, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		ObjectViewer oview = new ObjectViewer(app, window, composite, builder);
 		oview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite composite_1 = new Composite(composite, SWT.NONE);
+		Composite composite_1 = new CTComposite(composite, SWT.NONE);
 		composite_1.setLayout(new GridLayout(1, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 

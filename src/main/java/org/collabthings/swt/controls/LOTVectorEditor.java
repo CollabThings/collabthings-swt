@@ -5,16 +5,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
-public class LOTVectorEditor extends Composite {
+public class LOTVectorEditor extends CTComposite {
 
 	private ChangeListener<LVector> listener;
 	private LOTDoubleEditor ey;
 	private LOTDoubleEditor ez;
 	private LOTDoubleEditor ex;
 	private LVector v;
-	private Label lname;
+	private CTLabel lname;
 
 	public LOTVectorEditor(Composite c, LVector nv, ChangeListener<LVector> listener) {
 		super(c, SWT.None);
@@ -32,7 +31,7 @@ public class LOTVectorEditor extends Composite {
 			v = new LVector();
 		}
 
-		lname = new Label(this, SWT.None);
+		lname = new CTLabel(this, SWT.None);
 		
 		ex = new LOTDoubleEditor(this, (Double) v.x, d -> {
 			v.x = d;

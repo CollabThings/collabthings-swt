@@ -6,9 +6,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
-public class LOTOrientationEditor extends Composite {
+public class LOTOrientationEditor extends CTComposite {
 
 	private ChangeListener<LOrientation> listener;
 	private LOTVectorEditor el;
@@ -44,13 +43,13 @@ public class LOTOrientationEditor extends Composite {
 		en.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		en.setName("n:");
 
-		Composite bottom = new Composite(this, SWT.NONE);
+		Composite bottom = new CTComposite(this, SWT.NONE);
 		bottom.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout glbottom = new GridLayout(2, false);
 		LOTSWT.setDefaults(glbottom);
 		bottom.setLayout(glbottom);
 		
-		Label langlename = new Label(bottom, SWT.NONE);
+		CTLabel langlename = new CTLabel(bottom, SWT.NONE);
 		langlename.setText("Angle");
 		ea = new LOTDoubleEditor(bottom, o.getAngle(), e -> angleChanged(e));
 		ea.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));

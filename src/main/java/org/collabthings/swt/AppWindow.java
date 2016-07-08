@@ -16,6 +16,9 @@ import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.LOTMessageDialog;
 import org.collabthings.swt.view.FactoryView;
@@ -41,7 +44,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -61,7 +63,7 @@ public final class AppWindow implements CTInfo {
 	private List<LOTAppControl> controls = new LinkedList<>();
 
 	private CTabFolder tabFolder;
-	private Label lblBottonInfo;
+	private CTLabel lblBottonInfo;
 
 	private MenuItem objectmenu;
 	private Menu menu;
@@ -71,7 +73,7 @@ public final class AppWindow implements CTInfo {
 
 	private final ViewTypes viewtypes;
 	private LOTAppControl selectedcontrol;
-	private Label lblStatus;
+	private CTLabel lblStatus;
 	private ProgressBar progressBar;
 	private Menu mbookmarkslist;
 
@@ -215,7 +217,10 @@ public final class AppWindow implements CTInfo {
 	private void addTab(String name, LOTAppControl c, Object data) {
 		CTabItem i = new CTabItem(tabFolder, SWT.CLOSE);
 		i.setText(name);
-		i.setControl(c.getControl());
+		Control control = c.getControl();
+		control.setBackground(SWTResourceManager.getControlBg());
+
+		i.setControl(control);
 		i.setData(data);
 		tabFolder.setSelection(i);
 		tabSelected();
@@ -223,7 +228,7 @@ public final class AppWindow implements CTInfo {
 		controls.add(c);
 		i.addDisposeListener(e -> {
 			controls.remove(c);
-			c.getControl().dispose();
+			control.dispose();
 		});
 	}
 
@@ -334,6 +339,7 @@ public final class AppWindow implements CTInfo {
 	 */
 	protected void createContents() {
 		shell = new Shell();
+		shell.setBackground(SWTResourceManager.getControlBg());
 
 		Image small = new Image(shell.getDisplay(), ClassLoader.getSystemResourceAsStream("logo.png"));
 		shell.setImage(small);
@@ -452,7 +458,7 @@ public final class AppWindow implements CTInfo {
 			});
 		});
 
-		Composite composite = new Composite(shell, SWT.NONE);
+		Composite composite = new CTComposite(shell, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_composite);
 
@@ -461,7 +467,7 @@ public final class AppWindow implements CTInfo {
 		gd_composite.widthHint = 216;
 		composite.setLayoutData(gd_composite);
 
-		tabFolder = new CTabFolder(composite, SWT.NONE);
+		tabFolder = new CTTabFolder(composite, SWT.FLAT);
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -470,17 +476,17 @@ public final class AppWindow implements CTInfo {
 		});
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite composite_1 = new Composite(composite, SWT.NONE);
+		Composite composite_1 = new CTComposite(composite, SWT.NONE);
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		composite_1.setLayout(new GridLayout(2, false));
 
-		lblStatus = new Label(composite_1, SWT.NONE);
+		lblStatus = new CTLabel(composite_1, SWT.NONE);
 		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblStatus.setText("status");
 
 		progressBar = new ProgressBar(composite_1, SWT.NONE);
 
-		lblBottonInfo = new Label(composite, SWT.NONE);
+		lblBottonInfo = new CTLabel(composite, SWT.NONE);
 		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		lblBottonInfo.setAlignment(SWT.RIGHT);
 

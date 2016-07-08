@@ -6,6 +6,7 @@ import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -20,7 +21,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class SCADView extends Composite implements LOTAppControl {
+public class SCADView extends CTComposite implements LOTAppControl {
 
 	private AppWindow window;
 	private Text scripttext;
@@ -53,7 +54,7 @@ public class SCADView extends Composite implements LOTAppControl {
 
 		SashForm sashForm = new SashForm(sashForm_1, SWT.VERTICAL);
 
-		composite = new Composite(sashForm, SWT.NONE);
+		composite = new CTComposite(sashForm, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		canvas = new GLSceneView(composite);
 		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

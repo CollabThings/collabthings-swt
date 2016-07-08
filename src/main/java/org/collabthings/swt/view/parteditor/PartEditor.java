@@ -10,6 +10,9 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTVectorEditor;
 import org.collabthings.swt.controls.ObjectViewer;
@@ -17,6 +20,8 @@ import org.collabthings.swt.view.GLSceneView;
 import org.collabthings.swt.view.YamlEditor;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -28,13 +33,10 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
 
-public class PartEditor extends Composite implements LOTAppControl {
+public class PartEditor extends CTComposite implements LOTAppControl {
 	private CTPart part;
 
 	private LLog log = LLog.getLogger(this);
@@ -110,10 +112,12 @@ public class PartEditor extends Composite implements LOTAppControl {
 	}
 
 	private void init() {
+		setBackground(SWTResourceManager.getControlBg());
+
 		GridLayout gridLayout = new GridLayout(1, false);
 		setLayout(gridLayout);
 
-		Composite c_toolbar = new Composite(this, SWT.NONE);
+		Composite c_toolbar = new CTComposite(this, SWT.NONE);
 		c_toolbar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		RowLayout rl_c_toolbar = new RowLayout(SWT.HORIZONTAL);
 		rl_c_toolbar.center = true;
@@ -136,7 +140,6 @@ public class PartEditor extends Composite implements LOTAppControl {
 			}
 		});
 		button.setText("A");
-		button.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 
 		Button bnewscad = new Button(c_toolbar, SWT.FLAT);
 		bnewscad.addSelectionListener(new SelectionAdapter() {
@@ -147,7 +150,6 @@ public class PartEditor extends Composite implements LOTAppControl {
 			}
 		});
 		bnewscad.setText("set SCAD");
-		bnewscad.setFont(org.eclipse.wb.swt.SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 
 		Button btnPublish = new Button(c_toolbar, SWT.NONE);
 		btnPublish.addSelectionListener(new SelectionAdapter() {
@@ -159,11 +161,12 @@ public class PartEditor extends Composite implements LOTAppControl {
 		btnPublish.setText("Publish");
 
 		SashForm composite_main = new SashForm(this, SWT.NONE);
+		composite_main.setBackground(SWTResourceManager.getControlBg());
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		TabFolder tabFolder = new TabFolder(composite_main, SWT.NONE);
+		CTabFolder tabFolder = new CTTabFolder(composite_main, SWT.NONE);
 
-		TabItem tabProperties = new TabItem(tabFolder, SWT.NONE);
+		CTabItem tabProperties = new CTabItem(tabFolder, SWT.NONE);
 		tabProperties.setText("Properties");
 
 		ScrolledComposite scrolledComposite = new ScrolledComposite(tabFolder,
@@ -177,7 +180,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 		scrolledComposite.setContent(viewer);
 		scrolledComposite.setMinSize(viewer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
-		TabItem tabSource = new TabItem(tabFolder, SWT.NONE);
+		CTabItem tabSource = new CTabItem(tabFolder, SWT.NONE);
 		tabSource.setText("Source");
 
 		csource = new YamlEditor(tabFolder, SWT.NONE, "source");
@@ -191,7 +194,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 
 		// composite_main.setWeights(new int[] { 1, 1 });
 
-		Composite cbottom = new Composite(this, SWT.NONE);
+		Composite cbottom = new CTComposite(this, SWT.NONE);
 		GridLayout gl_cbottom = new GridLayout(3, false);
 		gl_cbottom.marginHeight = 1;
 		gl_cbottom.verticalSpacing = 1;
@@ -204,7 +207,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 		bleft.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		bleft.setText("<");
 
-		csubparts = new Composite(cbottom, SWT.NONE);
+		csubparts = new CTComposite(cbottom, SWT.NONE);
 		csubparts.setLayout(new RowLayout(SWT.HORIZONTAL));
 		GridData gd_csubparts = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_csubparts.heightHint = 95;
@@ -248,7 +251,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 
 	private void addSubpartToList(CTSubPart subpart) {
 
-		Composite composite = new Composite(csubparts, SWT.NONE);
+		Composite composite = new CTComposite(csubparts, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.verticalSpacing = 1;
 		gl_composite.marginWidth = 0;
@@ -256,7 +259,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 		gl_composite.horizontalSpacing = 0;
 		composite.setLayout(gl_composite);
 
-		Label lsubname = new Label(composite, SWT.NONE);
+		CTLabel lsubname = new CTLabel(composite, SWT.NONE);
 		lsubname.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 1, 1));
 		lsubname.setText("" + subpart);
 

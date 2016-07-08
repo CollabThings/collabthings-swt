@@ -5,6 +5,8 @@ import java.util.Set;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -15,10 +17,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public class EnvironmentView extends Composite {
+public class EnvironmentView extends CTComposite {
 
 	private CTEnvironment environment;
 	private AppWindow window;
@@ -60,13 +61,13 @@ public class EnvironmentView extends Composite {
 	private void addParameterEditor(TitleComposite params, String name) {
 		String value = environment != null ? ""
 				+ environment.getParameter(name) : "value";
-		Composite c = new Composite(params, SWT.NONE);
+		Composite c = new CTComposite(params, SWT.NONE);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_c = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_c);
 		c.setLayout(gl_c);
 
-		Label l = new Label(c, SWT.NONE);
+		CTLabel l = new CTLabel(c, SWT.NONE);
 		l.setText(name);
 
 		if (value.length() > 20) {
@@ -103,7 +104,7 @@ public class EnvironmentView extends Composite {
 		GridLayout gridLayout = (GridLayout) ctools.getLayout();
 		LOTSWT.setDefaults(gridLayout);
 
-		ctoolslist = new Composite(ctools, SWT.NONE);
+		ctoolslist = new CTComposite(ctools, SWT.NONE);
 		ctoolslist.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1,
 				1));
 		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
@@ -131,7 +132,7 @@ public class EnvironmentView extends Composite {
 	}
 
 	private void addTool(String string) {
-		Composite ctool = new Composite(ctoolslist, SWT.NONE);
+		Composite ctool = new CTComposite(ctoolslist, SWT.NONE);
 		GridLayout gl_ctool = new GridLayout();
 		gl_ctool.numColumns = 4;
 		ctool.setLayout(gl_ctool);
@@ -179,7 +180,7 @@ public class EnvironmentView extends Composite {
 		GridLayout gridLayout = (GridLayout) cscripts.getLayout();
 		LOTSWT.setDefaults(gridLayout);
 
-		cscriptslist = new Composite(cscripts, SWT.NONE);
+		cscriptslist = new CTComposite(cscripts, SWT.NONE);
 
 		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
 		fillLayout.marginHeight = 0;
@@ -210,7 +211,7 @@ public class EnvironmentView extends Composite {
 	}
 
 	private void addScript(String string) {
-		Composite cscript = new Composite(cscriptslist, SWT.NONE);
+		Composite cscript = new CTComposite(cscriptslist, SWT.NONE);
 		GridLayout gl_cscript = new GridLayout();
 
 		gl_cscript.numColumns = 4;

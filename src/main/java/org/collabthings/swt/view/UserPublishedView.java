@@ -7,6 +7,8 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -17,13 +19,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import waazdoh.common.WLogger;
 import waazdoh.common.vo.UserVO;
 
-public class UserPublishedView extends Composite {
+public class UserPublishedView extends CTComposite {
 	public final LOTApp app;
 	public final AppWindow window;
 
@@ -41,15 +42,14 @@ public class UserPublishedView extends Composite {
 
 		setLayout(new GridLayout(1, false));
 
-		Composite composite = new Composite(this, SWT.NONE);
+		Composite composite = new CTComposite(this, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		composite.setLayout(new GridLayout(6, false));
 
-		Label lblPublished = new Label(composite, SWT.NONE);
-		lblPublished.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		CTLabel lblPublished = new CTLabel(composite, SWT.NONE);
 		lblPublished.setText("Published");
 
-		Label lblFilter = new Label(composite, SWT.NONE);
+		CTLabel lblFilter = new CTLabel(composite, SWT.NONE);
 		lblFilter.setText("Filter");
 
 		publishedfilter = new Text(composite, SWT.BORDER);
@@ -68,7 +68,7 @@ public class UserPublishedView extends Composite {
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
-		clist = new Composite(scrolledComposite, SWT.NONE);
+		clist = new CTComposite(scrolledComposite, SWT.NONE);
 		clist.setLayout(new GridLayout(1, false));
 		scrolledComposite.setContent(clist);
 
@@ -105,13 +105,13 @@ public class UserPublishedView extends Composite {
 	}
 
 	private void addPublishedItem(String string) {
-		Composite item = new Composite(clist, SWT.NONE);
+		Composite item = new CTComposite(clist, SWT.NONE);
 		item.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_item = new GridLayout(2, false);
 		LOTSWT.setDefaults(gl_item);
 
 		item.setLayout(gl_item);
-		Label l = new Label(item, SWT.NONE);
+		CTLabel l = new CTLabel(item, SWT.NONE);
 		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		l.setText(string);
 
@@ -127,7 +127,6 @@ public class UserPublishedView extends Composite {
 
 		if (publishedcount++ % 2 == 0) {
 			Color bgcolor = SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
-			l.setBackground(bgcolor);
 			item.setBackground(bgcolor);
 			btnView.setBackground(bgcolor);
 		}

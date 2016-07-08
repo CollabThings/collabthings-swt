@@ -9,6 +9,7 @@ import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
@@ -19,7 +20,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class RunEnvironmentBuildRunView extends Composite implements LOTAppControl, RunEnvironmentListener {
+public class RunEnvironmentBuildRunView extends CTComposite implements LOTAppControl, RunEnvironmentListener {
 
 	// an hour
 	private static final int MAX_RUNTIME = 60 * 1000 * 60;
@@ -36,13 +37,13 @@ public class RunEnvironmentBuildRunView extends Composite implements LOTAppContr
 		SashForm sashForm = new SashForm(this, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite composite = new Composite(sashForm, SWT.NONE);
+		Composite composite = new CTComposite(sashForm, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
 		text = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite c_view = new Composite(sashForm, SWT.NONE);
+		Composite c_view = new CTComposite(sashForm, SWT.NONE);
 		c_view.setLayout(new GridLayout(1, false));
 
 		sashForm.setWeights(new int[] { 143, 294 });

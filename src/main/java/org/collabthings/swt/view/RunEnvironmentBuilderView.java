@@ -12,6 +12,9 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
@@ -26,14 +29,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
 
-public class RunEnvironmentBuilderView extends Composite implements LOTAppControl {
+public class RunEnvironmentBuilderView extends CTComposite implements LOTAppControl {
 	private CTRunEnvironmentBuilder builder;
 
 	private LLog log = LLog.getLogger(this);
@@ -48,7 +48,7 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 
 	private int printouthash;
 
-	private Label ltested;
+	private CTLabel ltested;
 
 	private MapView mapview;
 
@@ -96,9 +96,7 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 		SashForm composite_main = new SashForm(this, SWT.NONE);
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		CTabFolder tabFolder = new CTabFolder(composite_main, SWT.BORDER);
-		tabFolder.setSelectionBackground(
-				Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		CTabFolder tabFolder = new CTTabFolder(composite_main, SWT.BORDER);
 
 		// main yaml editor
 		CTabItem maintab = new CTabItem(tabFolder, SWT.NONE);
@@ -117,15 +115,15 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 
 		CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
 		tabItem.setText("Builder");
-		this.composite = new Composite(tabFolder, SWT.NONE);
+		this.composite = new CTComposite(tabFolder, SWT.NONE);
 		tabItem.setControl(composite);
 
-		Composite c_view = new Composite(composite_main, SWT.NONE);
+		Composite c_view = new CTComposite(composite_main, SWT.NONE);
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);
 		c_view.setLayout(new GridLayout(1, false));
 
-		Composite composite_1 = new Composite(c_view, SWT.BORDER);
+		Composite composite_1 = new CTComposite(c_view, SWT.BORDER);
 		composite_1.setLayout(new GridLayout(2, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
@@ -138,7 +136,7 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 		});
 		btest.setText("Test");
 
-		ltested = new Label(composite_1, SWT.NONE);
+		ltested = new CTLabel(composite_1, SWT.NONE);
 		ltested.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		ltested.setText("date");
 
@@ -228,11 +226,10 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 		EnvironmentView ev = new EnvironmentView(composite, window, builder.getEnvironment());
 		ev.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Label label = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
+		CTLabel label = new CTLabel(composite, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Label l = new Label(composite, SWT.NONE);
-		l.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
+		CTLabel l = new CTLabel(composite, SWT.NONE);
 		l.setAlignment(SWT.CENTER);
 		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		l.setText("Created runenvironment");
@@ -244,7 +241,7 @@ public class RunEnvironmentBuilderView extends Composite implements LOTAppContro
 			oview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		} catch (Exception e) {
 			log.error(this, "view", e);
-			Label error = new Label(composite, SWT.ERROR);
+			CTLabel error = new CTLabel(composite, SWT.ERROR);
 			error.setText("Loading runenvironment failed");
 		}
 	}

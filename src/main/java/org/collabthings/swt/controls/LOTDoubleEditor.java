@@ -7,7 +7,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-public class LOTDoubleEditor extends Composite {
+public class LOTDoubleEditor extends CTComposite {
 	private static final int MAX_DECIMALS = 2;
 	private static final double MIN_POS_VALUE = 0.001;
 	private static final double MIN_NEG_VALUE = 0.001;

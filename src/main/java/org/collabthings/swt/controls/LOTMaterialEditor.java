@@ -1,22 +1,20 @@
 package org.collabthings.swt.controls;
 
 import org.collabthings.model.CTMaterial;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.LOTDoubleEditor.ChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
-public class LOTMaterialEditor extends Composite {
+public class LOTMaterialEditor extends CTComposite {
 	private CTMaterial material;
 	private LOTDoubleEditor ered;
 	private LOTDoubleEditor egreen;
 	private LOTDoubleEditor eblue;
 	private Composite composite;
-	private Label lmaterial;
-	private Label lcolor;
+	private CTLabel lmaterial;
+	private CTLabel lcolor;
 
 	public LOTMaterialEditor(Composite c, CTMaterial m) {
 		super(c, SWT.None);
@@ -27,20 +25,17 @@ public class LOTMaterialEditor extends Composite {
 		};
 		setLayout(new GridLayout(1, false));
 
-		lmaterial = new Label(this, SWT.NONE);
+		lmaterial = new CTLabel(this, SWT.NONE);
 		lmaterial.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
 		lmaterial.setText("Material");
-		lmaterial.setBackground(SWTResourceManager
-				.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
-		lmaterial.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.BOLD));
 
-		composite = new Composite(this, SWT.NONE);
+		composite = new CTComposite(this, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
 		composite.setLayout(new GridLayout(4, false));
 
-		lcolor = new Label(composite, SWT.NONE);
+		lcolor = new CTLabel(composite, SWT.NONE);
 		lcolor.setText("Color");
 
 		ered = new LOTDoubleEditor(composite, m.getColor()[0], listener);

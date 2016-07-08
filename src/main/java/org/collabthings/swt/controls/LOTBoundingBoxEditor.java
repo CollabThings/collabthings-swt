@@ -6,7 +6,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class LOTBoundingBoxEditor extends Composite {
+public class LOTBoundingBoxEditor extends CTComposite {
 
 	private LOTVectorEditor el;
 	private LOTVectorEditor en;

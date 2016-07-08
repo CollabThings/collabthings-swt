@@ -5,6 +5,7 @@ import java.util.List;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -27,7 +28,7 @@ import org.eclipse.swt.widgets.Text;
 import waazdoh.client.WClient;
 import waazdoh.common.vo.ObjectVO;
 
-public class SearchView extends Composite implements LOTAppControl {
+public class SearchView extends CTComposite implements LOTAppControl {
 	private AppWindow window;
 	private Text text;
 	private LOTApp app;
@@ -50,7 +51,7 @@ public class SearchView extends Composite implements LOTAppControl {
 		setLayout(new GridLayout(1, false));
 
 		if (!hidesearchbox) {
-			Composite composite = new Composite(this, SWT.NONE);
+			Composite composite = new CTComposite(this, SWT.NONE);
 			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 					false, 1, 1));
 			composite.setLayout(new GridLayout(2, false));
@@ -86,7 +87,7 @@ public class SearchView extends Composite implements LOTAppControl {
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
-		clist = new Composite(scrolledComposite, SWT.NONE);
+		clist = new CTComposite(scrolledComposite, SWT.NONE);
 
 		scrolledComposite.setContent(clist);
 
