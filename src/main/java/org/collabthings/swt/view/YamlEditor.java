@@ -3,6 +3,7 @@ package org.collabthings.swt.view;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.util.LLog;
@@ -22,7 +23,7 @@ public class YamlEditor extends CTComposite {
 	private CTObject o;
 	private Text text;
 	private Text error;
-	private Button btnSave;
+	private CTButton btnSave;
 	private int currenthash;
 	private Thread t;
 
@@ -38,12 +39,9 @@ public class YamlEditor extends CTComposite {
 		top.setLayout(gl_top);
 		top.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-		btnSave = new Button(top, SWT.NONE);
-		btnSave.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				save();
-			}
+		btnSave = new CTButton(top, SWT.NONE);
+		btnSave.addSelectionListener(() -> {
+			save();
 		});
 		btnSave.setText("save");
 

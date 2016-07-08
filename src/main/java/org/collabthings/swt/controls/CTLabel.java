@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 public class CTLabel {
 
@@ -62,6 +63,18 @@ public class CTLabel {
 
 	public void setFont(int size, int style) {
 		this.label.setFont(SWTResourceManager.getDefaultFont(size, style));
+	}
+
+	public void setEnabled(boolean b) {
+		this.label.setEnabled(b);
+	}
+
+	public Shell getShell() {
+		return label.getShell();
+	}
+
+	public Label getLabel() {
+		return this.label;
 	}
 
 }

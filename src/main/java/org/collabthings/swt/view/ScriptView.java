@@ -29,8 +29,7 @@ public class ScriptView extends CTComposite implements LOTAppControl {
 
 	private LOTApp app;
 
-	public ScriptView(Composite c, LOTApp app, AppWindow appWindow,
-			CTScript script) {
+	public ScriptView(Composite c, LOTApp app, AppWindow appWindow, CTScript script) {
 		super(c, SWT.NONE);
 		this.app = app;
 
@@ -38,13 +37,11 @@ public class ScriptView extends CTComposite implements LOTAppControl {
 		this.script = script;
 
 		SashForm sashForm = new SashForm(this, SWT.VERTICAL);
-		GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1);
+		GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_sashForm.heightHint = 200;
 		sashForm.setLayoutData(gd_sashForm);
 
-		scripttext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		scripttext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		scripttext.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -58,8 +55,7 @@ public class ScriptView extends CTComposite implements LOTAppControl {
 			scripttext.setText("Script null");
 		}
 
-		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		sashForm.setWeights(new int[] { 3, 1 });
 	}
 
@@ -83,9 +79,7 @@ public class ScriptView extends CTComposite implements LOTAppControl {
 	}
 
 	private void doSave(String sscripttext) {
-		if (sscripttext != null
-				&& (script.getScript() == null || !script.getScript().equals(
-						sscripttext))) {
+		if (sscripttext != null && (script.getScript() == null || !script.getScript().equals(sscripttext))) {
 
 			CTScript s = this.app.getObjectFactory().getScript();
 			s.setScript(sscripttext);

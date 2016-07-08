@@ -5,18 +5,16 @@ import java.util.List;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -43,8 +41,7 @@ public class UsersSearchView extends CTComposite implements LOTAppControl {
 		this(c, app, appWindow, false);
 	}
 
-	public UsersSearchView(Composite c, LOTApp app, AppWindow appWindow,
-			boolean hidesearchbox) {
+	public UsersSearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox) {
 		super(c, SWT.NONE);
 		this.app = app;
 		this.window = appWindow;
@@ -52,8 +49,7 @@ public class UsersSearchView extends CTComposite implements LOTAppControl {
 
 		if (!hidesearchbox) {
 			Composite composite = new CTComposite(this, SWT.NONE);
-			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-					false, 1, 1));
+			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			composite.setLayout(new GridLayout(2, false));
 
 			text = new Text(composite, SWT.BORDER);
@@ -66,24 +62,18 @@ public class UsersSearchView extends CTComposite implements LOTAppControl {
 					}
 				}
 			});
-			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1,
-					1));
+			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-			Button bsearch = new Button(composite, SWT.NONE);
-			bsearch.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					searchSelected();
-				}
+			CTButton bsearch = new CTButton(composite, SWT.NONE);
+			bsearch.addSelectionListener(() -> {
+				searchSelected();
 			});
 
 			bsearch.setText("Search");
 		}
 
-		scrolledComposite = new ScrolledComposite(this, SWT.BORDER
-				| SWT.V_SCROLL);
-		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true, 1, 1));
+		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
+		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
@@ -175,8 +165,7 @@ public class UsersSearchView extends CTComposite implements LOTAppControl {
 			clist.pack();
 
 			int w = scrolledComposite.getClientArea().width;
-			scrolledComposite
-					.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
+			scrolledComposite.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
 		}
 	}
 

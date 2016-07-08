@@ -370,6 +370,7 @@ public final class AppWindow implements CTInfo {
 
 		MenuItem mntmNewFactory = new MenuItem(menu_new, SWT.NONE);
 		mntmNewFactory.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				newFactory();
@@ -379,26 +380,31 @@ public final class AppWindow implements CTInfo {
 
 		MenuItem mntmNewPart = new MenuItem(menu_new, SWT.NONE);
 		mntmNewPart.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				newPart();
 			}
 		});
+
 		mntmNewPart.setText("Part");
 
 		MenuItem mntmRunenvBuilder = new MenuItem(menu_new, SWT.NONE);
 		mntmRunenvBuilder.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				newRunEnvBuilder();
 			}
 		});
+
 		mntmRunenvBuilder.setText("RunEnv Builder");
 
 		MenuItem menulocalitem = new MenuItem(menufile, SWT.CASCADE);
 		menulocalitem.setText("Local");
 
 		menulocal = new Menu(menulocalitem);
+
 		initLocalMenu();
 
 		menulocalitem.setMenu(menulocal);
@@ -512,9 +518,9 @@ public final class AppWindow implements CTInfo {
 					public void widgetSelected(SelectionEvent arg0) {
 						view(value);
 					}
-
 				});
 			} else {
+
 				MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
 				mi.setText(bm);
 				Menu m = new Menu(mi);
@@ -522,6 +528,7 @@ public final class AppWindow implements CTInfo {
 
 				initBookmarks(m, path + "/" + bm);
 			}
+
 		}
 	}
 

@@ -8,14 +8,12 @@ import java.util.StringTokenizer;
 
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 import waazdoh.common.WData;
@@ -32,7 +30,7 @@ public class UserSmallView extends CTComposite {
 	private Set<String> ignorelist;
 
 	public UserSmallView(Composite cc, LOTApp app, AppWindow window, UserVO user) {
-		super(cc, SWT.NONE);
+		super(cc, SWT.BORDER);
 		this.app = app;
 
 		initIgnoreList();
@@ -55,21 +53,21 @@ public class UserSmallView extends CTComposite {
 		cvalues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		cvalues.setLayout(new GridLayout(1, false));
 
-		Composite ctools = new CTComposite(cvalues, SWT.NONE);
+		Composite ctools = new CTComposite(cvalues, SWT.BORDER);
 		ctools.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		ctools.setLayout(new GridLayout(2, false));
+		GridLayout gl_ctools = new GridLayout(2, false);
+		ctools.setLayout(gl_ctools);
 
-		Button bview = new Button(ctools, SWT.NONE);
-		bview.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				window.view(ltype.getText(), user);
-			}
+		CTButton bview = new CTButton(ctools, SWT.FLAT);
+		bview.addSelectionListener(() -> {
+			window.view(ltype.getText(), user);
 		});
 		bview.setText("View");
 
-		Button bcopyid = new Button(ctools, SWT.NONE);
-		bcopyid.addSelectionListener(new CopyToClipbardSelectionAdapter(this, user.getUserid()));
+		CTButton bcopyid = new CTButton(ctools, SWT.NONE);
+		bcopyid.addSelectionListener(() -> {
+			new CopyToClipbard(this, user.getUserid());
+		});
 		bcopyid.setText("ID");
 
 		items = new CTComposite(cvalues, getStyle());

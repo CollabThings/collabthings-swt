@@ -7,16 +7,14 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
@@ -55,12 +53,9 @@ public class UserPublishedView extends CTComposite {
 		publishedfilter = new Text(composite, SWT.BORDER);
 		publishedfilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Button btnSearchPublished = new Button(composite, SWT.NONE);
-		btnSearchPublished.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				initPublishedList();
-			}
+		CTButton btnSearchPublished = new CTButton(composite, SWT.NONE);
+		btnSearchPublished.addSelectionListener(() -> {
+			initPublishedList();
 		});
 		btnSearchPublished.setText("search");
 
@@ -115,12 +110,9 @@ public class UserPublishedView extends CTComposite {
 		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		l.setText(string);
 
-		Button btnView = new Button(item, SWT.NONE);
-		btnView.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				viewPublished(string);
-			}
+		CTButton btnView = new CTButton(item, SWT.NONE);
+		btnView.addSelectionListener(() -> {
+			viewPublished(string);
 		});
 
 		btnView.setText("View");

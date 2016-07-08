@@ -12,6 +12,7 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.swt.controls.CTTabFolder;
@@ -26,7 +27,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -127,12 +127,9 @@ public class RunEnvironmentBuilderView extends CTComposite implements LOTAppCont
 		composite_1.setLayout(new GridLayout(2, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Button btest = new Button(composite_1, SWT.NONE);
-		btest.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				testRun();
-			}
+		CTButton btest = new CTButton(composite_1, SWT.NONE);
+		btest.addSelectionListener(() -> {
+			testRun();
 		});
 		btest.setText("Test");
 

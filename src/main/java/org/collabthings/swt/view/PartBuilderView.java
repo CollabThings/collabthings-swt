@@ -5,15 +5,13 @@ import org.collabthings.model.CTPartBuilder;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -51,12 +49,9 @@ public class PartBuilderView extends CTComposite implements LOTAppControl {
 		composite_1.setLayout(new GridLayout(1, false));
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-		Button btnSave = new Button(composite_1, SWT.NONE);
-		btnSave.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				save();
-			}
+		CTButton btnSave = new CTButton(composite_1, SWT.NONE);
+		btnSave.addSelectionListener(() -> {
+			save();
 		});
 		btnSave.setBounds(0, 0, 75, 25);
 		btnSave.setText("save");

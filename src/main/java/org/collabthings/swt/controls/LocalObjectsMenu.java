@@ -63,19 +63,16 @@ public class LocalObjectsMenu {
 			WObject bean = storage.getBean(id);
 			// modified -value should be in every bean.
 			if (bean != null) {
-				if (openobjecthandlers.get(bean.getType()) != null
-						&& bean.getValue("modified") != null) {
+				if (openobjecthandlers.get(bean.getType()) != null && bean.getValue("modified") != null) {
 					addObjectMenu(id, bean);
 
-					if (count++ > app.getLClient().getPreferences()
-							.getInteger(MAX_LOCALMENU_OBJECTS, 40)) {
+					if (count++ > app.getLClient().getPreferences().getInteger(MAX_LOCALMENU_OBJECTS, 40)) {
 						MenuItem tbci = new MenuItem(menulocal, SWT.NONE);
 						tbci.setText("...");
 						break;
 					}
 				} else {
-					log.info("Not showing " + bean.getType() + " "
-							+ bean.getValue("name") + " in menu");
+					log.info("Not showing " + bean.getType() + " " + bean.getValue("name") + " in menu");
 				}
 			}
 		}
@@ -97,14 +94,12 @@ public class LocalObjectsMenu {
 		StringBuilder sb = new StringBuilder();
 		String userid = bean.getValue("creator");
 		if (userid != null) {
-			User user = appwindow.getApp().getLClient().getClient()
-					.getUser(new UserID(userid));
+			User user = appwindow.getApp().getLClient().getClient().getUser(new UserID(userid));
 			if (user != null) {
 				long modified = bean.getLongValue("modified");
 				String name = bean.getValue("name");
 
-				sb.append("" + name + " by " + user.getName() + " at "
-						+ modified);
+				sb.append("" + name + " by " + user.getName() + " at " + modified);
 			} else {
 				sb.append("User not found");
 			}

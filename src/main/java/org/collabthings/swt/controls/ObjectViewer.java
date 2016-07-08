@@ -27,11 +27,9 @@ import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
@@ -416,13 +414,10 @@ public class ObjectViewer extends CTComposite {
 		l.setText("Openscad model");
 		l.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Button b = new Button(c, SWT.NONE);
+		CTButton b = new CTButton(c, SWT.NONE);
 		b.setText("Open");
-		b.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				window.viewOpenSCAD(o);
-			}
+		b.addSelectionListener(() -> {
+			window.viewOpenSCAD(o);
 		});
 		return c;
 	}

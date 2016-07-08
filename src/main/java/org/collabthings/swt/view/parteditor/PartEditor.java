@@ -10,6 +10,7 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.swt.controls.CTTabFolder;
@@ -24,17 +25,15 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Label;
 
 public class PartEditor extends CTComposite implements LOTAppControl {
 	private CTPart part;
@@ -123,40 +122,28 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		rl_c_toolbar.center = true;
 		c_toolbar.setLayout(rl_c_toolbar);
 
-		Button button_1 = new Button(c_toolbar, SWT.NONE);
-		button_1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				goBack();
-			}
+		CTButton button_1 = new CTButton(c_toolbar, SWT.NONE);
+		button_1.addSelectionListener(() -> {
+			goBack();
 		});
 		button_1.setText("<");
 
-		Button button = new Button(c_toolbar, SWT.FLAT);
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				part.newSubPart();
-			}
+		CTButton button = new CTButton(c_toolbar, SWT.FLAT);
+		button.addSelectionListener(() -> {
+			part.newSubPart();
 		});
 		button.setText("A");
 
-		Button bnewscad = new Button(c_toolbar, SWT.FLAT);
-		bnewscad.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				part.save();
-				part.newSCAD();
-			}
+		CTButton bnewscad = new CTButton(c_toolbar, SWT.FLAT);
+		bnewscad.addSelectionListener(() -> {
+			part.save();
+			part.newSCAD();
 		});
 		bnewscad.setText("set SCAD");
 
-		Button btnPublish = new Button(c_toolbar, SWT.NONE);
-		btnPublish.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				publish();
-			}
+		CTButton btnPublish = new CTButton(c_toolbar, SWT.NONE);
+		btnPublish.addSelectionListener(() -> {
+			publish();
 		});
 		btnPublish.setText("Publish");
 
@@ -203,7 +190,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		cbottom.setLayout(gl_cbottom);
 		cbottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 
-		Button bleft = new Button(cbottom, SWT.NONE);
+		CTButton bleft = new CTButton(cbottom, SWT.NONE);
 		bleft.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		bleft.setText("<");
 
@@ -213,7 +200,9 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		gd_csubparts.heightHint = 95;
 		csubparts.setLayoutData(gd_csubparts);
 
-		Button bright = new Button(cbottom, SWT.NONE);
+		CTButton bright = new CTButton(cbottom, SWT.NONE);
+		new Label(cbottom, SWT.NONE);
+		new Label(cbottom, SWT.NONE);
 		bright.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		bright.setText(">");
 
@@ -278,13 +267,10 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		FillLayout fl_eangle = (FillLayout) eangle.getLayout();
 		eangle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 
-		Button b = new Button(composite, SWT.NONE);
+		CTButton b = new CTButton(composite, SWT.NONE);
 		b.setText("view");
-		b.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				view(subpart);
-			}
+		b.addSelectionListener(() -> {
+			view(subpart);
 		});
 	}
 

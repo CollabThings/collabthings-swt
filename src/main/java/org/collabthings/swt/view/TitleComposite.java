@@ -1,14 +1,12 @@
 package org.collabthings.swt.view;
 
 import org.collabthings.swt.LOTSWT;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 public class TitleComposite extends CTComposite {
@@ -34,13 +32,10 @@ public class TitleComposite extends CTComposite {
 	}
 
 	public void addButton(String string, ButtonAction action) {
-		Button b = new Button(ctitle, SWT.None);
+		CTButton b = new CTButton(ctitle, SWT.None);
 		b.setText(string);
-		b.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				action.action();
-			}
+		b.addSelectionListener(() -> {
+			action.action();
 		});
 	}
 

@@ -6,6 +6,7 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
@@ -13,7 +14,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -57,17 +57,14 @@ public class ScriptList extends CTComposite {
 			CTLabel clname = new CTLabel(cscript, SWT.NONE);
 			clname.setText("" + name);
 
-			Button btnView = new Button(cscript, SWT.NONE);
-			btnView.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					window.viewScript(app.getObjectFactory().getScript(new MStringID(id)));
-				}
+			CTButton btnView = new CTButton(cscript, SWT.NONE);
+			btnView.addSelectionListener(() -> {
+				window.viewScript(app.getObjectFactory().getScript(new MStringID(id)));
 			});
 			btnView.setText("View");
 
-			Button btnId = new Button(cscript, SWT.NONE);
-			btnId.addSelectionListener(new CopyToClipbardSelectionAdapter(cscript, id));
+			CTButton btnId = new CTButton(cscript, SWT.NONE);
+			btnId.addSelectionListener(() -> new CopyToClipbard(cscript, id));
 			btnId.setText("ID");
 
 			Composite composite = new CTComposite(cscript, SWT.NONE);
@@ -78,17 +75,13 @@ public class ScriptList extends CTComposite {
 			CTLabel lblAddTo = new CTLabel(composite, SWT.NONE);
 			lblAddTo.setText("Add to");
 
-			Button btnAdd = new Button(composite, SWT.FLAT | SWT.ARROW | SWT.DOWN);
-			btnAdd.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					Menu menu = new Menu(btnAdd.getShell(), SWT.POP_UP);
+			CTButton btnAdd = new CTButton(composite, SWT.FLAT | SWT.ARROW | SWT.DOWN);
+			btnAdd.addSelectionListener(() -> {
+				Menu menu = new Menu(btnAdd.getShell(), SWT.POP_UP);
 
-					createAddToMenu(id, menu);
+				createAddToMenu(id, menu);
 
-					menu.setVisible(true);
-				}
-
+				menu.setVisible(true);
 			});
 			btnAdd.setText("Add to");
 		}

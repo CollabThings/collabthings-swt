@@ -9,12 +9,12 @@ import java.util.StringTokenizer;
 
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,7 +39,7 @@ public class ObjectSmallView extends CTComposite {
 	private Set<String> ignorelist;
 	private WLogger log = WLogger.getLogger(this);
 
-	private Button btnBookmark;
+	private CTButton btnBookmark;
 
 	public ObjectSmallView(Composite cc, LOTApp app, AppWindow window, String id) {
 		super(cc, SWT.NONE);
@@ -76,20 +76,17 @@ public class ObjectSmallView extends CTComposite {
 		ctools.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		ctools.setLayout(new GridLayout(3, false));
 
-		Button bview = new Button(ctools, SWT.NONE);
-		bview.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				window.view(ltype.getText(), id);
-			}
+		CTButton bview = new CTButton(ctools, SWT.NONE);
+		bview.addSelectionListener(() -> {
+			window.view(ltype.getText(), id);
 		});
 		bview.setText("View");
 
-		Button bcopyid = new Button(ctools, SWT.NONE);
-		bcopyid.addSelectionListener(new CopyToClipbardSelectionAdapter(this, id));
+		CTButton bcopyid = new CTButton(ctools, SWT.NONE);
+		bcopyid.addSelectionListener(() -> new CopyToClipbard(this, id));
 		bcopyid.setText("ID");
 
-		this.btnBookmark = new Button(ctools, SWT.NONE);
+		this.btnBookmark = new CTButton(ctools, SWT.NONE);
 		btnBookmark.setText("Bookmark");
 
 		Composite cdates = new CTComposite(cvalues, SWT.NONE);
@@ -213,24 +210,21 @@ public class ObjectSmallView extends CTComposite {
 
 		if (vo != null && (o = vo.toObject()) != null) {
 
-			btnBookmark.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					WObject content = o.get("content");
-					if (content == null) {
-						content = o;
-					}
-
-					String namevalue = content.getValue("name");
-					String name;
-					if (namevalue != null) {
-						name = namevalue;
-					} else {
-						name = "unknown";
-					}
-
-					app.getLClient().getBookmarks().add("" + o.getType() + "/" + name, id);
+			btnBookmark.addSelectionListener(() -> {
+				WObject content = o.get("content");
+				if (content == null) {
+					content = o;
 				}
+
+				String namevalue = content.getValue("name");
+				String name;
+				if (namevalue != null) {
+					name = namevalue;
+				} else {
+					name = "unknown";
+				}
+
+				app.getLClient().getBookmarks().add("" + o.getType() + "/" + name, id);
 			});
 
 			if (o.getType() != null) {

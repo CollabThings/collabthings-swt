@@ -18,6 +18,7 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
@@ -115,12 +116,9 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 		cpanel.setLayout(gl_cpanel);
 		cpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Button btnAddChild = new Button(cpanel, SWT.NONE);
-		btnAddChild.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				addChild();
-			}
+		CTButton btnAddChild = new CTButton(cpanel, SWT.NONE);
+		btnAddChild.addSelectionListener(() -> {
+			addChild();
 		});
 		btnAddChild.setText("add child");
 
@@ -252,6 +250,7 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				addChild();
+
 			}
 		});
 
@@ -260,7 +259,6 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 			public void widgetSelected(SelectionEvent arg0) {
 				publish();
 			}
-
 		});
 
 		return mifactory;
