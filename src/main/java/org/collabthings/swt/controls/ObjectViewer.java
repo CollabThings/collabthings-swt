@@ -16,6 +16,8 @@ import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTObject;
+import org.collabthings.model.impl.CTOpenSCADImpl;
+import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
@@ -26,8 +28,11 @@ import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -51,8 +56,6 @@ public class ObjectViewer extends Composite {
 	private AppWindow window;
 	private LOTApp app;
 
-	private CTObject o;
-
 	/**
 	 * @wbp.parser.constructor
 	 */
@@ -65,13 +68,16 @@ public class ObjectViewer extends Composite {
 
 		this.app = app;
 		this.window = window;
-		this.o = o;
 
 		this.ignoreset = new HashSet<String>();
 		for (String s : ignore) {
 			ignoreset.add(s);
 		}
 
+		init(o);
+	}
+
+	private void init(CTObject o) {
 		initOkTypes();
 		parse(o);
 
@@ -129,6 +135,8 @@ public class ObjectViewer extends Composite {
 		editors.put(Set.class.getName(), (key, c, o) -> addCollectionView(key, c, o));
 
 		editors.put(CTMaterial.class.getName(), (key, c, o) -> addMaterialView(key, c, (CTMaterial) o));
+
+		editors.put(CTOpenSCADImpl.class.getName(), (key, c, o) -> addOpenScadField(key, c, (CTOpenSCADImpl) o));
 	}
 
 	private void updateData() {
@@ -140,7 +148,8 @@ public class ObjectViewer extends Composite {
 	private void parse(Object no) {
 		this.objectShown = no;
 		if (this.objectShown == null) {
-			this.objectShown = new TableTestData();
+			// this.objectShown = new TableTestData();
+			this.objectShown = new CTPartImpl(null);
 		}
 
 		//
@@ -282,7 +291,9 @@ public class ObjectViewer extends Composite {
 	}
 
 	private LOTMaterialEditor addMaterialView(String key, Composite c, CTMaterial o) {
-		return new LOTMaterialEditor(c, o);
+		LOTMaterialEditor e = new LOTMaterialEditor(c, o);
+		e.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		return e;
 	}
 
 	private Control addDoubleField(String key, Composite c, Double d) {
@@ -390,6 +401,28 @@ public class ObjectViewer extends Composite {
 		}
 
 		return v;
+	}
+
+	private Control addOpenScadField(String key, Composite parent, CTOpenSCADImpl o) {
+		Composite c = new Composite(parent, SWT.NONE);
+		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		GridLayout gridLayout = new GridLayout(1, false);
+		c.setLayout(gridLayout);
+
+		Label l = new Label(c, SWT.NONE);
+		l.setText("Openscad model");
+		l.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		Button b = new Button(c, SWT.NONE);
+		b.setText("Open");
+		b.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				window.viewOpenSCAD(o);
+			}
+		});
+		return c;
 	}
 
 	public void setObject(Object o) {

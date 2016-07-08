@@ -8,13 +8,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 public class LOTDoubleEditor extends Composite {
+	private static final int MAX_DECIMALS = 2;
 	private static final double MIN_POS_VALUE = 0.001;
 	private static final double MIN_NEG_VALUE = 0.001;
 	private Text s;
 	private ChangeListener<Double> listener;
 
-	public LOTDoubleEditor(Composite c, Double d,
-			ChangeListener<Double> listener) {
+	public LOTDoubleEditor(Composite c, Double d, ChangeListener<Double> listener) {
 		super(c, SWT.None);
 		this.listener = listener;
 
@@ -22,7 +22,7 @@ public class LOTDoubleEditor extends Composite {
 		//
 		s = new Text(this, SWT.NONE);
 		s.setEditable(true);
-		s.setText("" + d);
+		setDoubleText(d);
 
 		s.addKeyListener(new KeyListener() {
 
@@ -63,8 +63,17 @@ public class LOTDoubleEditor extends Composite {
 	}
 
 	private synchronized void setDouble(double nd) {
-		this.s.setText("" + nd);
+		setDoubleText(nd);
 		listener.changed(nd);
+	}
+
+	private void setDoubleText(double nd) {
+		String sd = "" + nd;
+		if (sd.indexOf(".") > 0 && (sd.length() - sd.indexOf(".")) > MAX_DECIMALS) {
+			sd = sd.substring(0, sd.indexOf(".") + MAX_DECIMALS);
+		}
+
+		this.s.setText(sd);
 	}
 
 	public static interface ChangeListener<T> {

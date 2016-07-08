@@ -83,7 +83,7 @@ public final class AppWindow implements CTInfo {
 	public void newPart() {
 		try {
 			CTPart p = app.newPart();
-			PartEditor view = new PartEditor(tabFolder, app, p);
+			PartEditor view = new PartEditor(tabFolder, app, this, p);
 			addTab("part " + p, view, p);
 		} catch (Exception e) {
 			showError(e);
@@ -204,7 +204,7 @@ public final class AppWindow implements CTInfo {
 	public void viewPart(CTPart part) {
 		if (part != null) {
 			shell.getDisplay().asyncExec(() -> {
-				PartEditor pv = new PartEditor(tabFolder, app, part);
+				PartEditor pv = new PartEditor(tabFolder, app, this, part);
 				addTab("" + part.getName(), pv, part);
 			});
 		} else {

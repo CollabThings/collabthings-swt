@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
@@ -46,18 +45,20 @@ public class PartEditor extends Composite implements LOTAppControl {
 	private CTRunEnvironmentImpl rune;
 
 	private Composite csubparts;
-	private Text tpartname;
 
 	private Stack<CTPart> parts = new Stack<CTPart>();
 
 	private YamlEditor csource;
 
-	private AppWindow window;
+	private final AppWindow window;
 
-	public PartEditor(Composite composite, LOTApp app, CTPart p) {
+	private ObjectViewer viewer;
+
+	public PartEditor(Composite composite, LOTApp app, AppWindow window, CTPart p) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.part = p;
+		this.window = window;
 
 		log.info("init " + p.toString());
 
@@ -171,7 +172,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
-		ObjectViewer viewer = new ObjectViewer(app, window, scrolledComposite, part);
+		viewer = new ObjectViewer(app, window, scrolledComposite, part);
 
 		scrolledComposite.setContent(viewer);
 		scrolledComposite.setMinSize(viewer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
@@ -205,7 +206,9 @@ public class PartEditor extends Composite implements LOTAppControl {
 
 		csubparts = new Composite(cbottom, SWT.NONE);
 		csubparts.setLayout(new RowLayout(SWT.HORIZONTAL));
-		csubparts.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		GridData gd_csubparts = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_csubparts.heightHint = 95;
+		csubparts.setLayoutData(gd_csubparts);
 
 		Button bright = new Button(cbottom, SWT.NONE);
 		bright.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
@@ -223,9 +226,7 @@ public class PartEditor extends Composite implements LOTAppControl {
 
 	private void updatePartInfo() {
 		if (part != null) {
-			tpartname.setText("" + part.getName());
-		} else {
-			tpartname.setText("unknown");
+			viewer.setObject(part);
 		}
 	}
 

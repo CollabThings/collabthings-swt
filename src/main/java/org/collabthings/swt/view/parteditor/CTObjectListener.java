@@ -20,6 +20,7 @@ public class CTObjectListener {
 		new Thread(() -> {
 			while (dowhile.doWhile()) {
 				if (!hash.equals(getContentHash())) {
+					hash = getContentHash();
 					changed.chanced();
 				}
 				doWait();
