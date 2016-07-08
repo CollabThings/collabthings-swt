@@ -202,10 +202,14 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void viewPart(CTPart part) {
-		shell.getDisplay().asyncExec(() -> {
-			PartEditor pv = new PartEditor(tabFolder, app, part);
-			addTab("" + part.getName(), pv, part);
-		});
+		if (part != null) {
+			shell.getDisplay().asyncExec(() -> {
+				PartEditor pv = new PartEditor(tabFolder, app, part);
+				addTab("" + part.getName(), pv, part);
+			});
+		} else {
+			log.info("ERROR part null");
+		}
 	}
 
 	private void addTab(String name, LOTAppControl c, Object data) {
