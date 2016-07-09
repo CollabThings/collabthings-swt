@@ -14,7 +14,6 @@ import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -27,12 +26,15 @@ import waazdoh.client.WClient;
 import waazdoh.common.vo.UserVO;
 
 public class UsersSearchView extends CTComposite implements LOTAppControl {
+	private static final int COLUMN_WIDTH = 300;
+
 	private AppWindow window;
 	private Text text;
 	private LOTApp app;
 	private LLog log = LLog.getLogger(this);
 	private Composite clist;
 	private ScrolledComposite scrolledComposite;
+	private GridLayout clistlayout;
 
 	/**
 	 * @wbp.parser.constructor
@@ -72,12 +74,14 @@ public class UsersSearchView extends CTComposite implements LOTAppControl {
 			bsearch.setText("Search");
 		}
 
-		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
+		scrolledComposite = new ScrolledComposite(this, SWT.NONE | SWT.V_SCROLL);
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
 		clist = new CTComposite(scrolledComposite, SWT.NONE);
+		clistlayout = new GridLayout(1, false);
+		clist.setLayout(clistlayout);
 
 		scrolledComposite.setContent(clist);
 
@@ -126,6 +130,7 @@ public class UsersSearchView extends CTComposite implements LOTAppControl {
 		if (list != null) {
 			getDisplay().asyncExec(() -> {
 				addRows(list);
+				clist.pack();
 				updateLayout();
 			});
 		}
@@ -145,7 +150,6 @@ public class UsersSearchView extends CTComposite implements LOTAppControl {
 	}
 
 	private void addRow(UserVO user) {
-		clist.setLayout(new RowLayout(SWT.HORIZONTAL));
 		new UserSmallView(clist, this.app, this.window, user);
 	}
 
@@ -162,9 +166,19 @@ public class UsersSearchView extends CTComposite implements LOTAppControl {
 
 	private void updateLayout() {
 		if (scrolledComposite != null) {
-			clist.pack();
-
 			int w = scrolledComposite.getClientArea().width;
+			int count = w / COLUMN_WIDTH;
+			if (count < 1) {
+				count = 1;
+			}
+
+			clistlayout.numColumns = count;
+			log.info("columncount " + clistlayout.numColumns + " w:" + w);
+
+			for (Control c : clist.getChildren()) {
+				c.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			}
+
 			scrolledComposite.setMinSize(w, clist.computeSize(w, SWT.DEFAULT).y);
 		}
 	}

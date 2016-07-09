@@ -53,7 +53,7 @@ public class SearchView extends CTComposite implements LOTAppControl {
 			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			composite.setLayout(new GridLayout(2, false));
 
-			text = CTControls.getText(composite, SWT.NONE);
+			text = CTControls.getText(composite, SWT.BORDER);
 
 			text.addTraverseListener(new TraverseListener() {
 
@@ -74,7 +74,7 @@ public class SearchView extends CTComposite implements LOTAppControl {
 			bsearch.setText("Search");
 		}
 
-		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.V_SCROLL);
+		scrolledComposite = new ScrolledComposite(this, SWT.NONE | SWT.V_SCROLL);
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
@@ -136,6 +136,7 @@ public class SearchView extends CTComposite implements LOTAppControl {
 			getDisplay().asyncExec(() -> {
 				addRows(list);
 				updateLayout();
+				clist.pack();
 			});
 		}
 	}
