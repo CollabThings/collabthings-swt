@@ -15,12 +15,16 @@ import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
+import com.thoughtworks.xstream.converters.reflection.SerializationMethodInvoker;
+
+import waazdoh.client.model.BinaryID;
 import waazdoh.common.WLogger;
 import waazdoh.common.WObject;
 import waazdoh.common.vo.ObjectVO;
@@ -42,6 +46,8 @@ public class ObjectSmallView extends CTComposite {
 
 	private CTButton btnBookmark;
 
+	private CTBinaryImage thumbnail;
+
 	public ObjectSmallView(Composite cc, LOTApp app, AppWindow window, String id) {
 		super(cc, SWT.NONE);
 		this.app = app;
@@ -52,10 +58,19 @@ public class ObjectSmallView extends CTComposite {
 
 		initIgnoreList();
 
-		setLayout(new GridLayout(2, false));
+		setLayout(new GridLayout(3, false));
 
 		Label label = new Label(this, SWT.SEPARATOR | SWT.SHADOW_NONE);
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true, 1, 1));
+
+		Composite cthumbnail = new CTComposite(this, SWT.NONE);
+		FillLayout fl_cthumbnail = new FillLayout(SWT.HORIZONTAL);
+		fl_cthumbnail.marginHeight = 15;
+		cthumbnail.setLayout(fl_cthumbnail);
+		cthumbnail.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 1, 1));
+
+		thumbnail = new CTBinaryImage(app, cthumbnail, SWT.BORDER);
+		GridLayout gridLayout = (GridLayout) thumbnail.getLayout();
 
 		Composite composite = new CTComposite(this, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -124,7 +139,7 @@ public class ObjectSmallView extends CTComposite {
 	private void addDates(Composite cvalues) {
 		Composite cdates = new CTComposite(cvalues, SWT.NONE);
 		cdates.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_cdates = new GridLayout(4, false);
+		GridLayout gl_cdates = new GridLayout(2, false);
 		gl_cdates.marginWidth = 0;
 		cdates.setLayout(gl_cdates);
 
@@ -152,6 +167,10 @@ public class ObjectSmallView extends CTComposite {
 
 		addDataHandler("modified", (n, d) -> {
 			lmodified.setText("" + new Date(Long.parseLong(d.getValue(n))));
+		});
+
+		addDataHandler("thumbnail", (n, d) -> {
+			thumbnail.setId(new BinaryID(d.getValue(n)));
 		});
 	}
 
@@ -226,6 +245,9 @@ public class ObjectSmallView extends CTComposite {
 				String t = st.nextToken();
 				ignorelist.add(t);
 			}
+
+			ignorelist.add("id");
+			ignorelist.add("type");
 		}
 	}
 
