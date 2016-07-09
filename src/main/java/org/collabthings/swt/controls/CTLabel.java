@@ -77,4 +77,9 @@ public class CTLabel {
 		return this.label;
 	}
 
+	public void setTitleFont() {
+		label.setFont(SWTResourceManager.getTitleFont());
+		label.setForeground(SWTResourceManager.getTitleColor());
+	}
+
 }

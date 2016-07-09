@@ -267,7 +267,7 @@ public final class AppWindow implements CTInfo {
 
 	private void openTestViews(Display display) {
 		display.asyncExec(() -> {
-			viewSearch("multiplegears");
+			viewSearch("part");
 		});
 
 		display.asyncExec(() -> {

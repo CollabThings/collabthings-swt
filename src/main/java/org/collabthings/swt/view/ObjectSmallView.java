@@ -15,12 +15,11 @@ import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 
 import waazdoh.common.WLogger;
 import waazdoh.common.WObject;
@@ -39,59 +38,95 @@ public class ObjectSmallView extends CTComposite {
 	private Set<String> ignorelist;
 	private WLogger log = WLogger.getLogger(this);
 
+	private AppWindow window;
+
 	private CTButton btnBookmark;
 
 	public ObjectSmallView(Composite cc, LOTApp app, AppWindow window, String id) {
 		super(cc, SWT.NONE);
 		this.app = app;
 		this.id = id;
+		this.window = window;
 
 		log.info("viewing " + id);
 
 		initIgnoreList();
 
-		this.setLayout(new GridLayout());
+		setLayout(new GridLayout(2, false));
 
-		Composite ctitle = new CTComposite(this, SWT.NONE);
-		ctitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		Label label = new Label(this, SWT.SEPARATOR | SWT.SHADOW_NONE);
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true, 1, 1));
+
+		Composite composite = new CTComposite(this, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		composite.setLayout(new GridLayout(1, false));
+
+		addTitle(composite);
+
+		Composite cvalues = new CTComposite(composite, SWT.NONE);
+		cvalues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		cvalues.setLayout(new GridLayout(1, false));
+
+		addTools(id, cvalues);
+		addDates(cvalues);
+
+		addCreatorAndVersion(cvalues);
+
+		items = new CTComposite(cvalues, getStyle());
+		GridLayout gl_items = new GridLayout(1, false);
+		gl_items.marginWidth = 0;
+		gl_items.marginHeight = 0;
+		items.setLayout(gl_items);
+		items.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 2));
+
+		addHandlers();
+
+		setData();
+	}
+
+	private void addHandlers() {
+		addDataHandler("license", (n, e) -> {
+		});
+
+		addDataHandler("scripts", (n, d) -> {
+			ScriptList sl = new ScriptList(items, app, window, d);
+			setListLayoutData(sl);
+		});
+
+		addDataHandler("environmentid", (n, d) -> {
+			//
+		});
+
+		addDataHandler("value", (n, d) -> {
+			// Probably script base64 value
+		});
+	}
+
+	private void addTitle(Composite composite) {
+		Composite ctitle = new CTComposite(composite, SWT.NONE);
+		ctitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		ctitle.setLayout(new GridLayout(2, false));
 
 		CTLabel lname = new CTLabel(ctitle, SWT.NONE);
 		lname.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		lname.setText("Name");
 		lname.setAlignment(SWT.CENTER);
+		lname.setTitleFont();
 
-		ltype = new CTLabel(ctitle, SWT.NONE);
-
-		ltype.setText("Type");
 		addDataHandler("name", (n, d) -> {
 			lname.setText(d.getValue(n));
 		});
 
-		Composite cvalues = new CTComposite(this, SWT.NONE);
-		cvalues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		cvalues.setLayout(new GridLayout(1, false));
+		ltype = new CTLabel(ctitle, SWT.NONE);
+		ltype.setText("Type");
+	}
 
-		Composite ctools = new CTComposite(cvalues, SWT.NONE);
-		ctools.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		ctools.setLayout(new GridLayout(3, false));
-
-		CTButton bview = new CTButton(ctools, SWT.NONE);
-		bview.addSelectionListener(() -> {
-			window.view(ltype.getText(), id);
-		});
-		bview.setText("View");
-
-		CTButton bcopyid = new CTButton(ctools, SWT.NONE);
-		bcopyid.addSelectionListener(() -> new CopyToClipbard(this, id));
-		bcopyid.setText("ID");
-
-		this.btnBookmark = new CTButton(ctools, SWT.NONE);
-		btnBookmark.setText("Bookmark");
-
+	private void addDates(Composite cvalues) {
 		Composite cdates = new CTComposite(cvalues, SWT.NONE);
 		cdates.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		cdates.setLayout(new GridLayout(4, false));
+		GridLayout gl_cdates = new GridLayout(4, false);
+		gl_cdates.marginWidth = 0;
+		cdates.setLayout(gl_cdates);
 
 		CTLabel lblModified = new CTLabel(cdates, SWT.NONE);
 		lblModified.setText("Modified");
@@ -104,35 +139,35 @@ public class ObjectSmallView extends CTComposite {
 
 		CTLabel lblCreated = new CTLabel(cdates, SWT.NONE);
 		lblCreated.setText("Created");
-
 		CTLabel lcreated = new CTLabel(cdates, SWT.NONE);
+
 		lcreated.setText("date");
 		GridData gd_lcreated = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
 		gd_lcreated.minimumWidth = 60;
 		lcreated.setLayoutData(gd_lcreated);
 
-		addDataHandler("modified", (n, d) -> {
-			lmodified.setText("" + new Date(Long.parseLong(d.getValue(n))));
-		});
 		addDataHandler("creationtime", (n, d) -> {
 			lcreated.setText("" + new Date(Long.parseLong(d.getValue(n))));
 		});
 
+		addDataHandler("modified", (n, d) -> {
+			lmodified.setText("" + new Date(Long.parseLong(d.getValue(n))));
+		});
+	}
+
+	private void addCreatorAndVersion(Composite cvalues) {
 		Composite ccreator = new CTComposite(cvalues, SWT.NONE);
 		ccreator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-		ccreator.setLayout(new GridLayout(3, false));
+		GridLayout gl_ccreator = new GridLayout(3, false);
+		gl_ccreator.marginWidth = 0;
+		ccreator.setLayout(gl_ccreator);
 
 		CTLabel lblCreator = new CTLabel(ccreator, SWT.NONE);
-		lblCreator.setText("Created by");
-
 		CTLabel lcreator = new CTLabel(ccreator, SWT.NONE);
+
+		lblCreator.setText("Created by");
 		lcreator.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		lcreator.setText("Creator");
-
-		CTLabel lversion = new CTLabel(ccreator, SWT.NONE);
-		addDataHandler("version", lversion);
-		addDataHandler("license", (n, e) -> {
-		});
 
 		addDataHandler("creator", (n, d) -> {
 			String userid = d.getValue(n);
@@ -147,9 +182,9 @@ public class ObjectSmallView extends CTComposite {
 			lcreator.setText(userid);
 			new Thread(() -> {
 				UserVO u = app.getLClient().getService().getUsers().getUser(userid);
-				if (!lcreated.isDisposed()) {
-					lcreated.getDisplay().syncExec(() -> {
-						if (!lcreated.isDisposed()) {
+				if (!lcreator.isDisposed()) {
+					lcreator.getDisplay().syncExec(() -> {
+						if (!lcreator.isDisposed()) {
 							lcreator.setText("" + u.getUsername());
 						}
 					});
@@ -157,27 +192,29 @@ public class ObjectSmallView extends CTComposite {
 			}).start();
 		});
 
-		items = new CTComposite(cvalues, getStyle());
-		GridLayout gl_items = new GridLayout(1, false);
-		gl_items.marginWidth = 0;
-		gl_items.marginHeight = 0;
-		items.setLayout(gl_items);
-		items.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 2));
+		CTLabel lversion = new CTLabel(ccreator, SWT.NONE);
+		addDataHandler("version", lversion);
+	}
 
-		addDataHandler("scripts", (n, d) -> {
-			ScriptList sl = new ScriptList(items, app, window, d);
-			setListLayoutData(sl);
+	private void addTools(String id, Composite cvalues) {
+		Composite ctools = new CTComposite(cvalues, SWT.NONE);
+		ctools.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridLayout gl_ctools = new GridLayout(3, false);
+		gl_ctools.marginWidth = 0;
+		ctools.setLayout(gl_ctools);
+
+		CTButton bview = new CTButton(ctools, SWT.NONE);
+		bview.addSelectionListener(() -> {
+			window.view(ltype.getText(), id);
 		});
+		bview.setText("View");
 
-		addDataHandler("environmentid", (n, d) -> {
-			//
-		});
+		CTButton bcopyid = new CTButton(ctools, SWT.NONE);
+		bcopyid.addSelectionListener(() -> new CopyToClipbard(this, id));
+		bcopyid.setText("ID");
 
-		addDataHandler("value", (n, d) -> {
-			// Probably script base64 value
-		});
-
-		setData();
+		btnBookmark = new CTButton(ctools, SWT.NONE);
+		btnBookmark.setText("Bookmark");
 	}
 
 	private void initIgnoreList() {
@@ -238,7 +275,7 @@ public class ObjectSmallView extends CTComposite {
 						dh.handle(name, o);
 					} else if (!ignorelist.contains(name)) {
 						CTLabel l = new CTLabel(items, getStyle());
-						l.setText("NAME " + name + " " + name);
+						l.setText("" + name + " " + o.getValue(name));
 						setListLayoutData(l.getControl());
 					}
 				}

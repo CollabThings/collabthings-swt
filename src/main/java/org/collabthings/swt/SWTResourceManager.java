@@ -498,4 +498,12 @@ public class SWTResourceManager {
 	public static Font getDefaultFont(int size, int style) {
 		return getFont("Nirmala UI", size, style);
 	}
+
+	public static Font getTitleFont() {
+		return getDefaultFont(13, SWT.BOLD);
+	}
+
+	public static Color getTitleColor() {
+		return getColor(100, 100, 0);
+	}
 }
