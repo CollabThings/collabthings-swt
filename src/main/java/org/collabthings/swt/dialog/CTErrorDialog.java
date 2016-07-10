@@ -10,9 +10,9 @@ import org.eclipse.swt.widgets.Text;
 
 public class CTErrorDialog {
 
-	protected Shell shell;
 	private Text terror;
 	private Label ltext;
+	private Shell shell;
 
 	/**
 	 * Create the dialog.
@@ -21,7 +21,9 @@ public class CTErrorDialog {
 	 * @param style
 	 */
 	public CTErrorDialog(Shell parent) {
+		shell = new Shell(parent);
 
+		createContents();
 	}
 
 	/**
@@ -30,7 +32,6 @@ public class CTErrorDialog {
 	 * @return the result
 	 */
 	public void open() {
-		createContents();
 		shell.open();
 		shell.layout();
 		new Thread(() -> {
@@ -47,7 +48,6 @@ public class CTErrorDialog {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		shell = new Shell();
 		shell.setSize(450, 300);
 		shell.setText("ERROR");
 		shell.setLayout(new GridLayout(1, false));
@@ -56,7 +56,7 @@ public class CTErrorDialog {
 		ltext.setBounds(0, 0, 55, 15);
 		ltext.setText("ERROR");
 
-		terror = new Text(shell, SWT.BORDER | SWT.MULTI);
+		terror = new Text(shell, SWT.BORDER | SWT.WRAP | SWT.MULTI);
 		terror.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		terror.setEditable(false);
 	}
