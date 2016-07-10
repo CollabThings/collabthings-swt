@@ -5,7 +5,9 @@ import java.util.Date;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -31,6 +33,7 @@ public class SCADView extends CTComposite implements LOTAppControl {
 	private SashForm sashForm_1;
 	private GLSceneView canvas;
 	private Composite composite;
+	private Composite ctools;
 
 	public SCADView(final Composite c, final LOTApp app, final AppWindow appWindow, final CTOpenSCAD scad) {
 		super(c, SWT.NONE);
@@ -39,10 +42,20 @@ public class SCADView extends CTComposite implements LOTAppControl {
 		setLayout(new GridLayout(1, false));
 		this.scad = scad;
 
+		ctools = new CTComposite(this, SWT.NONE);
+		ctools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		ctools.setLayout(new GridLayout(1, false));
+		ctools.setBackground(SWTResourceManager.getActiontitleBackground());
+		CTButton bsave = new CTButton(ctools, SWT.NONE);
+		bsave.setText("Save");
+		bsave.addSelectionListener(() -> startSave());
+
 		sashForm_1 = new SashForm(this, SWT.NONE);
 		sashForm_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		scripttext = new Text(sashForm_1, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		scripttext.setFont(SWTResourceManager.getDefaultFont());
+		
 		scripttext.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {

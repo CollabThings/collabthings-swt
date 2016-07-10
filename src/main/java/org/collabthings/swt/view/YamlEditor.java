@@ -9,11 +9,8 @@ import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -65,10 +62,11 @@ public class YamlEditor extends CTComposite {
 
 	}
 
-	private void save() {
+	private synchronized void save() {
 		WObject no = new WObject();
 		no.parse(text.getText());
 		this.o.parse(no);
+		currenthash = this.o.getObject().hashCode();
 	}
 
 	private void textChange() {
