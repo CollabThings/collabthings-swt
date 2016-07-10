@@ -109,6 +109,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 	public void setPart(CTPart p) {
 		this.part = p;
 		view.setPart(part);
+		viewer.setObject(p);
 		updateInfo();
 	}
 
@@ -164,9 +165,6 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		scrolledComposite.setExpandVertical(true);
 
 		viewer = new ObjectViewer(app, window, scrolledComposite);
-		scrolledComposite.setContent(viewer);
-
-		viewer.addObjectChangeListener(() -> scrolledComposite.setContent(viewer));
 
 		csource = new YamlEditor(tabFolder.getComposite(), SWT.NONE, "source");
 		tabFolder.addTab("Source", csource, null, false);
@@ -214,18 +212,19 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 				updateLayout();
 			}
 		});
+
+		objectChanged();
+		viewer.addObjectChangeListener(() -> objectChanged());
+	}
+
+	private void objectChanged() {
+		updateInfo();
+		scrolledComposite.setContent(viewer);
 	}
 
 	private void updateInfo() {
-		updatePartInfo();
 		updateSubpartList();
 		updateLayout();
-	}
-
-	private void updatePartInfo() {
-		if (part != null) {
-			viewer.setObject(part);
-		}
 	}
 
 	private void updateSubpartList() {
@@ -241,7 +240,6 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		}
 
 		csubparts.layout();
-		// addSubpartToList(null);
 	}
 
 	private void addSubpartToList(CTSubPart subpart) {
