@@ -18,6 +18,7 @@ import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.CTListener;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
@@ -27,7 +28,6 @@ import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -46,6 +46,7 @@ public class ObjectViewer extends CTComposite {
 	//
 	private Map<String, Method> methods = new HashMap<>();
 	private Set<ObjectViewerListener> listeners = new HashSet<>();
+	private Set<CTListener> objectchangelisteners = new HashSet<>();
 	private Map<String, LEditorFactory> editors = new HashMap<>();
 	private CTLabel lblObject;
 	private final Set<String> ignoreset;
@@ -55,11 +56,11 @@ public class ObjectViewer extends CTComposite {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ObjectViewer(LOTApp app, AppWindow window, Composite parent, CTObject o) {
-		this(app, window, parent, o, new String[0]);
+	public ObjectViewer(LOTApp app, AppWindow window, Composite parent) {
+		this(app, window, parent, new String[0]);
 	}
 
-	public ObjectViewer(LOTApp app, AppWindow window, Composite parent, CTObject o, String ignore[]) {
+	public ObjectViewer(LOTApp app, AppWindow window, Composite parent, String ignore[]) {
 		super(parent, SWT.NONE);
 
 		setBackground(SWTResourceManager.getControlBg());
@@ -73,12 +74,11 @@ public class ObjectViewer extends CTComposite {
 			ignoreset.add(s);
 		}
 
-		init(o);
+		init();
 	}
 
-	private void init(CTObject o) {
+	private void init() {
 		initOkTypes();
-		parse(o);
 
 		GridLayout gridLayout = new GridLayout(1, false);
 		LOTSWT.setDefaults(gridLayout);
@@ -88,7 +88,7 @@ public class ObjectViewer extends CTComposite {
 		lblObject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblObject.setAlignment(SWT.CENTER);
 		lblObject.setText("" + objectShown);
-		lblObject.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND));
+
 		lblObject.setFont(10, SWT.BOLD);
 
 		composite = new CTComposite(this, SWT.BORDER);
@@ -96,15 +96,8 @@ public class ObjectViewer extends CTComposite {
 		GridLayout gl_composite = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_composite);
 		composite.setLayout(gl_composite);
-		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_composite.heightHint = 314;
+		GridData gd_composite = new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1);
 		composite.setLayoutData(gd_composite);
-
-		new CTObjectListener(o, () -> {
-			return !isDisposed();
-		}, () -> updateData());
-
-		addRows();
 	}
 
 	private void initOkTypes() {
@@ -422,8 +415,14 @@ public class ObjectViewer extends CTComposite {
 		return c;
 	}
 
-	public void setObject(Object o) {
+	public void setObject(CTObject o) {
 		objectShown = o;
+		new CTObjectListener(o, () -> {
+			return !isDisposed();
+		}, () -> updateData());
+
+		parse(o);
+
 		lblObject.setText("" + o);
 		refresh();
 	}
@@ -434,14 +433,24 @@ public class ObjectViewer extends CTComposite {
 		}
 
 		addRows();
-		layout();
+		pack();
+
+		Set<CTListener> ls = objectchangelisteners;
+		for (CTListener ctListener : ls) {
+			ctListener.event();
+		}
 	}
 
 	public void addListener(ObjectViewerListener objectViewerListener) {
 		this.listeners.add(objectViewerListener);
 	}
 
+	public void addObjectChangeListener(CTListener l) {
+		this.objectchangelisteners.add(l);
+	}
+
 	private interface LEditorFactory {
 		public void add(String key, Composite c, Object o);
 	}
+
 }

@@ -98,10 +98,6 @@ public class SearchView extends CTComposite implements LOTAppControl {
 		clistlayout = new GridLayout();
 		clist.setLayout(clistlayout);
 
-		// RowLayout clistlayout = new RowLayout(SWT.HORIZONTAL);
-		// clistlayout.fill = true;
-		// clist.setLayout(clistlayout);
-
 		scrolledComposite.setContent(clist);
 		scrolledComposite.addListener(SWT.Resize, new Listener() {
 			@Override

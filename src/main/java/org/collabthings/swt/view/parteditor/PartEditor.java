@@ -29,7 +29,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -52,6 +54,8 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 	private final AppWindow window;
 
 	private ObjectViewer viewer;
+
+	private ScrolledComposite scrolledComposite;
 
 	public PartEditor(Composite composite, LOTApp app, AppWindow window, CTPart p) {
 		super(composite, SWT.None);
@@ -118,7 +122,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		c_toolbar.setBackground(SWTResourceManager.getActiontitleBackground());
 		c_toolbar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		RowLayout rl_c_toolbar = new RowLayout(SWT.HORIZONTAL);
-		rl_c_toolbar.spacing = 15;
+		rl_c_toolbar.spacing = 5;
 		rl_c_toolbar.center = true;
 		c_toolbar.setLayout(rl_c_toolbar);
 
@@ -153,29 +157,25 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 
 		CTTabFolder tabFolder = new CTTabFolder(composite_main, SWT.NONE);
 
-		ScrolledComposite scrolledComposite = new ScrolledComposite(tabFolder.getComposite(),
-				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		scrolledComposite = new ScrolledComposite(tabFolder.getComposite(), SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		tabFolder.addTab("properties", scrolledComposite, null);
 
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
-		viewer = new ObjectViewer(app, window, scrolledComposite, part);
-
+		viewer = new ObjectViewer(app, window, scrolledComposite);
 		scrolledComposite.setContent(viewer);
-		scrolledComposite.setMinSize(viewer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+		viewer.addObjectChangeListener(() -> scrolledComposite.setContent(viewer));
 
 		csource = new YamlEditor(tabFolder.getComposite(), SWT.NONE, "source");
-		tabFolder.addTab("Source", csource, null);
+		tabFolder.addTab("Source", csource, null, false);
 
 		csource.setObject(this.part);
 
 		view = new GLSceneView(composite_main);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		view.setBounds(0, 0, 64, 64);
-		composite_main.setWeights(new int[] { 1, 1 });
-
-		// composite_main.setWeights(new int[] { 1, 1 });
 
 		Composite cbottom = new CTComposite(this, SWT.NONE);
 		GridLayout gl_cbottom = new GridLayout(3, false);
@@ -202,14 +202,24 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		bright.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		bright.setText(">");
 
-		updateInfo();
+		tabFolder.addSelectionListener(() -> {
+			updateLayout();
+		});
+
+		composite_main.setWeights(new int[] { 100, 200 });
+
+		scrolledComposite.addListener(SWT.Resize, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				updateLayout();
+			}
+		});
 	}
 
 	private void updateInfo() {
-		getDisplay().asyncExec(() -> {
-			updatePartInfo();
-			updateSubpartList();
-		});
+		updatePartInfo();
+		updateSubpartList();
+		updateLayout();
 	}
 
 	private void updatePartInfo() {
@@ -268,10 +278,25 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		b.addSelectionListener(() -> {
 			view(subpart);
 		});
+
 	}
 
 	private void view(CTSubPart p) {
 		pushPart(p.getPart());
+	}
+
+	private void updateLayout() {
+		getDisplay().asyncExec(() -> {
+			if (scrolledComposite != null && viewer != null) {
+				int w = scrolledComposite.getClientArea().width;
+
+				viewer.layout();
+				viewer.redraw();
+				viewer.pack();
+
+				scrolledComposite.setMinSize(w, viewer.computeSize(w, SWT.DEFAULT).y);
+			}
+		});
 	}
 
 	protected void publish() {

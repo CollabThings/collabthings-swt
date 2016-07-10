@@ -19,7 +19,7 @@ public class CTButton {
 		l.setEditable(false);
 		l.setCaret(null);
 
-		l.setBackground(SWTResourceManager.getColor(200, 200, 200));
+		l.setBackground(SWTResourceManager.getColor(220, 220, 220));
 		l.setFont(SWTResourceManager.getDefaultFont());
 		l.setLeftMargin(padding);
 		l.setRightMargin(padding);

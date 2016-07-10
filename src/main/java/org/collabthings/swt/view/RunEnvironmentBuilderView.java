@@ -225,8 +225,8 @@ public class RunEnvironmentBuilderView extends CTComposite implements LOTAppCont
 
 		try {
 			CTRunEnvironment runEnvironment = this.builder.getRunEnvironment();
-			ObjectViewer oview = new ObjectViewer(app, window, composite, runEnvironment.getEnvironment(),
-					new String[] { "info" });
+			ObjectViewer oview = new ObjectViewer(app, window, composite, new String[] { "info" });
+			oview.setObject(runEnvironment.getEnvironment());
 			oview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		} catch (Exception e) {
 			log.error(this, "view", e);
@@ -287,8 +287,9 @@ public class RunEnvironmentBuilderView extends CTComposite implements LOTAppCont
 		gl_c_factoryproperties_1.marginTop = 5;
 		gl_c_factoryproperties_1.marginHeight = 0;
 		c.setLayout(gl_c_factoryproperties_1);
-		ObjectViewer factoryobjectviewer = new ObjectViewer(app, window, c, builder2);
-
+		ObjectViewer factoryobjectviewer = new ObjectViewer(app, window, c);
+		factoryobjectviewer.setObject(builder2);
+		
 		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		GridLayout gridLayout = (GridLayout) factoryobjectviewer.getLayout();
 		LOTSWT.setDefaults(gridLayout);

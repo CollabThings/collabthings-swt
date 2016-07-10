@@ -42,7 +42,8 @@ public class PartBuilderView extends CTComposite implements LOTAppControl {
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-		ObjectViewer oview = new ObjectViewer(app, window, composite, builder);
+		ObjectViewer oview = new ObjectViewer(app, window, composite);
+		oview.setObject(builder);
 		oview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite composite_1 = new CTComposite(composite, SWT.NONE);
