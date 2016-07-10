@@ -42,6 +42,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
@@ -321,12 +322,16 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void showError(String name, Exception e) {
-		LLog.getLogger(this).error(this, name, e);
-		CTErrorDialog d = new CTErrorDialog(shell);
-		this.shell.getDisplay().asyncExec(() -> {
-			d.open();
-			d.show(name, e);
-		});
+		if (name.equals(CTClient.ERROR_OPENSCADFAILED)) {
+			new FindOpenscadDialog(app, this, shell);
+		} else {
+			LLog.getLogger(this).error(this, name, e);
+			CTErrorDialog d = new CTErrorDialog(shell);
+			this.shell.getDisplay().asyncExec(() -> {
+				d.open();
+				d.show(name, e);
+			});
+		}
 	}
 
 	public void showError(String message) {

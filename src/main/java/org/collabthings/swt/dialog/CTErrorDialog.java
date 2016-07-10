@@ -21,8 +21,7 @@ public class CTErrorDialog {
 	 * @param style
 	 */
 	public CTErrorDialog(Shell parent) {
-		shell = new Shell(parent);
-
+		shell = new Shell(parent.getDisplay());
 		createContents();
 	}
 
@@ -37,11 +36,12 @@ public class CTErrorDialog {
 		new Thread(() -> {
 			Display display = shell.getDisplay();
 			while (!shell.isDisposed()) {
+
 				if (!display.readAndDispatch()) {
 					display.sleep();
 				}
 			}
-		}).start();
+		});
 	}
 
 	/**
