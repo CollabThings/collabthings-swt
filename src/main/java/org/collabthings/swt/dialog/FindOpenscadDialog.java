@@ -1,6 +1,7 @@
-package org.collabthings.swt;
+package org.collabthings.swt.dialog;
 
 import org.collabthings.CTClient;
+import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.app.LOTApp;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;

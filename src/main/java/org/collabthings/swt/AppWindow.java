@@ -21,6 +21,7 @@ import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.CTErrorDialog;
+import org.collabthings.swt.dialog.FindOpenscadDialog;
 import org.collabthings.swt.view.FactoryView;
 import org.collabthings.swt.view.ObjectSearchView;
 import org.collabthings.swt.view.PartBuilderView;
