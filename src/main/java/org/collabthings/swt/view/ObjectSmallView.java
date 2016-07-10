@@ -172,6 +172,10 @@ public class ObjectSmallView extends CTComposite {
 		addDataHandler("thumbnail", (n, d) -> {
 			thumbnail.setId(new BinaryID(d.getValue(n)));
 		});
+
+		addDataHandler("content", (n, d) -> {
+			handle(d.get(n));
+		});
 	}
 
 	private void addCreatorAndVersion(Composite cvalues) {
@@ -289,22 +293,7 @@ public class ObjectSmallView extends CTComposite {
 			if (o.getType() != null) {
 				ltype.setText(o.getType());
 
-				for (String name : o.getChildren()) {
-					log.debug("addData " + name);
-
-					DataHandler dh = handlers.get(name);
-					if (dh != null) {
-						dh.handle(name, o);
-					} else if (!ignorelist.contains(name)) {
-						CTLabel l = new CTLabel(items, getStyle());
-						try {
-							l.setText("" + name + " " + o.getValue(name));
-						} catch (ClassCastException e) {
-							l.setText("Wrong type with " + name);
-						}
-						setListLayoutData(l.getControl());
-					}
-				}
+				handle(o);
 			} else {
 				CTLabel nulll = new CTLabel(items, getStyle());
 				nulll.setText("Missing type");
@@ -313,6 +302,27 @@ public class ObjectSmallView extends CTComposite {
 		} else {
 			CTLabel nulll = new CTLabel(items, getStyle());
 			nulll.setText("Null id or app is not initialized");
+		}
+	}
+
+	private void handle(WObject o) {
+		for (String name : o.getChildren()) {
+			log.debug("addData " + name);
+
+			DataHandler dh = handlers.get(name);
+			if (dh != null) {
+				dh.handle(name, o);
+			} else if (!ignorelist.contains(name)) {
+				try {
+					String value = o.getValue(name);
+					CTLabel l = new CTLabel(items, getStyle());
+					l.setText("" + name + " " + value);
+					setListLayoutData(l.getControl());
+				} catch (ClassCastException e) {
+					log.info("Wrong type with " + name);
+				}
+
+			}
 		}
 	}
 
