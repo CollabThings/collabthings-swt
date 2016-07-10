@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.view.YamlEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.MouseAdapter;
@@ -49,7 +50,11 @@ public class CTTabFolder extends CTComposite {
 		cstack.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	}
 
-	public void addTab(String name, Control control, Object data) {
+	public void addTab(String name, Control control, Object object) {
+		addTab(name, control, object, true);
+	}
+
+	public void addTab(String name, Control control, Object data, boolean b) {
 		if (name.length() < 3) {
 			name = "TAB " + name;
 		}
@@ -70,8 +75,10 @@ public class CTTabFolder extends CTComposite {
 
 		});
 
-		select(i);
-
+		if (b) {
+			select(i);
+		}
+		
 		ctabs.pack();
 		layout();
 	}
@@ -87,6 +94,12 @@ public class CTTabFolder extends CTComposite {
 
 		stackLayout.topControl = i.getControl();
 		cstack.layout();
+
+		List<CTTabsListener> ls = selectionlisteners;
+
+		for (CTTabsListener ctTabsListener : ls) {
+			ctTabsListener.event();
+		}
 	}
 
 	public TabInfo getSelection() {
@@ -124,7 +137,7 @@ public class CTTabFolder extends CTComposite {
 	}
 
 	public static interface CTTabsListener {
-		void closed();
+		void event();
 	}
 
 	public Composite getComposite() {
