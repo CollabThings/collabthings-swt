@@ -20,17 +20,14 @@ import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
-import org.collabthings.swt.dialog.LOTMessageDialog;
+import org.collabthings.swt.dialog.CTErrorDialog;
 import org.collabthings.swt.view.FactoryView;
 import org.collabthings.swt.view.ObjectSearchView;
-import org.collabthings.swt.view.ObjectSmallView;
 import org.collabthings.swt.view.PartBuilderView;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
 import org.collabthings.swt.view.SCADView;
 import org.collabthings.swt.view.ScriptView;
-import org.collabthings.swt.view.SearchView;
-import org.collabthings.swt.view.SearchView.CTSearchResultFactory;
 import org.collabthings.swt.view.UserView;
 import org.collabthings.swt.view.UsersSearchView;
 import org.collabthings.swt.view.ValueEditorDialog;
@@ -50,7 +47,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
-import waazdoh.client.WClient;
 import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.ObjectVO;
@@ -82,6 +78,10 @@ public final class AppWindow implements CTInfo {
 	public AppWindow(LOTApp app) {
 		this.app = app;
 		this.viewtypes = new ViewTypes(this, app);
+
+		app.getLClient().addErrorListener((name, e) -> {
+			showError(name, e);
+		});
 	}
 
 	public void newPart() {
@@ -90,7 +90,7 @@ public final class AppWindow implements CTInfo {
 			PartEditor view = new PartEditor(tabFolder.getComposite(), app, this, p);
 			addTab("part " + p, view, p);
 		} catch (Exception e) {
-			showError(e);
+			showError("newPart", e);
 		}
 	}
 
@@ -257,7 +257,7 @@ public final class AppWindow implements CTInfo {
 			} catch (Exception e) {
 				// TODO shouldn't catch Exception, but didn't come up with
 				// anything better.
-				showError(e);
+				showError("Open", e);
 			}
 		} finally {
 			if (shell != null) {
@@ -316,20 +316,23 @@ public final class AppWindow implements CTInfo {
 				display.sleep();
 			}
 		} catch (Exception e) {
-			showError(e);
+			showError("readAndDispatch", e);
 		}
 	}
 
-	public void showError(Exception e) {
-		LLog.getLogger(this).error(this, null, e);
-		LOTMessageDialog d = new LOTMessageDialog(shell);
-		d.show(e);
+	public void showError(String name, Exception e) {
+		LLog.getLogger(this).error(this, name, e);
+		CTErrorDialog d = new CTErrorDialog(shell);
+		this.shell.getDisplay().asyncExec(() -> {
+			d.open();
+			d.show(name, e);
+		});
 	}
 
 	public void showError(String message) {
 		this.shell.getDisplay().asyncExec(() -> {
 			LLog.getLogger(this).info("ERROR " + message);
-			LOTMessageDialog d = new LOTMessageDialog(shell);
+			CTErrorDialog d = new CTErrorDialog(shell);
 			d.show("Error", message);
 		});
 	}

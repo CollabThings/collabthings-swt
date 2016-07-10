@@ -75,7 +75,7 @@ public class SCADView extends CTComposite implements LOTAppControl {
 					try {
 						this.wait(200);
 					} catch (Exception e) {
-						window.showError(e);
+						window.showError("Interrupted", e);
 					}
 				}
 			}

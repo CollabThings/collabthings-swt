@@ -132,7 +132,7 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 
 		enveditor = new YamlEditor(tabFolder, SWT.NONE, "Environment");
 		tabFolder.addTab("env", enveditor, null);
-		
+
 		enveditor.setObject(factory.getEnvironment());
 
 		Composite c_view = new CTComposite(composite_main, SWT.NONE);
@@ -291,7 +291,7 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 				try {
 					wait(100);
 				} catch (InterruptedException e) {
-					window.showError(e);
+					window.showError("Interrupted", e);
 				}
 			}
 		}
@@ -311,7 +311,7 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 					s.setScript(new String(bs));
 				}
 			} catch (IOException e) {
-				window.showError(e);
+				window.showError("importError", e);
 			}
 		});
 	}

@@ -163,7 +163,7 @@ public class RunEnvironmentBuilderView extends CTComposite implements LOTAppCont
 					try {
 						this.wait(300);
 					} catch (Exception e) {
-						window.showError(e);
+						window.showError("Interrupted", e);
 					}
 				}
 			}
@@ -289,7 +289,7 @@ public class RunEnvironmentBuilderView extends CTComposite implements LOTAppCont
 		c.setLayout(gl_c_factoryproperties_1);
 		ObjectViewer factoryobjectviewer = new ObjectViewer(app, window, c);
 		factoryobjectviewer.setObject(builder2);
-		
+
 		factoryobjectviewer.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		GridLayout gridLayout = (GridLayout) factoryobjectviewer.getLayout();
 		LOTSWT.setDefaults(gridLayout);
