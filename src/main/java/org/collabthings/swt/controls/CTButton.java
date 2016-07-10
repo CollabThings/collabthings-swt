@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class CTButton {
 	private StyledText l;
-	private int padding = 5;
+	private int padding = 10;
 
 	public CTButton(Composite parent, int style) {
 		l = new StyledText(parent, style);

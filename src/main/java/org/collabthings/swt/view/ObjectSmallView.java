@@ -297,7 +297,11 @@ public class ObjectSmallView extends CTComposite {
 						dh.handle(name, o);
 					} else if (!ignorelist.contains(name)) {
 						CTLabel l = new CTLabel(items, getStyle());
-						l.setText("" + name + " " + o.getValue(name));
+						try {
+							l.setText("" + name + " " + o.getValue(name));
+						} catch (ClassCastException e) {
+							l.setText("Wrong type with " + name);
+						}
 						setListLayoutData(l.getControl());
 					}
 				}

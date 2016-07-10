@@ -21,8 +21,6 @@ import org.collabthings.swt.view.GLSceneView;
 import org.collabthings.swt.view.YamlEditor;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.layout.FillLayout;
@@ -31,9 +29,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Label;
 
 public class PartEditor extends CTComposite implements LOTAppControl {
 	private CTPart part;
@@ -117,8 +115,10 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		setLayout(gridLayout);
 
 		Composite c_toolbar = new CTComposite(this, SWT.NONE);
-		c_toolbar.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		c_toolbar.setBackground(SWTResourceManager.getActiontitleBackground());
+		c_toolbar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		RowLayout rl_c_toolbar = new RowLayout(SWT.HORIZONTAL);
+		rl_c_toolbar.spacing = 15;
 		rl_c_toolbar.center = true;
 		c_toolbar.setLayout(rl_c_toolbar);
 
@@ -151,14 +151,12 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		composite_main.setBackground(SWTResourceManager.getControlBg());
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		CTabFolder tabFolder = new CTTabFolder(composite_main, SWT.NONE);
+		CTTabFolder tabFolder = new CTTabFolder(composite_main, SWT.NONE);
 
-		CTabItem tabProperties = new CTabItem(tabFolder, SWT.NONE);
-		tabProperties.setText("Properties");
-
-		ScrolledComposite scrolledComposite = new ScrolledComposite(tabFolder,
+		ScrolledComposite scrolledComposite = new ScrolledComposite(tabFolder.getComposite(),
 				SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		tabProperties.setControl(scrolledComposite);
+		tabFolder.addTab("properties", scrolledComposite, null);
+
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 
@@ -167,11 +165,9 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		scrolledComposite.setContent(viewer);
 		scrolledComposite.setMinSize(viewer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
-		CTabItem tabSource = new CTabItem(tabFolder, SWT.NONE);
-		tabSource.setText("Source");
+		csource = new YamlEditor(tabFolder.getComposite(), SWT.NONE, "source");
+		tabFolder.addTab("Source", csource, null);
 
-		csource = new YamlEditor(tabFolder, SWT.NONE, "source");
-		tabSource.setControl(csource);
 		csource.setObject(this.part);
 
 		view = new GLSceneView(composite_main);

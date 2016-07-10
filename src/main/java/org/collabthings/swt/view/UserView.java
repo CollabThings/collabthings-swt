@@ -28,8 +28,7 @@ public class UserView extends CTComposite implements LOTAppControl {
 	 * @param style
 	 */
 	public UserView(Composite parent, LOTApp app, AppWindow window, String userid) {
-		super(parent, SWT.BORDER | SWT.NO_FOCUS | SWT.NO_MERGE_PAINTS | SWT.NO_REDRAW_RESIZE
-				| SWT.NO_RADIO_GROUP | SWT.EMBEDDED);
+		super(parent, SWT.NO_FOCUS | SWT.NO_MERGE_PAINTS | SWT.NO_REDRAW_RESIZE | SWT.NO_RADIO_GROUP | SWT.EMBEDDED);
 
 		this.app = app;
 		this.window = window;
@@ -37,16 +36,27 @@ public class UserView extends CTComposite implements LOTAppControl {
 		GridLayout gridLayout = new GridLayout(1, false);
 		setLayout(gridLayout);
 
-		CTLabel lname = new CTLabel(this, SWT.NONE);
-		lname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
 		SashForm sashForm = new SashForm(this, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		SearchView searchView = new SearchView(sashForm, app, window, true);
+		Composite composite = new CTComposite(sashForm, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
+
+		Composite cuserinfo = new CTComposite(composite, SWT.NONE);
+
+		cuserinfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		cuserinfo.setLayout(new GridLayout(1, false));
+
+		CTLabel lname = new CTLabel(cuserinfo, SWT.NONE);
+		lname.setText("TESTING");
+		lname.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+
+		ObjectSearchView searchView = new ObjectSearchView(composite, app, window);
+		searchView.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		searchView.search("" + userid, 0, 10);
 
 		UserPublishedView dview = new UserPublishedView(sashForm, app, window);
+		sashForm.setWeights(new int[] { 1, 1 });
 
 		new Thread(() -> {
 			u = app.getLClient().getService().getUsers().getUser(userid);

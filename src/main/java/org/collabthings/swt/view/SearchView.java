@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
@@ -22,9 +23,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-import waazdoh.client.WClient;
-import waazdoh.common.vo.ObjectVO;
-
 public class SearchView extends CTComposite implements LOTAppControl {
 	private static final int COLUMN_WIDTH = 500;
 	private AppWindow window;
@@ -35,23 +33,40 @@ public class SearchView extends CTComposite implements LOTAppControl {
 	private ScrolledComposite scrolledComposite;
 	private GridLayout clistlayout;
 
+	private final CTSearchResultFactory factory;
+
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow) {
-		this(c, app, appWindow, false);
+	public SearchView(Composite c, LOTApp app, AppWindow appWindow, CTSearchResultFactory factory) {
+		this(c, app, appWindow, false, factory);
 	}
 
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox) {
-		super(c, SWT.BORDER);
+	public SearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox,
+			CTSearchResultFactory nfactory) {
+		super(c, SWT.NONE);
 		this.app = app;
 		this.window = appWindow;
-		setLayout(new GridLayout(1, false));
+		this.factory = nfactory;
+
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.marginLeft = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+
+		this.setLayout(gridLayout);
 
 		if (!hidesearchbox) {
 			Composite composite = new CTComposite(this, SWT.NONE);
+			composite.setBackground(SWTResourceManager.getActiontitleBackground());
+
 			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			composite.setLayout(new GridLayout(2, false));
+			GridLayout clayout = new GridLayout(2, false);
+			clayout.marginLeft = 6;
+			clayout.marginRight = 6;
+			clayout.marginTop = 3;
+			clayout.marginBottom = 3;
+			composite.setLayout(clayout);
 
 			text = CTControls.getText(composite, SWT.BORDER);
 
@@ -64,7 +79,7 @@ public class SearchView extends CTComposite implements LOTAppControl {
 					}
 				}
 			});
-			text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 			CTButton bsearch = new CTButton(composite, SWT.NONE);
 			bsearch.addSelectionListener(() -> {
@@ -80,7 +95,7 @@ public class SearchView extends CTComposite implements LOTAppControl {
 		scrolledComposite.setExpandVertical(true);
 
 		clist = new CTComposite(scrolledComposite, SWT.NONE);
-		clistlayout = new GridLayout(1, false);
+		clistlayout = new GridLayout();
 		clist.setLayout(clistlayout);
 
 		// RowLayout clistlayout = new RowLayout(SWT.HORIZONTAL);
@@ -124,8 +139,8 @@ public class SearchView extends CTComposite implements LOTAppControl {
 				}
 			});
 
-			WClient client = app.getLClient().getClient();
-			List<String> list = client.getObjects().search(searchitem, start, count);
+			List<String> list = factory.search(searchitem, start, count);
+
 			log.info("search got list " + list);
 			handleResponse(list);
 		}).start();
@@ -148,20 +163,10 @@ public class SearchView extends CTComposite implements LOTAppControl {
 		}
 
 		for (String id : list) {
-			addRow(id);
+			factory.addRow(id, clist);
 		}
 
 		updateLayout();
-	}
-
-	private void addRow(String id) {
-		try {
-			new ObjectSmallView(clist, this.app, this.window, id);
-		} catch (ClassCastException e) {
-			log.error(this, "addRow " + id, e);
-			ObjectVO o = this.app.getLClient().getService().getObjects().read(id);
-			log.info("failed object " + o.toObject());
-		}
 	}
 
 	@Override
@@ -194,4 +199,11 @@ public class SearchView extends CTComposite implements LOTAppControl {
 		}
 	}
 
+	public static interface CTSearchResultFactory {
+
+		void addRow(String id, Composite clist);
+
+		List<String> search(String s, int start, int count);
+
+	}
 }

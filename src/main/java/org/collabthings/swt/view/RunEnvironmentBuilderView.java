@@ -96,27 +96,19 @@ public class RunEnvironmentBuilderView extends CTComposite implements LOTAppCont
 		SashForm composite_main = new SashForm(this, SWT.NONE);
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		CTabFolder tabFolder = new CTTabFolder(composite_main, SWT.BORDER);
+		CTTabFolder tabFolder = new CTTabFolder(composite_main, SWT.BORDER);
 
 		// main yaml editor
-		CTabItem maintab = new CTabItem(tabFolder, SWT.NONE);
-		maintab.setText("Main");
+
 		this.maineditor = new YamlEditor(tabFolder, SWT.NONE, "main");
-		maineditor.setObject(builder);
-		maintab.setControl(maineditor);
-		tabFolder.setSelection(maintab);
-
+		tabFolder.addTab("Main", maineditor, null);
+		;
 		// environment yaml editor
-		CTabItem eeditor = new CTabItem(tabFolder, SWT.NONE);
-		eeditor.setText("Env");
 		this.enveditor = new YamlEditor(tabFolder, SWT.NONE, "env");
-		enveditor.setObject(builder.getEnvironment());
-		eeditor.setControl(enveditor);
+		tabFolder.addTab("Env", enveditor, null);
 
-		CTabItem tabItem = new CTabItem(tabFolder, SWT.NONE);
-		tabItem.setText("Builder");
 		this.composite = new CTComposite(tabFolder, SWT.NONE);
-		tabItem.setControl(composite);
+		tabFolder.addTab("Builder", composite, null);
 
 		Composite c_view = new CTComposite(composite_main, SWT.NONE);
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

@@ -3,6 +3,7 @@ package org.collabthings.swt.controls;
 import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -80,6 +81,14 @@ public class CTLabel {
 	public void setTitleFont() {
 		label.setFont(SWTResourceManager.getTitleFont());
 		label.setForeground(SWTResourceManager.getTitleColor());
+	}
+
+	public void setFont(Font font) {
+		label.setFont(font);
+	}
+
+	public void setColor(Color color) {
+		label.setForeground(color);
 	}
 
 }

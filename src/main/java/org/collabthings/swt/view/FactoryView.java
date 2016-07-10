@@ -31,12 +31,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.TabFolder;
 
 public class FactoryView extends CTComposite implements LOTAppControl, ScriptUser {
 	private CTFactory factory;
@@ -122,22 +122,17 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 		});
 		btnAddChild.setText("add child");
 
-		CTabFolder tabFolder = new CTTabFolder(composite, SWT.BORDER);
+		CTTabFolder tabFolder = new CTTabFolder(composite, SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		CTabItem tbtmMain = new CTabItem(tabFolder, SWT.NONE);
-		tbtmMain.setText("main");
-
 		yamleditor = new YamlEditor(tabFolder, SWT.NONE, "Factory");
-		tbtmMain.setControl(yamleditor);
-		yamleditor.setObject(this.factory);
-		tabFolder.setSelection(tbtmMain);
+		tabFolder.addTab("main", yamleditor, null);
 
-		CTabItem tbtmEnv = new CTabItem(tabFolder, SWT.NONE);
-		tbtmEnv.setText("env");
+		yamleditor.setObject(this.factory);
 
 		enveditor = new YamlEditor(tabFolder, SWT.NONE, "Environment");
-		tbtmEnv.setControl(enveditor);
+		tabFolder.addTab("env", enveditor, null);
+		
 		enveditor.setObject(factory.getEnvironment());
 
 		Composite c_view = new CTComposite(composite_main, SWT.NONE);

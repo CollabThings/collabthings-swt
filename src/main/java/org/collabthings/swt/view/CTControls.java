@@ -8,6 +8,7 @@ public class CTControls {
 
 	public static Text getText(Composite composite, int none) {
 		Text text = new Text(composite, none);
+		
 		text.setFont(SWTResourceManager.getDefaultFont());
 		return text;
 	}

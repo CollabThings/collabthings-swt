@@ -22,20 +22,21 @@ import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.LOTMessageDialog;
 import org.collabthings.swt.view.FactoryView;
+import org.collabthings.swt.view.ObjectSearchView;
+import org.collabthings.swt.view.ObjectSmallView;
 import org.collabthings.swt.view.PartBuilderView;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
 import org.collabthings.swt.view.SCADView;
 import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.SearchView;
+import org.collabthings.swt.view.SearchView.CTSearchResultFactory;
 import org.collabthings.swt.view.UserView;
 import org.collabthings.swt.view.UsersSearchView;
 import org.collabthings.swt.view.ValueEditorDialog;
 import org.collabthings.swt.view.parteditor.PartEditor;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -49,6 +50,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
+import waazdoh.client.WClient;
 import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.ObjectVO;
@@ -62,7 +64,7 @@ public final class AppWindow implements CTInfo {
 
 	private List<LOTAppControl> controls = new LinkedList<>();
 
-	private CTabFolder tabFolder;
+	private CTTabFolder tabFolder;
 	private CTLabel lblBottonInfo;
 
 	private MenuItem objectmenu;
@@ -85,7 +87,7 @@ public final class AppWindow implements CTInfo {
 	public void newPart() {
 		try {
 			CTPart p = app.newPart();
-			PartEditor view = new PartEditor(tabFolder, app, this, p);
+			PartEditor view = new PartEditor(tabFolder.getComposite(), app, this, p);
 			addTab("part " + p, view, p);
 		} catch (Exception e) {
 			showError(e);
@@ -127,21 +129,21 @@ public final class AppWindow implements CTInfo {
 		setInfo(0, 0, 0, "View User " + user.getUsername());
 
 		shell.getDisplay().asyncExec(() -> {
-			UserView v = new UserView(tabFolder, app, this, user.getUserid());
-			addTab("" + user, v, user);
+			UserView v = new UserView(tabFolder.getComposite(), app, this, user.getUserid());
+			addTab("" + user.getUsername(), v, user);
 		});
 	}
 
 	public void viewRunEnvironmentBuilder(CTRunEnvironmentBuilder b) {
 		setInfo(0, 0, 0, "Viewing Builder" + b.toString());
 		shell.getDisplay().asyncExec(() -> {
-			RunEnvironmentBuilderView v = new RunEnvironmentBuilderView(tabFolder, app, this, b);
+			RunEnvironmentBuilderView v = new RunEnvironmentBuilderView(tabFolder.getComposite(), app, this, b);
 			addTab("" + b, v, b);
 		});
 	}
 
 	public void viewSimulation(CTRunEnvironmentBuilder builder) {
-		RunEnvironmentBuildRunView v = new RunEnvironmentBuildRunView(tabFolder, app, this, builder);
+		RunEnvironmentBuildRunView v = new RunEnvironmentBuildRunView(tabFolder.getComposite(), app, this, builder);
 		addTab("" + builder, v, builder);
 	}
 
@@ -149,7 +151,7 @@ public final class AppWindow implements CTInfo {
 		setInfo(0, 0, 0, "Viewing factory " + f.toString());
 
 		shell.getDisplay().asyncExec(() -> {
-			FactoryView v = new FactoryView(tabFolder, app, this, f);
+			FactoryView v = new FactoryView(tabFolder.getComposite(), app, this, f);
 			addTab("" + f, v, f);
 		});
 	}
@@ -157,7 +159,7 @@ public final class AppWindow implements CTInfo {
 	public void viewPartBuilder(CTPartBuilder pb) {
 		setInfo(0, 0, 0, "Viewing partbuilder " + pb);
 		shell.getDisplay().asyncExec(() -> {
-			PartBuilderView v = new PartBuilderView(tabFolder, app, this, pb);
+			PartBuilderView v = new PartBuilderView(tabFolder.getComposite(), app, this, pb);
 			addTab("" + pb, v, pb);
 		});
 	}
@@ -173,32 +175,34 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void viewSearchUsers(String seachitem) {
-		UsersSearchView v = new UsersSearchView(tabFolder, app, this);
-		addTab("users", v, seachitem);
-		v.search(seachitem);
+		UsersSearchView v = new UsersSearchView(tabFolder.getComposite(), app, this);
+		addTab("users", v.getView(), seachitem);
+		v.search(seachitem, 0, 100);
 	}
 
 	public void viewSearch(String searchitem) {
-		SearchView s = new SearchView(tabFolder, app, this);
-		addTab("" + searchitem, s, searchitem);
+		AppWindow window = this;
+
+		ObjectSearchView s = new ObjectSearchView(tabFolder.getComposite(), app, this);
+		addTab("Search " + searchitem, s.getControl(), searchitem);
 		s.search(searchitem, 0, 50);
 	}
 
 	public void viewScript(CTScript script) {
 		shell.getDisplay().asyncExec(() -> {
-			ScriptView v = new ScriptView(tabFolder, app, this, script);
+			ScriptView v = new ScriptView(tabFolder.getComposite(), app, this, script);
 			addTab("" + script, v, script);
 		});
 	}
 
 	public void viewUser(String name, String userid) {
-		UserView v = new UserView(tabFolder, app, this, userid);
+		UserView v = new UserView(tabFolder.getComposite(), app, this, userid);
 		addTab("" + name, v, userid);
 	}
 
 	public void viewOpenSCAD(CTOpenSCAD scad) {
 		shell.getDisplay().asyncExec(() -> {
-			SCADView v = new SCADView(tabFolder, app, this, scad);
+			SCADView v = new SCADView(tabFolder.getComposite(), app, this, scad);
 			addTab("" + scad.getName(), v, scad);
 		});
 	}
@@ -206,7 +210,7 @@ public final class AppWindow implements CTInfo {
 	public void viewPart(CTPart part) {
 		if (part != null) {
 			shell.getDisplay().asyncExec(() -> {
-				PartEditor pv = new PartEditor(tabFolder, app, this, part);
+				PartEditor pv = new PartEditor(tabFolder.getComposite(), app, this, part);
 				addTab("" + part.getName(), pv, part);
 			});
 		} else {
@@ -215,18 +219,16 @@ public final class AppWindow implements CTInfo {
 	}
 
 	private void addTab(String name, LOTAppControl c, Object data) {
-		CTabItem i = new CTabItem(tabFolder, SWT.CLOSE);
-		i.setText(name);
 		Control control = c.getControl();
 		control.setBackground(SWTResourceManager.getControlBg());
 
-		i.setControl(control);
-		i.setData(data);
-		tabFolder.setSelection(i);
+		tabFolder.addTab(name, control, data);
+
 		tabSelected();
 
 		controls.add(c);
-		i.addDisposeListener(e -> {
+
+		tabFolder.addCloseListener(name, () -> {
 			controls.remove(c);
 			control.dispose();
 		});
@@ -466,6 +468,8 @@ public final class AppWindow implements CTInfo {
 
 		Composite composite = new CTComposite(shell, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.verticalSpacing = 0;
+		gl_composite.horizontalSpacing = 0;
 		LOTSWT.setDefaults(gl_composite);
 
 		composite.setLayout(gl_composite);
@@ -474,26 +478,26 @@ public final class AppWindow implements CTInfo {
 		composite.setLayoutData(gd_composite);
 
 		tabFolder = new CTTabFolder(composite, SWT.FLAT);
-		tabFolder.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				tabSelected();
-			}
+		tabFolder.addSelectionListener(() -> {
+			tabSelected();
 		});
+
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite composite_1 = new CTComposite(composite, SWT.NONE);
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		composite_1.setLayout(new GridLayout(2, false));
+		composite_1.setBackground(SWTResourceManager.getActiontitleBackground());
 
 		lblStatus = new CTLabel(composite_1, SWT.NONE);
 		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblStatus.setText("status");
 
 		progressBar = new ProgressBar(composite_1, SWT.NONE);
+		progressBar.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 
 		lblBottonInfo = new CTLabel(composite, SWT.NONE);
-		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		lblBottonInfo.setAlignment(SWT.RIGHT);
 
 		setBottomInfo();

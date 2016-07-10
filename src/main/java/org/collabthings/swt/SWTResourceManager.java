@@ -496,7 +496,7 @@ public class SWTResourceManager {
 	}
 
 	public static Font getDefaultFont(int size, int style) {
-		return getFont("Nirmala UI", size, style);
+		return getFont("Verdana", size, style);
 	}
 
 	public static Font getTitleFont() {
@@ -504,6 +504,18 @@ public class SWTResourceManager {
 	}
 
 	public static Color getTitleColor() {
-		return getColor(100, 100, 0);
+		return getColor(200, 100, 0);
+	}
+
+	public static Color getActiontitleBackground() {
+		return getColor(250, 150, 100);
+	}
+
+	public static Color getTabSelectedColor() {
+		return getColor(50, 50, 50);
+	}
+
+	public static Color getTabNotSelectedColor() {
+		return getColor(190, 190, 190);
 	}
 }
