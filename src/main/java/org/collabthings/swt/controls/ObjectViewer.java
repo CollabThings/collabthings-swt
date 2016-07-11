@@ -16,6 +16,7 @@ import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTObject;
+import org.collabthings.model.CTPart;
 import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTListener;
@@ -407,6 +408,7 @@ public class ObjectViewer extends CTComposite {
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.numColumns = 3;
 		c.setLayout(gridLayout);
 
 		CTLabel l = new CTLabel(c, SWT.NONE);
@@ -418,6 +420,14 @@ public class ObjectViewer extends CTComposite {
 		b.addSelectionListener(() -> {
 			window.viewOpenSCAD(o);
 		});
+
+		CTButton r = new CTButton(c, SWT.NONE);
+		r.setText("Remove");
+		r.addSelectionListener(() -> {
+			CTPart p = (CTPart) this.objectShown;
+			p.resetModel();
+		});
+
 		return c;
 	}
 

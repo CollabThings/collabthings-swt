@@ -271,11 +271,11 @@ public final class AppWindow implements CTInfo {
 
 	private void openTestViews(Display display) {
 		display.asyncExec(() -> {
-			viewSearch("part");
+			// viewSearch("part");
 		});
 
 		display.asyncExec(() -> {
-			viewSearchUsers("user");
+			// viewSearchUsers("user");
 			// newFactory();
 
 			String latest = app.getLClient().getService().getStorageArea()

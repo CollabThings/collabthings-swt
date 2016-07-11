@@ -518,4 +518,12 @@ public class SWTResourceManager {
 	public static Color getTabNotSelectedColor() {
 		return getColor(190, 190, 190);
 	}
+
+	public static Color getActiontitle2Background() {
+		return getColor(200, 200, 200);
+	}
+
+	public static Color getActionTitle2Color() {
+		return getTabSelectedColor();
+	}
 }

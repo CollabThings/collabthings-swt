@@ -17,9 +17,9 @@ public class CTLabel {
 	public CTLabel(Composite composite_1, int none) {
 		this.label = new Label(composite_1, none);
 
-		label.setBackground(SWTResourceManager.getControlBg());
+		label.setBackground(composite_1.getBackground());
 		label.setFont(SWTResourceManager.getDefaultFont());
-
+		label.setForeground(composite_1.getForeground());
 	}
 
 	public void setAlignment(int right) {
