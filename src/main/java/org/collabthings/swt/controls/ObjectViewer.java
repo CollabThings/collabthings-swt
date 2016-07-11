@@ -26,8 +26,9 @@ import org.collabthings.swt.view.ObjectSmallView;
 import org.collabthings.swt.view.parteditor.CTObjectListener;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -256,13 +257,19 @@ public class ObjectViewer extends CTComposite {
 	}
 
 	private void addValue(Composite parent, String key, Object o) {
-		LEditorFactory e = getEditor(o);
-		if (e != null) {
-			e.add(key, parent, o);
+		if (o != null) {
+			LEditorFactory e = getEditor(o);
+			if (e != null) {
+				e.add(key, parent, o);
+			} else {
+				CTLabel la = new CTLabel(parent, getStyle());
+				la.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+				la.setText("unknown type " + o.getClass().getName() + " " + key);
+			}
 		} else {
 			CTLabel la = new CTLabel(parent, getStyle());
 			la.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-			la.setText("unknown type " + o.getClass().getName() + " " + key);
+			la.setText("Empty value " + key);
 		}
 	}
 
@@ -291,13 +298,9 @@ public class ObjectViewer extends CTComposite {
 	}
 
 	private Control addDoubleField(String key, Composite c, Double d) {
-		return addTextField(c, key, "" + d, new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent arg0) {
-				String sdata = getString(arg0);
-				invokeSetMethod(key, Double.parseDouble(sdata));
-			}
+		return addTextField(c, key, "" + d, (t) -> {
+			String sdata = t.getText();
+			invokeSetMethod(key, Double.parseDouble(sdata));
 		});
 	}
 
@@ -328,19 +331,10 @@ public class ObjectViewer extends CTComposite {
 	}
 
 	private Control addStringField(String key, Composite c, String s) {
-		return addTextField(c, key, s, new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent arg0) {
-				String sdata = "" + getString(arg0);
-				invokeSetMethod(key, sdata);
-			}
+		return addTextField(c, key, s, (t) -> {
+			String sdata = "" + t.getText();
+			invokeSetMethod(key, sdata);
 		});
-	}
-
-	private String getString(ModifyEvent arg0) {
-		Text t = (Text) arg0.widget;
-		return "" + t.getText();
 	}
 
 	private CTLabel addLabelField(String key, Composite parent, String text) {
@@ -360,7 +354,7 @@ public class ObjectViewer extends CTComposite {
 		l.setText(key);
 	}
 
-	private Control addTextField(Composite parent, String name, String text, ModifyListener listener) {
+	private Control addTextField(Composite parent, String name, String text, TextListener listener) {
 		Composite c = getRowComposite(parent);
 
 		addLabel(name, c);
@@ -369,7 +363,19 @@ public class ObjectViewer extends CTComposite {
 		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		s.setEditable(true);
 		s.setText(text);
-		s.addModifyListener(listener);
+
+		s.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				listener.changed(s);
+			}
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+			}
+		});
+
 		return s;
 	}
 
@@ -453,4 +459,7 @@ public class ObjectViewer extends CTComposite {
 		public void add(String key, Composite c, Object o);
 	}
 
+	private interface TextListener {
+		void changed(Text t);
+	}
 }

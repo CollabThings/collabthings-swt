@@ -185,7 +185,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		cbottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 
 		CTButton bleft = new CTButton(cbottom, SWT.NONE);
-		bleft.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+		bleft.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		bleft.setText("<");
 
 		csubparts = new CTComposite(cbottom, SWT.NONE);
@@ -197,7 +197,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		CTButton bright = new CTButton(cbottom, SWT.NONE);
 		new Label(cbottom, SWT.NONE);
 		new Label(cbottom, SWT.NONE);
-		bright.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+		bright.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		bright.setText(">");
 
 		tabFolder.addSelectionListener(() -> {
@@ -247,15 +247,19 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		Composite composite = new CTComposite(csubparts, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.verticalSpacing = 1;
-		gl_composite.marginWidth = 0;
+		gl_composite.marginWidth = 10;
 		gl_composite.marginHeight = 0;
 		gl_composite.horizontalSpacing = 0;
 		composite.setLayout(gl_composite);
 
 		CTLabel lsubname = new CTLabel(composite, SWT.NONE);
 		lsubname.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true, true, 1, 1));
-		lsubname.setText("" + subpart);
-
+		if (subpart.getPart() != null) {
+			lsubname.setText("" + subpart.getPart().getName());
+		} else {
+			lsubname.setText("empty");
+		}
+		
 		LOTVectorEditor elocation = new LOTVectorEditor(composite, subpart.getLocation(), (e) -> {
 			subpart.setOrientation(e, subpart.getNormal(), subpart.getAngle());
 		});

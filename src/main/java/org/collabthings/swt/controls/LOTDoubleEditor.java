@@ -1,14 +1,16 @@
 package org.collabthings.swt.controls;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 public class LOTDoubleEditor extends CTComposite {
-	private static final int MAX_DECIMALS = 2;
+	private static final int MAX_DECIMALS = 3;
 	private static final double MIN_POS_VALUE = 0.001;
 	private static final double MIN_NEG_VALUE = 0.001;
 	private Text s;
@@ -24,16 +26,17 @@ public class LOTDoubleEditor extends CTComposite {
 		s.setEditable(true);
 		setDoubleText(d);
 
-		s.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				changed();
-			}
-
+		s.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				this_keyPressed(arg0);
+			}
+		});
+
+		s.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				changed();
 			}
 		});
 	}
@@ -69,7 +72,7 @@ public class LOTDoubleEditor extends CTComposite {
 
 	private void setDoubleText(double nd) {
 		String sd = "" + nd;
-		if (sd.indexOf(".") > 0 && (sd.length() - sd.indexOf(".")) > MAX_DECIMALS) {
+		if (sd.indexOf(".") > 0 && (sd.length() - sd.indexOf(".") - 1) > MAX_DECIMALS) {
 			sd = sd.substring(0, sd.indexOf(".") + MAX_DECIMALS);
 		}
 
