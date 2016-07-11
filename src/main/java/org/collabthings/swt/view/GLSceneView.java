@@ -13,13 +13,17 @@ import org.collabthings.ogl.LOTGLScene;
 import org.collabthings.ogl.LOTGLSceneImpl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -46,6 +50,29 @@ public class GLSceneView extends CTComposite {
 
 		GridLayout gridLayout = new GridLayout(1, true);
 		this.setLayout(gridLayout);
+
+		Composite ctools = new CTComposite(this, SWT.NONE);
+		ctools.setBackground(SWTResourceManager.getActiontitle2Background());
+		ctools.setForeground(SWTResourceManager.getActionTitle2Color());
+		ctools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+
+		GridLayout ctoolslayout = new GridLayout();
+		ctoolslayout.numColumns = 10;
+		ctools.setLayout(ctoolslayout);
+		CTLabel l = new CTLabel(ctools, SWT.NONE);
+		l.setText("Skip");
+
+		Text tskip = new Text(ctools, SWT.BORDER);
+		tskip.setForeground(ctools.getForeground());
+		tskip.setBackground(ctools.getBackground());
+
+		tskip.setText("0");
+		tskip.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				scene.setSkip(Integer.parseInt(tskip.getText()));
+			}
+		});
 
 		Composite c = new CTComposite(this, SWT.EMBEDDED);
 		c.setBackground(SWTResourceManager.getColor(248, 100, 100));
