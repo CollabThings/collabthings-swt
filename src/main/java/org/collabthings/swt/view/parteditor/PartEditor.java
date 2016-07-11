@@ -191,7 +191,6 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		csubparts = new CTComposite(cbottom, SWT.NONE);
 		csubparts.setLayout(new RowLayout(SWT.HORIZONTAL));
 		GridData gd_csubparts = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_csubparts.heightHint = 95;
 		csubparts.setLayoutData(gd_csubparts);
 
 		CTButton bright = new CTButton(cbottom, SWT.NONE);
@@ -259,7 +258,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		} else {
 			lsubname.setText("empty");
 		}
-		
+
 		LOTVectorEditor elocation = new LOTVectorEditor(composite, subpart.getLocation(), (e) -> {
 			subpart.setOrientation(e, subpart.getNormal(), subpart.getAngle());
 		});
@@ -275,12 +274,28 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		FillLayout fl_eangle = (FillLayout) eangle.getLayout();
 		eangle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 
-		CTButton b = new CTButton(composite, SWT.NONE);
+		CTComposite csubtools = new CTComposite(composite, SWT.NONE);
+		GridLayout csubtoolslayout = new GridLayout();
+		csubtoolslayout.numColumns = 2;
+		csubtools.setLayout(csubtoolslayout);
+		CTButton b = new CTButton(csubtools, SWT.NONE);
 		b.setText("view");
 		b.addSelectionListener(() -> {
 			view(subpart);
 		});
 
+		CTButton bcopy = new CTButton(csubtools, SWT.NONE);
+		bcopy.setText("copy");
+		bcopy.addSelectionListener(() -> {
+			addCopy(subpart);
+		});
+
+	}
+
+	private void addCopy(CTSubPart subpart) {
+		CTSubPart nsub = this.part.newSubPart();
+		nsub.setOrientation(subpart.getLocation(), subpart.getNormal(), subpart.getAngle());
+		nsub.setPart(subpart.getPart());
 	}
 
 	private void view(CTSubPart p) {
