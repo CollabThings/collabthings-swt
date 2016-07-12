@@ -24,12 +24,12 @@ import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
+import org.collabthings.swt.view.SCADView;
 import org.collabthings.swt.view.parteditor.CTObjectListener;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -93,12 +93,12 @@ public class ObjectViewer extends CTComposite {
 
 		lblObject.setFont(10, SWT.BOLD);
 
-		composite = new CTComposite(this, SWT.BORDER);
+		composite = new CTComposite(this, SWT.NONE);
 
 		GridLayout gl_composite = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_composite);
 		composite.setLayout(gl_composite);
-		GridData gd_composite = new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1);
+		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		composite.setLayoutData(gd_composite);
 	}
 
@@ -294,7 +294,7 @@ public class ObjectViewer extends CTComposite {
 
 	private LOTMaterialEditor addMaterialView(String key, Composite c, CTMaterial o) {
 		LOTMaterialEditor e = new LOTMaterialEditor(c, o);
-		e.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		e.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		return e;
 	}
 
@@ -315,7 +315,7 @@ public class ObjectViewer extends CTComposite {
 	private Composite getRowComposite(Composite parent) {
 		Composite c = new CTComposite(parent, SWT.NONE);
 		c.setLayout(new GridLayout(2, false));
-		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		return c;
 	}
@@ -326,7 +326,7 @@ public class ObjectViewer extends CTComposite {
 		LOTSWT.setDefaults(gridLayout);
 
 		c.setLayout(gridLayout);
-		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		return c;
 	}
@@ -344,7 +344,7 @@ public class ObjectViewer extends CTComposite {
 		addLabel(key, c);
 
 		CTLabel s = new CTLabel(c, SWT.NONE);
-		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		s.setText(text);
 		return s;
 	}
@@ -361,7 +361,7 @@ public class ObjectViewer extends CTComposite {
 		addLabel(name, c);
 
 		Text s = new Text(c, SWT.NONE);
-		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		s.setEditable(true);
 		s.setText(text);
 
@@ -387,6 +387,7 @@ public class ObjectViewer extends CTComposite {
 		addLabel("Collection " + key, v);
 
 		Composite c = new CTComposite(v, SWT.None);
+
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl = new GridLayout();
 		LOTSWT.setDefaults(gl);
@@ -405,15 +406,17 @@ public class ObjectViewer extends CTComposite {
 
 	private Control addOpenScadField(String key, Composite parent, CTOpenSCADImpl o) {
 		Composite c = new CTComposite(parent, SWT.NONE);
-		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		GridLayout gridLayout = new GridLayout(1, false);
-		gridLayout.numColumns = 3;
+		LOTSWT.setDefaults(gridLayout);
+
+		gridLayout.numColumns = 4;
 		c.setLayout(gridLayout);
 
 		CTLabel l = new CTLabel(c, SWT.NONE);
 		l.setText("Openscad model");
-		l.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		l.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		CTButton b = new CTButton(c, SWT.NONE);
 		b.setText("Open");
@@ -426,6 +429,16 @@ public class ObjectViewer extends CTComposite {
 		r.addSelectionListener(() -> {
 			CTPart p = (CTPart) this.objectShown;
 			p.resetModel();
+		});
+
+		CTButton s = new CTButton(c, SWT.NONE);
+		s.setText("Save");
+
+		SCADView view = new SCADView(parent, app, window, o, false);
+		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
+		s.addSelectionListener(() -> {
+			view.save();
 		});
 
 		return c;

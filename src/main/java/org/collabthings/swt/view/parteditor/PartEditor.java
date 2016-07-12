@@ -23,6 +23,7 @@ import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -305,13 +306,19 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 	private void updateLayout() {
 		getDisplay().asyncExec(() -> {
 			if (scrolledComposite != null && viewer != null) {
-				int w = scrolledComposite.getClientArea().width;
+				Rectangle clientArea = scrolledComposite.getClientArea();
+				int w = clientArea.width;
 
 				viewer.layout();
 				viewer.redraw();
 				viewer.pack();
 
-				scrolledComposite.setMinSize(w, viewer.computeSize(w, SWT.DEFAULT).y);
+				int height = viewer.computeSize(w, SWT.DEFAULT).y;
+				if (height < clientArea.height) {
+					height = clientArea.height;
+				}
+				
+				scrolledComposite.setMinSize(w, height);
 			}
 		});
 	}
