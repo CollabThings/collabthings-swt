@@ -46,16 +46,23 @@ public class PartBuilderView extends CTComposite implements LOTAppControl {
 		oview.setObject(builder);
 		oview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite composite_1 = new CTComposite(composite, SWT.NONE);
-		composite_1.setLayout(new GridLayout(1, false));
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		Composite ctools = new CTComposite(composite, SWT.NONE);
+		GridLayout ctoolslayout = new GridLayout(1, false);
+		ctoolslayout.numColumns = 5;
+		ctools.setLayout(ctoolslayout);
+		ctools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-		CTButton btnSave = new CTButton(composite_1, SWT.NONE);
+		CTButton btnSave = new CTButton(ctools, SWT.NONE);
 		btnSave.addSelectionListener(() -> {
 			save();
 		});
-		btnSave.setBounds(0, 0, 75, 25);
 		btnSave.setText("save");
+
+		CTButton btnRun = new CTButton(ctools, SWT.NONE);
+		btnRun.addSelectionListener(() -> {
+			updateView();
+		});
+		btnRun.setText("Run");
 
 		scriptview = new ScriptView(left, app, window, builder.getScript());
 		scriptview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
