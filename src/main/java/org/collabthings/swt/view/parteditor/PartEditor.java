@@ -15,12 +15,14 @@ import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.view.GLSceneView;
 import org.collabthings.swt.view.ObjectTreeView;
+import org.collabthings.swt.view.ObjectTreeView.PartListener;
 import org.collabthings.swt.view.ObjectTreeView.SubpartListener;
 import org.collabthings.swt.view.YamlEditor;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -195,6 +197,13 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 			@Override
 			public void hoverOver(CTSubPart subpart) {
 				view.setHighlight(subpart);
+			}
+		});
+
+		ctree.addPartListener(new PartListener() {
+			@Override
+			public void view(CTPart part) {
+				pushPart(part);
 			}
 		});
 

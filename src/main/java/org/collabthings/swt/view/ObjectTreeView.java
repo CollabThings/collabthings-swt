@@ -29,6 +29,7 @@ public class ObjectTreeView extends CTComposite implements TreeListener {
 
 	private TreeItem tiroot;
 	private Set<SubpartListener> subpartlisteners = new HashSet<>();
+	private Set<PartListener> partlisteners = new HashSet<>();
 	private CTComposite ctools;
 
 	/**
@@ -156,6 +157,26 @@ public class ObjectTreeView extends CTComposite implements TreeListener {
 		ctools.layout();
 	}
 
+	private void setTools(CTPart part) {
+		emptyTools();
+
+		new CTButton("view", ctools, SWT.NONE, () -> {
+			fireView(part);
+		});
+
+		new CTButton("remove model", ctools, SWT.NONE, () -> {
+			part.resetModel();
+		});
+
+		new CTButton("new scad", ctools, SWT.NONE, () -> {
+			part.newSCAD();
+		});
+
+		ctools.pack();
+		layout();
+		ctools.layout();
+	}
+
 	private TreeItem findItemWith(CTSubPart subpart) {
 		return findItemWith(tiroot, subpart);
 	}
@@ -209,15 +230,39 @@ public class ObjectTreeView extends CTComposite implements TreeListener {
 
 			@Override
 			public void expanded() {
-				TreeItem itempart = new TreeItem(item, SWT.NONE);
-				itempart.setText("Part: " + subpart.getPart());
+				addExpandedItems(subpart, item);
+			}
 
-				if (subpart.getPart() != null) {
-					addSubparts(item, subpart.getPart());
-				}
+		});
+
+	}
+
+	private void addExpandedItems(CTSubPart subpart, TreeItem item) {
+		TreeItem itempart = new TreeItem(item, SWT.NONE);
+		itempart.setText("Part: " + subpart.getPart());
+		itempart.setData("listener", new TreeItemLister() {
+
+			@Override
+			public void selected() {
+				setTools(subpart.getPart());
+			}
+
+			@Override
+			public void hovered() {
+			}
+
+			@Override
+			public void expanded() {
+			}
+
+			@Override
+			public void collapsed() {
 			}
 		});
 
+		if (subpart.getPart() != null) {
+			addSubparts(item, subpart.getPart());
+		}
 	}
 
 	private void addSubPartItems(CTSubPart subpart, TreeItem item) {
@@ -240,6 +285,16 @@ public class ObjectTreeView extends CTComposite implements TreeListener {
 		}
 	}
 
+	public void addPartListener(PartListener partListener) {
+		partlisteners.add(partListener);
+	}
+
+	private void fireView(CTPart subpart) {
+		for (PartListener l : partlisteners) {
+			l.view(subpart);
+		}
+	}
+
 	private interface TreeItemLister {
 		public void expanded();
 
@@ -251,8 +306,11 @@ public class ObjectTreeView extends CTComposite implements TreeListener {
 	}
 
 	public static interface SubpartListener {
-
 		void hoverOver(CTSubPart subpart);
-
 	}
+
+	public static interface PartListener {
+		void view(CTPart part);
+	}
+
 }
