@@ -178,4 +178,8 @@ public class GLSceneView extends CTComposite {
 		scene.setModel(scad);
 	}
 
+	public void setHighlight(Object o) {
+		scene.setHighlight(o);
+	}
+
 }

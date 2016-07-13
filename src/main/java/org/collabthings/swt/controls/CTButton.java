@@ -12,6 +12,13 @@ public class CTButton {
 	private StyledText l;
 	private int padding = 10;
 
+	public CTButton(String string, CTComposite ctools, int none, ButtonListener listener) {
+		this(ctools, none);
+
+		l.setText("" + string);
+		addSelectionListener(listener);
+	}
+
 	public CTButton(Composite parent, int style) {
 		l = new StyledText(parent, style);
 		// l = new CTLabel(parent, style);
