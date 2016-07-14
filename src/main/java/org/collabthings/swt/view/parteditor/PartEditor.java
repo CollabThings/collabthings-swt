@@ -260,5 +260,6 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 
 	protected void publish() {
 		this.part.publish();
+		this.app.getLClient().publish(part.getName(), part);
 	}
 }
