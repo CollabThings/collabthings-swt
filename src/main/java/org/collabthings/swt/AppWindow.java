@@ -13,6 +13,7 @@ import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CTFactoryImpl;
+import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.swt.app.LOTApp;
@@ -54,6 +55,7 @@ import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.StorageAreaVO;
 import waazdoh.common.vo.UserVO;
+import org.eclipse.swt.widgets.Label;
 
 public final class AppWindow implements CTInfo {
 	protected Shell shell;
@@ -462,6 +464,16 @@ public final class AppWindow implements CTInfo {
 		MenuItem miBookmarkCurrent = new MenuItem(mbookmarks, SWT.CASCADE);
 		miBookmarkCurrent.setText("Current");
 
+		MenuItem miupdate = new MenuItem(mbookmarks, SWT.NONE);
+		miupdate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				initBookmarks();
+			}
+		});
+
+		miupdate.setText("Update");
+
 		new MenuItem(mbookmarks, SWT.SEPARATOR);
 
 		mbookmarkslist = new Menu(mibookmarks);
@@ -504,6 +516,7 @@ public final class AppWindow implements CTInfo {
 
 		progressBar = new ProgressBar(composite_1, SWT.NONE);
 		progressBar.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+		new Label(composite_1, SWT.NONE);
 
 		lblBottonInfo = new CTLabel(composite, SWT.NONE);
 		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
@@ -519,6 +532,10 @@ public final class AppWindow implements CTInfo {
 	}
 
 	private void initBookmarks(Menu bookmarkmenu, String path) {
+		for (MenuItem i : bookmarkmenu.getItems()) {
+			i.dispose();
+		}
+
 		List<String> bookmarklist = this.app.getLClient().getBookmarks().list(path);
 
 		for (String bm : bookmarklist) {
@@ -556,6 +573,16 @@ public final class AppWindow implements CTInfo {
 				showError("Failed to open factory " + id);
 			}
 		});
+
+		localmenu.addObjectHandler(CTPartImpl.BEANNAME, (data) -> {
+			MStringID id = data.getIDValue("id");
+			CTPart p = getApp().getLClient().getObjectFactory().getPart(id);
+			if (p != null) {
+				viewPart(p);
+			} else {
+				showError("Failed to open part " + id);
+			}
+		});
 	}
 
 	protected void tabSelected() {
@@ -566,7 +593,7 @@ public final class AppWindow implements CTInfo {
 
 			if (control instanceof LOTAppControl) {
 				LOTAppControl v = (LOTAppControl) control;
-				selectedcontrol = v;
+				this.selectedcontrol = v;
 				log.info("selected " + v);
 
 				v.selected(this);
