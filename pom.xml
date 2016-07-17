@@ -126,18 +126,18 @@
 						<configuration>
 							<tasks>
 								<!-- -->
-								<zip
-									destfile="${project.build.directory}/lot-app-${app.arch}/bin${buildNumber}.zip">
+								<zip destfile="${project.build.directory}/nsis/files/bin.zip">
 									<fileset dir="src/main/app/bin" />
 								</zip>
-								<zip
-									destfile="${project.build.directory}/lot-app-${app.arch}/jdk${java.version}.zip">
+								<zip destfile="${project.build.directory}/nsis/files/jdk.zip">
 									<fileset dir="${jdk}" />
 								</zip>
-								<zip
-									destfile="${project.build.directory}/lot-app-${app.arch}/resources${buildNumber}.zip">
+								<zip destfile="${project.build.directory}/nsis/files/resources.zip">
 									<fileset dir="src/main/resources" />
 								</zip>
+								<copy todir="${project.build.directory}/nsis/">
+									<fileset dir="src/main/msi" />
+								</copy>
 							</tasks>
 						</configuration>
 					</execution>

@@ -1,6 +1,7 @@
 ;--------------------------------
 
 !define APPNAME "CollabThings"
+!include zipdll.nsh
 
 ; The name of the installer
 Name "CollabThings"
@@ -43,6 +44,17 @@ Section "" ;No components page, name is not important
 	File "files\CollabThings.exe" 
 	File "files\Ionic.Zip.dll"
  	File "files\log4net.dll"
+ 	File "files\bin.zip"
+ 	File "files\jdk.zip"
+ 	File "files\resources.zip"
+ 
+ 	createDirectory $INSTDIR\bin
+ 	createDirectory $INSTDIR\jdk
+ 	createDirectory $INSTDIR\resources
+ 	
+ 	!insertmacro ZIPDLL_EXTRACT "$INSTDIR\bin.zip" "$INSTDIR\bin\" "<ALL>"
+ 	!insertmacro ZIPDLL_EXTRACT "$INSTDIR\jdk.zip" "$INSTDIR\jdk\" "<ALL>"
+ 	!insertmacro ZIPDLL_EXTRACT "$INSTDIR\resources.zip" "$INSTDIR\resources\" "<ALL>"
  
 	# Start Menu
 	createDirectory "$SMPROGRAMS\${APPNAME}"
