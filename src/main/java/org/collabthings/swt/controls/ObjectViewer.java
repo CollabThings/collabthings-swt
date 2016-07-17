@@ -141,7 +141,7 @@ public class ObjectViewer extends CTComposite {
 		});
 	}
 
-	private void parse(Object no) {
+	private synchronized void parse(Object no) {
 		this.objectShown = no;
 		if (this.objectShown == null) {
 			this.objectShown = new TableTestData();
@@ -149,6 +149,12 @@ public class ObjectViewer extends CTComposite {
 		}
 
 		//
+		parseMethods();
+	}
+
+	private void parseMethods() {
+		methods = new HashMap<>();
+
 		Method[] ms = this.objectShown.getClass().getMethods();
 		for (Method method : ms) {
 			try {
@@ -159,7 +165,7 @@ public class ObjectViewer extends CTComposite {
 		}
 	}
 
-	private void parseMethod(Method method) {
+	private synchronized void parseMethod(Method method) {
 		String mname = method.getName();
 		if (mname.startsWith("get") && method.getParameterTypes().length == 0) {
 			String fname = mname.substring(3).toLowerCase();
@@ -460,6 +466,8 @@ public class ObjectViewer extends CTComposite {
 		for (Control control : composite.getChildren()) {
 			control.dispose();
 		}
+
+		parseMethods();
 
 		addRows();
 		pack();
