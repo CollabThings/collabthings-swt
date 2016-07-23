@@ -1,16 +1,16 @@
 package org.collabthings.swt.dialog;
 
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 public class CTErrorDialog {
 
-	private Text terror;
+	private CTText terror;
 	private Label ltext;
 	private Shell shell;
 
@@ -56,7 +56,7 @@ public class CTErrorDialog {
 		ltext.setBounds(0, 0, 55, 15);
 		ltext.setText("ERROR");
 
-		terror = new Text(shell, SWT.BORDER | SWT.WRAP | SWT.MULTI);
+		terror = new CTText(shell, SWT.BORDER | SWT.WRAP | SWT.MULTI);
 		terror.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		terror.setEditable(false);
 	}

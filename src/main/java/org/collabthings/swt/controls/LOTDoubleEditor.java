@@ -13,7 +13,7 @@ public class LOTDoubleEditor extends CTComposite {
 	private static final int MAX_DECIMALS = 3;
 	private static final double MIN_POS_VALUE = 0.001;
 	private static final double MIN_NEG_VALUE = 0.001;
-	private Text s;
+	private CTText s;
 	private ChangeListener<Double> listener;
 
 	public LOTDoubleEditor(Composite c, Double d, ChangeListener<Double> listener) {
@@ -22,7 +22,7 @@ public class LOTDoubleEditor extends CTComposite {
 
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		//
-		s = new Text(this, SWT.NONE);
+		s = new CTText(this, SWT.NONE);
 		s.setEditable(true);
 		setDoubleText(d);
 

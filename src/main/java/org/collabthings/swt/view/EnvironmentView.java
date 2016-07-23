@@ -8,14 +8,13 @@ import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
@@ -76,7 +75,7 @@ public class EnvironmentView extends CTComposite {
 				environment.setParameter(name, nvalue);
 			});
 		} else {
-			Text t = new Text(c, SWT.NONE);
+			CTText t = new CTText(c, SWT.NONE);
 			t.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			t.setText("" + value);
 
@@ -123,7 +122,7 @@ public class EnvironmentView extends CTComposite {
 		gl_ctool.numColumns = 4;
 		ctool.setLayout(gl_ctool);
 
-		Text tname = new Text(ctool, SWT.NONE);
+		CTText tname = new CTText(ctool, SWT.NONE);
 		GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_tname.widthHint = 146;
 		tname.setLayoutData(gd_tname);
@@ -191,7 +190,7 @@ public class EnvironmentView extends CTComposite {
 		gl_cscript.numColumns = 4;
 		cscript.setLayout(gl_cscript);
 
-		Text tname = new Text(cscript, SWT.NONE);
+		CTText tname = new CTText(cscript, SWT.NONE);
 		GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_tname.widthHint = 146;
 		tname.setLayoutData(gd_tname);

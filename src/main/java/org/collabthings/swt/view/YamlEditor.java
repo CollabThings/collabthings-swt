@@ -6,6 +6,7 @@ import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -18,8 +19,8 @@ import waazdoh.common.WObject;
 
 public class YamlEditor extends CTComposite {
 	private CTObject o;
-	private Text text;
-	private Text error;
+	private CTText text;
+	private CTText error;
 	private CTButton btnSave;
 	private int currenthash;
 	private Thread t;
@@ -45,7 +46,7 @@ public class YamlEditor extends CTComposite {
 		CTLabel ltitle = new CTLabel(top, SWT.NONE);
 		ltitle.setText(title);
 
-		text = new Text(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		text = new CTText(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		text.setFont(SWTResourceManager.getFont("Open Sans", 10, SWT.NORMAL));
 		text.setText("testing\ntestintintit");
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -57,7 +58,7 @@ public class YamlEditor extends CTComposite {
 			}
 		});
 
-		error = new Text(this, SWT.MULTI);
+		error = new CTText(this, SWT.MULTI);
 		error.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	}

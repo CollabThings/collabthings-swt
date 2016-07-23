@@ -14,6 +14,7 @@ import org.collabthings.ogl.LOTGLSceneImpl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -62,7 +63,7 @@ public class GLSceneView extends CTComposite {
 		CTLabel l = new CTLabel(ctools, SWT.NONE);
 		l.setText("Skip");
 
-		Text tskip = new Text(ctools, SWT.BORDER);
+		CTText tskip = new CTText(ctools, SWT.BORDER);
 		tskip.setForeground(ctools.getForeground());
 		tskip.setBackground(ctools.getBackground());
 

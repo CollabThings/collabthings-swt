@@ -8,6 +8,7 @@ import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -26,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
 public class SearchView extends CTComposite implements LOTAppControl {
 	private static final int COLUMN_WIDTH = 500;
 	private AppWindow window;
-	private Text text;
+	private CTText text;
 	private LOTApp app;
 	private LLog log = LLog.getLogger(this);
 	private Composite clist;

@@ -10,6 +10,7 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
@@ -25,7 +26,7 @@ public class RunEnvironmentBuildRunView extends CTComposite implements LOTAppCon
 	// an hour
 	private static final int MAX_RUNTIME = 60 * 1000 * 60;
 	private CTSimpleSimulation s;
-	private Text text;
+	private CTText text;
 
 	public RunEnvironmentBuildRunView(Composite parent, LOTApp app, AppWindow appWindow,
 			CTRunEnvironmentBuilder builder) {
@@ -40,7 +41,7 @@ public class RunEnvironmentBuildRunView extends CTComposite implements LOTAppCon
 		Composite composite = new CTComposite(sashForm, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
-		text = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		text = new CTText(composite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite c_view = new CTComposite(sashForm, SWT.NONE);

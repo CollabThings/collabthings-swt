@@ -98,8 +98,7 @@ public class ObjectViewer extends CTComposite {
 		GridLayout gl_composite = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_composite);
 		composite.setLayout(gl_composite);
-		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		composite.setLayoutData(gd_composite);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	}
 
 	private void initOkTypes() {
@@ -298,8 +297,8 @@ public class ObjectViewer extends CTComposite {
 		return new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key, orgo));
 	}
 
-	private LOTMaterialEditor addMaterialView(String key, Composite c, CTMaterial o) {
-		LOTMaterialEditor e = new LOTMaterialEditor(c, o);
+	private CTMaterialEditor addMaterialView(String key, Composite c, CTMaterial o) {
+		CTMaterialEditor e = new CTMaterialEditor(c, o);
 		e.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		return e;
 	}
@@ -366,7 +365,7 @@ public class ObjectViewer extends CTComposite {
 
 		addLabel(name, c);
 
-		Text s = new Text(c, SWT.NONE);
+		CTText s = new CTText(c, SWT.NONE);
 		s.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		s.setEditable(true);
 		s.setText(text);
@@ -411,7 +410,7 @@ public class ObjectViewer extends CTComposite {
 	}
 
 	private Control addOpenScadField(String key, Composite parent, CTOpenSCADImpl o) {
-		Composite c = new CTComposite(parent, SWT.NONE);
+		Composite c = new CTComposite(parent, SWT.BORDER);
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		GridLayout gridLayout = new GridLayout(1, false);
@@ -456,13 +455,13 @@ public class ObjectViewer extends CTComposite {
 			return !isDisposed();
 		}, () -> updateData());
 
-		parse(o);
-
 		lblObject.setText("" + o);
 		refresh();
 	}
 
 	private void refresh() {
+		log.info("refreshdata " + this);
+
 		for (Control control : composite.getChildren()) {
 			control.dispose();
 		}
@@ -470,14 +469,15 @@ public class ObjectViewer extends CTComposite {
 		parseMethods();
 
 		addRows();
-		pack();
+
+		layout();
 
 		Set<CTListener> ls = objectchangelisteners;
 		for (CTListener ctListener : ls) {
 			ctListener.event();
 		}
 	}
-
+	
 	public void addListener(ObjectViewerListener objectViewerListener) {
 		this.listeners.add(objectViewerListener);
 	}
@@ -491,6 +491,6 @@ public class ObjectViewer extends CTComposite {
 	}
 
 	private interface TextListener {
-		void changed(Text t);
+		void changed(CTText t);
 	}
 }

@@ -7,7 +7,6 @@ import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.SearchView.CTSearchResultFactory;
 import org.collabthings.util.LLog;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
 import waazdoh.client.WClient;

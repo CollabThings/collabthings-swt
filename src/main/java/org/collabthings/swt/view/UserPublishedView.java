@@ -10,6 +10,7 @@ import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Color;
@@ -29,7 +30,7 @@ public class UserPublishedView extends CTComposite {
 	public UserVO u;
 
 	private int publishedcount;
-	private Text publishedfilter;
+	private CTText publishedfilter;
 	private ScrolledComposite scrolledComposite;
 	private Composite clist;
 
@@ -50,7 +51,7 @@ public class UserPublishedView extends CTComposite {
 		CTLabel lblFilter = new CTLabel(composite, SWT.NONE);
 		lblFilter.setText("Filter");
 
-		publishedfilter = new Text(composite, SWT.BORDER);
+		publishedfilter = new CTText(composite, SWT.BORDER);
 		publishedfilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		CTButton btnSearchPublished = new CTButton(composite, SWT.NONE);

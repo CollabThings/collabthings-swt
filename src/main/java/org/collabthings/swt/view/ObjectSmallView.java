@@ -22,8 +22,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import com.thoughtworks.xstream.converters.reflection.SerializationMethodInvoker;
-
 import waazdoh.client.model.BinaryID;
 import waazdoh.common.WLogger;
 import waazdoh.common.WObject;

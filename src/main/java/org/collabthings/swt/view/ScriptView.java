@@ -7,6 +7,7 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -23,9 +24,9 @@ import org.eclipse.swt.widgets.Text;
 
 public class ScriptView extends CTComposite implements LOTAppControl {
 
-	private Text scripttext;
+	private CTText scripttext;
 	private CTScript script;
-	private Text bottomtext;
+	private CTText bottomtext;
 
 	private LOTApp app;
 
@@ -41,7 +42,7 @@ public class ScriptView extends CTComposite implements LOTAppControl {
 		gd_sashForm.heightHint = 200;
 		sashForm.setLayoutData(gd_sashForm);
 
-		scripttext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		scripttext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		scripttext.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -55,7 +56,7 @@ public class ScriptView extends CTComposite implements LOTAppControl {
 			scripttext.setText("Script null");
 		}
 
-		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		bottomtext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		sashForm.setWeights(new int[] { 3, 1 });
 	}
 

@@ -2,6 +2,7 @@ package org.collabthings.swt.view;
 
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -15,7 +16,7 @@ import org.eclipse.swt.widgets.Text;
 public class ValueEditorDialog {
 
 	private String value;
-	private Text text;
+	private CTText text;
 	private String name;
 
 	public ValueEditorDialog(Shell parentShell, String name, String value2) {
@@ -35,7 +36,7 @@ public class ValueEditorDialog {
 		lvaluename.setBounds(0, 0, 55, 15);
 		lvaluename.setText(name);
 
-		text = new Text(c, SWT.BORDER | SWT.MULTI);
+		text = new CTText(c, SWT.BORDER | SWT.MULTI);
 		text.setText(value);
 
 		text.addKeyListener(new KeyAdapter() {

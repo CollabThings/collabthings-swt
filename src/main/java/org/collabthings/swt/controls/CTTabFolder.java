@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.view.YamlEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.MouseAdapter;

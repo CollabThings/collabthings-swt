@@ -14,23 +14,19 @@ import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.view.GLSceneView;
-import org.collabthings.swt.view.ObjectTreeView;
-import org.collabthings.swt.view.ObjectTreeView.PartListener;
-import org.collabthings.swt.view.ObjectTreeView.SubpartListener;
+import org.collabthings.swt.view.ObjectContextView;
+import org.collabthings.swt.view.ObjectContextView.PartListener;
+import org.collabthings.swt.view.ObjectContextView.SubpartListener;
 import org.collabthings.swt.view.YamlEditor;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -52,9 +48,9 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 
 	private ObjectViewer viewer;
 
-	private ScrolledComposite scrolledComposite;
+	private ObjectContextView ctree;
 
-	private ObjectTreeView ctree;
+	private int scrolledareaw;
 
 	public PartEditor(Composite composite, LOTApp app, AppWindow window, CTPart p) {
 		super(composite, SWT.None);
@@ -155,23 +151,18 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		btnPublish.setText("Publish");
 		new Label(this, SWT.NONE);
 
-		SashForm composite_main = new SashForm(this, SWT.NONE);
+		SashForm composite_main = new SashForm(this, SWT.BORDER);
 		composite_main.setBackground(SWTResourceManager.getControlBg());
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		CTTabFolder tabFolder = new CTTabFolder(composite_main, SWT.NONE);
 
-		scrolledComposite = new ScrolledComposite(tabFolder.getComposite(), SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-
-		ctree = new ObjectTreeView(tabFolder.getComposite(), SWT.NONE);
+		ctree = new ObjectContextView(app, window, tabFolder.getComposite(), SWT.NONE);
 
 		tabFolder.addTab("Tree", ctree, null);
-		tabFolder.addTab("properties", scrolledComposite, null, false);
 
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-
-		viewer = new ObjectViewer(app, window, scrolledComposite);
+		viewer = new ObjectViewer(app, window, tabFolder.getComposite());
+		tabFolder.addTab("properties", viewer, null, false);
 
 		csource = new YamlEditor(tabFolder.getComposite(), SWT.NONE, "source");
 		tabFolder.addTab("Source", csource, null, false);
@@ -179,14 +170,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		csource.setObject(this.part);
 
 		tabFolder.addSelectionListener(() -> {
-			updateLayout();
-		});
-
-		scrolledComposite.addListener(SWT.Resize, new Listener() {
-			@Override
-			public void handleEvent(Event arg0) {
-				updateLayout();
-			}
+			// updateLayout();
 		});
 
 		viewer.addObjectChangeListener(() -> objectChanged());
@@ -209,10 +193,8 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		view = new GLSceneView(composite_main);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		view.setBounds(0, 0, 64, 64);
-		new Label(this, SWT.NONE);
 
 		composite_main.setWeights(new int[] { 100, 200 });
-		new Label(this, SWT.NONE);
 
 		objectChanged();
 	}
@@ -220,11 +202,10 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 	private void objectChanged() {
 		updateInfo();
 		ctree.updatePart();
-		scrolledComposite.setContent(viewer);
 	}
 
 	private void updateInfo() {
-		updateLayout();
+		// updateLayout();
 	}
 
 	private void addCopy(CTSubPart subpart) {
@@ -235,26 +216,6 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 
 	private void view(CTSubPart p) {
 		pushPart(p.getPart());
-	}
-
-	private void updateLayout() {
-		getDisplay().asyncExec(() -> {
-			if (scrolledComposite != null && viewer != null) {
-				Rectangle clientArea = scrolledComposite.getClientArea();
-				int w = clientArea.width;
-
-				viewer.layout();
-				viewer.redraw();
-				viewer.pack();
-
-				int height = viewer.computeSize(w, SWT.DEFAULT).y;
-				if (height < clientArea.height) {
-					height = clientArea.height;
-				}
-
-				scrolledComposite.setMinSize(w, height);
-			}
-		});
 	}
 
 	protected void publish() {

@@ -10,6 +10,7 @@ import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -27,9 +28,9 @@ import org.eclipse.swt.widgets.Text;
 public class SCADView extends CTComposite implements LOTAppControl {
 
 	private AppWindow window;
-	private Text scripttext;
+	private CTText scripttext;
 	private CTOpenSCAD scad;
-	private Text bottomtext;
+	private CTText bottomtext;
 
 	private GLSceneView canvas;
 	private Composite composite;
@@ -75,7 +76,7 @@ public class SCADView extends CTComposite implements LOTAppControl {
 		if (b) {
 			textstyle = textstyle | SWT.H_SCROLL;
 		}
-		scripttext = new Text(left, textstyle);
+		scripttext = new CTText(left, textstyle);
 		scripttext.setFont(SWTResourceManager.getDefaultFont());
 
 		if (!b) {
@@ -99,7 +100,7 @@ public class SCADView extends CTComposite implements LOTAppControl {
 			canvas = new GLSceneView(composite);
 			canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-			bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+			bottomtext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 			sashForm.setWeights(new int[] { 1, 1 });
 
 			new Thread(() -> {
@@ -157,8 +158,14 @@ public class SCADView extends CTComposite implements LOTAppControl {
 					}
 				} else {
 					String error = scad.getError();
-					bottomtext.append("ERROR " + error + "\n");
+					if (bottomtext != null) {
+						bottomtext.append("ERROR " + error + "\n");
+					} else {
+						window.showError("ERROR " + error);
+					}
+
 					scad.setScript(oldscript);
+
 				}
 			});
 		}

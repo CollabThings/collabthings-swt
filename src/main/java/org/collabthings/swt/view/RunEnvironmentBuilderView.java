@@ -16,12 +16,11 @@ import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.swt.controls.CTTabFolder;
+import org.collabthings.swt.controls.CTText;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -43,7 +42,7 @@ public class RunEnvironmentBuilderView extends CTComposite implements LOTAppCont
 	private AppWindow window;
 	private int currentfactoryhash;
 
-	private Text text;
+	private CTText text;
 	private PrintOut printout = new PrintOut();
 
 	private int printouthash;
@@ -129,7 +128,7 @@ public class RunEnvironmentBuilderView extends CTComposite implements LOTAppCont
 		ltested.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		ltested.setText("date");
 
-		text = new Text(c_view, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		text = new CTText(c_view, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		gd_text.heightHint = 128;
 		text.setLayoutData(gd_text);
