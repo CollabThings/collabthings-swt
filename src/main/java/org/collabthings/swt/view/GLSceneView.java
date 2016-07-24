@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Label;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -43,6 +43,7 @@ public class GLSceneView extends CTComposite {
 	private LLog log = LLog.getLogger(this);
 
 	private LOTGLScene scene;
+	private Label lhighlight;
 
 	public GLSceneView(Composite parent) {
 		super(parent, SWT.NONE);
@@ -74,6 +75,10 @@ public class GLSceneView extends CTComposite {
 				scene.setSkip(Integer.parseInt(tskip.getText()));
 			}
 		});
+
+		lhighlight = new Label(ctools, SWT.NONE);
+		lhighlight.setText("Highlight");
+		lhighlight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		Composite c = new CTComposite(this, SWT.EMBEDDED);
 		c.setBackground(SWTResourceManager.getColor(248, 100, 100));
@@ -181,6 +186,7 @@ public class GLSceneView extends CTComposite {
 
 	public void setHighlight(Object o) {
 		scene.setHighlight(o);
+		lhighlight.setText("" + o);
 	}
 
 }

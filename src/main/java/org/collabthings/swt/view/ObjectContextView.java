@@ -167,6 +167,15 @@ public class ObjectContextView extends CTComposite {
 		tablee.horizontalAlignment = SWT.LEFT;
 		tablee.grabHorizontal = true;
 
+		table.addListener(SWT.MouseMove, e -> {
+			Point pt = new Point(e.x, e.y);
+			TableItem item = table.getItem(pt);
+			if (item != null) {
+				CTSubPart subpart = (CTSubPart) item.getData();
+				fireHovered(subpart);
+			}
+		});
+
 		table.addListener(SWT.MouseDown, event -> {
 			Rectangle clientArea = table.getClientArea();
 			Point pt = new Point(event.x, event.y);
@@ -298,6 +307,8 @@ public class ObjectContextView extends CTComposite {
 				tableItem.setText(SUBPART_COLUMN_INDEX_LOC, "" + subpart.getLocation());
 				tableItem.setText(SUBPART_COLUMN_INDEX_NORM, "" + subpart.getNormal());
 				tableItem.setText(SUBPART_COLUMN_INDEX_ANGLE, "" + subpart.getAngle());
+
+				tableItem.setData(subpart);
 
 				tableitemlisteners.put(tableItem, () -> {
 					subpart.setName(tableItem.getText(SUBPART_COLUMN_INDEX_NAME));
