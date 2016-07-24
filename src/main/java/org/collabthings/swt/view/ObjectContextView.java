@@ -144,7 +144,7 @@ public class ObjectContextView extends CTComposite {
 		tblclmnActions.setText(">");
 
 		tblclmnIndex = new TableColumn(table, SWT.NONE);
-		tblclmnIndex.setWidth(100);
+		tblclmnIndex.setWidth(20);
 		tblclmnIndex.setText("index");
 
 		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
@@ -152,11 +152,11 @@ public class ObjectContextView extends CTComposite {
 		tblclmnName.setText("name");
 
 		TableColumn tblclmnLocation = new TableColumn(table, SWT.NONE);
-		tblclmnLocation.setWidth(100);
+		tblclmnLocation.setWidth(200);
 		tblclmnLocation.setText("location");
 
 		TableColumn tblclmnNormal = new TableColumn(table, SWT.NONE);
-		tblclmnNormal.setWidth(100);
+		tblclmnNormal.setWidth(200);
 		tblclmnNormal.setText("normal");
 
 		TableColumn tblclmnAngle = new TableColumn(table, SWT.NONE);
@@ -187,38 +187,13 @@ public class ObjectContextView extends CTComposite {
 					Rectangle rect = item.getBounds(i);
 					if (rect.contains(pt)) {
 						final int column = i;
-						final Text text = new Text(table, SWT.NONE);
+						String currentvalue = item.getText(i);
+						final Control editor = createItemEditor(item, column, currentvalue);
 
-						Listener textListener = e -> {
-							switch (e.type) {
-							case SWT.FocusOut:
-								item.setText(column, text.getText());
-								text.dispose();
-
-								fireEvent(item);
-
-								break;
-							case SWT.Traverse:
-								switch (e.detail) {
-								case SWT.TRAVERSE_RETURN:
-									item.setText(column, text.getText());
-									fireEvent(item);
-
-									// FALL THROUGH
-								case SWT.TRAVERSE_ESCAPE:
-									text.dispose();
-									e.doit = false;
-								}
-								break;
-							}
-						};
-						text.addListener(SWT.FocusOut, textListener);
-						text.addListener(SWT.Traverse, textListener);
-
-						tablee.setEditor(text, item, i);
-						text.setText(item.getText(i));
-						text.selectAll();
-						text.setFocus();
+						if (editor != null) {
+							tablee.setEditor(editor, item, i);
+							editor.setFocus();
+						}
 						return;
 					}
 					if (!visible && rect.intersects(clientArea)) {
@@ -230,6 +205,48 @@ public class ObjectContextView extends CTComposite {
 				index++;
 			}
 		});
+	}
+
+	private Control createItemEditor(final TableItem item, final int column, String currentvalue) {
+		Control text;
+		if (column == SUBPART_COLUMN_INDEX_NAME) {
+			text = createTextEditor(item, column, currentvalue);
+		} else {
+			text = null;
+		}
+		return text;
+	}
+
+	private Text createTextEditor(final TableItem item, final int column, String currentvalue) {
+		final Text text = new Text(table, SWT.NONE);
+
+		Listener textListener = e -> {
+			switch (e.type) {
+			case SWT.FocusOut:
+				item.setText(column, text.getText());
+				text.dispose();
+
+				fireEvent(item);
+
+				break;
+			case SWT.Traverse:
+				switch (e.detail) {
+				case SWT.TRAVERSE_RETURN:
+					item.setText(column, text.getText());
+					fireEvent(item);
+
+					// FALL THROUGH
+				case SWT.TRAVERSE_ESCAPE:
+					text.dispose();
+					e.doit = false;
+				}
+				break;
+			}
+		};
+		text.addListener(SWT.FocusOut, textListener);
+		text.addListener(SWT.Traverse, textListener);
+		text.setText(currentvalue);
+		return text;
 	}
 
 	private void fireEvent(final TableItem item) {
@@ -301,7 +318,7 @@ public class ObjectContextView extends CTComposite {
 			for (CTSubPart subpart : subparts) {
 				TableItem tableItem = new TableItem(table, SWT.NONE);
 
-				tableItem.setText(SUBPART_COLUMN_INDEX_TOOLS, "Tools");
+				tableItem.setText(SUBPART_COLUMN_INDEX_TOOLS, ">");
 				tableItem.setText(SUBPART_COLUMN_INDEX_LINE, "" + (count++));
 				tableItem.setText(SUBPART_COLUMN_INDEX_NAME, "" + subpart.getName());
 				tableItem.setText(SUBPART_COLUMN_INDEX_LOC, "" + subpart.getLocation());

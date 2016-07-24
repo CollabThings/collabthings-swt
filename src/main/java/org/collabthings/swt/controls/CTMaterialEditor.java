@@ -2,6 +2,7 @@ package org.collabthings.swt.controls;
 
 import org.collabthings.model.CTMaterial;
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.controls.dialogs.CTMaterialColorPopupDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -12,7 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 public class CTMaterialEditor extends CTComposite {
-	CTMaterial material;
+	private CTMaterial material;
 	private Composite composite;
 	private CTLabel lmaterial;
 	private CTLabel lcolor;
@@ -65,14 +66,14 @@ public class CTMaterialEditor extends CTComposite {
 
 	private void clicked() {
 		if (dialog == null) {
-			dialog = new CTMaterialColorPopupDialog(getShell());
+			dialog = new CTMaterialColorPopupDialog(getShell(), material, this);
 			dialog.setListener(this);
 			dialog.open();
 			dialog = null;
 		}
 	}
 
-	void colorChanged(double ered, double egreen, double eblue) {
+	public void colorChanged(double ered, double egreen, double eblue) {
 		material.getColor()[0] = checkValue(ered);
 		material.getColor()[1] = checkValue(egreen);
 		material.getColor()[2] = checkValue(eblue);

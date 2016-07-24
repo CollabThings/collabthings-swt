@@ -328,11 +328,13 @@ public final class AppWindow implements CTInfo {
 			new FindOpenscadDialog(app, this, shell);
 		} else {
 			LLog.getLogger(this).error(this, name, e);
-			CTErrorDialog d = new CTErrorDialog(shell);
-			this.shell.getDisplay().asyncExec(() -> {
-				d.open();
-				d.show(name, e);
-			});
+			if (!shell.isDisposed()) {
+				CTErrorDialog d = new CTErrorDialog(shell);
+				this.shell.getDisplay().asyncExec(() -> {
+					d.open();
+					d.show(name, e);
+				});
+			}
 		}
 	}
 
@@ -622,10 +624,12 @@ public final class AppWindow implements CTInfo {
 
 			@Override
 			public void run() {
-				lblBottonInfo.setText(" CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: "
-						+ app.getLClient());
-				//
-				setBottomInfo();
+				if (!lblBottonInfo.isDisposed()) {
+					lblBottonInfo.setText(" CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION
+							+ " environment: " + app.getLClient());
+					//
+					setBottomInfo();
+				}
 			}
 		});
 	}

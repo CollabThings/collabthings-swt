@@ -1,6 +1,8 @@
 package org.collabthings.swt.controls;
 
+import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -28,6 +30,11 @@ public class CTText extends CTComposite {
 		composite.setLayoutData(gd_composite);
 	}
 
+	@Override
+	public void addFocusListener(FocusListener l) {
+		text.addFocusListener(l);
+	}
+
 	public void setEditable(boolean arg0) {
 		text.setEditable(arg0);
 		// text.setBackground(SWTResourceManager.getTextBackground());
@@ -45,4 +52,11 @@ public class CTText extends CTComposite {
 		text.append(string);
 	}
 
+	public void setValidated(boolean b) {
+		if (b) {
+			text.setForeground(SWTResourceManager.getTextEditorColor());
+		} else {
+			text.setForeground(SWTResourceManager.getTextError());
+		}
+	}
 }

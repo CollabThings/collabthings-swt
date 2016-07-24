@@ -537,4 +537,12 @@ public class SWTResourceManager {
 		int b = (int) (255 * blue);
 		return new RGB(r, g, b);
 	}
+
+	public static Color getTextError() {
+		return getColor(150, 20, 20);
+	}
+
+	public static Color getTextEditorColor() {
+		return getColor(0, 0, 0);
+	}
 }

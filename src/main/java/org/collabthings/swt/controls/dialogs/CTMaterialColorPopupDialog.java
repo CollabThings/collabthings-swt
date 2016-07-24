@@ -1,7 +1,12 @@
-package org.collabthings.swt.controls;
+package org.collabthings.swt.controls.dialogs;
 
+import org.collabthings.model.CTMaterial;
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTMaterialEditor;
+import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTDoubleEditor.ChangeListener;
+import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -14,8 +19,10 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-class CTMaterialColorPopupDialog extends Dialog {
+public class CTMaterialColorPopupDialog extends Dialog {
 	private CTMaterialEditor materialeditor;
+	private CTMaterial material;
+
 	private LOTDoubleEditor ered;
 	private LOTDoubleEditor egreen;
 	private LOTDoubleEditor eblue;
@@ -26,8 +33,10 @@ class CTMaterialColorPopupDialog extends Dialog {
 	private double dgreen;
 	private double dblue;
 
-	public CTMaterialColorPopupDialog(Shell arg0) {
+	public CTMaterialColorPopupDialog(Shell arg0, CTMaterial material, CTMaterialEditor editor) {
 		super(arg0);
+		this.material = material;
+		this.materialeditor = editor;
 	}
 
 	public void open() {
@@ -50,11 +59,11 @@ class CTMaterialColorPopupDialog extends Dialog {
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		composite.setLayout(new GridLayout());
 
-		ered = new LOTDoubleEditor(composite, this.materialeditor.material.getColor()[0], listener);
+		ered = new LOTDoubleEditor(composite, this.material.getColor()[0], listener);
 		ered.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		egreen = new LOTDoubleEditor(composite, this.materialeditor.material.getColor()[1], listener);
+		egreen = new LOTDoubleEditor(composite, this.material.getColor()[1], listener);
 		egreen.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		eblue = new LOTDoubleEditor(composite, this.materialeditor.material.getColor()[2], listener);
+		eblue = new LOTDoubleEditor(composite, this.material.getColor()[2], listener);
 		eblue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		updateColor();
@@ -86,12 +95,16 @@ class CTMaterialColorPopupDialog extends Dialog {
 	}
 
 	private void updateColor() {
-		dred = ered.getValue();
-		dgreen = egreen.getValue();
-		dblue = eblue.getValue();
+		try {
+			dred = ered.getValue();
+			dgreen = egreen.getValue();
+			dblue = eblue.getValue();
 
-		RGB rgb = getRGB();
-		composite_1.setBackground(SWTResourceManager.getColor(rgb));
+			RGB rgb = getRGB();
+			composite_1.setBackground(SWTResourceManager.getColor(rgb));
+		} catch (IllegalArgumentException e) {
+			LLog.getLogger(this).error(this, "updateColor", e);
+		}
 	}
 
 	public RGB getRGB() {

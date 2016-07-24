@@ -1,5 +1,6 @@
 package org.collabthings.swt.controls;
 
+import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -7,7 +8,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 
 public class LOTDoubleEditor extends CTComposite {
 	private static final int MAX_DECIMALS = 3;
@@ -58,11 +58,19 @@ public class LOTDoubleEditor extends CTComposite {
 				nd = -MIN_NEG_VALUE;
 			}
 			setDouble(nd);
+		} else if (arg0.keyCode == SWT.TAB) {
+			changed();
 		}
 	}
 
 	private synchronized void changed() {
-		listener.changed(getDouble());
+		try {
+			this.s.setValidated(true);
+			double value = getDouble();
+			listener.changed(value);
+		} catch (NumberFormatException e) {
+			this.s.setValidated(false);
+		}
 	}
 
 	private synchronized void setDouble(double nd) {
