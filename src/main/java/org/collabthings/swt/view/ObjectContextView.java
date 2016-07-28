@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bouncycastle.crypto.tls.TlsBlockCipher;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
@@ -17,6 +18,7 @@ import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.swt.controls.CTText;
 import org.collabthings.swt.controls.ObjectViewer;
+import org.collabthings.swt.controls.dialogs.CTSubPartPopupDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.TableEditor;
@@ -39,12 +41,13 @@ import org.eclipse.zest.core.widgets.GraphNode;
 
 public class ObjectContextView extends CTComposite {
 
-	private static final int SUBPART_COLUMN_INDEX_TOOLS = 0;
-	private static final int SUBPART_COLUMN_INDEX_LINE = 1;
-	private static final int SUBPART_COLUMN_INDEX_NAME = 2;
-	private static final int SUBPART_COLUMN_INDEX_LOC = 3;
-	private static final int SUBPART_COLUMN_INDEX_NORM = 4;
-	private static final int SUBPART_COLUMN_INDEX_ANGLE = 5;
+	private static final int SUBPART_COLUMN_INDEX_VIEW = 0;
+	private static final int SUBPART_COLUMN_INDEX_TOOLS = 1;
+	private static final int SUBPART_COLUMN_INDEX_LINE = 2;
+	private static final int SUBPART_COLUMN_INDEX_NAME = 3;
+	private static final int SUBPART_COLUMN_INDEX_LOC = 4;
+	private static final int SUBPART_COLUMN_INDEX_NORM = 5;
+	private static final int SUBPART_COLUMN_INDEX_ANGLE = 6;
 
 	private Set<SubpartListener> subpartlisteners = new HashSet<>();
 	private Set<PartListener> partlisteners = new HashSet<>();
@@ -63,6 +66,7 @@ public class ObjectContextView extends CTComposite {
 	private TableEditor tablee;
 	private Table table;
 	private Map<TableItem, CTListener> tableitemlisteners = new HashMap<>();
+	private TableColumn tblclmnView;
 
 	/**
 	 * Create the composite.
@@ -137,15 +141,20 @@ public class ObjectContextView extends CTComposite {
 		xpndtmChildren.setControl(table);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
+
 		xpndtmChildren.setHeight(xpndtmChildren.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
+
+		tblclmnView = new TableColumn(table, SWT.NONE);
+		tblclmnView.setWidth(19);
+		tblclmnView.setText(">");
 
 		tblclmnActions = new TableColumn(table, SWT.NONE);
 		tblclmnActions.setWidth(19);
-		tblclmnActions.setText(">");
+		tblclmnActions.setText("T");
 
 		tblclmnIndex = new TableColumn(table, SWT.NONE);
 		tblclmnIndex.setWidth(20);
-		tblclmnIndex.setText("index");
+		tblclmnIndex.setText("I");
 
 		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
 		tblclmnName.setWidth(100);
@@ -163,6 +172,19 @@ public class ObjectContextView extends CTComposite {
 		tblclmnAngle.setWidth(100);
 		tblclmnAngle.setText("angle");
 
+		table.addListener(SWT.Resize, e -> {
+			int w = table.getSize().x - 20;
+			tblclmnView.setWidth(19);
+			tblclmnActions.setWidth(19);
+			tblclmnIndex.setWidth(19);
+			tblclmnName.setWidth(100);
+
+			int rest = w - 19 * 3 - 100;
+			tblclmnLocation.setWidth(rest * 4 / 10);
+			tblclmnNormal.setWidth(rest * 4 / 10);
+			tblclmnAngle.setWidth(rest * 2 / 10);
+		});
+
 		tablee = new TableEditor(table);
 		tablee.horizontalAlignment = SWT.LEFT;
 		tablee.grabHorizontal = true;
@@ -173,80 +195,37 @@ public class ObjectContextView extends CTComposite {
 			if (item != null) {
 				CTSubPart subpart = (CTSubPart) item.getData();
 				fireHovered(subpart);
+			} else {
+				fireHovered(null);
 			}
 		});
 
-		table.addListener(SWT.MouseDown, event -> {
-			Rectangle clientArea = table.getClientArea();
-			Point pt = new Point(event.x, event.y);
-			int index = table.getTopIndex();
-			while (index < table.getItemCount()) {
-				boolean visible = false;
-				final TableItem item = table.getItem(index);
-				for (int i = 0; i < table.getColumnCount(); i++) {
-					Rectangle rect = item.getBounds(i);
-					if (rect.contains(pt)) {
-						final int column = i;
-						String currentvalue = item.getText(i);
-						final Control editor = createItemEditor(item, column, currentvalue);
+		table.addListener(SWT.MouseDown, e -> {
+			Point pt = new Point(e.x, e.y);
+			TableItem item = table.getItem(pt);
+			if (item != null) {
+				int index = 0;
 
-						if (editor != null) {
-							tablee.setEditor(editor, item, i);
-							editor.setFocus();
-						}
-						return;
-					}
-					if (!visible && rect.intersects(clientArea)) {
-						visible = true;
+				for (; index <= table.getColumnCount(); index++) {
+					Rectangle b = item.getBounds(index);
+					if (b.contains(pt)) {
+						break;
 					}
 				}
-				if (!visible)
-					return;
-				index++;
+
+				CTSubPart subpart = (CTSubPart) item.getData();
+
+				if (index == SUBPART_COLUMN_INDEX_VIEW) {
+					fireView(subpart.getPart());
+				} else if (index == SUBPART_COLUMN_INDEX_TOOLS) {
+
+				} else {
+					CTSubPartPopupDialog dialog = new CTSubPartPopupDialog(getShell(), (CTSubPart) item.getData());
+					dialog.open();
+				}
 			}
 		});
-	}
 
-	private Control createItemEditor(final TableItem item, final int column, String currentvalue) {
-		Control text;
-		if (column == SUBPART_COLUMN_INDEX_NAME) {
-			text = createTextEditor(item, column, currentvalue);
-		} else {
-			text = null;
-		}
-		return text;
-	}
-
-	private Text createTextEditor(final TableItem item, final int column, String currentvalue) {
-		final Text text = new Text(table, SWT.NONE);
-
-		Listener textListener = e -> {
-			switch (e.type) {
-			case SWT.FocusOut:
-				item.setText(column, text.getText());
-				text.dispose();
-
-				fireEvent(item);
-
-				break;
-			case SWT.Traverse:
-				switch (e.detail) {
-				case SWT.TRAVERSE_RETURN:
-					item.setText(column, text.getText());
-					fireEvent(item);
-
-					// FALL THROUGH
-				case SWT.TRAVERSE_ESCAPE:
-					text.dispose();
-					e.doit = false;
-				}
-				break;
-			}
-		};
-		text.addListener(SWT.FocusOut, textListener);
-		text.addListener(SWT.Traverse, textListener);
-		text.setText(currentvalue);
-		return text;
 	}
 
 	private void fireEvent(final TableItem item) {
@@ -316,20 +295,21 @@ public class ObjectContextView extends CTComposite {
 			int count = 0;
 			List<CTSubPart> subparts = p.getSubParts();
 			for (CTSubPart subpart : subparts) {
-				TableItem tableItem = new TableItem(table, SWT.NONE);
+				TableItem tableitem = new TableItem(table, SWT.NONE);
 
-				tableItem.setText(SUBPART_COLUMN_INDEX_TOOLS, ">");
-				tableItem.setText(SUBPART_COLUMN_INDEX_LINE, "" + (count++));
-				tableItem.setText(SUBPART_COLUMN_INDEX_NAME, "" + subpart.getName());
-				tableItem.setText(SUBPART_COLUMN_INDEX_LOC, "" + subpart.getLocation());
-				tableItem.setText(SUBPART_COLUMN_INDEX_NORM, "" + subpart.getNormal());
-				tableItem.setText(SUBPART_COLUMN_INDEX_ANGLE, "" + subpart.getAngle());
+				tableitem.setText(SUBPART_COLUMN_INDEX_VIEW, ">");
+				tableitem.setText(SUBPART_COLUMN_INDEX_TOOLS, "T");
+				tableitem.setText(SUBPART_COLUMN_INDEX_LINE, "" + (count++));
+				tableitem.setText(SUBPART_COLUMN_INDEX_NAME, "" + subpart.getName());
+				tableitem.setText(SUBPART_COLUMN_INDEX_LOC, "" + subpart.getLocation());
+				tableitem.setText(SUBPART_COLUMN_INDEX_NORM, "" + subpart.getNormal());
+				tableitem.setText(SUBPART_COLUMN_INDEX_ANGLE, "" + subpart.getAngle());
 
-				tableItem.setData(subpart);
+				tableitem.setData(subpart);
 
-				tableitemlisteners.put(tableItem, () -> {
-					subpart.setName(tableItem.getText(SUBPART_COLUMN_INDEX_NAME));
-					subpart.setAngle(Double.parseDouble(tableItem.getText(SUBPART_COLUMN_INDEX_ANGLE)));
+				tableitemlisteners.put(tableitem, () -> {
+					subpart.setName(tableitem.getText(SUBPART_COLUMN_INDEX_NAME));
+					subpart.setAngle(Double.parseDouble(tableitem.getText(SUBPART_COLUMN_INDEX_ANGLE)));
 				});
 			}
 		}

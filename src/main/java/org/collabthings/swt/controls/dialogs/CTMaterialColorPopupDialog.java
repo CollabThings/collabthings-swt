@@ -85,10 +85,11 @@ public class CTMaterialColorPopupDialog extends Dialog {
 		shell.open();
 
 		Display display = parent.getDisplay();
-		while (!popupclosed) {
+		while (!popupclosed && !parent.isDisposed() && !shell.isDisposed()) {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
+
 		shell.dispose();
 
 		this.materialeditor.colorChanged(dred, dgreen, dblue);
