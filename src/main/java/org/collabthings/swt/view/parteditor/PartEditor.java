@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import waazdoh.client.utils.ConditionWaiter;
+
 public class PartEditor extends CTComposite implements LOTAppControl {
 	private CTPart part;
 
@@ -103,11 +105,17 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 
 	public void setPart(CTPart p) {
 		this.part = p;
-		view.setPart(part);
 		viewer.setObject(p);
 		updateInfo();
 
 		this.ctree.setPart(p);
+
+		new Thread(() -> {
+			log.info("setPartcwait");
+			ConditionWaiter.wait(() -> view.isReady(), 60000);
+			log.info("setPartcwait done");
+			view.setPart(part);
+		}).start();
 	}
 
 	private void init() {

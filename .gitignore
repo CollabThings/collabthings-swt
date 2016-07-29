@@ -9,3 +9,5 @@ target/
 /bin/
 /bin/
 /swing2swt.jar
+/lwjgl64.dll
+/OpenAL64.dll

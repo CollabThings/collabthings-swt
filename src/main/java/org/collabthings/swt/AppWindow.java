@@ -272,7 +272,7 @@ public final class AppWindow implements CTInfo {
 
 	private void openTestViews(Display display) {
 		display.asyncExec(() -> {
-			viewSearch("builder");
+			viewSearch("two");
 		});
 
 		display.asyncExec(() -> {
@@ -297,7 +297,7 @@ public final class AppWindow implements CTInfo {
 			 * newRunEnvBuilder(); }
 			 */
 			String latestscadpart = app.getLClient().getService().getStorageArea()
-					.read(new StorageAreaVO("JuusoV", "published/part/latest", null));
+					.read(new StorageAreaVO("juusoface", "published/part/latest", null));
 			if (latestscadpart != null) {
 				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
 				viewPart(b);
