@@ -3,10 +3,11 @@ package org.collabthings.swt.view;
 import java.awt.Canvas;
 import java.awt.Frame;
 
+import org.collabthings.jme.CTObjectViewer;
+import org.collabthings.jme.CTObjectViewerImpl;
+import org.collabthings.jme.CTSceneApp;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
-import org.collabthings.ogl.CTJmeScene;
-import org.collabthings.ogl.CTSceneView;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
@@ -30,10 +31,10 @@ public class GLSceneView extends CTComposite {
 
 	private LLog log = LLog.getLogger(this);
 
-	private CTJmeScene scene;
+	private CTObjectViewer scene;
 	private Label lhighlight;
 
-	private CTSceneView view;
+	private CTSceneApp view;
 
 	public GLSceneView(Composite parent) {
 		super(parent, SWT.NONE);
@@ -75,7 +76,7 @@ public class GLSceneView extends CTComposite {
 		GLProfile glprofile = GLProfile.getDefault();
 		GLCapabilities glcapabilities = new GLCapabilities(glprofile);
 
-		view = new CTSceneView();
+		view = new CTSceneApp();
 		view.init();
 
 		getDisplay().asyncExec(() -> {
@@ -88,10 +89,8 @@ public class GLSceneView extends CTComposite {
 				log.info("setscenecwait");
 				ConditionWaiter.wait(() -> view.isReady(), 20000);
 				log.info("setscenecwait done");
-				getDisplay().asyncExec(() -> {
-					scene = view.newScene();
-					view.setScene(scene);
-				});
+				scene = new CTObjectViewerImpl(view);
+				view.setScene(scene);
 			}).start();
 		});
 
