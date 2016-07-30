@@ -38,8 +38,6 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 	private LLog log = LLog.getLogger(this);
 	private final LOTApp app;
 
-	private GLSceneView view;
-
 	private CTRunEnvironmentImpl rune;
 
 	private Stack<CTPart> parts = new Stack<CTPart>();
@@ -54,11 +52,14 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 
 	private int scrolledareaw;
 
-	public PartEditor(Composite composite, LOTApp app, AppWindow window, CTPart p) {
+	private GLSceneView view;
+
+	public PartEditor(Composite composite, LOTApp app, AppWindow window, CTPart p, GLSceneView view) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.part = p;
 		this.window = window;
+		this.view = view;
 
 		log.info("init " + p.toString());
 
@@ -86,7 +87,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 
 	@Override
 	public void selected(AppWindow appWindow) {
-
+		appWindow.getMainView().setViewedPart(part);
 	}
 
 	private void goBack() {
@@ -121,9 +122,8 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 	private void init() {
 		setBackground(SWTResourceManager.getControlBg());
 
-		GridLayout gridLayout = new GridLayout(2, false);
+		GridLayout gridLayout = new GridLayout(1, false);
 		setLayout(gridLayout);
-		new Label(this, SWT.NONE);
 
 		Composite c_toolbar = new CTComposite(this, SWT.NONE);
 		c_toolbar.setBackground(SWTResourceManager.getActiontitleBackground());
@@ -134,30 +134,29 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		c_toolbar.setLayout(rl_c_toolbar);
 
 		CTButton button_1 = new CTButton(c_toolbar, SWT.NONE);
+
+		CTButton button = new CTButton(c_toolbar, SWT.FLAT);
+
+		CTButton bnewscad = new CTButton(c_toolbar, SWT.FLAT);
+
+		CTButton btnPublish = new CTButton(c_toolbar, SWT.NONE);
 		button_1.addSelectionListener(() -> {
 			goBack();
 		});
 		button_1.setText("<");
-
-		CTButton button = new CTButton(c_toolbar, SWT.FLAT);
 		button.addSelectionListener(() -> {
 			part.newSubPart();
 		});
 		button.setText("A");
-
-		CTButton bnewscad = new CTButton(c_toolbar, SWT.FLAT);
 		bnewscad.addSelectionListener(() -> {
 			part.save();
 			part.newSCAD();
 		});
 		bnewscad.setText("set SCAD");
-
-		CTButton btnPublish = new CTButton(c_toolbar, SWT.NONE);
 		btnPublish.addSelectionListener(() -> {
 			publish();
 		});
 		btnPublish.setText("Publish");
-		new Label(this, SWT.NONE);
 
 		SashForm composite_main = new SashForm(this, SWT.BORDER);
 		composite_main.setBackground(SWTResourceManager.getControlBg());
@@ -198,11 +197,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 			}
 		});
 
-		view = new GLSceneView(composite_main);
-		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		view.setBounds(0, 0, 64, 64);
-
-		composite_main.setWeights(new int[] { 100, 200 });
+		composite_main.setWeights(new int[] { 100 });
 
 		objectChanged();
 	}

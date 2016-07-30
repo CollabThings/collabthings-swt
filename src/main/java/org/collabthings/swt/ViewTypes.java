@@ -52,7 +52,7 @@ public class ViewTypes {
 		views.put("part", id -> {
 			CTPart b = app.getObjectFactory().getPart(id);
 			if (b != null) {
-				window.viewPart(b);
+				window.getMainView().viewPart(b);
 			} else {
 				window.showError("Failed to get part " + id);
 			}

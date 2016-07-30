@@ -23,6 +23,7 @@ import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.CTErrorDialog;
 import org.collabthings.swt.dialog.FindOpenscadDialog;
+import org.collabthings.swt.view.CTMainView;
 import org.collabthings.swt.view.FactoryView;
 import org.collabthings.swt.view.ObjectSearchView;
 import org.collabthings.swt.view.PartBuilderView;
@@ -33,7 +34,6 @@ import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.UserView;
 import org.collabthings.swt.view.UsersSearchView;
 import org.collabthings.swt.view.ValueEditorDialog;
-import org.collabthings.swt.view.parteditor.PartEditor;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -77,6 +77,7 @@ public final class AppWindow implements CTInfo {
 	private CTLabel lblStatus;
 	private ProgressBar progressBar;
 	private Menu mbookmarkslist;
+	private CTMainView mainview;
 
 	public AppWindow(LOTApp app) {
 		this.app = app;
@@ -85,16 +86,6 @@ public final class AppWindow implements CTInfo {
 		app.getLClient().addErrorListener((name, e) -> {
 			showError(name, e);
 		});
-	}
-
-	public void newPart() {
-		try {
-			CTPart p = app.newPart();
-			PartEditor view = new PartEditor(tabFolder.getComposite(), app, this, p);
-			addTab("part " + p, view, p);
-		} catch (Exception e) {
-			showError("newPart", e);
-		}
 	}
 
 	public void newFactory() {
@@ -210,17 +201,6 @@ public final class AppWindow implements CTInfo {
 		});
 	}
 
-	public void viewPart(CTPart part) {
-		if (part != null) {
-			shell.getDisplay().asyncExec(() -> {
-				PartEditor pv = new PartEditor(tabFolder.getComposite(), app, this, part);
-				addTab("" + part.getName(), pv, part);
-			});
-		} else {
-			log.info("ERROR part null");
-		}
-	}
-
 	private void addTab(String name, LOTAppControl c, Object data) {
 		Control control = c.getControl();
 		control.setBackground(SWTResourceManager.getControlBg());
@@ -300,9 +280,9 @@ public final class AppWindow implements CTInfo {
 					.read(new StorageAreaVO("juusoface", "published/part/latest", null));
 			if (latestscadpart != null) {
 				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
-				viewPart(b);
+				mainview.viewPart(b);
 			} else {
-				newPart();
+				mainview.newPart();
 			}
 		});
 
@@ -397,7 +377,7 @@ public final class AppWindow implements CTInfo {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				newPart();
+				mainview.newPart();
 			}
 		});
 
@@ -524,6 +504,9 @@ public final class AppWindow implements CTInfo {
 		lblBottonInfo.setAlignment(SWT.RIGHT);
 
 		setBottomInfo();
+
+		mainview = new CTMainView(tabFolder.getComposite(), app, this);
+		addTab("main", mainview, null);
 	}
 
 	private void initBookmarks() {
@@ -579,7 +562,7 @@ public final class AppWindow implements CTInfo {
 			MStringID id = data.getIDValue("id");
 			CTPart p = getApp().getLClient().getObjectFactory().getPart(id);
 			if (p != null) {
-				viewPart(p);
+				mainview.viewPart(p);
 			} else {
 				showError("Failed to open part " + id);
 			}
@@ -654,5 +637,9 @@ public final class AppWindow implements CTInfo {
 
 	public void viewTool(CTTool tool) {
 		// TODO Auto-generated method stub
+	}
+
+	public CTMainView getMainView() {
+		return mainview;
 	}
 }
