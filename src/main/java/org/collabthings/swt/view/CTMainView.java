@@ -39,11 +39,11 @@ public class CTMainView extends CTComposite implements LOTAppControl {
 		tabfolder = new CTTabFolder(sashForm, SWT.NONE);
 
 		Composite right = new CTComposite(sashForm, SWT.NONE);
-		sashForm.setWeights(new int[] { 1, 1 });
 		right.setLayout(new GridLayout(1, false));
 
 		view = new GLSceneView(right);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		sashForm.setWeights(new int[] {150, 287});
 
 		tabfolder.addSelectionListener(() -> {
 			tabSelected();

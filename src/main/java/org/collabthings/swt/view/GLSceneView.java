@@ -17,13 +17,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLProfile;
 
 import waazdoh.client.utils.ConditionWaiter;
 
@@ -61,7 +59,9 @@ public class GLSceneView extends CTComposite {
 		tskip.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				scene.setSkip(Integer.parseInt(tskip.getText()));
+				if (scene != null && tskip != null) {
+					scene.setSkip(Integer.parseInt(tskip.getText()));
+				}
 			}
 		});
 
@@ -73,11 +73,10 @@ public class GLSceneView extends CTComposite {
 		c.setBackground(SWTResourceManager.getColor(248, 100, 100));
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		GLProfile glprofile = GLProfile.getDefault();
-		GLCapabilities glcapabilities = new GLCapabilities(glprofile);
-
 		view = new CTSceneApp();
 		view.init();
+
+		Color controlBg = SWTResourceManager.getControlBg();
 
 		getDisplay().asyncExec(() -> {
 			Canvas canvas = view.getCanvas(c.getSize().x, c.getSize().y);
@@ -91,6 +90,8 @@ public class GLSceneView extends CTComposite {
 				log.info("setscenecwait done");
 				scene = new CTObjectViewerImpl(view);
 				view.setScene(scene);
+				view.setBackgroundColor(controlBg.getRed() / 255.0f, controlBg.getGreen() / 255.0f,
+						controlBg.getBlue() / 255.0f);
 			}).start();
 		});
 
