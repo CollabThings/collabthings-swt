@@ -426,7 +426,7 @@ public class ObjectViewer extends CTComposite {
 		CTButton b = new CTButton(c, SWT.NONE);
 		b.setText("Open");
 		b.addSelectionListener(() -> {
-			window.viewOpenSCAD(o);
+			window.getMainView().viewSCAD(o);
 		});
 
 		CTButton r = new CTButton(c, SWT.NONE);
@@ -477,7 +477,7 @@ public class ObjectViewer extends CTComposite {
 			ctListener.event();
 		}
 	}
-	
+
 	public void addListener(ObjectViewerListener objectViewerListener) {
 		this.listeners.add(objectViewerListener);
 	}

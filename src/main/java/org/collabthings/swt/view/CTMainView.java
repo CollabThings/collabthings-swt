@@ -1,6 +1,8 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
+import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.SWTResourceManager;
@@ -43,7 +45,7 @@ public class CTMainView extends CTComposite implements LOTAppControl {
 
 		view = new GLSceneView(right);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		sashForm.setWeights(new int[] {150, 287});
+		sashForm.setWeights(new int[] { 150, 287 });
 
 		tabfolder.addSelectionListener(() -> {
 			tabSelected();
@@ -98,12 +100,31 @@ public class CTMainView extends CTComposite implements LOTAppControl {
 		view.setPart(part);
 	}
 
+	public void setViewedModel(CTOpenSCAD scad) {
+		view.setModelView(scad);
+	}
+
 	public void viewPart(CTPart part) {
 		if (part != null) {
 			getDisplay().asyncExec(() -> {
 				try {
 					PartEditor pv = new PartEditor(tabfolder.getComposite(), app, window, part, view);
 					addTab("" + part.getName(), pv, part);
+				} catch (Exception e) {
+					window.showError("viewPart", e);
+				}
+			});
+		} else {
+			log.info("ERROR part null");
+		}
+	}
+
+	public void viewSCAD(CTOpenSCAD scad) {
+		if (scad != null) {
+			getDisplay().asyncExec(() -> {
+				try {
+					SCADView v = new SCADView(tabfolder.getComposite(), app, window, scad);
+					addTab("" + scad.getName(), v, scad);
 				} catch (Exception e) {
 					window.showError("viewPart", e);
 				}
@@ -123,4 +144,5 @@ public class CTMainView extends CTComposite implements LOTAppControl {
 			control.dispose();
 		});
 	}
+
 }

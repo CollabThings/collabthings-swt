@@ -194,13 +194,6 @@ public final class AppWindow implements CTInfo {
 		addTab("" + name, v, userid);
 	}
 
-	public void viewOpenSCAD(CTOpenSCAD scad) {
-		shell.getDisplay().asyncExec(() -> {
-			SCADView v = new SCADView(tabFolder.getComposite(), app, this, scad);
-			addTab("" + scad.getName(), v, scad);
-		});
-	}
-
 	private void addTab(String name, LOTAppControl c, Object data) {
 		Control control = c.getControl();
 		control.setBackground(SWTResourceManager.getControlBg());

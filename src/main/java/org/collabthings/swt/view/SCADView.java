@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
 public class SCADView extends CTComposite implements LOTAppControl {
 
@@ -32,7 +31,6 @@ public class SCADView extends CTComposite implements LOTAppControl {
 	private CTOpenSCAD scad;
 	private CTText bottomtext;
 
-	private GLSceneView canvas;
 	private Composite composite;
 	private Composite ctools;
 
@@ -97,15 +95,13 @@ public class SCADView extends CTComposite implements LOTAppControl {
 
 			composite = new CTComposite(sashForm, SWT.NONE);
 			composite.setLayout(gridLayout);
-			canvas = new GLSceneView(composite);
-			canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 			bottomtext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 			sashForm.setWeights(new int[] { 1, 1 });
 
 			new Thread(() -> {
 				int hash = 0;
-				while (!canvas.isDisposed()) {
+				while (!window.getMainView().isDisposed()) {
 					if (scad.hashCode() != hash) {
 						hash = scad.hashCode();
 						setModel();
@@ -124,7 +120,7 @@ public class SCADView extends CTComposite implements LOTAppControl {
 	}
 
 	private void setModel() {
-		canvas.setModelView(scad);
+		window.getMainView().setViewedModel(scad);
 	}
 
 	protected synchronized void key(KeyEvent arg0) {
@@ -173,7 +169,7 @@ public class SCADView extends CTComposite implements LOTAppControl {
 
 	@Override
 	public void selected(AppWindow appWindow) {
-
+		setModel();
 	}
 
 	@Override
