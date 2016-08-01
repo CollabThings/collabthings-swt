@@ -38,6 +38,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.zest.core.widgets.GraphNode;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.layout.RowLayout;
 
 public class ObjectContextView extends CTComposite {
 
@@ -67,6 +69,7 @@ public class ObjectContextView extends CTComposite {
 	private Table table;
 	private Map<TableItem, CTListener> tableitemlisteners = new HashMap<>();
 	private TableColumn tblclmnView;
+	private CTComposite cchildrentools;
 
 	/**
 	 * Create the composite.
@@ -137,8 +140,21 @@ public class ObjectContextView extends CTComposite {
 	}
 
 	private void createSubpartsTable() {
-		table = new Table(expandBar, SWT.BORDER | SWT.FULL_SELECTION);
-		xpndtmChildren.setControl(table);
+		Composite children = new CTComposite(expandBar, SWT.NONE);
+		children.setLayout(new GridLayout(1, false));
+
+		cchildrentools = new CTComposite(children, SWT.NONE);
+		cchildrentools.setLayout(new RowLayout(SWT.HORIZONTAL));
+		cchildrentools.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+
+		Label lblTools = new Label(cchildrentools, SWT.NONE);
+		lblTools.setText("Tools");
+		Label lblTools2 = new Label(cchildrentools, SWT.NONE);
+		lblTools2.setText("Tools2");
+
+		table = new Table(children, SWT.BORDER | SWT.FULL_SELECTION);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		xpndtmChildren.setControl(children);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
@@ -218,7 +234,7 @@ public class ObjectContextView extends CTComposite {
 				if (index == SUBPART_COLUMN_INDEX_VIEW) {
 					fireView(subpart.getPart());
 				} else if (index == SUBPART_COLUMN_INDEX_TOOLS) {
-
+					setTools(rootpart, subpart);
 				} else {
 					CTSubPartPopupDialog dialog = new CTSubPartPopupDialog(getShell(), (CTSubPart) item.getData());
 					dialog.open();
@@ -316,20 +332,22 @@ public class ObjectContextView extends CTComposite {
 	}
 
 	private void setTools(CTPart parent, CTSubPart subpart) {
-		emptyTools();
+		for (Widget c : cchildrentools.getChildren()) {
+			c.dispose();
+		}
 
-		new CTButton("copy", ctools, SWT.NONE, () -> {
+		new CTButton("copy", cchildrentools, SWT.NONE, () -> {
 			CTSubPart n = parent.newSubPart();
 			n.set(subpart);
 		});
 
-		new CTButton("remove", ctools, SWT.NONE, () -> {
+		new CTButton("remove", cchildrentools, SWT.NONE, () -> {
 			parent.removeSubPart(subpart);
 		});
 
-		ctools.pack();
+		cchildrentools.pack();
 		layout();
-		ctools.layout();
+		cchildrentools.layout();
 	}
 
 	private void setTools(CTPart part) {
@@ -410,5 +428,4 @@ public class ObjectContextView extends CTComposite {
 	public static interface PartListener {
 		void view(CTPart part);
 	}
-
 }

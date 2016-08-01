@@ -37,8 +37,6 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 	private LLog log = LLog.getLogger(this);
 	private final LOTApp app;
 
-	private CTRunEnvironmentImpl rune;
-
 	private Stack<CTPart> parts = new Stack<CTPart>();
 
 	private YamlEditor csource;
@@ -48,8 +46,6 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 	private ObjectViewer viewer;
 
 	private ObjectContextView ctree;
-
-	private int scrolledareaw;
 
 	private GLSceneView view;
 
