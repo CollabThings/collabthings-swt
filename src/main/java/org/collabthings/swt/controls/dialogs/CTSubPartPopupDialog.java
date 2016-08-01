@@ -1,5 +1,6 @@
 package org.collabthings.swt.controls.dialogs;
 
+import org.collabthings.math.CTMath;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTText;
@@ -104,8 +105,8 @@ public class CTSubPartPopupDialog extends Dialog {
 		lblAngle = new Label(composite_1, SWT.NONE);
 		lblAngle.setText("angle");
 
-		a = new LOTDoubleEditor(composite_1, subpart.getAngle(), d -> {
-			subpart.setAngle(d);
+		a = new LOTDoubleEditor(composite_1, CTMath.radToDegrees(subpart.getAngle()), d -> {
+			subpart.setAngle(CTMath.degreesToRad(d));
 		});
 		a.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 

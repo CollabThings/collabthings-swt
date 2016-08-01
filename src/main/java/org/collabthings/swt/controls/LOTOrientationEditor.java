@@ -1,5 +1,6 @@
 package org.collabthings.swt.controls;
 
+import org.collabthings.math.CTMath;
 import org.collabthings.math.LOrientation;
 import org.collabthings.swt.LOTSWT;
 import org.eclipse.swt.SWT;
@@ -51,12 +52,12 @@ public class LOTOrientationEditor extends CTComposite {
 		
 		CTLabel langlename = new CTLabel(bottom, SWT.NONE);
 		langlename.setText("Angle");
-		ea = new LOTDoubleEditor(bottom, o.getAngle(), e -> angleChanged(e));
+		ea = new LOTDoubleEditor(bottom, CTMath.radToDegrees(o.getAngle()), e -> angleChanged(e));
 		ea.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 	}
 
 	private void angleChanged(double na) {
-		o.setAngle(na);
+		o.setAngle(CTMath.degreesToRad(na));
 		listener.changed(o);
 	}
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.collabthings.math.CTMath;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
@@ -321,7 +322,7 @@ public class ObjectContextView extends CTComposite {
 				tableitem.setText(SUBPART_COLUMN_INDEX_NAME, "" + subpart.getName());
 				tableitem.setText(SUBPART_COLUMN_INDEX_LOC, "" + subpart.getLocation());
 				tableitem.setText(SUBPART_COLUMN_INDEX_NORM, "" + subpart.getNormal());
-				tableitem.setText(SUBPART_COLUMN_INDEX_ANGLE, "" + subpart.getAngle());
+				tableitem.setText(SUBPART_COLUMN_INDEX_ANGLE, "" + CTMath.radToDegrees(subpart.getAngle()));
 
 				tableitem.setData(subpart);
 

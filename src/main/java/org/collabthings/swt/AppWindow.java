@@ -7,7 +7,6 @@ import org.collabthings.CTClient;
 import org.collabthings.CTStorage;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTInfo;
-import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTScript;
@@ -29,7 +28,6 @@ import org.collabthings.swt.view.ObjectSearchView;
 import org.collabthings.swt.view.PartBuilderView;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
-import org.collabthings.swt.view.SCADView;
 import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.UserView;
 import org.collabthings.swt.view.UsersSearchView;
@@ -249,40 +247,20 @@ public final class AppWindow implements CTInfo {
 		});
 
 		display.asyncExec(() -> {
-			// viewSearchUsers("user");
+			viewSearchUsers("");
 			// newFactory();
 
-			String latest = app.getLClient().getService().getStorageArea()
-					.read(new StorageAreaVO("juusoface", "DERP_published/factory/latest", null));
-			if (latest != null) {
-				CTFactory f = app.getObjectFactory().getFactory(new MStringID(latest));
-				viewFactory(f);
-			} else {
-				// newRunEnvBuilder();
-			}
+			UserVO user = app.getLClient().getService().getUser();
+			viewUser(user.getUsername(), user.getUserid());
 
-			/*
-			 * String latestpartbuilder = app.getLClient().getService()
-			 * .getStorageArea() .read("juusoface",
-			 * "published/partbuilder/latest"); if (latestpartbuilder != null) {
-			 * LOTPartBuilder b = app.getObjectFactory().getPartBuilder( new
-			 * MStringID(latestpartbuilder)); viewPartBuilder(b); } else { //
-			 * newRunEnvBuilder(); }
-			 */
 			String latestscadpart = app.getLClient().getService().getStorageArea()
-					.read(new StorageAreaVO("juusoface", "published/part/latest", null));
+					.read(new StorageAreaVO(user.getUsername(), "published/part/latest", null));
 			if (latestscadpart != null) {
 				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
 				mainview.viewPart(b);
 			} else {
 				mainview.newPart();
 			}
-		});
-
-		display.asyncExec(() -> {
-			CTStorage storage = app.getLClient().getStorage();
-			storage.readStorage(app.getLClient().getClient().getService().getUser("juuso.vilmunen"),
-					"/published/builder/latest");
 		});
 	}
 
