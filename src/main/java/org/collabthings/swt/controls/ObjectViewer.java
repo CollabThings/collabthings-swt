@@ -18,6 +18,7 @@ import org.collabthings.model.CTMaterial;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.impl.CTOpenSCADImpl;
+import org.collabthings.model.impl.CTPartBuilderImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTListener;
 import org.collabthings.swt.LOTSWT;
@@ -25,6 +26,7 @@ import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
 import org.collabthings.swt.view.SCADView;
+import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.parteditor.CTObjectListener;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
@@ -132,6 +134,9 @@ public class ObjectViewer extends CTComposite {
 		editors.put(CTMaterial.class.getName(), (key, c, o) -> addMaterialView(key, c, (CTMaterial) o));
 
 		editors.put(CTOpenSCADImpl.class.getName(), (key, c, o) -> addOpenScadField(key, c, (CTOpenSCADImpl) o));
+
+		editors.put(CTPartBuilderImpl.class.getName(),
+				(key, c, o) -> addPartBuilderField(key, c, (CTPartBuilderImpl) o));
 	}
 
 	private void updateData() {
@@ -407,6 +412,35 @@ public class ObjectViewer extends CTComposite {
 		}
 
 		return v;
+	}
+
+	private Control addPartBuilderField(String key, Composite parent, CTPartBuilderImpl o) {
+		Composite c = new CTComposite(parent, SWT.BORDER);
+		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+
+		GridLayout gridLayout = new GridLayout(1, false);
+		LOTSWT.setDefaults(gridLayout);
+
+		gridLayout.numColumns = 4;
+		c.setLayout(gridLayout);
+
+		CTLabel l = new CTLabel(c, SWT.NONE);
+		l.setText("PartBuilder");
+		l.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+
+		CTButton s = new CTButton(c, SWT.NONE);
+		s.setText("Save");
+
+		CTButton brun = new CTButton(c, SWT.NONE);
+		brun.setText("Run");
+		brun.addSelectionListener(() -> o.run((CTPart) this.objectShown));
+
+		ScriptView view = new ScriptView(parent, app, window, o.getScript());
+		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	
+
+		s.addSelectionListener(() -> view.save());
+
+		return c;
 	}
 
 	private Control addOpenScadField(String key, Composite parent, CTOpenSCADImpl o) {

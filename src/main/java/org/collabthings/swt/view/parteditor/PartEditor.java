@@ -128,26 +128,32 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		rl_c_toolbar.center = true;
 		c_toolbar.setLayout(rl_c_toolbar);
 
-		CTButton button_1 = new CTButton(c_toolbar, SWT.NONE);
-
-		CTButton button = new CTButton(c_toolbar, SWT.FLAT);
-
+		CTButton bprevious = new CTButton(c_toolbar, SWT.NONE);
+		CTButton bnewsubpart = new CTButton(c_toolbar, SWT.FLAT);
 		CTButton bnewscad = new CTButton(c_toolbar, SWT.FLAT);
+		CTButton bnewbuilder = new CTButton(c_toolbar, SWT.FLAT);
 
 		CTButton btnPublish = new CTButton(c_toolbar, SWT.NONE);
-		button_1.addSelectionListener(() -> {
+		bprevious.addSelectionListener(() -> {
 			goBack();
 		});
-		button_1.setText("<");
-		button.addSelectionListener(() -> {
+		bprevious.setText("<");
+		bnewsubpart.addSelectionListener(() -> {
 			part.newSubPart();
 		});
-		button.setText("A");
+		bnewsubpart.setText("A");
 		bnewscad.addSelectionListener(() -> {
 			part.save();
 			part.newSCAD();
 		});
-		bnewscad.setText("set SCAD");
+		bnewscad.setText("New SCAD");
+
+		bnewbuilder.addSelectionListener(() -> {
+			part.save();
+			part.newBuilder();
+		});
+		bnewbuilder.setText("New Builder");
+
 		btnPublish.addSelectionListener(() -> {
 			publish();
 		});
