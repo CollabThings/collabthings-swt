@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bouncycastle.crypto.tls.TlsBlockCipher;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
@@ -26,20 +25,19 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.zest.core.widgets.GraphNode;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.RowLayout;
 
 public class ObjectContextView extends CTComposite {
 
@@ -50,6 +48,8 @@ public class ObjectContextView extends CTComposite {
 	private static final int SUBPART_COLUMN_INDEX_LOC = 4;
 	private static final int SUBPART_COLUMN_INDEX_NORM = 5;
 	private static final int SUBPART_COLUMN_INDEX_ANGLE = 6;
+
+	private final LOTApp app;
 
 	private Set<SubpartListener> subpartlisteners = new HashSet<>();
 	private Set<PartListener> partlisteners = new HashSet<>();
@@ -79,6 +79,8 @@ public class ObjectContextView extends CTComposite {
 	 */
 	public ObjectContextView(LOTApp app, AppWindow window, Composite parent, int style) {
 		super(parent, style);
+
+		this.app = app;
 
 		setLayout(new GridLayout(1, false));
 
@@ -236,7 +238,7 @@ public class ObjectContextView extends CTComposite {
 				} else if (index == SUBPART_COLUMN_INDEX_TOOLS) {
 					setTools(rootpart, subpart);
 				} else {
-					CTSubPartPopupDialog dialog = new CTSubPartPopupDialog(getShell(), (CTSubPart) item.getData());
+					CTSubPartPopupDialog dialog = new CTSubPartPopupDialog(getShell(), app, (CTSubPart) item.getData());
 					dialog.open();
 				}
 			}

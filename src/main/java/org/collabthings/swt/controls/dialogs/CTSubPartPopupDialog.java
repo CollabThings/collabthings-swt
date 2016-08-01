@@ -1,6 +1,7 @@
 package org.collabthings.swt.controls.dialogs;
 
 import org.collabthings.model.CTSubPart;
+import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTText;
 import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTVectorEditor;
@@ -17,6 +18,8 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
+import waazdoh.common.MStringID;
 
 public class CTSubPartPopupDialog extends Dialog {
 
@@ -36,10 +39,15 @@ public class CTSubPartPopupDialog extends Dialog {
 	private Label lblAngle;
 	private CTText tname;
 	private Label lblName;
+	private Label lblPartid;
+	private CTText tpartid;
 
-	public CTSubPartPopupDialog(Shell shell, CTSubPart data) {
+	private LOTApp app;
+
+	public CTSubPartPopupDialog(Shell shell, LOTApp app, CTSubPart data) {
 		super(shell);
 		this.subpart = data;
+		this.app = app;
 	}
 
 	public void open() {
@@ -100,6 +108,26 @@ public class CTSubPartPopupDialog extends Dialog {
 			subpart.setAngle(d);
 		});
 		a.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+		lblPartid = new Label(composite_1, SWT.NONE);
+		lblPartid.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblPartid.setText("Part id");
+
+		tpartid = new CTText(composite_1, SWT.BORDER);
+		tpartid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		tpartid.setText(subpart.getPart().getID().toString());
+		tpartid.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				subpart.setPart(app.getObjectFactory().getPart(new MStringID(tpartid.getText())));
+			}
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+			}
+		});
+
 		new Label(composite_1, SWT.NONE);
 
 		Button bOK = new Button(composite_1, SWT.NONE);
