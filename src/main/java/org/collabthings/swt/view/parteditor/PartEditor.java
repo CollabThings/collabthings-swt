@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import waazdoh.client.utils.ConditionWaiter;
 
 public class PartEditor extends CTComposite implements LOTAppControl {
+	private static final String PREFERENCES_SHOWSOURCE = "app.editor.showsource";
+
 	private CTPart part;
 
 	private LLog log = LLog.getLogger(this);
@@ -172,10 +174,12 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		viewer = new ObjectViewer(app, window, tabFolder.getComposite());
 		tabFolder.addTab("properties", viewer, null, false);
 
-		csource = new YamlEditor(tabFolder.getComposite(), SWT.NONE, "source");
-		tabFolder.addTab("Source", csource, null, false);
-
-		csource.setObject(this.part);
+		if (app.getLClient().getPreferences().getBoolean(PREFERENCES_SHOWSOURCE, false)) {
+			csource = new YamlEditor(tabFolder.getComposite(), SWT.NONE, "source");
+			tabFolder.addTab("Source", csource, null, false);
+			csource.setObject(this.part);
+		}
+		
 
 		tabFolder.addSelectionListener(() -> {
 			// updateLayout();
