@@ -19,8 +19,9 @@ public class CTObjectListener {
 
 		new Thread(() -> {
 			while (dowhile.doWhile()) {
-				if (!hash.equals(getContentHash())) {
-					hash = getContentHash();
+				String contentHash = getContentHash();
+				if (!hash.equals(contentHash)) {
+					hash = contentHash;
 					changed.chanced();
 				}
 				doWait();
