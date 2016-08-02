@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.collabthings.CTListener;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.math.LOrientation;
 import org.collabthings.math.LVector;
@@ -20,7 +21,6 @@ import org.collabthings.model.CTPart;
 import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.model.impl.CTPartBuilderImpl;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.CTListener;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
@@ -436,7 +436,7 @@ public class ObjectViewer extends CTComposite {
 		brun.addSelectionListener(() -> o.run((CTPart) this.objectShown));
 
 		ScriptView view = new ScriptView(parent, app, window, o.getScript());
-		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));	
+		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		s.addSelectionListener(() -> view.save());
 
@@ -486,7 +486,7 @@ public class ObjectViewer extends CTComposite {
 	public void setObject(CTObject o) {
 		objectShown = o;
 		new CTObjectListener(o, () -> {
-			return !isDisposed();
+			return !isDisposed() && o == objectShown;
 		}, () -> updateData());
 
 		lblObject.setText("" + o);
