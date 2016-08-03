@@ -24,6 +24,10 @@ public class UsersSearchView {
 		this.search = new SearchView(c, app, window, new CTSearchResultFactory() {
 			@Override
 			public List<String> search(String s, int start, int count) {
+				if (s == null || s.length() == 0) {
+					s = "user";
+				}
+
 				WClient client = app.getLClient().getClient();
 				List<String> ret = new LinkedList<>();
 				List<UserVO> list = client.searchUsers(s, 50);
