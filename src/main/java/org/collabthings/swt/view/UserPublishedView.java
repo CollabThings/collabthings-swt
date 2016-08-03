@@ -1,5 +1,6 @@
 package org.collabthings.swt.view;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -11,6 +12,7 @@ import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.swt.controls.CTText;
+import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Color;
@@ -18,7 +20,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Text;
 
 import waazdoh.common.WLogger;
 import waazdoh.common.vo.UserVO;
@@ -85,19 +86,33 @@ public class UserPublishedView extends CTComposite {
 				for (Control c : clist.getChildren()) {
 					c.dispose();
 				}
-
-				List<String> published = app.getLClient().getStorage().getUserPublished(u.getUserid(), 0, 50);
-				WLogger.getLogger(this).info("got published list " + published);
-				String filter = "" + publishedfilter.getText();
-				for (String string : published) {
-					if (string.indexOf(filter) > 0 || filter.length() < 2) {
-						addPublishedItem(string);
-					}
-				}
-
-				updateLayout();
+				doSearch(publishedfilter.getText());
 			});
 		}
+	}
+
+	private void doSearch(String filter) {
+		new Thread(() -> {
+			List<String> published = app.getLClient().getStorage().getUserPublished(u.getUserid(), 0, 50);
+			LLog.getLogger(this).info("got published list " + published);
+			List<String> list = new ArrayList<>();
+			published.stream().forEach(string -> {
+				if (string.indexOf(filter) > 0 || filter.length() < 2) {
+					list.add(string);
+				}
+			});
+
+			addPublishedItem(list);
+
+		}).start();
+
+	}
+
+	private void addPublishedItem(List<String> list) {
+		getDisplay().asyncExec(() -> {
+			list.forEach(item -> addPublishedItem(item));
+			updateLayout();
+		});
 	}
 
 	private void addPublishedItem(String string) {
