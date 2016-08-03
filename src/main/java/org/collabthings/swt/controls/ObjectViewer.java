@@ -12,7 +12,7 @@ import java.util.Set;
 import org.collabthings.CTListener;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.math.LOrientation;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTMaterial;
@@ -106,7 +106,7 @@ public class ObjectViewer extends CTComposite {
 	private void initOkTypes() {
 		editors.put(String.class.getName(), (key, c, o) -> addStringField(key, c, (String) o));
 
-		editors.put(LVector.class.getName(), (key, c, o) -> addVectorField(key, c, (LVector) o));
+		editors.put(Vector3f.class.getName(), (key, c, o) -> addVectorField(key, c, (Vector3f) o));
 
 		editors.put(Double.class.getName(), (key, c, o) -> addDoubleField(key, c, (Double) o));
 
@@ -315,7 +315,7 @@ public class ObjectViewer extends CTComposite {
 		});
 	}
 
-	private Composite addVectorField(String key, Composite parent, LVector orgv) {
+	private Composite addVectorField(String key, Composite parent, Vector3f orgv) {
 		Composite c = getRowComposite(parent);
 		addLabel(key, c);
 		LOTVectorEditor e = new LOTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));

@@ -1,21 +1,22 @@
 package org.collabthings.swt.controls;
 
-import org.collabthings.math.LVector;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import com.jme3.math.Vector3f;
+
 public class LOTVectorEditor extends CTComposite {
 
-	private ChangeListener<LVector> listener;
+	private ChangeListener<Vector3f> listener;
 	private LOTDoubleEditor ey;
 	private LOTDoubleEditor ez;
 	private LOTDoubleEditor ex;
-	private LVector v;
+	private Vector3f v;
 	private CTLabel lname;
 
-	public LOTVectorEditor(Composite c, LVector nv, ChangeListener<LVector> listener) {
+	public LOTVectorEditor(Composite c, Vector3f nv, ChangeListener<Vector3f> listener) {
 		super(c, SWT.None);
 		this.v = nv;
 		this.listener = listener;
@@ -28,23 +29,23 @@ public class LOTVectorEditor extends CTComposite {
 		setLayout(gridLayout);
 
 		if (v == null) {
-			v = new LVector();
+			v = new Vector3f();
 		}
 
 		lname = new CTLabel(this, SWT.None);
-		
-		ex = new LOTDoubleEditor(this, (Double) v.x, d -> {
-			v.x = d;
+
+		ex = new LOTDoubleEditor(this, (Double) (double) v.x, d -> {
+			v.x = d.floatValue();
 			changed();
 		});
 		ex.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		ey = new LOTDoubleEditor(this, (Double) v.x, d -> {
-			v.y = d;
+		ey = new LOTDoubleEditor(this, (Double) (double) v.x, d -> {
+			v.y = d.floatValue();
 			changed();
 		});
 		ey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		ez = new LOTDoubleEditor(this, (Double) v.x, d -> {
-			v.z = d;
+		ez = new LOTDoubleEditor(this, (Double) (double) v.x, d -> {
+			v.z = d.floatValue();
 			changed();
 		});
 		ez.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -55,13 +56,13 @@ public class LOTVectorEditor extends CTComposite {
 	public void setName(String name) {
 		lname.setText(name);
 	}
-	
+
 	private void changed() {
 		listener.changed(getV());
 	}
 
-	private LVector getV() {
-		return new LVector(ex.getValue(), ey.getValue(), ez.getValue());
+	private Vector3f getV() {
+		return new Vector3f((float) ex.getValue(), (float) ey.getValue(), (float) ez.getValue());
 	}
 
 	public static interface ChangeListener<T> {

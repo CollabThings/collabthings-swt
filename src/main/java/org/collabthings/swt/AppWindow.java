@@ -278,6 +278,7 @@ public final class AppWindow implements CTInfo {
 		if (name.equals(CTClient.ERROR_OPENSCADFAILED)) {
 			new FindOpenscadDialog(app, this, shell);
 		} else {
+			LLog.getLogger(this).info("Error  " + name + " " + e);
 			LLog.getLogger(this).error(this, name, e);
 			if (!shell.isDisposed()) {
 				CTErrorDialog d = new CTErrorDialog(shell);

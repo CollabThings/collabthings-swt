@@ -1,7 +1,9 @@
 package org.collabthings.swt.controls;
 
+import org.collabthings.CTListener;
 import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -58,5 +60,19 @@ public class CTText extends CTComposite {
 		} else {
 			text.setForeground(SWTResourceManager.getTextError());
 		}
+	}
+
+	public void addEditDoneListener(CTListener l) {
+		addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				l.event();
+			}
+
+			@Override
+			public void focusGained(FocusEvent arg0) {
+			}
+		});
 	}
 }

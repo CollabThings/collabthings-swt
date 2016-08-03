@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.collabthings.math.LOrientation;
-import org.collabthings.math.LVector;
+import com.jme3.math.Vector3f;
 
 public class TableTestData {
 	private String value1 = "value1";
 	private String value2 = "value2";
 	private int intvalue = 5;
-	private LVector v = new LVector(1, 2, 3);
+	private Vector3f v = new Vector3f(1, 2, 3);
 	private LOrientation o = new LOrientation();
 	private Set<String> somestrings = new HashSet<String>();
 
@@ -33,11 +33,11 @@ public class TableTestData {
 		this.intvalue = intvalue;
 	}
 
-	public LVector getV() {
+	public Vector3f getV() {
 		return v;
 	}
 
-	public void setV(LVector v) {
+	public void setV(Vector3f v) {
 		this.v = v;
 	}
 

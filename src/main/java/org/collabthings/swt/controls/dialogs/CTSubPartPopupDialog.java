@@ -44,6 +44,8 @@ public class CTSubPartPopupDialog extends Dialog {
 	private CTText tpartid;
 
 	private LOTApp app;
+	private Label lpartbookmark;
+	private CTText tpartbookmark;
 
 	public CTSubPartPopupDialog(Shell shell, LOTApp app, CTSubPart data) {
 		super(shell);
@@ -71,18 +73,7 @@ public class CTSubPartPopupDialog extends Dialog {
 		tname = new CTText(composite_1, SWT.BORDER);
 		tname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tname.setText(subpart.getName());
-		tname.addFocusListener(new FocusListener() {
-
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				subpart.setName(tname.getText());
-			}
-
-			@Override
-			public void focusGained(FocusEvent arg0) {
-			}
-		});
-
+		tname.addEditDoneListener(() -> subpart.setName(tname.getText()));
 		lblLoc = new Label(composite_1, SWT.NONE);
 		lblLoc.setText("loc");
 
@@ -117,18 +108,17 @@ public class CTSubPartPopupDialog extends Dialog {
 		tpartid = new CTText(composite_1, SWT.BORDER);
 		tpartid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tpartid.setText(subpart.getPart().getID().toString());
-		tpartid.addFocusListener(new FocusListener() {
+		tpartid.addEditDoneListener(
+				() -> subpart.setPart(app.getObjectFactory().getPart(new MStringID(tpartid.getText()))));
 
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				subpart.setPart(app.getObjectFactory().getPart(new MStringID(tpartid.getText())));
-			}
+		lpartbookmark = new Label(composite_1, SWT.NONE);
+		lpartbookmark.setText("Part bm");
 
-			@Override
-			public void focusGained(FocusEvent arg0) {
-			}
-		});
-
+		tpartbookmark = new CTText(composite_1, SWT.BORDER);
+		tpartbookmark.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		tpartbookmark.setText((String) subpart.getPartBookmark());
+		tpartbookmark.addEditDoneListener(() -> subpart.setPartBookmark(tpartbookmark.getText()));
+		
 		new Label(composite_1, SWT.NONE);
 
 		Button bOK = new Button(composite_1, SWT.NONE);
