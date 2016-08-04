@@ -116,9 +116,11 @@ public class CTSubPartPopupDialog extends Dialog {
 
 		tpartbookmark = new CTText(composite_1, SWT.BORDER);
 		tpartbookmark.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		tpartbookmark.setText((String) subpart.getPartBookmark());
+		if (subpart.getPartBookmark() != null) {
+			tpartbookmark.setText(subpart.getPartBookmark());
+		}
 		tpartbookmark.addEditDoneListener(() -> subpart.setPartBookmark(tpartbookmark.getText()));
-		
+
 		new Label(composite_1, SWT.NONE);
 
 		Button bOK = new Button(composite_1, SWT.NONE);

@@ -1,6 +1,7 @@
 package org.collabthings.swt.controls;
 
 import org.collabthings.swt.SWTResourceManager;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -33,6 +34,13 @@ public class CTButton {
 		l.setTopMargin(padding);
 		l.setBottomMargin(padding);
 	}
+
+	public CTButton(Composite parent, String string, ButtonListener listener) {
+		this(parent, SWT.NONE);
+		setText(string);
+		addSelectionListener(listener);
+	}
+
 
 	public void setText(String string) {
 		l.setText(string);

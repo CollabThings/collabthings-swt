@@ -21,7 +21,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import waazdoh.common.WLogger;
 import waazdoh.common.vo.UserVO;
 
 public class UserPublishedView extends CTComposite {
@@ -118,7 +117,7 @@ public class UserPublishedView extends CTComposite {
 	private void addPublishedItem(String string) {
 		Composite item = new CTComposite(clist, SWT.NONE);
 		item.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_item = new GridLayout(2, false);
+		GridLayout gl_item = new GridLayout(4, false);
 		LOTSWT.setDefaults(gl_item);
 
 		item.setLayout(gl_item);
@@ -126,12 +125,17 @@ public class UserPublishedView extends CTComposite {
 		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		l.setText(string);
 
-		CTButton btnView = new CTButton(item, SWT.NONE);
-		btnView.addSelectionListener(() -> {
+		CTButton btnView = new CTButton(item, "View", () -> {
 			viewPublished(string);
 		});
 
-		btnView.setText("View");
+		new CTButton(item, "Copy", () -> {
+			new CopyToClipbard(this, string);
+		});
+
+		new CTButton(item, "Id", () -> {
+			new CopyToClipbard(this, readID(string));
+		});
 
 		if (publishedcount++ % 2 == 0) {
 			Color bgcolor = SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
@@ -141,11 +145,15 @@ public class UserPublishedView extends CTComposite {
 	}
 
 	private void viewPublished(String item) {
-		String itemdata = app.getLClient().getStorage().readStorage(u, item);
+		String itemdata = readID(item);
 		StringTokenizer st = new StringTokenizer(item, "/");
 		st.nextToken(); // "published"
 		String type = st.nextToken();
 		window.view(type, itemdata);
+	}
+
+	private String readID(String item) {
+		return app.getLClient().getStorage().readStorage(u, item);
 	}
 
 	private void updateLayout() {
