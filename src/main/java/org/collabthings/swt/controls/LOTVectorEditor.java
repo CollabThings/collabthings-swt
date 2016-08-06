@@ -58,10 +58,10 @@ public class LOTVectorEditor extends CTComposite {
 	}
 
 	private void changed() {
-		listener.changed(getV());
+		listener.changed(getValue());
 	}
 
-	private Vector3f getV() {
+	public Vector3f getValue() {
 		return new Vector3f((float) ex.getValue(), (float) ey.getValue(), (float) ez.getValue());
 	}
 
@@ -74,4 +74,5 @@ public class LOTVectorEditor extends CTComposite {
 		ey.setValue(v.y);
 		ez.setValue(v.z);
 	}
+
 }

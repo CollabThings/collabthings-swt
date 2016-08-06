@@ -7,8 +7,6 @@ import org.collabthings.swt.controls.CTText;
 import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTVectorEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -78,7 +76,7 @@ public class CTSubPartPopupDialog extends Dialog {
 		lblLoc.setText("loc");
 
 		loc = new LOTVectorEditor(composite_1, subpart.getLocation(), v -> {
-
+			updateOrientation();
 		});
 
 		loc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -87,6 +85,7 @@ public class CTSubPartPopupDialog extends Dialog {
 		lblN.setText("n");
 
 		n = new LOTVectorEditor(composite_1, subpart.getNormal(), v -> {
+			updateOrientation();
 		});
 
 		GridData gd_n = new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1);
@@ -97,7 +96,7 @@ public class CTSubPartPopupDialog extends Dialog {
 		lblAngle.setText("angle");
 
 		a = new LOTDoubleEditor(composite_1, CTMath.radToDegrees(subpart.getAngle()), d -> {
-			subpart.setAngle(CTMath.degreesToRad(d));
+			updateOrientation();
 		});
 		a.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
@@ -150,6 +149,10 @@ public class CTSubPartPopupDialog extends Dialog {
 			shell.dispose();
 		}
 
+	}
+
+	private void updateOrientation() {
+		subpart.setOrientation(loc.getValue(), this.n.getValue().normalize(), CTMath.degreesToRad(a.getValue()));
 	}
 
 }

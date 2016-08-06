@@ -26,7 +26,7 @@ public class CTText extends CTComposite {
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite composite = new Composite(this, SWT.NONE);
-		composite.setBackground(org.eclipse.wb.swt.SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		gd_composite.heightHint = 1;
 		composite.setLayoutData(gd_composite);
