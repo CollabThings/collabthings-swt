@@ -9,7 +9,6 @@ import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -23,22 +22,19 @@ public class PartBuilderView extends CTComposite implements LOTAppControl {
 	private AppWindow window;
 	private CTPartBuilder builder;
 	private ScriptView scriptview;
-	private GLSceneView partview;
+	private GLSceneView view;
 
-	public PartBuilderView(Composite parent, LOTApp app, AppWindow appWindow, CTPartBuilder pb) {
+	public PartBuilderView(Composite parent, LOTApp app, AppWindow appWindow, CTPart p, CTPartBuilder pb,
+			GLSceneView view) {
 		super(parent, SWT.NONE);
 		this.window = appWindow;
 		this.app = app;
 		this.builder = pb;
+		this.view = view;
+
 		setLayout(new GridLayout(1, false));
 
-		SashForm sashForm = new SashForm(this, SWT.NONE);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		Composite left = new CTComposite(sashForm, SWT.NONE);
-		left.setLayout(new GridLayout(1, false));
-
-		Composite composite = new CTComposite(left, SWT.NONE);
+		Composite composite = new CTComposite(this, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
@@ -60,30 +56,17 @@ public class PartBuilderView extends CTComposite implements LOTAppControl {
 
 		CTButton btnRun = new CTButton(ctools, SWT.NONE);
 		btnRun.addSelectionListener(() -> {
-			updateView();
+			pb.run(p);
 		});
+
 		btnRun.setText("Run");
 
-		scriptview = new ScriptView(left, app, window, builder.getScript());
+		scriptview = new ScriptView(this, app, window, builder.getScript());
 		scriptview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		partview = new GLSceneView(sashForm);
-		sashForm.setWeights(new int[] { 1, 1 });
-
-		getDisplay().asyncExec(() -> {
-			updateView();
-		});
-
 	}
 
 	private void save() {
 		scriptview.save();
-	}
-
-	private void updateView() {
-		CTPart p = this.app.getLClient().getObjectFactory().getPart();
-		builder.run(p);
-		partview.setPart(p);
 	}
 
 	@Override

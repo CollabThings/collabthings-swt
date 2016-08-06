@@ -4,9 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.collabthings.math.LOrientation;
+import org.collabthings.model.CTObject;
+
 import com.jme3.math.Vector3f;
 
-public class TableTestData {
+import waazdoh.common.ObjectID;
+import waazdoh.common.WObject;
+
+public class TableTestData implements CTObject {
 	private String value1 = "value1";
 	private String value2 = "value2";
 	private int intvalue = 5;
@@ -72,4 +77,46 @@ public class TableTestData {
 	public void setSomestrings(Set<String> somestrings) {
 		this.somestrings = somestrings;
 	}
+
+	@Override
+	public boolean isReady() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void publish() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void save() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public ObjectID getID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WObject getObject() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean parse(WObject o) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getName() {
+		return "testdata";
+	}
+
 }

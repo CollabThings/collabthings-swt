@@ -2,7 +2,7 @@ package org.collabthings.swt.view;
 
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
-import org.collabthings.model.impl.CTOpenSCADImpl;
+import org.collabthings.model.CTPartBuilder;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.SWTResourceManager;
@@ -131,6 +131,19 @@ public class CTMainView extends CTComposite implements LOTAppControl {
 			});
 		} else {
 			log.info("ERROR part null");
+		}
+	}
+
+	public void viewBuilder(String name, CTPart p, CTPartBuilder o) {
+		if (o != null) {
+			getDisplay().asyncExec(() -> {
+				try {
+					PartBuilderView v = new PartBuilderView(tabfolder.getComposite(), app, window, p, o, view);
+					addTab("" + name, v, o);
+				} catch (Exception e) {
+					window.showError("viewPart", e);
+				}
+			});
 		}
 	}
 

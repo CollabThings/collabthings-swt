@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.collabthings.CTClient;
-import org.collabthings.CTStorage;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTInfo;
 import org.collabthings.model.CTPart;
@@ -25,7 +24,6 @@ import org.collabthings.swt.dialog.FindOpenscadDialog;
 import org.collabthings.swt.view.CTMainView;
 import org.collabthings.swt.view.FactoryView;
 import org.collabthings.swt.view.ObjectSearchView;
-import org.collabthings.swt.view.PartBuilderView;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
 import org.collabthings.swt.view.ScriptView;
@@ -148,12 +146,9 @@ public final class AppWindow implements CTInfo {
 		});
 	}
 
-	public void viewPartBuilder(CTPartBuilder pb) {
+	public void viewPartBuilder(CTPart p, CTPartBuilder pb) {
 		setInfo(0, 0, 0, "Viewing partbuilder " + pb);
-		shell.getDisplay().asyncExec(() -> {
-			PartBuilderView v = new PartBuilderView(tabFolder.getComposite(), app, this, pb);
-			addTab("" + pb, v, pb);
-		});
+		mainview.viewBuilder("" + p.getShortname() + "/" + pb.getName(), p, pb);
 	}
 
 	private void setInfo(int current, int min, int max, String string) {
@@ -167,14 +162,14 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void viewSearchUsers(String seachitem) {
-		UsersSearchView v = new UsersSearchView(tabFolder.getComposite(), app, this);
-		addTab("users", v.getView(), seachitem);
-		v.search(seachitem, 0, 100);
+		shell.getDisplay().asyncExec(() -> {
+			UsersSearchView v = new UsersSearchView(tabFolder.getComposite(), app, this);
+			addTab("users", v.getView(), seachitem);
+			v.search(seachitem, 0, 100);
+		});
 	}
 
 	public void viewSearch(String searchitem) {
-		AppWindow window = this;
-
 		ObjectSearchView s = new ObjectSearchView(tabFolder.getComposite(), app, this);
 		addTab("Search " + searchitem, s.getControl(), searchitem);
 		s.search(searchitem, 0, 50);
@@ -188,8 +183,10 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void viewUser(String name, String userid) {
-		UserView v = new UserView(tabFolder.getComposite(), app, this, userid);
-		addTab("" + name, v, userid);
+		shell.getDisplay().asyncExec(() -> {
+			UserView v = new UserView(tabFolder.getComposite(), app, this, userid);
+			addTab("" + name, v, userid);
+		});
 	}
 
 	private void addTab(String name, LOTAppControl c, Object data) {
@@ -242,14 +239,12 @@ public final class AppWindow implements CTInfo {
 	}
 
 	private void openTestViews(Display display) {
-		display.asyncExec(() -> {
-			viewSearch("two");
-		});
+		viewSearch("two");
 
-		display.asyncExec(() -> {
-			viewSearchUsers("");
-			// newFactory();
+		viewSearchUsers("user");
+		// newFactory();
 
+		new Thread(() -> {
 			UserVO user = app.getLClient().getService().getUser();
 			viewUser(user.getUsername(), user.getUserid());
 
@@ -261,7 +256,7 @@ public final class AppWindow implements CTInfo {
 			} else {
 				mainview.newPart();
 			}
-		});
+		}).start();
 	}
 
 	private void readAndDispatch(Display display) {

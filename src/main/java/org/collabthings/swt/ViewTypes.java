@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTPart;
-import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.swt.app.LOTApp;
 
@@ -31,21 +30,11 @@ public class ViewTypes {
 		});
 
 		views.put("builder", id -> {
-			CTRunEnvironmentBuilder b = app.getObjectFactory()
-					.getRuntimeBuilder(id);
+			CTRunEnvironmentBuilder b = app.getObjectFactory().getRuntimeBuilder(id);
 			if (b != null) {
 				window.viewRunEnvironmentBuilder(b);
 			} else {
 				window.showError("Failed to get envbuilder " + id);
-			}
-		});
-
-		views.put("partbuilder", id -> {
-			CTPartBuilder b = app.getObjectFactory().getPartBuilder(id);
-			if (b != null) {
-				window.viewPartBuilder(b);
-			} else {
-				window.showError("Failed to get partbuilder " + id);
 			}
 		});
 
@@ -59,8 +48,7 @@ public class ViewTypes {
 		});
 
 		views.put("runenvbuilder", id -> {
-			CTRunEnvironmentBuilder b = app.getObjectFactory()
-					.getRuntimeBuilder(id);
+			CTRunEnvironmentBuilder b = app.getObjectFactory().getRuntimeBuilder(id);
 			if (b != null) {
 				window.viewRunEnvironmentBuilder(b);
 			} else {

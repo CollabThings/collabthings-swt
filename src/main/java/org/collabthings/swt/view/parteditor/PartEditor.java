@@ -2,7 +2,6 @@ package org.collabthings.swt.view.parteditor;
 
 import java.util.Stack;
 
-import org.collabthings.environment.impl.CTRunEnvironmentImpl;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
@@ -179,7 +178,6 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 			tabFolder.addTab("Source", csource, null, false);
 			csource.setObject(this.part);
 		}
-		
 
 		tabFolder.addSelectionListener(() -> {
 			// updateLayout();

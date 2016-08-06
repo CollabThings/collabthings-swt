@@ -12,7 +12,6 @@ import java.util.Set;
 import org.collabthings.CTListener;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.math.LOrientation;
-import com.jme3.math.Vector3f;
 import org.collabthings.model.CTBoundingBox;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTMaterial;
@@ -25,8 +24,6 @@ import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
-import org.collabthings.swt.view.SCADView;
-import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.parteditor.CTObjectListener;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
@@ -38,10 +35,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
+import com.jme3.math.Vector3f;
+
 public class ObjectViewer extends CTComposite {
 	private LLog log = LLog.getLogger(this);
 	//
-	public Object objectShown;
+	public CTObject objectShown;
 	public CTLabel className;
 	public CTLabel superClassName;
 	public Text toString;
@@ -146,10 +145,9 @@ public class ObjectViewer extends CTComposite {
 	}
 
 	private synchronized void parse(Object no) {
-		this.objectShown = no;
+		this.objectShown = (CTObject) no;
 		if (this.objectShown == null) {
 			this.objectShown = new TableTestData();
-			// this.objectShown = new CTPartImpl(null);
 		}
 
 		//
@@ -435,10 +433,14 @@ public class ObjectViewer extends CTComposite {
 		brun.setText("Run");
 		brun.addSelectionListener(() -> o.run((CTPart) this.objectShown));
 
-		ScriptView view = new ScriptView(parent, app, window, o.getScript());
-		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		s.addSelectionListener(() -> view.save());
+		CTButton bopen = new CTButton(c, SWT.NONE);
+		bopen.setText("Open");
+		bopen.addSelectionListener(() -> {
+			if (objectShown instanceof CTPart) {
+				CTPart p = (CTPart) objectShown;
+				window.getMainView().viewBuilder(objectShown.getName() + "/" + o.getName(), p, o);
+			}
+		});
 
 		return c;
 	}
@@ -472,13 +474,6 @@ public class ObjectViewer extends CTComposite {
 
 		CTButton s = new CTButton(c, SWT.NONE);
 		s.setText("Save");
-
-		SCADView view = new SCADView(parent, app, window, o, false);
-		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
-		s.addSelectionListener(() -> {
-			view.save();
-		});
 
 		return c;
 	}
