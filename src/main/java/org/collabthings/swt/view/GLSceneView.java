@@ -109,6 +109,7 @@ public class GLSceneView extends CTComposite {
 	}
 
 	public void setHighlight(Object o) {
+		view.setHighlight(o);
 		scene.setHighlight(o);
 		lhighlight.setText("" + o);
 	}
