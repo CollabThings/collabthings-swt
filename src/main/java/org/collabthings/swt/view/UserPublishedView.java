@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
@@ -91,7 +92,7 @@ public class UserPublishedView extends CTComposite {
 	}
 
 	private void doSearch(String filter) {
-		new Thread(() -> {
+		window.addRunner(new CTRunner<String>("dosearch " + filter)).run(() -> {
 			List<String> published = app.getLClient().getStorage().getUserPublished(u.getUserid(), 0, 50);
 			LLog.getLogger(this).info("got published list " + published);
 			List<String> list = new ArrayList<>();
@@ -103,8 +104,7 @@ public class UserPublishedView extends CTComposite {
 
 			addPublishedItem(list);
 
-		}).start();
-
+		});
 	}
 
 	private void addPublishedItem(List<String> list) {

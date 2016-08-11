@@ -6,6 +6,7 @@ import org.collabthings.swt.app.LOTApp;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.WClient;
+import waazdoh.client.utils.ThreadChecker;
 import waazdoh.common.WPreferences;
 import waazdoh.swt.WSWTApp;
 import waazdoh.swt.WSWTAppLauncher;

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.collabthings.CTClient;
+import org.collabthings.CTListener;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTInfo;
 import org.collabthings.model.CTPart;
@@ -14,6 +15,8 @@ import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
+import org.collabthings.swt.app.CTRunner;
+import org.collabthings.swt.app.CTRunners;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
@@ -53,6 +56,8 @@ import waazdoh.common.vo.StorageAreaVO;
 import waazdoh.common.vo.UserVO;
 
 public final class AppWindow implements CTInfo {
+	public static final String STATUS_RUNNERS = "Runners";
+
 	protected Shell shell;
 	//
 	private LOTApp app;
@@ -75,9 +80,13 @@ public final class AppWindow implements CTInfo {
 	private Menu mbookmarkslist;
 	private CTMainView mainview;
 
+	private CTRunners runners;
+	private Label lblrunners;
+
 	public AppWindow(LOTApp app) {
 		this.app = app;
 		this.viewtypes = new ViewTypes(this, app);
+		this.runners = new CTRunners(this, app);
 
 		app.getLClient().addErrorListener((name, e) -> {
 			showError(name, e);
@@ -455,12 +464,16 @@ public final class AppWindow implements CTInfo {
 
 		Composite composite_1 = new CTComposite(composite, SWT.NONE);
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		composite_1.setLayout(new GridLayout(2, false));
+		composite_1.setLayout(new GridLayout(3, false));
 		composite_1.setBackground(SWTResourceManager.getActiontitleBackground());
 
 		lblStatus = new CTLabel(composite_1, SWT.NONE);
 		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblStatus.setText("status");
+
+		lblrunners = new Label(composite_1, SWT.NONE);
+		lblrunners.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblrunners.setText("Runners status");
 
 		progressBar = new ProgressBar(composite_1, SWT.NONE);
 		progressBar.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
@@ -570,18 +583,12 @@ public final class AppWindow implements CTInfo {
 	}
 
 	private void setBottomInfo() {
-		shell.getDisplay().timerExec(1000, new Runnable() {
-
-			@Override
-			public void run() {
-				if (!lblBottonInfo.isDisposed()) {
-					lblBottonInfo.setText(" CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION
-							+ " environment: " + app.getLClient());
-					//
-					setBottomInfo();
-				}
-			}
-		});
+		CTRunner<String> runner = new CTRunner<String>("BottomUpdateInfo", 1000).runWhile(() -> {
+			return !lblBottonInfo.isDisposed();
+		}).action(() -> {
+			return " CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: " + app.getLClient();
+		}).gui((o) -> lblBottonInfo.setText("" + o));
+		// addRunner(runner);
 	}
 
 	public LOTApp getApp() {
@@ -609,4 +616,25 @@ public final class AppWindow implements CTInfo {
 	public CTMainView getMainView() {
 		return mainview;
 	}
+
+	@SuppressWarnings("rawtypes")
+	public CTRunner addRunner(CTRunner runner) {
+		return runners.add(runner);
+	}
+
+	public void launch(CTListener l) {
+		shell.getDisplay().asyncExec(() -> l.event());
+
+	}
+
+	public void setStatus(String string, String status) {
+		if (shell != null) {
+			shell.getDisplay().asyncExec(() -> {
+				if (STATUS_RUNNERS.equals(string)) {
+					lblrunners.setText(status);
+				}
+			});
+		}
+	}
+
 }

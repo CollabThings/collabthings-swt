@@ -17,6 +17,7 @@ import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.LOTSWT;
+import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
@@ -143,7 +144,7 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 		setMenu(tempmenu);
 		createMenu(tempmenu);
 
-		new Thread(() -> checkFactoryUpdate()).start();
+		checkFactoryUpdate();
 	}
 
 	private void updateFactory() {
@@ -277,7 +278,7 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 	}
 
 	private synchronized void checkFactoryUpdate() {
-		while (!isDisposed()) {
+		window.addRunner(new CTRunner<>("factoryupdatecheck", 300)).runWhile(() -> isDisposed()).run(() -> {
 			int nhash = factory.getObject().hashCode();
 			if (nhash != currentfactoryhash) {
 				yamleditor.setObject(factory);
@@ -291,7 +292,7 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 					window.showError("Interrupted", e);
 				}
 			}
-		}
+		});
 	}
 
 	protected void importSelected() {

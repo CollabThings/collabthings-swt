@@ -7,6 +7,7 @@ import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTAppControl;
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
@@ -102,17 +103,18 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 
 	public void setPart(CTPart p) {
 		this.part = p;
-		viewer.setObject(p);
-		updateInfo();
+		window.addRunner(new CTRunner<>("PartEditor setPart").run(() -> {
+			getDisplay().asyncExec(() -> {
+				viewer.setObject(p);
+				updateInfo();
+				this.ctree.setPart(p);
+			});
 
-		this.ctree.setPart(p);
-
-		new Thread(() -> {
 			log.info("setPartcwait");
 			ConditionWaiter.wait(() -> view.isReady(), 60000);
 			log.info("setPartcwait done");
 			view.setPart(part);
-		}).start();
+		}));
 	}
 
 	private void init() {
@@ -132,6 +134,7 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		CTButton bprevious = new CTButton(c_toolbar, SWT.NONE);
 		CTButton bnewsubpart = new CTButton(c_toolbar, SWT.FLAT);
 		CTButton bnewscad = new CTButton(c_toolbar, SWT.FLAT);
+		CTButton bnewhm = new CTButton(c_toolbar, SWT.FLAT);
 		CTButton bnewbuilder = new CTButton(c_toolbar, SWT.FLAT);
 
 		CTButton btnPublish = new CTButton(c_toolbar, SWT.NONE);
@@ -147,13 +150,19 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 			part.save();
 			part.newSCAD();
 		});
-		bnewscad.setText("New SCAD");
+		bnewscad.setText("SCAD");
+
+		bnewhm.addSelectionListener(() -> {
+			part.save();
+			part.newHeightmap();
+		});
+		bnewhm.setText("HM");
 
 		bnewbuilder.addSelectionListener(() -> {
 			part.save();
 			part.newBuilder();
 		});
-		bnewbuilder.setText("New Builder");
+		bnewbuilder.setText("Builder");
 
 		btnPublish.addSelectionListener(() -> {
 			publish();

@@ -8,6 +8,7 @@ import org.collabthings.model.CTObject;
 
 import com.jme3.math.Vector3f;
 
+import waazdoh.common.MStringID;
 import waazdoh.common.ObjectID;
 import waazdoh.common.WObject;
 
@@ -25,6 +26,11 @@ public class TableTestData implements CTObject {
 		}
 	}
 
+	@Override
+	public boolean load(MStringID id) {
+		return true;
+	}
+	
 	@Override
 	public String toString() {
 		return "TableTestData";
