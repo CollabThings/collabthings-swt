@@ -6,6 +6,7 @@ import java.awt.Frame;
 import org.collabthings.jme.CTObjectViewer;
 import org.collabthings.jme.CTObjectViewerImpl;
 import org.collabthings.jme.CTSceneApp;
+import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.swt.SWTResourceManager;
@@ -104,8 +105,8 @@ public class GLSceneView extends CTComposite {
 		scene.setPart(part);
 	}
 
-	public void setModelView(CTOpenSCAD scad) {
-		scene.setModel(scad);
+	public void setModelView(CTModel hm) {
+		scene.setModel(hm);
 	}
 
 	public void setHighlight(Object o) {

@@ -1,5 +1,7 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.model.CTHeightmap;
+import org.collabthings.model.CTModel;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
@@ -100,8 +102,8 @@ public class CTMainView extends CTComposite implements LOTAppControl {
 		view.setPart(part);
 	}
 
-	public void setViewedModel(CTOpenSCAD scad) {
-		view.setModelView(scad);
+	public void setViewedModel(CTModel hm) {
+		view.setModelView(hm);
 	}
 
 	public void viewPart(CTPart part) {
