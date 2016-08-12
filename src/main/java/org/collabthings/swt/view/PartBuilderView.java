@@ -1,9 +1,10 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
@@ -16,7 +17,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class PartBuilderView extends CTComposite implements LOTAppControl {
+public class PartBuilderView extends CTComposite implements CTAppControl {
 
 	private LOTApp app;
 	private AppWindow window;
@@ -63,6 +64,11 @@ public class PartBuilderView extends CTComposite implements LOTAppControl {
 
 		scriptview = new ScriptView(this, app, window, builder.getScript());
 		scriptview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+	}
+
+	@Override
+	public CTObject getObject() {
+		return this.builder;
 	}
 
 	private void save() {

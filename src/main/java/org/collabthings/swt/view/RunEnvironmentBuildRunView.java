@@ -4,10 +4,11 @@ import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.environment.RunEnvironmentListener;
+import org.collabthings.model.CTObject;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTText;
@@ -21,7 +22,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class RunEnvironmentBuildRunView extends CTComposite implements LOTAppControl, RunEnvironmentListener {
+public class RunEnvironmentBuildRunView extends CTComposite implements CTAppControl, RunEnvironmentListener {
 
 	// an hour
 	private static final int MAX_RUNTIME = 60 * 1000 * 60;
@@ -57,6 +58,11 @@ public class RunEnvironmentBuildRunView extends CTComposite implements LOTAppCon
 			s.run(MAX_RUNTIME);
 		}).start();
 
+	}
+
+	@Override
+	public CTObject getObject() {
+		return null;
 	}
 
 	@Override

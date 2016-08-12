@@ -7,6 +7,7 @@ import org.collabthings.jme.CTObjectViewer;
 import org.collabthings.jme.CTObjectViewerImpl;
 import org.collabthings.jme.CTSceneApp;
 import org.collabthings.model.CTModel;
+import org.collabthings.model.CTObject;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.swt.SWTResourceManager;
@@ -118,5 +119,6 @@ public class GLSceneView extends CTComposite {
 	public boolean isReady() {
 		return view != null && view.isReady() && scene != null;
 	}
+
 
 }

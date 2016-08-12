@@ -2,9 +2,10 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
+import org.collabthings.model.CTObject;
 import org.collabthings.model.CTScript;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTText;
@@ -22,7 +23,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class ScriptView extends CTComposite implements LOTAppControl {
+public class ScriptView extends CTComposite implements CTAppControl {
 
 	private CTText scripttext;
 	private CTScript script;
@@ -62,6 +63,11 @@ public class ScriptView extends CTComposite implements LOTAppControl {
 
 	protected synchronized void key(KeyEvent arg0) {
 
+	}
+
+	@Override
+	public CTObject getObject() {
+		return script;
 	}
 
 	public synchronized void save() {

@@ -6,10 +6,11 @@ import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.environment.RunEnvironmentListener;
+import org.collabthings.model.CTObject;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
@@ -32,7 +33,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class RunEnvironmentBuilderView extends CTComposite implements LOTAppControl {
+public class RunEnvironmentBuilderView extends CTComposite implements CTAppControl {
 	private CTRunEnvironmentBuilder builder;
 
 	private LLog log = LLog.getLogger(this);
@@ -66,6 +67,11 @@ public class RunEnvironmentBuilderView extends CTComposite implements LOTAppCont
 	private RunEnvironmentBuilderView(Composite c, int i) {
 		super(c, i);
 		init();
+	}
+
+	@Override
+	public CTObject getObject() {
+		return this.builder;
 	}
 
 	@Override

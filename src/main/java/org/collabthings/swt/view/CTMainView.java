@@ -1,12 +1,12 @@
 package org.collabthings.swt.view;
 
-import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTModel;
+import org.collabthings.model.CTObject;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class CTMainView extends CTComposite implements LOTAppControl {
+public class CTMainView extends CTComposite implements CTAppControl {
 
 	private CTTabFolder tabfolder;
 	private AppWindow window;
@@ -54,18 +54,22 @@ public class CTMainView extends CTComposite implements LOTAppControl {
 		});
 	}
 
+	@Override
+	public CTObject getObject() {
+		return null;
+	}
+
 	private void tabSelected() {
+		CTAppControl v = getSelectedControl();
+		log.info("selected " + v);
+
+		v.selected(window);
+	}
+
+	private CTAppControl getSelectedControl() {
 		Control control = tabfolder.getSelection().getControl();
-
-		if (control instanceof LOTAppControl) {
-			LOTAppControl v = (LOTAppControl) control;
-			log.info("selected " + v);
-
-			v.selected(window);
-		} else {
-			window.showError(
-					"Selected " + control + " that is not a LOTAppControl. Name:" + tabfolder.getSelection().getText());
-		}
+		CTAppControl v = (CTAppControl) control;
+		return v;
 	}
 
 	@Override
@@ -104,6 +108,10 @@ public class CTMainView extends CTComposite implements LOTAppControl {
 
 	public void setViewedModel(CTModel hm) {
 		view.setModelView(hm);
+	}
+
+	public CTObject getCurrentObject() {
+		return getSelectedControl().getObject();
 	}
 
 	public void viewPart(CTPart part) {
@@ -149,7 +157,7 @@ public class CTMainView extends CTComposite implements LOTAppControl {
 		}
 	}
 
-	private void addTab(String name, LOTAppControl c, Object data) {
+	private void addTab(String name, CTAppControl c, Object data) {
 		Control control = c.getControl();
 		control.setBackground(SWTResourceManager.getControlBg());
 

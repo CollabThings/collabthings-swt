@@ -7,6 +7,7 @@ import org.collabthings.CTClient;
 import org.collabthings.CTListener;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTInfo;
+import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTScript;
@@ -62,7 +63,7 @@ public final class AppWindow implements CTInfo {
 	//
 	private LOTApp app;
 
-	private List<LOTAppControl> controls = new LinkedList<>();
+	private List<CTAppControl> controls = new LinkedList<>();
 
 	private CTTabFolder tabFolder;
 	private CTLabel lblBottonInfo;
@@ -74,7 +75,7 @@ public final class AppWindow implements CTInfo {
 	private Menu menulocal;
 
 	private final ViewTypes viewtypes;
-	private LOTAppControl selectedcontrol;
+	private CTAppControl selectedcontrol;
 	private CTLabel lblStatus;
 	private ProgressBar progressBar;
 	private Menu mbookmarkslist;
@@ -198,7 +199,7 @@ public final class AppWindow implements CTInfo {
 		});
 	}
 
-	private void addTab(String name, LOTAppControl c, Object data) {
+	private void addTab(String name, CTAppControl c, Object data) {
 		Control control = c.getControl();
 		control.setBackground(SWTResourceManager.getControlBg());
 
@@ -340,7 +341,6 @@ public final class AppWindow implements CTInfo {
 
 		MenuItem mntmNewFactory = new MenuItem(menu_new, SWT.NONE);
 		mntmNewFactory.addSelectionListener(new SelectionAdapter() {
-
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				newFactory();
@@ -418,9 +418,6 @@ public final class AppWindow implements CTInfo {
 		Menu mbookmarks = new Menu(mibookmarks);
 		mibookmarks.setMenu(mbookmarks);
 
-		MenuItem miBookmarkCurrent = new MenuItem(mbookmarks, SWT.CASCADE);
-		miBookmarkCurrent.setText("Current");
-
 		MenuItem miupdate = new MenuItem(mbookmarks, SWT.NONE);
 		miupdate.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -489,6 +486,13 @@ public final class AppWindow implements CTInfo {
 		addTab("main", mainview, null);
 	}
 
+	private void bookmarkCurrent(String path) {
+		CTObject o = mainview.getCurrentObject();
+		if (o != null) {
+			this.app.getLClient().getBookmarks().add(path + "/" + o.getName(), o.getID().toString());
+		}
+	}
+
 	private void initBookmarks() {
 		Menu bookmarkmenu = mbookmarkslist;
 		String path = "";
@@ -499,6 +503,8 @@ public final class AppWindow implements CTInfo {
 		for (MenuItem i : bookmarkmenu.getItems()) {
 			i.dispose();
 		}
+
+		addAddMenu(bookmarkmenu, path);
 
 		List<String> bookmarklist = this.app.getLClient().getBookmarks().list(path);
 
@@ -513,8 +519,7 @@ public final class AppWindow implements CTInfo {
 						view(value);
 					}
 				});
-			} else {
-
+			} else if (!bm.startsWith("_")) {
 				MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
 				mi.setText(bm);
 				Menu m = new Menu(mi);
@@ -524,6 +529,27 @@ public final class AppWindow implements CTInfo {
 			}
 
 		}
+	}
+
+	private void addAddMenu(Menu m, String path) {
+		MenuItem add = new MenuItem(m, SWT.CASCADE);
+		add.setText("add");
+		add.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				app.getLClient().getBookmarks().addFolder(path + "/new");
+			}
+		});
+
+		MenuItem current = new MenuItem(m, SWT.CASCADE);
+		current.setText("current");
+		current.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				bookmarkCurrent(path);
+			}
+		});
+
 	}
 
 	private void initLocalMenu() {
@@ -555,8 +581,8 @@ public final class AppWindow implements CTInfo {
 
 			Control control = tabFolder.getSelection().getControl();
 
-			if (control instanceof LOTAppControl) {
-				LOTAppControl v = (LOTAppControl) control;
+			if (control instanceof CTAppControl) {
+				CTAppControl v = (CTAppControl) control;
 				this.selectedcontrol = v;
 				log.info("selected " + v);
 
@@ -569,7 +595,7 @@ public final class AppWindow implements CTInfo {
 		}
 	}
 
-	public void updateObjectMenu(LOTAppControl v) {
+	public void updateObjectMenu(CTAppControl v) {
 		log.info("updating object menu " + v);
 		disposeObjectMenu();
 		objectmenu = v.createMenu(menu);
@@ -583,23 +609,23 @@ public final class AppWindow implements CTInfo {
 	}
 
 	private void setBottomInfo() {
-		CTRunner<String> runner = new CTRunner<String>("BottomUpdateInfo", 1000).runWhile(() -> {
+		addRunner(new CTRunner<String>("BottomUpdateInfo", 1000).runWhile(() -> {
 			return !lblBottonInfo.isDisposed();
 		}).action(() -> {
-			return " CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: " + app.getLClient();
-		}).gui((o) -> lblBottonInfo.setText("" + o));
-		// addRunner(runner);
+			return " CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: " + app.getLClient()
+					+ " " + app.getLClient().getBinarySource().getStats();
+		}).gui((o) -> lblBottonInfo.setText("" + o)));// addRunner(runner);
 	}
 
 	public LOTApp getApp() {
 		return this.app;
 	}
 
-	public List<LOTAppControl> getTablist() {
-		return new LinkedList<LOTAppControl>(controls);
+	public List<CTAppControl> getTablist() {
+		return new LinkedList<CTAppControl>(controls);
 	}
 
-	public boolean isSelected(LOTAppControl c) {
+	public boolean isSelected(CTAppControl c) {
 		return selectedcontrol == c;
 	}
 

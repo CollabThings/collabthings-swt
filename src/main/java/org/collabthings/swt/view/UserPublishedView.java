@@ -97,7 +97,7 @@ public class UserPublishedView extends CTComposite {
 			LLog.getLogger(this).info("got published list " + published);
 			List<String> list = new ArrayList<>();
 			published.stream().forEach(string -> {
-				if (string.indexOf(filter) > 0 || filter.length() < 2) {
+				if (string.startsWith("/published") && (string.indexOf(filter) > 0 || filter.length() < 2)) {
 					list.add(string);
 				}
 			});
@@ -123,17 +123,17 @@ public class UserPublishedView extends CTComposite {
 		item.setLayout(gl_item);
 		CTLabel l = new CTLabel(item, SWT.NONE);
 		l.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		l.setText(string);
+		l.setText(string.replace("/published/", ""));
 
 		CTButton btnView = new CTButton(item, "View", () -> {
 			viewPublished(string);
 		});
 
-		new CTButton(item, "Copy", () -> {
+		CTButton btncopy = new CTButton(item, "Copy", () -> {
 			new CopyToClipbard(this, string);
 		});
 
-		new CTButton(item, "Id", () -> {
+		CTButton btncopyid = new CTButton(item, "Id", () -> {
 			new CopyToClipbard(this, readID(string));
 		});
 
@@ -141,6 +141,8 @@ public class UserPublishedView extends CTComposite {
 			Color bgcolor = SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
 			item.setBackground(bgcolor);
 			btnView.setBackground(bgcolor);
+			btncopy.setBackground(bgcolor);
+			btncopyid.setBackground(bgcolor);
 		}
 	}
 

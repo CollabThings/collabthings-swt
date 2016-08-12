@@ -3,8 +3,9 @@ package org.collabthings.swt.view;
 import java.util.Date;
 
 import org.collabthings.model.CTHeightmap;
+import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
@@ -24,7 +25,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class HeightmapView extends CTComposite implements LOTAppControl {
+public class HeightmapView extends CTComposite implements CTAppControl {
 
 	private AppWindow window;
 	private CTText scripttext;
@@ -117,6 +118,11 @@ public class HeightmapView extends CTComposite implements LOTAppControl {
 				}
 			}).start();
 		}
+	}
+
+	@Override
+	public CTObject getObject() {
+		return hm;
 	}
 
 	private void setModel() {

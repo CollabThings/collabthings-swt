@@ -11,11 +11,12 @@ import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTObject;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.LOTApp;
@@ -36,7 +37,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class FactoryView extends CTComposite implements LOTAppControl, ScriptUser {
+public class FactoryView extends CTComposite implements CTAppControl, ScriptUser {
 	private CTFactory factory;
 	private LOTApp app;
 
@@ -57,6 +58,11 @@ public class FactoryView extends CTComposite implements LOTAppControl, ScriptUse
 	private FactoryView(Composite c, int i) {
 		super(c, i);
 		init();
+	}
+
+	@Override
+	public CTObject getObject() {
+		return factory;
 	}
 
 	@Override

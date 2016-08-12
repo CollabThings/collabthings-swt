@@ -3,7 +3,7 @@ package org.collabthings.swt.view;
 import java.util.List;
 
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.SearchView.CTSearchResultFactory;
 import org.collabthings.util.LLog;
@@ -41,7 +41,7 @@ public class ObjectSearchView {
 
 	}
 
-	public LOTAppControl getControl() {
+	public CTAppControl getControl() {
 		return search;
 	}
 

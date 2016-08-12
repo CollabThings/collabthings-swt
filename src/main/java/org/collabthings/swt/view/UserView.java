@@ -1,7 +1,8 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
@@ -16,7 +17,7 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.common.vo.UserVO;
 
-public class UserView extends CTComposite implements LOTAppControl {
+public class UserView extends CTComposite implements CTAppControl {
 	private AppWindow window;
 	private LOTApp app;
 	private UserVO u;
@@ -66,6 +67,11 @@ public class UserView extends CTComposite implements LOTAppControl {
 
 			dview.setUser(u);
 		}).start();
+	}
+
+	@Override
+	public CTObject getObject() {
+		return null;
 	}
 
 	@Override

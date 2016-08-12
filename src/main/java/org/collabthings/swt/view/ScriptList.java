@@ -3,7 +3,7 @@ package org.collabthings.swt.view;
 import java.util.List;
 
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
@@ -88,8 +88,8 @@ public class ScriptList extends CTComposite {
 	}
 
 	private void createAddToMenu(String id, Menu menu) {
-		List<LOTAppControl> controls = window.getTablist();
-		for (LOTAppControl c : controls) {
+		List<CTAppControl> controls = window.getTablist();
+		for (CTAppControl c : controls) {
 			if (c instanceof ScriptUser) {
 				ScriptUser su = (ScriptUser) c;
 				MenuItem mcontrol = new MenuItem(menu, SWT.NONE);

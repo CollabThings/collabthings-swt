@@ -2,10 +2,11 @@ package org.collabthings.swt.view.parteditor;
 
 import java.util.Stack;
 
+import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.LOTApp;
@@ -31,7 +32,7 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.client.utils.ConditionWaiter;
 
-public class PartEditor extends CTComposite implements LOTAppControl {
+public class PartEditor extends CTComposite implements CTAppControl {
 	private static final String PREFERENCES_SHOWSOURCE = "app.editor.showsource";
 
 	private CTPart part;
@@ -65,6 +66,11 @@ public class PartEditor extends CTComposite implements LOTAppControl {
 		getDisplay().asyncExec(() -> {
 			setPart(p);
 		});
+	}
+
+	@Override
+	public CTObject getObject() {
+		return part;
 	}
 
 	@Override

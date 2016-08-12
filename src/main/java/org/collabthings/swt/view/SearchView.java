@@ -2,8 +2,9 @@ package org.collabthings.swt.view;
 
 import java.util.List;
 
+import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
@@ -24,7 +25,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class SearchView extends CTComposite implements LOTAppControl {
+public class SearchView extends CTComposite implements CTAppControl {
 	private static final int COLUMN_WIDTH = 500;
 	private AppWindow window;
 	private CTText text;
@@ -111,6 +112,11 @@ public class SearchView extends CTComposite implements LOTAppControl {
 	@Override
 	public void selected(AppWindow appWindow) {
 
+	}
+	
+	@Override
+	public CTObject getObject() {
+		return null;
 	}
 
 	@Override
