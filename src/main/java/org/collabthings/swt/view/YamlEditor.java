@@ -105,7 +105,7 @@ public class YamlEditor extends CTComposite {
 			if (this.o != null) {
 				int nhash = this.o.getObject().hashCode();
 				if (nhash != currenthash) {
-					setText(this.o.getObject().toText());
+					setText(this.o.getObject().toYaml());
 					currenthash = nhash;
 				} else {
 					doWait(100);

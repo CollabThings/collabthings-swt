@@ -99,34 +99,12 @@ public class HeightmapView extends CTComposite implements CTAppControl {
 
 			bottomtext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 			sashForm.setWeights(new int[] { 1, 1 });
-
-			new Thread(() -> {
-				int hash = 0;
-				while (!window.getMainView().isDisposed()) {
-					if (hm.hashCode() != hash) {
-						hash = hm.hashCode();
-						setModel();
-					}
-
-					synchronized (this) {
-						try {
-							this.wait(200);
-						} catch (Exception e) {
-							window.showError("Interrupted", e);
-						}
-					}
-				}
-			}).start();
 		}
 	}
 
 	@Override
 	public CTObject getObject() {
 		return hm;
-	}
-
-	private void setModel() {
-		window.getMainView().setViewedModel(hm);
 	}
 
 	protected synchronized void key(KeyEvent arg0) {
@@ -175,7 +153,7 @@ public class HeightmapView extends CTComposite implements CTAppControl {
 
 	@Override
 	public void selected(AppWindow appWindow) {
-		setModel();
+		//
 	}
 
 	@Override

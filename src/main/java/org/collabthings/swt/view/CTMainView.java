@@ -106,10 +106,6 @@ public class CTMainView extends CTComposite implements CTAppControl {
 		view.setPart(part);
 	}
 
-	public void setViewedModel(CTModel hm) {
-		view.setModelView(hm);
-	}
-
 	public CTObject getCurrentObject() {
 		return getSelectedControl().getObject();
 	}

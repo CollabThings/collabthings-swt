@@ -106,10 +106,6 @@ public class GLSceneView extends CTComposite {
 		scene.setPart(part);
 	}
 
-	public void setModelView(CTModel hm) {
-		scene.setModel(hm);
-	}
-
 	public void setHighlight(Object o) {
 		view.setHighlight(o);
 		scene.setHighlight(o);
@@ -119,6 +115,5 @@ public class GLSceneView extends CTComposite {
 	public boolean isReady() {
 		return view != null && view.isReady() && scene != null;
 	}
-
 
 }

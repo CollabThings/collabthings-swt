@@ -99,34 +99,12 @@ public class SCADView extends CTComposite implements CTAppControl {
 
 			bottomtext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 			sashForm.setWeights(new int[] { 1, 1 });
-
-			new Thread(() -> {
-				int hash = 0;
-				while (!window.getMainView().isDisposed()) {
-					if (scad.hashCode() != hash) {
-						hash = scad.hashCode();
-						setModel();
-					}
-
-					synchronized (this) {
-						try {
-							this.wait(200);
-						} catch (Exception e) {
-							window.showError("Interrupted", e);
-						}
-					}
-				}
-			}).start();
 		}
 	}
 
 	@Override
 	public CTObject getObject() {
 		return scad;
-	}
-
-	private void setModel() {
-		window.getMainView().setViewedModel(scad);
 	}
 
 	protected synchronized void key(KeyEvent arg0) {
@@ -175,7 +153,7 @@ public class SCADView extends CTComposite implements CTAppControl {
 
 	@Override
 	public void selected(AppWindow appWindow) {
-		setModel();
+		//
 	}
 
 	@Override
