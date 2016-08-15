@@ -259,7 +259,7 @@ public final class AppWindow implements CTInfo {
 			viewUser(user.getUsername(), user.getUserid());
 
 			String latestscadpart = app.getLClient().getService().getStorageArea()
-					.read(new StorageAreaVO(user.getUsername(), "published/part/latest", null));
+					.read(new StorageAreaVO(user.getUsername(), "published/part/latest", null)).getData();
 			if (latestscadpart != null) {
 				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
 				mainview.viewPart(b);
