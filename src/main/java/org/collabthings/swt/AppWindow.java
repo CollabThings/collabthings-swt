@@ -23,6 +23,7 @@ import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
+import org.collabthings.swt.controls.dialogs.CTTextDialog;
 import org.collabthings.swt.dialog.CTErrorDialog;
 import org.collabthings.swt.dialog.FindOpenscadDialog;
 import org.collabthings.swt.view.CTMainView;
@@ -249,9 +250,9 @@ public final class AppWindow implements CTInfo {
 	}
 
 	private void openTestViews(Display display) {
-		viewSearch("two");
+		// viewSearch("two");
 
-		viewSearchUsers("user");
+		// viewSearchUsers("user");
 		// newFactory();
 
 		new Thread(() -> {
@@ -537,7 +538,8 @@ public final class AppWindow implements CTInfo {
 		add.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				app.getLClient().getBookmarks().addFolder(path + "/new");
+				String text = new CTTextDialog(shell).getText();
+				app.getLClient().getBookmarks().addFolder(text);
 			}
 		});
 

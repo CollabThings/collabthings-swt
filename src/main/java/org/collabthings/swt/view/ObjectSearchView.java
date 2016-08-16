@@ -21,9 +21,9 @@ public class ObjectSearchView {
 		search = new SearchView(composite, app, window, new CTSearchResultFactory() {
 
 			@Override
-			public List<String> search(String searchitem, int start, int count) {
+			public List<ObjectVO> search(String searchitem, int start, int count) {
 				WClient client = app.getLClient().getClient();
-				List<String> list = client.getObjects().search(searchitem, start, count);
+				List<ObjectVO> list = client.getObjects().search(searchitem, start, count);
 				return list;
 			}
 

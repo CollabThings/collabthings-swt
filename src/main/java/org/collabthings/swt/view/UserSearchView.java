@@ -23,11 +23,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
-import waazdoh.common.vo.ObjectVO;
+import waazdoh.common.vo.UserVO;
 
-public class SearchView extends CTComposite implements CTAppControl {
+public class UserSearchView extends CTComposite implements CTAppControl {
 	private static final int COLUMN_WIDTH = 500;
 	private AppWindow window;
 	private CTText text;
@@ -37,17 +36,17 @@ public class SearchView extends CTComposite implements CTAppControl {
 	private ScrolledComposite scrolledComposite;
 	private GridLayout clistlayout;
 
-	private final CTSearchResultFactory factory;
+	private final CTUserSearchResultFactory factory;
 
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, CTSearchResultFactory factory) {
+	public UserSearchView(Composite c, LOTApp app, AppWindow appWindow, CTUserSearchResultFactory factory) {
 		this(c, app, appWindow, false, factory);
 	}
 
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox,
-			CTSearchResultFactory nfactory) {
+	public UserSearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox,
+			CTUserSearchResultFactory nfactory) {
 		super(c, SWT.NONE);
 		this.app = app;
 		this.window = appWindow;
@@ -144,14 +143,14 @@ public class SearchView extends CTComposite implements CTAppControl {
 				}
 			});
 
-			List<ObjectVO> list = factory.search(searchitem, start, count);
+			List<UserVO> list = factory.search(searchitem, start, count);
 
 			log.info("search got list " + list);
 			handleResponse(list);
 		}).start();
 	}
 
-	private void handleResponse(List<ObjectVO> list) {
+	private void handleResponse(List<UserVO> list) {
 		if (list != null) {
 			getDisplay().asyncExec(() -> {
 				addRows(list);
@@ -161,14 +160,14 @@ public class SearchView extends CTComposite implements CTAppControl {
 		}
 	}
 
-	private void addRows(List<ObjectVO> list) {
+	private void addRows(List<UserVO> list) {
 		Control[] cs = clist.getChildren();
 		for (Control control : cs) {
 			control.dispose();
 		}
 
-		for (ObjectVO vo : list) {
-			factory.addRow(vo.getId(), clist);
+		for (UserVO vo : list) {
+			factory.addRow(vo.getUserid(), clist);
 		}
 
 		updateLayout();
@@ -204,11 +203,11 @@ public class SearchView extends CTComposite implements CTAppControl {
 		}
 	}
 
-	public static interface CTSearchResultFactory {
+	public static interface CTUserSearchResultFactory {
 
 		void addRow(String id, Composite clist);
 
-		List<ObjectVO> search(String s, int start, int count);
+		List<UserVO> search(String s, int start, int count);
 
 	}
 }

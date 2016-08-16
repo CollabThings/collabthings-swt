@@ -1,11 +1,10 @@
 package org.collabthings.swt.view;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.view.SearchView.CTSearchResultFactory;
+import org.collabthings.swt.view.UserSearchView.CTUserSearchResultFactory;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.widgets.Composite;
 
@@ -14,27 +13,23 @@ import waazdoh.common.vo.UserVO;
 
 public class UsersSearchView {
 	private LLog log = LLog.getLogger(this);
-	private SearchView search;
+	private UserSearchView search;
 
 	public UsersSearchView(Composite c, LOTApp app, AppWindow window) {
 		this(c, app, window, false);
 	}
 
 	public UsersSearchView(Composite c, LOTApp app, AppWindow window, boolean hidesearchbox) {
-		this.search = new SearchView(c, app, window, new CTSearchResultFactory() {
+		this.search = new UserSearchView(c, app, window, new CTUserSearchResultFactory() {
 			@Override
-			public List<String> search(String s, int start, int count) {
+			public List<UserVO> search(String s, int start, int count) {
 				if (s == null || s.length() == 0) {
 					s = "user";
 				}
 
 				WClient client = app.getLClient().getClient();
-				List<String> ret = new LinkedList<>();
 				List<UserVO> list = client.searchUsers(s, 50);
-				for (UserVO userVO : list) {
-					ret.add(userVO.getUserid());
-				}
-				return ret;
+				return list;
 			}
 
 			@Override
@@ -46,7 +41,7 @@ public class UsersSearchView {
 
 	}
 
-	public SearchView getView() {
+	public UserSearchView getView() {
 		return search;
 	}
 
