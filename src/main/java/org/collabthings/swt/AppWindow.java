@@ -1,5 +1,6 @@
 package org.collabthings.swt;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -505,31 +506,45 @@ public final class AppWindow implements CTInfo {
 			i.dispose();
 		}
 
+		class BM {
+			String path;
+			String value;
+		}
+
 		addAddMenu(bookmarkmenu, path);
 
-		List<String> bookmarklist = this.app.getLClient().getBookmarks().list(path);
+		List<BM> bookmarklist = new ArrayList<>();
+		addRunner(new CTRunner<String>("updatebookmarkmenu " + path).run(() -> {
+			this.app.getLClient().getBookmarks().list(path).forEach(s -> {
+				BM bm = new BM();
+				bm.path = s;
+				bm.value = this.app.getLClient().getBookmarks().get(path + "/" + s);
+				bookmarklist.add(bm);
+			});
+		}).gui(v -> {
+			for (BM bm : bookmarklist) {
+				log.info("bookmark " + path + " " + bm.path + "->" + bm.value);
 
-		for (String bm : bookmarklist) {
-			String value = this.app.getLClient().getBookmarks().get(path + "/" + bm);
-			if (value != null) {
-				MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
-				mi.setText(bm);
-				mi.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						view(value);
-					}
-				});
-			} else if (!bm.startsWith("_")) {
-				MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
-				mi.setText(bm);
-				Menu m = new Menu(mi);
-				mi.setMenu(m);
+				if (bm.value != null) {
+					MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
+					mi.setText(bm.path);
+					mi.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent arg0) {
+							view(bm.value);
+						}
+					});
+				} else if (!bm.path.startsWith("_")) {
+					MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
+					mi.setText(bm.path);
+					Menu m = new Menu(mi);
+					mi.setMenu(m);
 
-				initBookmarks(m, path + "/" + bm);
+					initBookmarks(m, path + "/" + bm.path);
+				}
+
 			}
-
-		}
+		}));
 	}
 
 	private void addAddMenu(Menu m, String path) {
@@ -538,8 +553,15 @@ public final class AppWindow implements CTInfo {
 		add.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				String text = new CTTextDialog(shell).getText();
-				app.getLClient().getBookmarks().addFolder(text);
+				CTTextDialog dialog = new CTTextDialog(shell);
+				dialog.open("Bookmark folder name");
+				String text = dialog.getValue();
+
+				addRunner(new CTRunner<String>("addbookmarkfolder").run(() -> {
+					app.getLClient().getBookmarks().addFolder(path + "/" + text);
+				}).gui((v) -> {
+					initBookmarks();
+				}));
 			}
 		});
 
@@ -551,6 +573,8 @@ public final class AppWindow implements CTInfo {
 				bookmarkCurrent(path);
 			}
 		});
+
+		new MenuItem(m, SWT.SEPARATOR);
 
 	}
 

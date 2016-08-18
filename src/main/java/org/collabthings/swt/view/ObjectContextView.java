@@ -57,7 +57,7 @@ public class ObjectContextView extends CTComposite {
 	private CTComposite ctools;
 	private CTPart rootpart;
 	private Map<Object, GraphNode> nodes = new HashMap<Object, GraphNode>();
-	private CTText txtPoop;
+	private CTComposite cusedin;
 
 	private ObjectViewer propertiesview;
 	private ExpandItem xpndtmProperties;
@@ -114,9 +114,9 @@ public class ObjectContextView extends CTComposite {
 		xpndtmUsedIn.setExpanded(true);
 		xpndtmUsedIn.setText("Used in");
 
-		txtPoop = new CTText(expandBar, SWT.NONE);
-		txtPoop.setText("poop");
-		xpndtmUsedIn.setControl(txtPoop);
+		cusedin = new CTComposite(expandBar, SWT.NONE);
+
+		xpndtmUsedIn.setControl(cusedin);
 		xpndtmUsedIn.setHeight(xpndtmUsedIn.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
 		xpndtmProperties = new ExpandItem(expandBar, SWT.NONE);

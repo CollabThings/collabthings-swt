@@ -46,15 +46,19 @@ public class CTRunner<T> {
 				if (current - lastrun > interval) {
 					lastrun = current;
 
+					T t = null;
+
 					if (this.run != null) {
 						run.run();
 					}
 
 					if (action != null) {
-						T t = action.action();
-						if (gui != null) {
-							window.launch(() -> gui.action(t));
-						}
+						t = action.action();
+					}
+
+					if (gui != null) {
+						final T ft = t;
+						window.launch(() -> gui.action(ft));
 					}
 				}
 
@@ -69,7 +73,7 @@ public class CTRunner<T> {
 		}
 	}
 
-	public CTRunner run(Runnable r) {
+	public CTRunner<T> run(Runnable r) {
 		this.run = r;
 		return this;
 	}

@@ -23,7 +23,7 @@ public class CTTextDialog extends Dialog {
 		super(arg0);
 	}
 
-	public void open() {
+	public void open(String title) {
 		Shell parent = getParent();
 		Shell shell = new Shell(parent, SWT.NO_TRIM | SWT.ON_TOP);
 		shell.setSize(281, 125);
@@ -33,7 +33,7 @@ public class CTTextDialog extends Dialog {
 		shell.setLayout(gl_shell);
 
 		Label ltitle = new Label(shell, SWT.NONE);
-		ltitle.setText("Title");
+		ltitle.setText(title);
 
 		Composite composite = new CTComposite(shell, SWT.NONE);
 		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
@@ -43,6 +43,10 @@ public class CTTextDialog extends Dialog {
 
 		etext = new CTText(composite, SWT.NONE);
 		etext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		etext.addEditDoneListener(() -> {
+			this.text = etext.getText();
+
+		});
 
 		Button bOK = new Button(composite, SWT.NONE);
 		bOK.addSelectionListener(new SelectionAdapter() {
@@ -69,7 +73,10 @@ public class CTTextDialog extends Dialog {
 
 		shell.dispose();
 
-		this.text = etext.getText();
+	}
+
+	public String getValue() {
+		return this.text;
 	}
 
 }
