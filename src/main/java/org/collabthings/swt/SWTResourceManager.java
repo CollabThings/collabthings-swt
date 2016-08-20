@@ -51,8 +51,7 @@ public class SWTResourceManager {
 	//
 	// //////////////////////////////////////////////////////////////////////////
 	private static Map<RGB, Color> m_colorMap = new HashMap<RGB, Color>();
-	private static final LLog log = LLog.getLogger(SWTResourceManager.class
-			.getName());
+	private static final LLog log = LLog.getLogger(SWTResourceManager.class.getName());
 
 	/**
 	 * Returns the system {@link Color} matching the specific ID.
@@ -194,8 +193,7 @@ public class SWTResourceManager {
 	 *         missing image.
 	 */
 	private static Image getMissingImage() {
-		Image image = new Image(Display.getCurrent(), MISSING_IMAGE_SIZE,
-				MISSING_IMAGE_SIZE);
+		Image image = new Image(Display.getCurrent(), MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
 		//
 		GC gc = new GC(image);
 		gc.setBackground(getColor(SWT.COLOR_RED));
@@ -261,8 +259,7 @@ public class SWTResourceManager {
 	 *            the corner to place decorator image
 	 * @return the resulting decorated {@link Image}
 	 */
-	public static Image decorateImage(final Image baseImage,
-			final Image decorator, final int corner) {
+	public static Image decorateImage(final Image baseImage, final Image decorator, final int corner) {
 		if (corner <= 0 || corner >= LAST_CORNER_KEY) {
 			throw new IllegalArgumentException("Wrong decorate corner");
 		}
@@ -293,8 +290,7 @@ public class SWTResourceManager {
 			} else if (corner == BOTTOM_LEFT) {
 				gc.drawImage(decorator, 0, bib.height - dib.height);
 			} else if (corner == BOTTOM_RIGHT) {
-				gc.drawImage(decorator, bib.width - dib.width, bib.height
-						- dib.height);
+				gc.drawImage(decorator, bib.width - dib.width, bib.height - dib.height);
 			}
 			gc.dispose();
 			//
@@ -318,8 +314,7 @@ public class SWTResourceManager {
 		for (int i = 0; i < m_decoratedImageMap.length; i++) {
 			Map<Image, Map<Image, Image>> cornerDecoratedImageMap = m_decoratedImageMap[i];
 			if (cornerDecoratedImageMap != null) {
-				for (Map<Image, Image> decoratedMap : cornerDecoratedImageMap
-						.values()) {
+				for (Map<Image, Image> decoratedMap : cornerDecoratedImageMap.values()) {
 					for (Image image : decoratedMap.values()) {
 						image.dispose();
 					}
@@ -376,27 +371,21 @@ public class SWTResourceManager {
 	 * @return {@link Font} The font matching the name, height, style, strikeout
 	 *         and underline
 	 */
-	public static Font getFont(String name, int size, int style,
-			boolean strikeout, boolean underline) {
-		String fontName = name + '|' + size + '|' + style + '|' + strikeout
-				+ '|' + underline;
+	public static Font getFont(String name, int size, int style, boolean strikeout, boolean underline) {
+		String fontName = name + '|' + size + '|' + style + '|' + strikeout + '|' + underline;
 		Font font = m_fontMap.get(fontName);
 		if (font == null) {
 			FontData fontData = new FontData(name, size, style);
 			if (strikeout || underline) {
 				try {
-					Class<?> logFontClass = Class
-							.forName("org.eclipse.swt.internal.win32.LOGFONT"); //$NON-NLS-1$
-					Object logFont = FontData.class
-							.getField("data").get(fontData); //$NON-NLS-1$
+					Class<?> logFontClass = Class.forName("org.eclipse.swt.internal.win32.LOGFONT"); //$NON-NLS-1$
+					Object logFont = FontData.class.getField("data").get(fontData); //$NON-NLS-1$
 					if (logFont != null && logFontClass != null) {
 						if (strikeout) {
-							logFontClass
-									.getField("lfStrikeOut").set(logFont, Byte.valueOf((byte) 1)); //$NON-NLS-1$
+							logFontClass.getField("lfStrikeOut").set(logFont, Byte.valueOf((byte) 1)); //$NON-NLS-1$
 						}
 						if (underline) {
-							logFontClass
-									.getField("lfUnderline").set(logFont, Byte.valueOf((byte) 1)); //$NON-NLS-1$
+							logFontClass.getField("lfUnderline").set(logFont, Byte.valueOf((byte) 1)); //$NON-NLS-1$
 						}
 					}
 				} catch (Exception e) {
@@ -422,8 +411,7 @@ public class SWTResourceManager {
 		if (font == null) {
 			FontData fontDatas[] = baseFont.getFontData();
 			FontData data = fontDatas[0];
-			font = new Font(Display.getCurrent(), data.getName(),
-					data.getHeight(), SWT.BOLD);
+			font = new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD);
 			m_fontToBoldFontMap.put(baseFont, font);
 		}
 		return font;
@@ -497,5 +485,64 @@ public class SWTResourceManager {
 		disposeImages();
 		disposeFonts();
 		disposeCursors();
+	}
+
+	public static Color getControlBg() {
+		return getColor(255, 255, 255);
+	}
+
+	public static Font getDefaultFont() {
+		return getDefaultFont(10, SWT.NORMAL);
+	}
+
+	public static Font getDefaultFont(int size, int style) {
+		return getFont("Verdana", size, style);
+	}
+
+	public static Font getTitleFont() {
+		return getDefaultFont(13, SWT.BOLD);
+	}
+
+	public static Color getTitleColor() {
+		return getColor(200, 100, 0);
+	}
+
+	public static Color getActiontitleBackground() {
+		return getColor(250, 150, 100);
+	}
+
+	public static Color getTabSelectedColor() {
+		return getColor(50, 50, 50);
+	}
+
+	public static Color getTabNotSelectedColor() {
+		return getColor(190, 190, 190);
+	}
+
+	public static Color getActiontitle2Background() {
+		return getColor(200, 200, 200);
+	}
+
+	public static Color getActionTitle2Color() {
+		return getTabSelectedColor();
+	}
+
+	public static Color getTextBackground() {
+		return getColor(240, 240, 240);
+	}
+
+	public static RGB getRGBWithDoubled(double red, double green, double blue) {
+		int r = (int) (255 * red);
+		int g = (int) (255 * green);
+		int b = (int) (255 * blue);
+		return new RGB(r, g, b);
+	}
+
+	public static Color getTextError() {
+		return getColor(150, 20, 20);
+	}
+
+	public static Color getTextEditorColor() {
+		return getColor(0, 0, 0);
 	}
 }

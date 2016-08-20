@@ -1,9 +1,9 @@
 package org.collabthings.swt.view;
 
-import org.collabthings.model.LOTScript;
+import org.collabthings.model.CTScript;
 
 public interface ScriptUser {
 
-	void addScript(LOTScript script);
+	void addScript(CTScript script);
 
 }

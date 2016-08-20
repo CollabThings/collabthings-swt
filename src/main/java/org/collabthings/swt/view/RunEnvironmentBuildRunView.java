@@ -1,14 +1,17 @@
 package org.collabthings.swt.view;
 
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.LOTRuntimeEvent;
-import org.collabthings.environment.LOTTask;
+import org.collabthings.environment.CTEnvironmentTask;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.CTRuntimeEvent;
 import org.collabthings.environment.RunEnvironmentListener;
-import org.collabthings.model.run.LOTRunEnvironmentBuilder;
-import org.collabthings.simulation.LOTSimpleSimulation;
+import org.collabthings.model.CTObject;
+import org.collabthings.model.run.CTRunEnvironmentBuilder;
+import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
@@ -19,55 +22,51 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class RunEnvironmentBuildRunView extends Composite implements
-		LOTAppControl, RunEnvironmentListener {
+public class RunEnvironmentBuildRunView extends CTComposite implements CTAppControl, RunEnvironmentListener {
 
 	// an hour
 	private static final int MAX_RUNTIME = 60 * 1000 * 60;
-	private RunEnvironment4xJFXView eview;
-	private LOTSimpleSimulation s;
-	private Text text;
+	private CTSimpleSimulation s;
+	private CTText text;
 
-	public RunEnvironmentBuildRunView(Composite parent, LOTApp app,
-			AppWindow appWindow, LOTRunEnvironmentBuilder builder) {
+	public RunEnvironmentBuildRunView(Composite parent, LOTApp app, AppWindow appWindow,
+			CTRunEnvironmentBuilder builder) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));
 
-		LOTRunEnvironment runEnvironment = builder.getRunEnvironment();
+		CTRunEnvironment runEnvironment = builder.getRunEnvironment();
 
 		SashForm sashForm = new SashForm(this, SWT.NONE);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1));
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite composite = new Composite(sashForm, SWT.NONE);
+		Composite composite = new CTComposite(sashForm, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
-		text = new Text(composite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL
-				| SWT.MULTI);
+		text = new CTText(composite, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite c_view = new Composite(sashForm, SWT.NONE);
+		Composite c_view = new CTComposite(sashForm, SWT.NONE);
 		c_view.setLayout(new GridLayout(1, false));
-		eview = new RunEnvironment4xJFXView(c_view, SWT.NONE);
-		eview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		eview.setRunEnvironment(runEnvironment);
+
 		sashForm.setWeights(new int[] { 143, 294 });
 
 		runEnvironment.addListener(this);
 
-		s = new LOTSimpleSimulation(runEnvironment);
+		s = new CTSimpleSimulation(runEnvironment);
 
 		new Thread(() -> {
 			s.run(MAX_RUNTIME);
 		}).start();
 
-		eview.runWhile(() -> {
-			return !s.isDone() && !isDisposed();
-		});
 	}
 
 	@Override
-	public void event(LOTRuntimeEvent e) {
+	public CTObject getObject() {
+		return null;
+	}
+
+	@Override
+	public void event(CTRuntimeEvent e) {
 		appendText("" + e.getTime() + " " + e.getName());
 		appendText(" --- " + e.getObject());
 		appendText(" --- " + e.getValues());
@@ -75,15 +74,17 @@ public class RunEnvironmentBuildRunView extends Composite implements
 	}
 
 	@Override
-	public void taskFailed(LOTRunEnvironment runenv, LOTTask task) {
+	public void taskFailed(CTRunEnvironment runenv, CTEnvironmentTask task) {
 		appendText("Task failed : " + task);
 	}
 
 	private void appendText(String string) {
-		getDisplay().asyncExec(() -> {
-			text.append(string);
-			text.append("\n");
-		});
+		if (!isDisposed()) {
+			getDisplay().asyncExec(() -> {
+				text.append(string);
+				text.append("\n");
+			});
+		}
 	}
 
 	@Override

@@ -2,10 +2,13 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
-import org.collabthings.model.LOTScript;
+import org.collabthings.model.CTObject;
+import org.collabthings.model.CTScript;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -20,16 +23,15 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class ScriptView extends Composite implements LOTAppControl {
+public class ScriptView extends CTComposite implements CTAppControl {
 
-	private Text scripttext;
-	private LOTScript script;
-	private Text bottomtext;
+	private CTText scripttext;
+	private CTScript script;
+	private CTText bottomtext;
 
 	private LOTApp app;
 
-	public ScriptView(Composite c, LOTApp app, AppWindow appWindow,
-			LOTScript script) {
+	public ScriptView(Composite c, LOTApp app, AppWindow appWindow, CTScript script) {
 		super(c, SWT.NONE);
 		this.app = app;
 
@@ -37,13 +39,11 @@ public class ScriptView extends Composite implements LOTAppControl {
 		this.script = script;
 
 		SashForm sashForm = new SashForm(this, SWT.VERTICAL);
-		GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1);
+		GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_sashForm.heightHint = 200;
 		sashForm.setLayoutData(gd_sashForm);
 
-		scripttext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		scripttext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		scripttext.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -51,10 +51,13 @@ public class ScriptView extends Composite implements LOTAppControl {
 			}
 		});
 
-		scripttext.setText("" + script.getScript());
+		if (script != null) {
+			scripttext.setText("" + script.getScript());
+		} else {
+			scripttext.setText("Script null");
+		}
 
-		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		bottomtext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		sashForm.setWeights(new int[] { 3, 1 });
 	}
 
@@ -62,9 +65,14 @@ public class ScriptView extends Composite implements LOTAppControl {
 
 	}
 
-	private synchronized void startSave() {
+	@Override
+	public CTObject getObject() {
+		return script;
+	}
+
+	public synchronized void save() {
 		String sstring = this.scripttext.getText();
-		save(sstring);
+		doSave(sstring);
 	}
 
 	@Override
@@ -77,19 +85,17 @@ public class ScriptView extends Composite implements LOTAppControl {
 		return "Script: " + script;
 	}
 
-	private void save(String sscripttext) {
-		if (sscripttext != null
-				&& (script.getScript() == null || !script.getScript().equals(
-						sscripttext))) {
+	private void doSave(String sscripttext) {
+		if (sscripttext != null && (script.getScript() == null || !script.getScript().equals(sscripttext))) {
 
-			LOTScript s = this.app.getObjectFactory().getScript();
+			CTScript s = this.app.getObjectFactory().getScript();
 			s.setScript(sscripttext);
 			getDisplay().asyncExec(() -> {
 				if (s.isOK()) {
 					script.setScript(sscripttext);
 					bottomtext.append("OK " + new Date() + "\n");
 				} else {
-					String error = script.getError();
+					String error = s.getError();
 					bottomtext.append("ERROR " + error + "\n");
 				}
 			});
@@ -114,7 +120,7 @@ public class ScriptView extends Composite implements LOTAppControl {
 		msave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				startSave();
+				save();
 			}
 		});
 

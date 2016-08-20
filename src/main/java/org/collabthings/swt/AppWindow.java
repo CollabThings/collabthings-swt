@@ -1,36 +1,43 @@
 package org.collabthings.swt;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.LOTClient;
-import org.collabthings.LOTStorage;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTInfo;
-import org.collabthings.model.LOTOpenSCAD;
-import org.collabthings.model.LOTPart;
-import org.collabthings.model.LOTScript;
-import org.collabthings.model.LOTTool;
-import org.collabthings.model.impl.LOTFactoryImpl;
-import org.collabthings.model.run.LOTRunEnvironmentBuilder;
-import org.collabthings.model.run.impl.LOTRunEnvironmentBuilderImpl;
+import org.collabthings.CTClient;
+import org.collabthings.CTListener;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTInfo;
+import org.collabthings.model.CTObject;
+import org.collabthings.model.CTPart;
+import org.collabthings.model.CTPartBuilder;
+import org.collabthings.model.CTScript;
+import org.collabthings.model.CTTool;
+import org.collabthings.model.impl.CTFactoryImpl;
+import org.collabthings.model.impl.CTPartImpl;
+import org.collabthings.model.run.CTRunEnvironmentBuilder;
+import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
+import org.collabthings.swt.app.CTRunner;
+import org.collabthings.swt.app.CTRunners;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
-import org.collabthings.swt.dialog.LOTMessageDialog;
+import org.collabthings.swt.controls.dialogs.CTTextDialog;
+import org.collabthings.swt.dialog.CTErrorDialog;
+import org.collabthings.swt.dialog.FindOpenscadDialog;
+import org.collabthings.swt.view.CTMainView;
 import org.collabthings.swt.view.FactoryView;
-import org.collabthings.swt.view.PartView;
+import org.collabthings.swt.view.ObjectSearchView;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
-import org.collabthings.swt.view.SCADView;
 import org.collabthings.swt.view.ScriptView;
-import org.collabthings.swt.view.SearchView;
 import org.collabthings.swt.view.UserView;
 import org.collabthings.swt.view.UsersSearchView;
 import org.collabthings.swt.view.ValueEditorDialog;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -47,17 +54,21 @@ import org.eclipse.swt.widgets.Shell;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WaazdohInfo;
+import waazdoh.common.vo.ObjectVO;
+import waazdoh.common.vo.StorageAreaVO;
 import waazdoh.common.vo.UserVO;
 
-public final class AppWindow implements LOTInfo {
+public final class AppWindow implements CTInfo {
+	public static final String STATUS_RUNNERS = "Runners";
+
 	protected Shell shell;
 	//
 	private LOTApp app;
 
-	private List<LOTAppControl> controls = new LinkedList<>();
+	private List<CTAppControl> controls = new LinkedList<>();
 
-	private CTabFolder tabFolder;
-	private Label lblBottonInfo;
+	private CTTabFolder tabFolder;
+	private CTLabel lblBottonInfo;
 
 	private MenuItem objectmenu;
 	private Menu menu;
@@ -66,34 +77,46 @@ public final class AppWindow implements LOTInfo {
 	private Menu menulocal;
 
 	private final ViewTypes viewtypes;
-	private LOTAppControl selectedcontrol;
-	private Label lblStatus;
+	private CTAppControl selectedcontrol;
+	private CTLabel lblStatus;
 	private ProgressBar progressBar;
+	private Menu mbookmarkslist;
+	private CTMainView mainview;
+
+	private CTRunners runners;
+	private Label lblrunners;
 
 	public AppWindow(LOTApp app) {
 		this.app = app;
 		this.viewtypes = new ViewTypes(this, app);
-	}
+		this.runners = new CTRunners(this, app);
 
-	public void newPart() {
-		try {
-			LOTPart p = app.newPart();
-			PartView view = new PartView(tabFolder, app, this, p);
-			addTab("part " + p, view, p);
-		} catch (Exception e) {
-			showError(e);
-		}
+		app.getLClient().addErrorListener((name, e) -> {
+			showError(name, e);
+		});
 	}
 
 	public void newFactory() {
-		LOTFactory f = app.newFactory();
+		CTFactory f = app.newFactory();
 		viewFactory(f);
 	}
 
 	public void newRunEnvBuilder() {
-		LOTRunEnvironmentBuilder b = new LOTRunEnvironmentBuilderImpl(
-				this.app.getLClient());
-		viewRuntimeBuilder(b);
+		CTRunEnvironmentBuilder b = new CTRunEnvironmentBuilderImpl(this.app.getLClient());
+		viewRunEnvironmentBuilder(b);
+	}
+
+	public void view(String id) {
+		setInfo(0, 0, 0, "View id:" + id);
+
+		new Thread(() -> {
+			ObjectVO o = app.getLClient().getClient().getObjects().read(id);
+			if (o != null) {
+				String type = o.toObject().getType();
+				viewtypes.view(type, new MStringID(id));
+			}
+		}).start();
+
 	}
 
 	public void view(String type, String id) {
@@ -108,35 +131,36 @@ public final class AppWindow implements LOTInfo {
 		setInfo(0, 0, 0, "View User " + user.getUsername());
 
 		shell.getDisplay().asyncExec(() -> {
-			UserView v = new UserView(tabFolder, app, this, user.getUserid());
-			addTab("" + user, v, user);
+			UserView v = new UserView(tabFolder.getComposite(), app, this, user.getUserid());
+			addTab("" + user.getUsername(), v, user);
 		});
 	}
 
-	public void viewRuntimeBuilder(LOTRunEnvironmentBuilder b) {
+	public void viewRunEnvironmentBuilder(CTRunEnvironmentBuilder b) {
 		setInfo(0, 0, 0, "Viewing Builder" + b.toString());
-		shell.getDisplay()
-				.asyncExec(
-						() -> {
-							RunEnvironmentBuilderView v = new RunEnvironmentBuilderView(
-									tabFolder, app, this, b);
-							addTab("" + b, v, b);
-						});
+		shell.getDisplay().asyncExec(() -> {
+			RunEnvironmentBuilderView v = new RunEnvironmentBuilderView(tabFolder.getComposite(), app, this, b);
+			addTab("" + b, v, b);
+		});
 	}
 
-	public void viewSimulation(LOTRunEnvironmentBuilder builder) {
-		RunEnvironmentBuildRunView v = new RunEnvironmentBuildRunView(
-				tabFolder, app, this, builder);
+	public void viewSimulation(CTRunEnvironmentBuilder builder) {
+		RunEnvironmentBuildRunView v = new RunEnvironmentBuildRunView(tabFolder.getComposite(), app, this, builder);
 		addTab("" + builder, v, builder);
 	}
 
-	public void viewFactory(LOTFactory f) {
+	public void viewFactory(CTFactory f) {
 		setInfo(0, 0, 0, "Viewing factory " + f.toString());
 
 		shell.getDisplay().asyncExec(() -> {
-			FactoryView v = new FactoryView(tabFolder, app, this, f);
+			FactoryView v = new FactoryView(tabFolder.getComposite(), app, this, f);
 			addTab("" + f, v, f);
 		});
+	}
+
+	public void viewPartBuilder(CTPart p, CTPartBuilder pb) {
+		setInfo(0, 0, 0, "Viewing partbuilder " + pb);
+		mainview.viewBuilder("" + p.getShortname() + "/" + pb.getName(), p, pb);
 	}
 
 	private void setInfo(int current, int min, int max, String string) {
@@ -150,43 +174,46 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	public void viewSearchUsers(String seachitem) {
-		UsersSearchView v = new UsersSearchView(tabFolder, app, this);
-		addTab("users", v, seachitem);
-		v.search(seachitem);
+		shell.getDisplay().asyncExec(() -> {
+			UsersSearchView v = new UsersSearchView(tabFolder.getComposite(), app, this);
+			addTab("users", v.getView(), seachitem);
+			v.search(seachitem, 0, 100);
+		});
 	}
 
 	public void viewSearch(String searchitem) {
-		SearchView s = new SearchView(tabFolder, app, this);
-		addTab("" + searchitem, s, searchitem);
+		ObjectSearchView s = new ObjectSearchView(tabFolder.getComposite(), app, this);
+		addTab("Search " + searchitem, s.getControl(), searchitem);
 		s.search(searchitem, 0, 50);
 	}
 
-	public void viewScript(LOTScript script) {
-		ScriptView v = new ScriptView(tabFolder, app, this, script);
-		addTab("" + script, v, script);
+	public void viewScript(CTScript script) {
+		shell.getDisplay().asyncExec(() -> {
+			ScriptView v = new ScriptView(tabFolder.getComposite(), app, this, script);
+			addTab("" + script, v, script);
+		});
 	}
 
 	public void viewUser(String name, String userid) {
-		UserView v = new UserView(tabFolder, app, this, userid);
-		addTab("" + name, v, userid);
+		shell.getDisplay().asyncExec(() -> {
+			UserView v = new UserView(tabFolder.getComposite(), app, this, userid);
+			addTab("" + name, v, userid);
+		});
 	}
 
-	public void viewOpenSCAD(LOTOpenSCAD scad) {
-		SCADView v = new SCADView(tabFolder, app, this, scad);
-		addTab("" + scad.getName(), v, scad);
-	}
+	private void addTab(String name, CTAppControl c, Object data) {
+		Control control = c.getControl();
+		control.setBackground(SWTResourceManager.getControlBg());
 
-	private void addTab(String name, LOTAppControl c, Object data) {
-		CTabItem i = new CTabItem(tabFolder, SWT.CLOSE);
-		i.setText(name);
-		i.setControl(c.getControl());
-		i.setData(data);
-		tabFolder.setSelection(i);
+		tabFolder.addTab(name, control, data);
+
 		tabSelected();
 
 		controls.add(c);
-		i.addDisposeListener(e -> {
+
+		tabFolder.addCloseListener(name, () -> {
 			controls.remove(c);
+			control.dispose();
 		});
 	}
 
@@ -196,6 +223,8 @@ public final class AppWindow implements LOTInfo {
 	public void open() {
 		try {
 			try {
+				Thread.currentThread().setName("App open");
+
 				Display display = Display.getDefault();
 				createContents();
 				//
@@ -211,7 +240,7 @@ public final class AppWindow implements LOTInfo {
 			} catch (Exception e) {
 				// TODO shouldn't catch Exception, but didn't come up with
 				// anything better.
-				showError(e);
+				showError("Open", e);
 			}
 		} finally {
 			if (shell != null) {
@@ -222,31 +251,24 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	private void openTestViews(Display display) {
-		display.asyncExec(() -> {
-			viewSearch("boxsetfactory");
-		});
+		// viewSearch("two");
 
-		display.asyncExec(() -> {
-			viewSearchUsers("user");
-			// newFactory();
+		// viewSearchUsers("user");
+		// newFactory();
 
-			String latest = app.getLClient().getService().getStorageArea()
-					.read("ugoogle", "published/builder/latest");
-			if (latest != null) {
-				LOTRunEnvironmentBuilder b = app.getObjectFactory()
-						.getRuntimeBuilder(new MStringID(latest));
-				viewRuntimeBuilder(b);
+		new Thread(() -> {
+			UserVO user = app.getLClient().getService().getUser();
+			viewUser(user.getUsername(), user.getUserid());
+
+			String latestscadpart = app.getLClient().getService().getStorageArea()
+					.read(new StorageAreaVO(user.getUsername(), "published/part/latest", null)).getData();
+			if (latestscadpart != null) {
+				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
+				mainview.viewPart(b);
 			} else {
-				newRunEnvBuilder();
-
+				mainview.newPart();
 			}
-		});
-
-		display.asyncExec(() -> {
-			LOTStorage storage = app.getLClient().getStorage();
-			storage.readStorage(app.getLClient().getClient().getService()
-					.getUser("juuso.vilmunen"), "/published/builder/latest");
-		});
+		}).start();
 	}
 
 	private void readAndDispatch(Display display) {
@@ -255,20 +277,30 @@ public final class AppWindow implements LOTInfo {
 				display.sleep();
 			}
 		} catch (Exception e) {
-			showError(e);
+			showError("readAndDispatch", e);
 		}
 	}
 
-	public void showError(Exception e) {
-		LLog.getLogger(this).error(this, null, e);
-		LOTMessageDialog d = new LOTMessageDialog(shell);
-		d.show(e);
+	public void showError(String name, Exception e) {
+		if (name.equals(CTClient.ERROR_OPENSCADFAILED)) {
+			new FindOpenscadDialog(app, this, shell);
+		} else {
+			LLog.getLogger(this).info("Error  " + name + " " + e);
+			LLog.getLogger(this).error(this, name, e);
+			if (!shell.isDisposed()) {
+				CTErrorDialog d = new CTErrorDialog(shell);
+				this.shell.getDisplay().asyncExec(() -> {
+					d.open();
+					d.show(name, e);
+				});
+			}
+		}
 	}
 
 	public void showError(String message) {
 		this.shell.getDisplay().asyncExec(() -> {
 			LLog.getLogger(this).info("ERROR " + message);
-			LOTMessageDialog d = new LOTMessageDialog(shell);
+			CTErrorDialog d = new CTErrorDialog(shell);
 			d.show("Error", message);
 		});
 	}
@@ -280,14 +312,13 @@ public final class AppWindow implements LOTInfo {
 	 */
 	protected void createContents() {
 		shell = new Shell();
+		shell.setBackground(SWTResourceManager.getControlBg());
 
-		Image small = new Image(shell.getDisplay(),
-				ClassLoader.getSystemResourceAsStream("logo.png"));
+		Image small = new Image(shell.getDisplay(), ClassLoader.getSystemResourceAsStream("logo.png"));
 		shell.setImage(small);
 
 		shell.setSize(589, 395);
-		shell.setText("CollabThings - "
-				+ app.getLClient().getService().getUser().getUsername());
+		shell.setText("CollabThings - " + app.getLClient().getService().getUser().getUsername());
 		GridLayout gl_shell = new GridLayout(1, false);
 		gl_shell.verticalSpacing = 1;
 		gl_shell.horizontalSpacing = 1;
@@ -321,26 +352,31 @@ public final class AppWindow implements LOTInfo {
 
 		MenuItem mntmNewPart = new MenuItem(menu_new, SWT.NONE);
 		mntmNewPart.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				newPart();
+				mainview.newPart();
 			}
 		});
+
 		mntmNewPart.setText("Part");
 
 		MenuItem mntmRunenvBuilder = new MenuItem(menu_new, SWT.NONE);
 		mntmRunenvBuilder.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				newRunEnvBuilder();
 			}
 		});
+
 		mntmRunenvBuilder.setText("RunEnv Builder");
 
 		MenuItem menulocalitem = new MenuItem(menufile, SWT.CASCADE);
 		menulocalitem.setText("Local");
 
 		menulocal = new Menu(menulocalitem);
+
 		initLocalMenu();
 
 		menulocalitem.setMenu(menulocal);
@@ -348,16 +384,16 @@ public final class AppWindow implements LOTInfo {
 		MenuItem menulocaldate = new MenuItem(menulocal, SWT.NONE);
 		menulocaldate.setText("Date");
 
-		MenuItem msearchmenu = new MenuItem(menu, SWT.CASCADE);
-		msearchmenu.setText("Search");
+		MenuItem misearch = new MenuItem(menu, SWT.CASCADE);
+		misearch.setText("Search");
 
-		Menu menu_1 = new Menu(msearchmenu);
-		msearchmenu.setMenu(menu_1);
+		Menu msearch = new Menu(misearch);
+		misearch.setMenu(msearch);
 
-		MenuItem misearchobjects = new MenuItem(menu_1, SWT.CASCADE);
+		MenuItem misearchobjects = new MenuItem(msearch, SWT.CASCADE);
 		misearchobjects.setText("Objects");
 
-		MenuItem misearchusers = new MenuItem(menu_1, SWT.NONE);
+		MenuItem misearchusers = new MenuItem(msearch, SWT.NONE);
 		misearchusers.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -378,59 +414,188 @@ public final class AppWindow implements LOTInfo {
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
 		mntmHelp.setText("Help");
 
-		Composite composite = new Composite(shell, SWT.NONE);
+		MenuItem mibookmarks = new MenuItem(menu, SWT.CASCADE);
+		mibookmarks.setText("Bookmarks");
+
+		Menu mbookmarks = new Menu(mibookmarks);
+		mibookmarks.setMenu(mbookmarks);
+
+		MenuItem miupdate = new MenuItem(mbookmarks, SWT.NONE);
+		miupdate.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				initBookmarks();
+			}
+		});
+
+		miupdate.setText("Update");
+
+		new MenuItem(mbookmarks, SWT.SEPARATOR);
+
+		mbookmarkslist = new Menu(mibookmarks);
+		MenuItem miBookmarksList = new MenuItem(mbookmarks, SWT.CASCADE);
+		miBookmarksList.setText("Bookmarks");
+		miBookmarksList.setMenu(mbookmarkslist);
+
+		this.app.addTask(() -> {
+			this.shell.getDisplay().asyncExec(() -> {
+				initBookmarks();
+			});
+		});
+
+		Composite composite = new CTComposite(shell, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
+		gl_composite.verticalSpacing = 0;
+		gl_composite.horizontalSpacing = 0;
 		LOTSWT.setDefaults(gl_composite);
 
 		composite.setLayout(gl_composite);
-		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1);
+		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_composite.widthHint = 216;
 		composite.setLayoutData(gd_composite);
 
-		tabFolder = new CTabFolder(composite, SWT.NONE);
-		tabFolder.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				tabSelected();
-			}
+		tabFolder = new CTTabFolder(composite, SWT.FLAT);
+		tabFolder.addSelectionListener(() -> {
+			tabSelected();
 		});
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1));
 
-		Composite composite_1 = new Composite(composite, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
-				false, 1, 1));
-		composite_1.setLayout(new GridLayout(2, false));
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		lblStatus = new Label(composite_1, SWT.NONE);
-		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-				1, 1));
+		Composite composite_1 = new CTComposite(composite, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+		composite_1.setLayout(new GridLayout(3, false));
+		composite_1.setBackground(SWTResourceManager.getActiontitleBackground());
+
+		lblStatus = new CTLabel(composite_1, SWT.NONE);
+		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblStatus.setText("status");
 
-		progressBar = new ProgressBar(composite_1, SWT.NONE);
+		lblrunners = new Label(composite_1, SWT.NONE);
+		lblrunners.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblrunners.setText("Runners status");
 
-		lblBottonInfo = new Label(composite, SWT.NONE);
-		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
-				false, 1, 1));
+		progressBar = new ProgressBar(composite_1, SWT.NONE);
+		progressBar.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+		new Label(composite_1, SWT.NONE);
+
+		lblBottonInfo = new CTLabel(composite, SWT.NONE);
+		lblBottonInfo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		lblBottonInfo.setAlignment(SWT.RIGHT);
 
 		setBottomInfo();
+
+		mainview = new CTMainView(tabFolder.getComposite(), app, this);
+		addTab("main", mainview, null);
+	}
+
+	private void bookmarkCurrent(String path) {
+		CTObject o = mainview.getCurrentObject();
+		if (o != null) {
+			this.app.getLClient().getBookmarks().add(path + "/" + o.getName(), o.getID().toString());
+		}
+	}
+
+	private void initBookmarks() {
+		Menu bookmarkmenu = mbookmarkslist;
+		String path = "";
+		initBookmarks(bookmarkmenu, path);
+	}
+
+	private void initBookmarks(Menu bookmarkmenu, String path) {
+		for (MenuItem i : bookmarkmenu.getItems()) {
+			i.dispose();
+		}
+
+		class BM {
+			String path;
+			String value;
+		}
+
+		addAddMenu(bookmarkmenu, path);
+
+		List<BM> bookmarklist = new ArrayList<>();
+		addRunner(new CTRunner<String>("updatebookmarkmenu " + path).run(() -> {
+			this.app.getLClient().getBookmarks().list(path).forEach(s -> {
+				BM bm = new BM();
+				bm.path = s;
+				bm.value = this.app.getLClient().getBookmarks().get(path + "/" + s);
+				bookmarklist.add(bm);
+			});
+		}).gui(v -> {
+			for (BM bm : bookmarklist) {
+				log.info("bookmark " + path + " " + bm.path + "->" + bm.value);
+
+				if (bm.value != null) {
+					MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
+					mi.setText(bm.path);
+					mi.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent arg0) {
+							view(bm.value);
+						}
+					});
+				} else if (!bm.path.startsWith("_")) {
+					MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
+					mi.setText(bm.path);
+					Menu m = new Menu(mi);
+					mi.setMenu(m);
+
+					initBookmarks(m, path + "/" + bm.path);
+				}
+
+			}
+		}));
+	}
+
+	private void addAddMenu(Menu m, String path) {
+		MenuItem add = new MenuItem(m, SWT.CASCADE);
+		add.setText("add");
+		add.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				CTTextDialog dialog = new CTTextDialog(shell);
+				dialog.open("Bookmark folder name");
+				String text = dialog.getValue();
+
+				addRunner(new CTRunner<String>("addbookmarkfolder").run(() -> {
+					app.getLClient().getBookmarks().addFolder(path + "/" + text);
+				}).gui((v) -> {
+					initBookmarks();
+				}));
+			}
+		});
+
+		MenuItem current = new MenuItem(m, SWT.CASCADE);
+		current.setText("current");
+		current.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				bookmarkCurrent(path);
+			}
+		});
+
+		new MenuItem(m, SWT.SEPARATOR);
+
 	}
 
 	private void initLocalMenu() {
 		LocalObjectsMenu localmenu = new LocalObjectsMenu(this, menulocal);
-		localmenu.addObjectHandler(LOTFactoryImpl.BEANNAME,
-				(data) -> {
-					MStringID id = data.getIDValue("id");
-					LOTFactory f = getApp().getLClient().getObjectFactory()
-							.getFactory(id);
-					if (f != null) {
-						viewFactory(f);
-					} else {
-						showError("Failed to open factory " + id);
-					}
-				});
+		localmenu.addObjectHandler(CTFactoryImpl.BEANNAME, (data) -> {
+			MStringID id = data.getIDValue("id");
+			CTFactory f = getApp().getLClient().getObjectFactory().getFactory(id);
+			if (f != null) {
+				viewFactory(f);
+			} else {
+				showError("Failed to open factory " + id);
+			}
+		});
+
+		localmenu.addObjectHandler(CTPartImpl.BEANNAME, (data) -> {
+			MStringID id = data.getIDValue("id");
+			CTPart p = getApp().getLClient().getObjectFactory().getPart();
+			p.parse(data);
+			mainview.viewPart(p);
+		});
 	}
 
 	protected void tabSelected() {
@@ -439,22 +604,21 @@ public final class AppWindow implements LOTInfo {
 
 			Control control = tabFolder.getSelection().getControl();
 
-			if (control instanceof LOTAppControl) {
-				LOTAppControl v = (LOTAppControl) control;
-				selectedcontrol = v;
+			if (control instanceof CTAppControl) {
+				CTAppControl v = (CTAppControl) control;
+				this.selectedcontrol = v;
 				log.info("selected " + v);
 
 				v.selected(this);
 				updateObjectMenu(v);
 			} else {
-				showError("Selected " + control
-						+ " that is not a LOTAppControl. Name:"
+				showError("Selected " + control + " that is not a LOTAppControl. Name:"
 						+ tabFolder.getSelection().getText());
 			}
 		}
 	}
 
-	public void updateObjectMenu(LOTAppControl v) {
+	public void updateObjectMenu(CTAppControl v) {
 		log.info("updating object menu " + v);
 		disposeObjectMenu();
 		objectmenu = v.createMenu(menu);
@@ -468,28 +632,23 @@ public final class AppWindow implements LOTInfo {
 	}
 
 	private void setBottomInfo() {
-		shell.getDisplay().timerExec(1000, new Runnable() {
-
-			@Override
-			public void run() {
-				lblBottonInfo.setText("LOT:" + LOTClient.VERSION + " Waazdoh:"
-						+ WaazdohInfo.VERSION + " environment: "
-						+ app.getLClient());
-				//
-				setBottomInfo();
-			}
-		});
+		addRunner(new CTRunner<String>("BottomUpdateInfo", 1000).runWhile(() -> {
+			return !lblBottonInfo.isDisposed();
+		}).action(() -> {
+			return " CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: " + app.getLClient()
+					+ " " + app.getLClient().getBinarySource().getStats();
+		}).gui((o) -> lblBottonInfo.setText("" + o)));// addRunner(runner);
 	}
 
 	public LOTApp getApp() {
 		return this.app;
 	}
 
-	public List<LOTAppControl> getTablist() {
-		return new LinkedList<LOTAppControl>(controls);
+	public List<CTAppControl> getTablist() {
+		return new LinkedList<CTAppControl>(controls);
 	}
 
-	public boolean isSelected(LOTAppControl c) {
+	public boolean isSelected(CTAppControl c) {
 		return selectedcontrol == c;
 	}
 
@@ -499,7 +658,32 @@ public final class AppWindow implements LOTInfo {
 		return e.getValue();
 	}
 
-	public void viewTool(LOTTool tool) {
+	public void viewTool(CTTool tool) {
 		// TODO Auto-generated method stub
 	}
+
+	public CTMainView getMainView() {
+		return mainview;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public CTRunner addRunner(CTRunner runner) {
+		return runners.add(runner);
+	}
+
+	public void launch(CTListener l) {
+		shell.getDisplay().asyncExec(() -> l.event());
+
+	}
+
+	public void setStatus(String string, String status) {
+		if (shell != null) {
+			shell.getDisplay().asyncExec(() -> {
+				if (STATUS_RUNNERS.equals(string)) {
+					lblrunners.setText(status);
+				}
+			});
+		}
+	}
+
 }

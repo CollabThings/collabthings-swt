@@ -1,39 +1,42 @@
 package org.collabthings.swt.controls;
 
+import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 
-public class LOTDoubleEditor extends Composite {
+public class LOTDoubleEditor extends CTComposite {
+	private static final int MAX_DECIMALS = 3;
 	private static final double MIN_POS_VALUE = 0.001;
 	private static final double MIN_NEG_VALUE = 0.001;
-	private Text s;
+	private CTText s;
 	private ChangeListener<Double> listener;
 
-	public LOTDoubleEditor(Composite c, Double d,
-			ChangeListener<Double> listener) {
+	public LOTDoubleEditor(Composite c, Double d, ChangeListener<Double> listener) {
 		super(c, SWT.None);
 		this.listener = listener;
 
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		//
-		s = new Text(this, SWT.NONE);
+		s = new CTText(this, SWT.NONE);
 		s.setEditable(true);
-		s.setText("" + d);
+		setDoubleText(d);
 
-		s.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				changed();
-			}
-
+		s.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				this_keyPressed(arg0);
+			}
+		});
+
+		s.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				changed();
 			}
 		});
 	}
@@ -55,16 +58,33 @@ public class LOTDoubleEditor extends Composite {
 				nd = -MIN_NEG_VALUE;
 			}
 			setDouble(nd);
+		} else if (arg0.keyCode == SWT.TAB) {
+			changed();
 		}
 	}
 
 	private synchronized void changed() {
-		listener.changed(getDouble());
+		try {
+			this.s.setValidated(true);
+			double value = getDouble();
+			listener.changed(value);
+		} catch (NumberFormatException e) {
+			this.s.setValidated(false);
+		}
 	}
 
 	private synchronized void setDouble(double nd) {
-		this.s.setText("" + nd);
+		setDoubleText(nd);
 		listener.changed(nd);
+	}
+
+	private void setDoubleText(double nd) {
+		String sd = "" + nd;
+		if (sd.indexOf(".") > 0 && (sd.length() - sd.indexOf(".") - 1) > MAX_DECIMALS) {
+			sd = sd.substring(0, sd.indexOf(".") + MAX_DECIMALS);
+		}
+
+		this.s.setText(sd);
 	}
 
 	public static interface ChangeListener<T> {

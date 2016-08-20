@@ -2,10 +2,16 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
-import org.collabthings.model.LOTOpenSCAD;
+import org.collabthings.model.CTObject;
+import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
+import org.collabthings.swt.LOTSWT;
+import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -18,33 +24,64 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
-public class SCADView extends Composite implements LOTAppControl {
+public class SCADView extends CTComposite implements CTAppControl {
 
 	private AppWindow window;
-	private Text scripttext;
-	private LOTOpenSCAD scad;
-	private Text bottomtext;
+	private CTText scripttext;
+	private CTOpenSCAD scad;
+	private CTText bottomtext;
 
-	private SashForm sashForm_1;
-	private Model3DView canvas;
 	private Composite composite;
+	private Composite ctools;
 
-	public SCADView(final Composite c, final LOTApp app,
-			final AppWindow appWindow, final LOTOpenSCAD scad) {
+	public SCADView(Composite c, LOTApp app, AppWindow window2, CTOpenSCAD o) {
+		this(c, app, window2, o, true);
+	}
+
+	public SCADView(Composite c, LOTApp app, AppWindow nwindow, CTOpenSCAD o, boolean b) {
 		super(c, SWT.NONE);
-		this.window = appWindow;
+		this.window = nwindow;
 
-		setLayout(new GridLayout(1, false));
-		this.scad = scad;
+		GridLayout gridLayout = new GridLayout(1, false);
+		LOTSWT.setDefaults(gridLayout);
+		setLayout(gridLayout);
+		this.scad = o;
 
-		sashForm_1 = new SashForm(this, SWT.NONE);
-		sashForm_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
-				1, 1));
+		if (b) {
+			ctools = new CTComposite(this, SWT.NONE);
+			ctools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+			ctools.setLayout(gridLayout);
+			ctools.setBackground(SWTResourceManager.getActiontitleBackground());
+			CTButton bsave = new CTButton(ctools, SWT.NONE);
+			bsave.setText("Save");
+			bsave.addSelectionListener(() -> save());
+		}
 
-		scripttext = new Text(sashForm_1, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		Composite left;
+
+		if (b) {
+			SashForm sashForm_1 = new SashForm(this, SWT.NONE);
+			left = sashForm_1;
+		} else {
+			left = new CTComposite(this, SWT.NONE);
+			GridLayout leftlayout = new GridLayout();
+			LOTSWT.setDefaults(leftlayout);
+			left.setLayout(leftlayout);
+		}
+
+		left.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		int textstyle = SWT.BORDER | SWT.CANCEL | SWT.MULTI | SWT.V_SCROLL;
+		if (b) {
+			textstyle = textstyle | SWT.H_SCROLL;
+		}
+		scripttext = new CTText(left, textstyle);
+		scripttext.setFont(SWTResourceManager.getDefaultFont());
+
+		if (!b) {
+			scripttext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		}
+
 		scripttext.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -54,48 +91,29 @@ public class SCADView extends Composite implements LOTAppControl {
 
 		scripttext.setText("" + scad.getScript());
 
-		SashForm sashForm = new SashForm(sashForm_1, SWT.VERTICAL);
+		if (b) {
+			SashForm sashForm = new SashForm(left, SWT.VERTICAL);
 
-		composite = new Composite(sashForm, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
-		canvas = new Model3DView(composite, SWT.NONE);
-		canvas.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			composite = new CTComposite(sashForm, SWT.NONE);
+			composite.setLayout(gridLayout);
 
-		bottomtext = new Text(sashForm, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		sashForm.setWeights(new int[] { 1, 1 });
-		sashForm_1.setWeights(new int[] { 1, 1 });
-
-		new Thread(() -> {
-			int hash = 0;
-			while (!canvas.isDisposed()) {
-				if (scad.hashCode() != hash) {
-					hash = scad.hashCode();
-					setModel();
-				}
-
-				synchronized (this) {
-					try {
-						this.wait(200);
-					} catch (Exception e) {
-						window.showError(e);
-					}
-				}
-			}
-		}).start();
+			bottomtext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+			sashForm.setWeights(new int[] { 1, 1 });
+		}
 	}
 
-	private void setModel() {
-		canvas.addModel(null, scad);
+	@Override
+	public CTObject getObject() {
+		return scad;
 	}
 
 	protected synchronized void key(KeyEvent arg0) {
 
 	}
 
-	private synchronized void startSave() {
+	public synchronized void save() {
 		String sstring = this.scripttext.getText();
-		save(sstring);
+		doSave(sstring);
 	}
 
 	@Override
@@ -108,20 +126,26 @@ public class SCADView extends Composite implements LOTAppControl {
 		return "Script: " + scad;
 	}
 
-	private void save(String sscripttext) {
-		if (sscripttext != null
-				&& (scad.getScript() == null || !scad.getScript().equals(
-						sscripttext))) {
+	private void doSave(String sscripttext) {
+		if (sscripttext != null && (scad.getScript() == null || !scad.getScript().equals(sscripttext))) {
 
 			String oldscript = scad.getScript();
 			getDisplay().asyncExec(() -> {
 				scad.setScript(sscripttext);
 				if (scad.getModel() != null && scad.isOK()) {
-					bottomtext.append("OK " + new Date() + "\n");
+					if (bottomtext != null) {
+						bottomtext.append("OK " + new Date() + "\n");
+					}
 				} else {
 					String error = scad.getError();
-					bottomtext.append("ERROR " + error + "\n");
+					if (bottomtext != null) {
+						bottomtext.append("ERROR " + error + "\n");
+					} else {
+						window.showError("ERROR " + error);
+					}
+
 					scad.setScript(oldscript);
+
 				}
 			});
 		}
@@ -129,7 +153,7 @@ public class SCADView extends Composite implements LOTAppControl {
 
 	@Override
 	public void selected(AppWindow appWindow) {
-
+		//
 	}
 
 	@Override
@@ -145,7 +169,7 @@ public class SCADView extends Composite implements LOTAppControl {
 		msave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				startSave();
+				save();
 			}
 		});
 

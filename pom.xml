@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.3.0-RELEASE</version>
 	<name>collabthings.swt</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.collabthings</groupId>
@@ -115,7 +115,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
+				<version>1.8</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>
@@ -126,18 +126,18 @@
 						<configuration>
 							<tasks>
 								<!-- -->
-								<zip
-									destfile="${project.build.directory}/lot-app-${app.arch}/bin${buildNumber}.zip">
+								<zip destfile="${project.build.directory}/nsis/files/bin.zip">
 									<fileset dir="src/main/app/bin" />
 								</zip>
-								<zip
-									destfile="${project.build.directory}/lot-app-${app.arch}/jdk${java.version}.zip">
+								<zip destfile="${project.build.directory}/nsis/files/jdk.zip">
 									<fileset dir="${jdk}" />
 								</zip>
-								<zip
-									destfile="${project.build.directory}/lot-app-${app.arch}/resources${buildNumber}.zip">
+								<zip destfile="${project.build.directory}/nsis/files/resources.zip">
 									<fileset dir="src/main/resources" />
 								</zip>
+								<copy todir="${project.build.directory}/nsis/">
+									<fileset dir="src/main/msi" />
+								</copy>
 							</tasks>
 						</configuration>
 					</execution>
@@ -216,44 +216,26 @@
 
 		<dependency>
 			<groupId>org.collabthings</groupId>
-			<artifactId>collabthings.client</artifactId>
-			<version>0.2.3-SNAPSHOT</version>
+			<artifactId>client</artifactId>
+			<version>[0.3.3-RELEASE,)</version>
 		</dependency>
 
 		<dependency>
-			<groupId>waazdoh</groupId>
-			<artifactId>waazdoh.swt</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<groupId>org.collabthings</groupId>
+			<artifactId>ogl</artifactId>
+			<version>[0.0.2-RELEASE,)</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.waazdoh</groupId>
+			<artifactId>swt</artifactId>
+			<version>[0.0.5-RELEASE,)</version>
 		</dependency>
 
 		<dependency>
 			<groupId>${swt.groupId}</groupId>
 			<artifactId>${swt.artifactId}</artifactId>
 			<version>4.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.jface</groupId>
-			<artifactId>org.eclipse.jface</artifactId>
-			<version>3.8.0.v20120521-2329</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>jfx</artifactId>
-			<version>2.2.3</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/app/bin/jimX3dModelImporterJFX.jar
-			</systemPath>
-		</dependency>
-
-		<dependency>
-			<groupId>com.interactivemesh</groupId>
-			<artifactId>jfx</artifactId>
-			<version>2.2.3</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/app/bin/jimStlMeshImporterJFX.jar
-			</systemPath>
 		</dependency>
 
 		<dependency>
@@ -285,23 +267,20 @@
 
 
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>javafx</artifactId>
-			<version>2.2.3</version>
-			<scope>system</scope>
-			<systemPath>${env.JAVA_HOME}/jre/lib/jfxswt.jar</systemPath>
-		</dependency>
-
-		<dependency>
-			<groupId>java3d</groupId>
-			<artifactId>vecmath</artifactId>
-			<version>1.3.1</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.vafer</groupId>
 			<artifactId>jdeb</artifactId>
 			<version>1.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl-all-main</artifactId>
+			<version>2.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.gluegen</groupId>
+			<artifactId>gluegen-rt-main</artifactId>
+			<version>2.3.2</version>
 		</dependency>
 
 	</dependencies>
@@ -394,6 +373,12 @@
 			<id>waazdoh</id>
 			<name>waazdoh</name>
 			<url>http://maven.waazdoh.com/repository</url>
+		</repository>
+		<repository>
+			<id>jogamp-remote</id>
+			<name>jogamp test mirror</name>
+			<url>http://www.jogamp.org/deployment/maven/</url>
+			<layout>default</layout>
 		</repository>
 	</repositories>
 

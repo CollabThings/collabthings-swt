@@ -22,7 +22,7 @@ import waazdoh.common.UserID;
 import waazdoh.common.WObject;
 
 public class LocalObjectsMenu {
-	private static final String MAX_LOCALMENU_OBJECTS = "lot.gui.local.menuobjects.max";
+	private static final String MAX_LOCALMENU_OBJECTS = "ct.gui.local.menuobjects.max";
 
 	private LLog log = LLog.getLogger(this);
 	private AppWindow appwindow;
@@ -63,56 +63,62 @@ public class LocalObjectsMenu {
 			WObject bean = storage.getBean(id);
 			// modified -value should be in every bean.
 			if (bean != null) {
-				if (openobjecthandlers.get(bean.getType()) != null
-						&& bean.getValue("modified") != null) {
-					addObjectMenu(id, bean);
+				if (openobjecthandlers.get(bean.getType()) != null) {
+					if (bean.getValue("modified") != null) {
 
-					if (count++ > app.getLClient().getPreferences()
-							.getInteger(MAX_LOCALMENU_OBJECTS, 40)) {
-						MenuItem tbci = new MenuItem(menulocal, SWT.NONE);
-						tbci.setText("...");
-						break;
+						MenuItem i = addObjectMenu(id, bean);
+						if (i != null
+								&& count++ > app.getLClient().getPreferences().getInteger(MAX_LOCALMENU_OBJECTS, 40)) {
+							MenuItem tbci = new MenuItem(menulocal, SWT.NONE);
+							tbci.setText("...");
+							break;
+						}
+					} else {
+						log.info("Not showing " + bean.getType() + " in menu. modified missing " + bean);
 					}
 				} else {
-					log.info("Not showing " + bean.getType() + " "
-							+ bean.getValue("name") + " in menu");
+					log.info("Bean not found " + id);
 				}
 			}
 		}
 	}
 
-	private void addObjectMenu(MStringID id, WObject bean) {
-		MenuItem i = new MenuItem(menulocal, SWT.NONE);
-		i.setText(getLocalBeanInfo(bean));
-		i.setData(id);
-		i.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				openLocal(id);
-			}
-		});
+	private MenuItem addObjectMenu(MStringID id, WObject bean) {
+		String localBeanInfo = getLocalBeanInfo(bean);
+		if (localBeanInfo != null) {
+			MenuItem i = new MenuItem(menulocal, SWT.NONE);
+			i.setText(localBeanInfo);
+			i.setData(id);
+			i.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					openLocal(id);
+				}
+			});
+			return i;
+		} else {
+			return null;
+		}
 	}
 
 	private String getLocalBeanInfo(WObject bean) {
 		StringBuilder sb = new StringBuilder();
 		String userid = bean.getValue("creator");
 		if (userid != null) {
-			User user = appwindow.getApp().getLClient().getClient()
-					.getUser(new UserID(userid));
-			if (user != null) {
-				long modified = bean.getLongValue("modified");
-				String name = bean.getValue("name");
+			User user = appwindow.getApp().getLClient().getClient().getUser(new UserID(userid));
 
-				sb.append("" + name + " by " + user.getName() + " at "
-						+ modified);
-			} else {
-				sb.append("User not found");
-			}
-		} else {
-			sb.append("Userid not found");
+			long modified = bean.getLongValue("modified");
+			WObject content = bean.get("content");
+			String name = content.getValue("name");
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(modified);
+
+			sb.append("" + name + " by " + (user != null ? user.getName() : "Unknown") + " at " + cal.getTime());
+			return sb.toString();
 		}
-
-		return sb.toString();
+		log.info("User not found " + userid);
+		return null;
 	}
 
 	protected void openLocal(MStringID id) {

@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.impl.LOTFactoryState;
-import org.collabthings.environment.impl.LOTToolUser;
-import org.collabthings.model.LOTAttachedFactory;
-import org.collabthings.model.LOTEnvironment;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTRuntimeObject;
-import org.collabthings.model.LOTTool;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.environment.impl.CTToolUser;
+import org.collabthings.model.CTAttachedFactory;
+import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTRuntimeObject;
+import org.collabthings.model.CTTool;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -23,14 +25,13 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.zest.core.widgets.Graph;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
 
-public class MapView extends Composite {
+public class MapView extends CTComposite {
 
 	private Graph graph;
 	private Map<Object, GraphNode> nodes = new HashMap<Object, GraphNode>();
@@ -41,14 +42,14 @@ public class MapView extends Composite {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));
 
-		Composite cupper = new Composite(this, SWT.BORDER);
+		Composite cupper = new CTComposite(this, SWT.BORDER);
 		cupper.setLayout(new GridLayout(1, false));
 		cupper.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
 
-		new Label(cupper, SWT.NONE);
+		new CTLabel(cupper, SWT.NONE);
 
-		Composite composite = new Composite(this, SWT.NONE);
+		Composite composite = new CTComposite(this, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
@@ -73,16 +74,16 @@ public class MapView extends Composite {
 		});
 	}
 
-	public void set(LOTRunEnvironment env) {
+	public void set(CTRunEnvironment env) {
 		clear();
 
 		if (env != null) {
 			GraphNode envnode = new GraphNode(graph, SWT.NONE, "Env " + env);
 
-			Set<LOTRuntimeObject> rs = env.getRunObjects();
-			for (LOTRuntimeObject runo : rs) {
-				if (runo instanceof LOTFactoryState) {
-					LOTFactoryState state = (LOTFactoryState) runo;
+			Set<CTRuntimeObject> rs = env.getRunObjects();
+			for (CTRuntimeObject runo : rs) {
+				if (runo instanceof CTFactoryState) {
+					CTFactoryState state = (CTFactoryState) runo;
 					addFactoryState(1, envnode, state);
 				}
 			}
@@ -95,23 +96,23 @@ public class MapView extends Composite {
 	}
 
 	private void addFactoryState(int depth, GraphNode envnode,
-			LOTFactoryState state) {
+			CTFactoryState state) {
 		GraphNode factorystatenode = getNode(state, "" + state);
 		factorystatenode.setBackgroundColor(graph.LIGHT_BLUE);
 		setNodeLocation(depth, factorystatenode);
 
 		new GraphConnection(graph, SWT.NONE, envnode, factorystatenode);
 
-		LOTFactory factory = state.getFactory();
+		CTFactory factory = state.getFactory();
 		addFactory(depth + 3, factorystatenode, factory);
 
-		List<LOTFactoryState> fs = state.getFactories();
-		for (LOTFactoryState childstate : fs) {
+		List<CTFactoryState> fs = state.getFactories();
+		for (CTFactoryState childstate : fs) {
 			addFactoryState(depth + 3, factorystatenode, childstate);
 		}
 
-		List<LOTToolUser> toolusers = state.getToolUsers();
-		for (LOTToolUser tooluser : toolusers) {
+		List<CTToolUser> toolusers = state.getToolUsers();
+		for (CTToolUser tooluser : toolusers) {
 			String toolname = tooluser.getName();
 			if (toolname == null) {
 				toolname = "" + tooluser;
@@ -134,7 +135,7 @@ public class MapView extends Composite {
 		node.setLocation(x * 100, depth * 50);
 	}
 
-	private void addFactory(int depth, GraphNode parent, LOTFactory factory) {
+	private void addFactory(int depth, GraphNode parent, CTFactory factory) {
 		GraphNode factorynode = getNode(factory, "" + factory);
 		setNodeLocation(depth, factorynode);
 
@@ -142,7 +143,7 @@ public class MapView extends Composite {
 
 		Set<String> fs = factory.getFactories();
 		for (String string : fs) {
-			LOTAttachedFactory childfactory = factory.getFactory(string);
+			CTAttachedFactory childfactory = factory.getFactory(string);
 			addFactory(depth + 3, factorynode, childfactory.getFactory());
 		}
 
@@ -150,11 +151,11 @@ public class MapView extends Composite {
 	}
 
 	private void addEnvironment(int depth, GraphNode parent,
-			LOTEnvironment environment) {
+			CTEnvironment environment) {
 		Set<String> tools = environment.getTools();
 
 		for (String string : tools) {
-			LOTTool tool = environment.getTool(string);
+			CTTool tool = environment.getTool(string);
 			GraphNode toolnode = getNode(tool, string);
 			setNodeLocation(depth, toolnode);
 			new GraphConnection(graph, SWT.NONE, parent, toolnode);

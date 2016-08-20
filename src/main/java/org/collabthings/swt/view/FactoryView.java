@@ -6,39 +6,39 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Set;
 
-import org.collabthings.LOTClient;
-import org.collabthings.environment.LOTRunEnvironment;
-import org.collabthings.environment.impl.LOTFactoryState;
-import org.collabthings.model.LOTEnvironment;
-import org.collabthings.model.LOTFactory;
-import org.collabthings.model.LOTScript;
-import org.collabthings.model.impl.LOTEnvironmentImpl;
-import org.collabthings.model.impl.LOTFactoryImpl;
+import org.collabthings.CTClient;
+import org.collabthings.environment.CTRunEnvironment;
+import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.model.CTEnvironment;
+import org.collabthings.model.CTFactory;
+import org.collabthings.model.CTObject;
+import org.collabthings.model.CTScript;
+import org.collabthings.model.impl.CTEnvironmentImpl;
+import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.LOTAppControl;
+import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
+import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.controls.CTButton;
+import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class FactoryView extends Composite implements LOTAppControl, ScriptUser {
-	private LOTFactory factory;
-	private RunEnvironment4xJFXView view;
+public class FactoryView extends CTComposite implements CTAppControl, ScriptUser {
+	private CTFactory factory;
 	private LOTApp app;
 
 	private AppWindow window;
@@ -47,8 +47,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	private YamlEditor yamleditor;
 	private YamlEditor enveditor;
 
-	public FactoryView(Composite composite, LOTApp app, AppWindow w,
-			LOTFactory f) {
+	public FactoryView(Composite composite, LOTApp app, AppWindow w, CTFactory f) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;
@@ -62,6 +61,11 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	}
 
 	@Override
+	public CTObject getObject() {
+		return factory;
+	}
+
+	@Override
 	public Control getControl() {
 		return this;
 	}
@@ -72,10 +76,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 	}
 
 	@Override
-	public void addScript(LOTScript script) {
-		factory.addScript(
-				"script" + factory.getScripts().size() + " " + script.getName(),
-				script);
+	public void addScript(CTScript script) {
+		factory.addScript("script" + factory.getScripts().size() + " " + script.getName(), script);
 	}
 
 	private synchronized void updateFactoryHash() {
@@ -87,11 +89,11 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		updateView();
 	}
 
-	private void viewChild(LOTFactory f) {
+	private void viewChild(CTFactory f) {
 		window.viewFactory(f);
 	}
 
-	LOTScript addScript(String name) {
+	CTScript addScript(String name) {
 		return factory.addScript(name);
 	}
 
@@ -105,77 +107,59 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		setLayout(gridLayout);
 
 		SashForm composite_main = new SashForm(this, SWT.NONE);
-		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true, 1, 1));
+		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite composite = new Composite(composite_main, SWT.NONE);
+		Composite composite = new CTComposite(composite_main, SWT.NONE);
 		GridLayout gl_composite = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_composite);
 		composite.setLayout(gl_composite);
 
-		Composite cpanel = new Composite(composite, SWT.NONE);
+		Composite cpanel = new CTComposite(composite, SWT.NONE);
 		GridLayout gl_cpanel = new GridLayout(1, false);
 		LOTSWT.setDefaults(gl_cpanel);
 		cpanel.setLayout(gl_cpanel);
-		cpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
-				1));
+		cpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		Button btnAddChild = new Button(cpanel, SWT.NONE);
-		btnAddChild.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				addChild();
-			}
+		CTButton btnAddChild = new CTButton(cpanel, SWT.NONE);
+		btnAddChild.addSelectionListener(() -> {
+			addChild();
 		});
 		btnAddChild.setText("add child");
 
-		CTabFolder tabFolder = new CTabFolder(composite, SWT.BORDER);
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1));
-		tabFolder.setSelectionBackground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
-
-		CTabItem tbtmMain = new CTabItem(tabFolder, SWT.NONE);
-		tbtmMain.setText("main");
+		CTTabFolder tabFolder = new CTTabFolder(composite, SWT.BORDER);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		yamleditor = new YamlEditor(tabFolder, SWT.NONE, "Factory");
-		tbtmMain.setControl(yamleditor);
-		yamleditor.setObject(this.factory);
-		tabFolder.setSelection(tbtmMain);
+		tabFolder.addTab("main", yamleditor, null);
 
-		CTabItem tbtmEnv = new CTabItem(tabFolder, SWT.NONE);
-		tbtmEnv.setText("env");
+		yamleditor.setObject(this.factory);
 
 		enveditor = new YamlEditor(tabFolder, SWT.NONE, "Environment");
-		tbtmEnv.setControl(enveditor);
+		tabFolder.addTab("env", enveditor, null);
+
 		enveditor.setObject(factory.getEnvironment());
 
-		Composite c_view = new Composite(composite_main, SWT.NONE);
+		Composite c_view = new CTComposite(composite_main, SWT.NONE);
 		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
 		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		c_view.setBounds(0, 0, 64, 64);
 
-		view = new RunEnvironment4xJFXView(c_view, SWT.NONE);
 		composite_main.setWeights(new int[] { 384, 421 });
 
 		Menu tempmenu = new Menu(this);
 		setMenu(tempmenu);
 		createMenu(tempmenu);
 
-		new Thread(() -> checkFactoryUpdate()).start();
+		checkFactoryUpdate();
 	}
 
 	private void updateFactory() {
 		new Thread(() -> {
-			LOTClient client = app.getLClient();
-			LOTEnvironment env = new LOTEnvironmentImpl(client);
-			LOTRunEnvironment runenv = new LOTFactoryState(client, env, "view",
-					factory).getRunEnvironment();
-			view.setRunEnvironment(runenv);
-			view.step(0);
-			view.stop();
+			CTClient client = app.getLClient();
+			CTEnvironment env = new CTEnvironmentImpl(client);
+			CTRunEnvironment runenv = new CTFactoryState(client, env, "view", factory).getRunEnvironment();
 			// view.doRepaint();
-			}).start();
+		}).start();
 	}
 
 	private synchronized void updateView() {
@@ -212,8 +196,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		mfsaddnew.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				addScript("script"
-						+ factory.getEnvironment().getScripts().size());
+				addScript("script" + factory.getEnvironment().getScripts().size());
 			}
 		});
 
@@ -266,6 +249,7 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				addChild();
+
 			}
 		});
 
@@ -274,7 +258,6 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 			public void widgetSelected(SelectionEvent arg0) {
 				publish();
 			}
-
 		});
 
 		return mifactory;
@@ -286,9 +269,8 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 
 	private void initLocalMenu(Menu mAddLocalChild) {
 		LocalObjectsMenu m = new LocalObjectsMenu(window, mAddLocalChild);
-		m.addObjectHandler(LOTFactoryImpl.BEANNAME, (data) -> {
-			LOTFactory f = window.getApp().getLClient().getObjectFactory()
-					.getFactory(data.getIDValue("id"));
+		m.addObjectHandler(CTFactoryImpl.BEANNAME, (data) -> {
+			CTFactory f = window.getApp().getLClient().getObjectFactory().getFactory(data.getIDValue("id"));
 			addChild(f);
 		});
 	}
@@ -297,48 +279,45 @@ public class FactoryView extends Composite implements LOTAppControl, ScriptUser 
 		this.factory.addFactory();
 	}
 
-	private void addChild(LOTFactory f) {
-		this.factory.addFactory("factory" + this.factory.getFactories().size(),
-				f);
+	private void addChild(CTFactory f) {
+		this.factory.addFactory("factory" + this.factory.getFactories().size(), f);
 	}
 
 	private synchronized void checkFactoryUpdate() {
-		while (!isDisposed()) {
+		window.addRunner(new CTRunner<>("factoryupdatecheck", 300)).runWhile(() -> isDisposed()).run(() -> {
 			int nhash = factory.getObject().hashCode();
 			if (nhash != currentfactoryhash) {
-				yamleditor.setText(factory.getObject().toText());
-				enveditor.setText(factory.getEnvironment().getObject().toText());
+				yamleditor.setObject(factory);
+				enveditor.setObject(factory.getEnvironment());
 				currentfactoryhash = nhash;
 				updateView();
 			} else {
 				try {
 					wait(100);
 				} catch (InterruptedException e) {
-					window.showError(e);
+					window.showError("Interrupted", e);
 				}
 			}
-		}
+		});
 	}
 
 	protected void importSelected() {
-		getDisplay().asyncExec(
-				() -> {
-					try {
-						FileDialog fd = new FileDialog(getShell(), SWT.MULTI);
-						fd.open();
+		getDisplay().asyncExec(() -> {
+			try {
+				FileDialog fd = new FileDialog(getShell(), SWT.MULTI);
+				fd.open();
 
-						String fpath = fd.getFilterPath();
-						String[] fns = fd.getFileNames();
-						for (String string : fns) {
-							LOTScript s = addScript(string);
-							byte[] bs = Files.readAllBytes(Paths.get(fpath
-									+ File.separator + string));
-							s.setScript(new String(bs));
-						}
-					} catch (IOException e) {
-						window.showError(e);
-					}
-				});
+				String fpath = fd.getFilterPath();
+				String[] fns = fd.getFileNames();
+				for (String string : fns) {
+					CTScript s = addScript(string);
+					byte[] bs = Files.readAllBytes(Paths.get(fpath + File.separator + string));
+					s.setScript(new String(bs));
+				}
+			} catch (IOException e) {
+				window.showError("importError", e);
+			}
+		});
 	}
 
 	protected void scriptMenuSelected(String string) {
