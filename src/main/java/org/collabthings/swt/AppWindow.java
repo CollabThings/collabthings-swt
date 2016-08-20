@@ -592,12 +592,9 @@ public final class AppWindow implements CTInfo {
 
 		localmenu.addObjectHandler(CTPartImpl.BEANNAME, (data) -> {
 			MStringID id = data.getIDValue("id");
-			CTPart p = getApp().getLClient().getObjectFactory().getPart(id);
-			if (p != null) {
-				mainview.viewPart(p);
-			} else {
-				showError("Failed to open part " + id);
-			}
+			CTPart p = getApp().getLClient().getObjectFactory().getPart();
+			p.parse(data);
+			mainview.viewPart(p);
 		});
 	}
 

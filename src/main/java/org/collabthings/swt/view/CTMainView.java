@@ -95,8 +95,10 @@ public class CTMainView extends CTComposite implements CTAppControl {
 	public void newPart() {
 		try {
 			CTPart p = app.newPart();
-			PartEditor pview = new PartEditor(tabfolder.getComposite(), app, window, p, view);
-			addTab("part " + p, pview, p);
+			getDisplay().asyncExec(() -> {
+				PartEditor pview = new PartEditor(tabfolder.getComposite(), app, window, p, view);
+				addTab("part " + p, pview, p);
+			});
 		} catch (Exception e) {
 			window.showError("newPart", e);
 		}
