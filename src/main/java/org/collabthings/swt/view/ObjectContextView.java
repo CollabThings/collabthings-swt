@@ -16,7 +16,6 @@ import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
-import org.collabthings.swt.controls.CTText;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.controls.dialogs.CTSubPartPopupDialog;
 import org.eclipse.swt.SWT;
@@ -42,13 +41,15 @@ import org.eclipse.zest.core.widgets.GraphNode;
 
 public class ObjectContextView extends CTComposite {
 
+	private static final int TABLE_SMALL_COLUMN_WIDTH = 25;
 	private static final int SUBPART_COLUMN_INDEX_VIEW = 0;
 	private static final int SUBPART_COLUMN_INDEX_TOOLS = 1;
-	private static final int SUBPART_COLUMN_INDEX_LINE = 2;
-	private static final int SUBPART_COLUMN_INDEX_NAME = 3;
-	private static final int SUBPART_COLUMN_INDEX_LOC = 4;
-	private static final int SUBPART_COLUMN_INDEX_NORM = 5;
-	private static final int SUBPART_COLUMN_INDEX_ANGLE = 6;
+	private static final int SUBPART_COLUMN_INDEX_BMUPDATE = 2;
+	private static final int SUBPART_COLUMN_INDEX_LINE = 3;
+	private static final int SUBPART_COLUMN_INDEX_NAME = 4;
+	private static final int SUBPART_COLUMN_INDEX_LOC = 5;
+	private static final int SUBPART_COLUMN_INDEX_NORM = 6;
+	private static final int SUBPART_COLUMN_INDEX_ANGLE = 7;
 
 	private final LOTApp app;
 
@@ -88,7 +89,7 @@ public class ObjectContextView extends CTComposite {
 		ctools = new CTComposite(this, SWT.NONE);
 		ctools.setBackground(SWTResourceManager.getActiontitle2Background());
 		ctools.setForeground(SWTResourceManager.getActionTitle2Color());
-
+		
 		GridLayout ctoolslayout = new GridLayout();
 		ctoolslayout.numColumns = 10;
 		ctools.setLayout(ctoolslayout);
@@ -164,15 +165,19 @@ public class ObjectContextView extends CTComposite {
 		xpndtmChildren.setHeight(xpndtmChildren.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y);
 
 		tblclmnView = new TableColumn(table, SWT.NONE);
-		tblclmnView.setWidth(19);
+		tblclmnView.setWidth(TABLE_SMALL_COLUMN_WIDTH);
 		tblclmnView.setText(">");
 
 		tblclmnActions = new TableColumn(table, SWT.NONE);
-		tblclmnActions.setWidth(19);
+		tblclmnActions.setWidth(TABLE_SMALL_COLUMN_WIDTH);
 		tblclmnActions.setText("T");
 
+		tblclmnActions = new TableColumn(table, SWT.NONE);
+		tblclmnActions.setWidth(TABLE_SMALL_COLUMN_WIDTH);
+		tblclmnActions.setText("U");
+
 		tblclmnIndex = new TableColumn(table, SWT.NONE);
-		tblclmnIndex.setWidth(20);
+		tblclmnIndex.setWidth(TABLE_SMALL_COLUMN_WIDTH);
 		tblclmnIndex.setText("I");
 
 		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
@@ -192,13 +197,13 @@ public class ObjectContextView extends CTComposite {
 		tblclmnAngle.setText("angle");
 
 		table.addListener(SWT.Resize, e -> {
-			int w = table.getSize().x - 20;
-			tblclmnView.setWidth(19);
-			tblclmnActions.setWidth(19);
-			tblclmnIndex.setWidth(19);
+			int w = table.getSize().x - 2;
+			tblclmnView.setWidth(TABLE_SMALL_COLUMN_WIDTH);
+			tblclmnActions.setWidth(TABLE_SMALL_COLUMN_WIDTH);
+			tblclmnIndex.setWidth(TABLE_SMALL_COLUMN_WIDTH);
 			tblclmnName.setWidth(100);
 
-			int rest = w - 19 * 3 - 100;
+			int rest = w - TABLE_SMALL_COLUMN_WIDTH * 4 - 100;
 			tblclmnLocation.setWidth(rest * 4 / 10);
 			tblclmnNormal.setWidth(rest * 4 / 10);
 			tblclmnAngle.setWidth(rest * 2 / 10);
@@ -218,7 +223,7 @@ public class ObjectContextView extends CTComposite {
 				fireHovered(null);
 			}
 		});
-
+		
 		table.addListener(SWT.MouseDown, e -> {
 			Point pt = new Point(e.x, e.y);
 			TableItem item = table.getItem(pt);
@@ -238,6 +243,8 @@ public class ObjectContextView extends CTComposite {
 					fireView(subpart.getPart());
 				} else if (index == SUBPART_COLUMN_INDEX_TOOLS) {
 					setTools(rootpart, subpart);
+				} else if (index == SUBPART_COLUMN_INDEX_BMUPDATE) {
+					updateBMPart(rootpart, subpart);
 				} else {
 					CTSubPartPopupDialog dialog = new CTSubPartPopupDialog(getShell(), app, (CTSubPart) item.getData());
 					dialog.open();
@@ -245,6 +252,10 @@ public class ObjectContextView extends CTComposite {
 			}
 		});
 
+	}
+
+	private void updateBMPart(CTPart rootpart2, CTSubPart subpart) {
+		subpart.updateBookmark();
 	}
 
 	private void fireEvent(final TableItem item) {
@@ -318,6 +329,9 @@ public class ObjectContextView extends CTComposite {
 
 				tableitem.setText(SUBPART_COLUMN_INDEX_VIEW, ">");
 				tableitem.setText(SUBPART_COLUMN_INDEX_TOOLS, "T");
+				tableitem.setText(SUBPART_COLUMN_INDEX_BMUPDATE, "U");
+				tableitem.setBackground(SUBPART_COLUMN_INDEX_BMUPDATE, subpart.isBookmarkUpdated()
+						? SWTResourceManager.getActiontitleBackground() : SWTResourceManager.getControlBg());
 				tableitem.setText(SUBPART_COLUMN_INDEX_LINE, "" + (count++));
 				tableitem.setText(SUBPART_COLUMN_INDEX_NAME, "" + subpart.getName());
 				tableitem.setText(SUBPART_COLUMN_INDEX_LOC, "" + subpart.getLocation());

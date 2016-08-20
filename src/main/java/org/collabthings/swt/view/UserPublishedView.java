@@ -130,7 +130,7 @@ public class UserPublishedView extends CTComposite {
 		});
 
 		CTButton btncopy = new CTButton(item, "Copy", () -> {
-			new CopyToClipbard(this, string);
+			new CopyToClipbard(this, u.getUsername() + "/" + string);
 		});
 
 		CTButton btncopyid = new CTButton(item, "Id", () -> {
