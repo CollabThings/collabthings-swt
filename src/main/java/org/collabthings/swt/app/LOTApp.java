@@ -16,7 +16,7 @@ import waazdoh.client.WClientListener;
 import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.common.BeanStorage;
 import waazdoh.common.WPreferences;
-import waazdoh.common.client.RestServiceClient;
+import waazdoh.common.client.WRestServiceClient;
 import waazdoh.cp2p.P2PBinarySource;
 import waazdoh.swt.AppPreferences;
 
@@ -59,7 +59,7 @@ public class LOTApp {
 	public synchronized CTClient getLClient() {
 		if (client == null) {
 			client = new CTClientImpl(preferences, binarysource, beanstorage,
-					new RestServiceClient(serviceurl, beanstorage));
+					new WRestServiceClient(serviceurl, beanstorage));
 		}
 		return client;
 	}
