@@ -10,8 +10,6 @@ import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -20,6 +18,7 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WObject;
+import waazdoh.swt.CTSelectionAdapter;
 
 public class ScriptList extends CTComposite {
 
@@ -94,12 +93,8 @@ public class ScriptList extends CTComposite {
 				ScriptUser su = (ScriptUser) c;
 				MenuItem mcontrol = new MenuItem(menu, SWT.NONE);
 				mcontrol.setText("" + c.getControlName());
-				mcontrol.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						su.addScript(app.getObjectFactory().getScript(new MStringID(id)));
-					}
-				});
+				mcontrol.addSelectionListener(
+						new CTSelectionAdapter(e -> su.addScript(app.getObjectFactory().getScript(new MStringID(id)))));
 			}
 		}
 	}

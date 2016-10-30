@@ -3,7 +3,6 @@ package org.collabthings.swt.controls.dialogs;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -13,6 +12,8 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
+import waazdoh.swt.CTSelectionAdapter;
 
 public class CTTextDialog extends Dialog {
 	private CTText etext;
@@ -49,13 +50,7 @@ public class CTTextDialog extends Dialog {
 		});
 
 		Button bOK = new Button(composite, SWT.NONE);
-		bOK.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				popupclosed = true;
-			}
-		});
+		bOK.addSelectionListener(new CTSelectionAdapter(e -> popupclosed = true));
 		bOK.setText("OK");
 
 		shell.pack();

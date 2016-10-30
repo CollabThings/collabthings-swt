@@ -10,8 +10,6 @@ import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -20,6 +18,7 @@ import waazdoh.common.BeanStorage;
 import waazdoh.common.MStringID;
 import waazdoh.common.UserID;
 import waazdoh.common.WObject;
+import waazdoh.swt.CTSelectionAdapter;
 
 public class LocalObjectsMenu {
 	private static final String MAX_LOCALMENU_OBJECTS = "ct.gui.local.menuobjects.max";
@@ -89,14 +88,11 @@ public class LocalObjectsMenu {
 			MenuItem i = new MenuItem(menulocal, SWT.NONE);
 			i.setText(localBeanInfo);
 			i.setData(id);
-			i.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					openLocal(id);
-				}
-			});
+			i.addSelectionListener(new CTSelectionAdapter(e -> openLocal(id)));
 			return i;
-		} else {
+		} else
+
+		{
 			return null;
 		}
 	}

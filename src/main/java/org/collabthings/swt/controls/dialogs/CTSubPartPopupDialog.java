@@ -7,8 +7,6 @@ import org.collabthings.swt.controls.CTText;
 import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTVectorEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -19,6 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import waazdoh.common.MStringID;
+import waazdoh.swt.CTSelectionAdapter;
 
 public class CTSubPartPopupDialog extends Dialog {
 
@@ -123,13 +122,11 @@ public class CTSubPartPopupDialog extends Dialog {
 		new Label(composite_1, SWT.NONE);
 
 		Button bOK = new Button(composite_1, SWT.NONE);
-		bOK.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				subpart.getNormal().normalize();
-				popupclosed = true;
-			}
-		});
+		bOK.addSelectionListener(new CTSelectionAdapter(e -> {
+			subpart.getNormal().normalize();
+			popupclosed = true;
+
+		}));
 		bOK.setText("OK");
 
 		shell.pack();

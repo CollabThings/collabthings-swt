@@ -137,43 +137,32 @@ public class ObjectSmallView extends CTComposite {
 	private void addDates(Composite cvalues) {
 		Composite cdates = new CTComposite(cvalues, SWT.NONE);
 		cdates.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gl_cdates = new GridLayout(2, false);
-		gl_cdates.marginWidth = 0;
-		cdates.setLayout(gl_cdates);
+		GridLayout glcdates = new GridLayout(2, false);
+		glcdates.marginWidth = 0;
+		cdates.setLayout(glcdates);
 
 		CTLabel lblModified = new CTLabel(cdates, SWT.NONE);
 		lblModified.setText("Modified");
 
 		CTLabel lmodified = new CTLabel(cdates, SWT.NONE);
 		lmodified.setText("date");
-		GridData gd_lmodified = new GridData(SWT.LEFT, SWT.FILL, true, false, 1, 1);
-		gd_lmodified.minimumWidth = 60;
-		lmodified.setLayoutData(gd_lmodified);
+		GridData gdlmodified = new GridData(SWT.LEFT, SWT.FILL, true, false, 1, 1);
+		gdlmodified.minimumWidth = 60;
+		lmodified.setLayoutData(gdlmodified);
 
 		CTLabel lblCreated = new CTLabel(cdates, SWT.NONE);
 		lblCreated.setText("Created");
 		CTLabel lcreated = new CTLabel(cdates, SWT.NONE);
 
 		lcreated.setText("date");
-		GridData gd_lcreated = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
-		gd_lcreated.minimumWidth = 60;
-		lcreated.setLayoutData(gd_lcreated);
+		GridData gdlcreated = new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1);
+		gdlcreated.minimumWidth = 60;
+		lcreated.setLayoutData(gdlcreated);
 
-		addDataHandler("creationtime", (n, d) -> {
-			lcreated.setText("" + new Date(Long.parseLong(d.getValue(n))));
-		});
-
-		addDataHandler("modified", (n, d) -> {
-			lmodified.setText("" + new Date(Long.parseLong(d.getValue(n))));
-		});
-
-		addDataHandler("thumbnail", (n, d) -> {
-			thumbnail.setId(new BinaryID(d.getValue(n)));
-		});
-
-		addDataHandler("content", (n, d) -> {
-			handle(d.get(n));
-		});
+		addDataHandler("creationtime", (n, d) -> lcreated.setText("" + new Date(Long.parseLong(d.getValue(n)))));
+		addDataHandler("modified", (n, d) -> lmodified.setText("" + new Date(Long.parseLong(d.getValue(n)))));
+		addDataHandler("thumbnail", (n, d) -> thumbnail.setId(new BinaryID(d.getValue(n))));
+		addDataHandler("content", (n, d) -> handle(d.get(n)));
 	}
 
 	private void addCreatorAndVersion(Composite cvalues) {

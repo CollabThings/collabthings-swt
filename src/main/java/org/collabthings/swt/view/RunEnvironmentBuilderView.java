@@ -33,6 +33,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
+import waazdoh.swt.CTSelectionAdapter;
+
 public class RunEnvironmentBuilderView extends CTComposite implements CTAppControl {
 	private CTRunEnvironmentBuilder builder;
 
@@ -323,22 +325,10 @@ public class RunEnvironmentBuilderView extends CTComposite implements CTAppContr
 		mifpublish.setText("Publish");
 
 		MenuItem mirun = new MenuItem(mrunenv, SWT.NONE);
-		mirun.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				run();
-			}
-		});
+		mirun.addSelectionListener(new CTSelectionAdapter(e -> run()));
 		mirun.setText("Run " + builder);
 
-		mifpublish.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				publish();
-			}
-
-		});
-
+		mifpublish.addSelectionListener(new CTSelectionAdapter(e -> publish()));
 		return mirunenv;
 	}
 

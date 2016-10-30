@@ -26,8 +26,6 @@ import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -37,7 +35,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class FactoryView extends CTComposite implements CTAppControl, ScriptUser {
+import waazdoh.swt.CTSelectionAdapter;
+
+public class FactoryView extends CTComposite implements CTAppControl {
 	private CTFactory factory;
 	private LOTApp app;
 
@@ -75,7 +75,6 @@ public class FactoryView extends CTComposite implements CTAppControl, ScriptUser
 		return "Factory: " + factory.getName();
 	}
 
-	@Override
 	public void addScript(CTScript script) {
 		factory.addScript("script" + factory.getScripts().size() + " " + script.getName(), script);
 	}
@@ -97,33 +96,28 @@ public class FactoryView extends CTComposite implements CTAppControl, ScriptUser
 		return factory.addScript(name);
 	}
 
-	private void updateLayout() {
-
-	}
-
 	private void init() {
 		GridLayout gridLayout = new GridLayout(1, false);
 		LOTSWT.setDefaults(gridLayout);
 		setLayout(gridLayout);
 
-		SashForm composite_main = new SashForm(this, SWT.NONE);
-		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		SashForm cmain = new SashForm(this, SWT.NONE);
+		cmain.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		Composite composite = new CTComposite(composite_main, SWT.NONE);
-		GridLayout gl_composite = new GridLayout(1, false);
-		LOTSWT.setDefaults(gl_composite);
-		composite.setLayout(gl_composite);
+		Composite composite = new CTComposite(cmain, SWT.NONE);
+		GridLayout glcomposite = new GridLayout(1, false);
+		LOTSWT.setDefaults(glcomposite);
+		composite.setLayout(glcomposite);
 
 		Composite cpanel = new CTComposite(composite, SWT.NONE);
-		GridLayout gl_cpanel = new GridLayout(1, false);
-		LOTSWT.setDefaults(gl_cpanel);
-		cpanel.setLayout(gl_cpanel);
+		GridLayout glcpanel = new GridLayout(1, false);
+		LOTSWT.setDefaults(glcpanel);
+		cpanel.setLayout(glcpanel);
 		cpanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		CTButton btnAddChild = new CTButton(cpanel, SWT.NONE);
-		btnAddChild.addSelectionListener(() -> {
-			addChild();
-		});
+		btnAddChild.addSelectionListener(() -> addChild());
+
 		btnAddChild.setText("add child");
 
 		CTTabFolder tabFolder = new CTTabFolder(composite, SWT.BORDER);
@@ -139,12 +133,12 @@ public class FactoryView extends CTComposite implements CTAppControl, ScriptUser
 
 		enveditor.setObject(factory.getEnvironment());
 
-		Composite c_view = new CTComposite(composite_main, SWT.NONE);
-		c_view.setLayout(new FillLayout(SWT.HORIZONTAL));
-		c_view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		c_view.setBounds(0, 0, 64, 64);
+		Composite cview = new CTComposite(cmain, SWT.NONE);
+		cview.setLayout(new FillLayout(SWT.HORIZONTAL));
+		cview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		cview.setBounds(0, 0, 64, 64);
 
-		composite_main.setWeights(new int[] { 384, 421 });
+		cmain.setWeights(new int[] { 384, 421 });
 
 		Menu tempmenu = new Menu(this);
 		setMenu(tempmenu);
@@ -158,7 +152,6 @@ public class FactoryView extends CTComposite implements CTAppControl, ScriptUser
 			CTClient client = app.getLClient();
 			CTEnvironment env = new CTEnvironmentImpl(client);
 			CTRunEnvironment runenv = new CTFactoryState(client, env, "view", factory).getRunEnvironment();
-			// view.doRepaint();
 		}).start();
 	}
 
@@ -171,13 +164,13 @@ public class FactoryView extends CTComposite implements CTAppControl, ScriptUser
 	private synchronized void updateDataEditors() {
 		window.updateObjectMenu(this);
 		updateFactory();
-		updateLayout();
 	}
 
 	protected void environmentObjectChanged(String name, Object o) {
 		updateFactory();
 	}
 
+	@Override
 	public MenuItem createMenu(Menu menu) {
 		MenuItem mifactory = new MenuItem(menu, SWT.CASCADE);
 		mifactory.setText("Factory");
@@ -193,12 +186,8 @@ public class FactoryView extends CTComposite implements CTAppControl, ScriptUser
 
 		MenuItem mfsaddnew = new MenuItem(mfmscripts, SWT.NONE);
 		mfsaddnew.setText("New");
-		mfsaddnew.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				addScript("script" + factory.getEnvironment().getScripts().size());
-			}
-		});
+		mfsaddnew.addSelectionListener(
+				new CTSelectionAdapter(e -> addScript("script" + factory.getEnvironment().getScripts().size())));
 
 		MenuItem micscripts = new MenuItem(mfmscripts, SWT.CASCADE);
 		micscripts.setText("list");
@@ -210,21 +199,12 @@ public class FactoryView extends CTComposite implements CTAppControl, ScriptUser
 		for (String string : scripts) {
 			MenuItem mscript = new MenuItem(mscripts, SWT.NONE);
 			mscript.setText(string);
-			mscript.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent arg0) {
-					scriptMenuSelected(string);
-				};
-			});
+			mscript.addSelectionListener(new CTSelectionAdapter(e -> scriptMenuSelected(string)));
 		}
 
 		MenuItem mfmImport = new MenuItem(mfmscripts, SWT.NONE);
 		mfmImport.setText("Import");
-		mfmImport.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				importSelected();
-			}
-		});
+		mfmImport.addSelectionListener(new CTSelectionAdapter(e -> importSelected()));
 
 		MenuItem mifpublish = new MenuItem(mfactory, SWT.NONE);
 		mifpublish.setText("Publish");
@@ -245,20 +225,8 @@ public class FactoryView extends CTComposite implements CTAppControl, ScriptUser
 		miAddLocalChild.setMenu(mAddLocalChild);
 		initLocalMenu(mAddLocalChild);
 
-		mifaddnewchild.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				addChild();
-
-			}
-		});
-
-		mifpublish.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				publish();
-			}
-		});
+		mifaddnewchild.addSelectionListener(new CTSelectionAdapter(e -> addChild()));
+		mifpublish.addSelectionListener(new CTSelectionAdapter(e -> publish()));
 
 		return mifactory;
 	}
@@ -296,6 +264,7 @@ public class FactoryView extends CTComposite implements CTAppControl, ScriptUser
 					wait(100);
 				} catch (InterruptedException e) {
 					window.showError("Interrupted", e);
+					Thread.currentThread().interrupt();
 				}
 			}
 		});

@@ -57,6 +57,7 @@ import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.StorageAreaVO;
 import waazdoh.common.vo.UserVO;
+import waazdoh.swt.CTSelectionAdapter;
 
 public final class AppWindow implements CTInfo {
 	public static final String STATUS_RUNNERS = "Runners";
@@ -342,33 +343,17 @@ public final class AppWindow implements CTInfo {
 		mntmNew.setMenu(menu_new);
 
 		MenuItem mntmNewFactory = new MenuItem(menu_new, SWT.NONE);
-		mntmNewFactory.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				newFactory();
-			}
-		});
+		mntmNewFactory.addSelectionListener(new CTSelectionAdapter(e -> newFactory()));
+
 		mntmNewFactory.setText("Factory");
 
 		MenuItem mntmNewPart = new MenuItem(menu_new, SWT.NONE);
-		mntmNewPart.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				mainview.newPart();
-			}
-		});
+		mntmNewPart.addSelectionListener(new CTSelectionAdapter(e -> mainview.newPart()));
 
 		mntmNewPart.setText("Part");
 
 		MenuItem mntmRunenvBuilder = new MenuItem(menu_new, SWT.NONE);
-		mntmRunenvBuilder.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				newRunEnvBuilder();
-			}
-		});
+		mntmRunenvBuilder.addSelectionListener(new CTSelectionAdapter(e -> newRunEnvBuilder()));
 
 		mntmRunenvBuilder.setText("RunEnv Builder");
 
@@ -394,19 +379,9 @@ public final class AppWindow implements CTInfo {
 		misearchobjects.setText("Objects");
 
 		MenuItem misearchusers = new MenuItem(msearch, SWT.NONE);
-		misearchusers.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				viewSearchUsers("");
-			}
-		});
+		misearchusers.addSelectionListener(new CTSelectionAdapter(e -> viewSearchUsers("")));
 		misearchusers.setText("Users");
-		misearchobjects.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				viewSearch("search");
-			}
-		});
+		misearchobjects.addSelectionListener(new CTSelectionAdapter(e -> viewSearch("search")));
 
 		MenuItem mntmRun = new MenuItem(menu, SWT.NONE);
 		mntmRun.setText("Run");
@@ -421,12 +396,7 @@ public final class AppWindow implements CTInfo {
 		mibookmarks.setMenu(mbookmarks);
 
 		MenuItem miupdate = new MenuItem(mbookmarks, SWT.NONE);
-		miupdate.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				initBookmarks();
-			}
-		});
+		miupdate.addSelectionListener(new CTSelectionAdapter(e -> initBookmarks()));
 
 		miupdate.setText("Update");
 
@@ -438,9 +408,7 @@ public final class AppWindow implements CTInfo {
 		miBookmarksList.setMenu(mbookmarkslist);
 
 		this.app.addTask(() -> {
-			this.shell.getDisplay().asyncExec(() -> {
-				initBookmarks();
-			});
+			this.shell.getDisplay().asyncExec(() -> initBookmarks());
 		});
 
 		Composite composite = new CTComposite(shell, SWT.NONE);
@@ -528,12 +496,7 @@ public final class AppWindow implements CTInfo {
 				if (bm.value != null) {
 					MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
 					mi.setText(bm.path);
-					mi.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent arg0) {
-							view(bm.value);
-						}
-					});
+					mi.addSelectionListener(new CTSelectionAdapter(e -> view(bm.value)));
 				} else if (!bm.path.startsWith("_")) {
 					MenuItem mi = new MenuItem(bookmarkmenu, SWT.CASCADE);
 					mi.setText(bm.path);
@@ -550,29 +513,21 @@ public final class AppWindow implements CTInfo {
 	private void addAddMenu(Menu m, String path) {
 		MenuItem add = new MenuItem(m, SWT.CASCADE);
 		add.setText("add");
-		add.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				CTTextDialog dialog = new CTTextDialog(shell);
-				dialog.open("Bookmark folder name");
-				String text = dialog.getValue();
+		add.addSelectionListener(new CTSelectionAdapter(arg0 -> {
+			CTTextDialog dialog = new CTTextDialog(shell);
+			dialog.open("Bookmark folder name");
+			String text = dialog.getValue();
 
-				addRunner(new CTRunner<String>("addbookmarkfolder").run(() -> {
-					app.getLClient().getBookmarks().addFolder(path + "/" + text);
-				}).gui((v) -> {
-					initBookmarks();
-				}));
-			}
-		});
+			addRunner(new CTRunner<String>("addbookmarkfolder").run(() -> {
+				app.getLClient().getBookmarks().addFolder(path + "/" + text);
+			}).gui((v) -> {
+				initBookmarks();
+			}));
+		}));
 
 		MenuItem current = new MenuItem(m, SWT.CASCADE);
 		current.setText("current");
-		current.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				bookmarkCurrent(path);
-			}
-		});
+		current.addSelectionListener(new CTSelectionAdapter(e -> bookmarkCurrent(path)));
 
 		new MenuItem(m, SWT.SEPARATOR);
 

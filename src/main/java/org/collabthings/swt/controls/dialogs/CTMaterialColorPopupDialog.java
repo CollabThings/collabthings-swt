@@ -8,8 +8,6 @@ import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTDoubleEditor.ChangeListener;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -18,6 +16,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
+import waazdoh.swt.CTSelectionAdapter;
 
 public class CTMaterialColorPopupDialog extends Dialog {
 	private CTMaterialEditor materialeditor;
@@ -69,12 +69,7 @@ public class CTMaterialColorPopupDialog extends Dialog {
 		updateColor();
 
 		Button bOK = new Button(composite, SWT.NONE);
-		bOK.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				popupclosed = true;
-			}
-		});
+		bOK.addSelectionListener(new CTSelectionAdapter(e -> popupclosed = true));
 		bOK.setText("OK");
 
 		shell.pack();

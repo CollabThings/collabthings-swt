@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
+import waazdoh.swt.CTSelectionAdapter;
+
 public class ScriptView extends CTComposite implements CTAppControl {
 
 	private CTText scripttext;
@@ -117,12 +119,7 @@ public class ScriptView extends CTComposite implements CTAppControl {
 
 		MenuItem msave = new MenuItem(mscript, SWT.NONE);
 		msave.setText("Save");
-		msave.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				save();
-			}
-		});
+		msave.addSelectionListener(new CTSelectionAdapter(e -> save()));
 
 		return miscripts;
 	}
