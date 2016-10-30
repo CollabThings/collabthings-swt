@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.math.LOrientation;
@@ -503,7 +504,7 @@ public class ObjectViewer extends CTComposite {
 
 		Set<CTListener> ls = objectchangelisteners;
 		for (CTListener ctListener : ls) {
-			ctListener.event();
+			ctListener.event(new CTEvent("refresh"));
 		}
 	}
 

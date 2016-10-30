@@ -2,6 +2,7 @@ package org.collabthings.swt.controls.dialogs;
 
 import org.collabthings.model.CTMaterial;
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTMaterialEditor;
 import org.collabthings.swt.controls.LOTDoubleEditor;
@@ -16,8 +17,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-
-import waazdoh.swt.CTSelectionAdapter;
 
 public class CTMaterialColorPopupDialog extends Dialog {
 	private CTMaterialEditor materialeditor;

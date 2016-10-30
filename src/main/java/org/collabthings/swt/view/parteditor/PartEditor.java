@@ -198,7 +198,7 @@ public class PartEditor extends CTComposite implements CTAppControl {
 			// updateLayout();
 		});
 
-		viewer.addObjectChangeListener(() -> objectChanged());
+		viewer.addObjectChangeListener((e) -> objectChanged());
 
 		ctree.addSubpartListener(new SubpartListener() {
 

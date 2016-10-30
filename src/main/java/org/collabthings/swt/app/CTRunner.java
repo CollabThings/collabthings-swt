@@ -58,7 +58,7 @@ public class CTRunner<T> {
 
 					if (gui != null) {
 						final T ft = t;
-						window.launch(() -> gui.action(ft));
+						window.launch((e) -> gui.action(ft));
 					}
 				}
 

@@ -1,5 +1,6 @@
 package org.collabthings.swt.controls.dialogs;
 
+import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
@@ -12,8 +13,6 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-
-import waazdoh.swt.CTSelectionAdapter;
 
 public class CTTextDialog extends Dialog {
 	private CTText etext;

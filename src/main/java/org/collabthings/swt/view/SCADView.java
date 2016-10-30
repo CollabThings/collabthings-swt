@@ -8,6 +8,7 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
+import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
@@ -22,8 +23,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
-import waazdoh.swt.CTSelectionAdapter;
 
 public class SCADView extends CTComposite implements CTAppControl {
 

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.collabthings.CTClient;
+import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTInfo;
@@ -19,6 +20,7 @@ import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.CTRunners;
+import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
@@ -38,8 +40,6 @@ import org.collabthings.swt.view.UsersSearchView;
 import org.collabthings.swt.view.ValueEditorDialog;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -57,7 +57,6 @@ import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.StorageAreaVO;
 import waazdoh.common.vo.UserVO;
-import waazdoh.swt.CTSelectionAdapter;
 
 public final class AppWindow implements CTInfo {
 	public static final String STATUS_RUNNERS = "Runners";
@@ -627,8 +626,9 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void launch(CTListener l) {
-		shell.getDisplay().asyncExec(() -> l.event());
-
+		if (!shell.getDisplay().isDisposed()) {
+			shell.getDisplay().asyncExec(() -> l.event(new CTEvent("launch")));
+		}
 	}
 
 	public void setStatus(String string, String status) {

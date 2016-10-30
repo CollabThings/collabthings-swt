@@ -12,6 +12,7 @@ import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
+import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
@@ -32,8 +33,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
-
-import waazdoh.swt.CTSelectionAdapter;
 
 public class RunEnvironmentBuilderView extends CTComposite implements CTAppControl {
 	private CTRunEnvironmentBuilder builder;

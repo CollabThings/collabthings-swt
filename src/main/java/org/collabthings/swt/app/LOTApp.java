@@ -9,16 +9,17 @@ import org.collabthings.factory.CTObjectFactory;
 import org.collabthings.impl.CTClientImpl;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTPart;
+import org.collabthings.swt.AppPreferences;
 import org.collabthings.util.CTTask;
 import org.collabthings.util.LLog;
 
+import waazdoh.client.WClient;
 import waazdoh.client.WClientListener;
 import waazdoh.client.storage.local.FileBeanStorage;
 import waazdoh.common.BeanStorage;
 import waazdoh.common.WPreferences;
 import waazdoh.common.client.WRestServiceClient;
 import waazdoh.cp2p.P2PBinarySource;
-import waazdoh.swt.AppPreferences;
 
 public class LOTApp {
 	private static final String PREFERENCES_PREFIX = "ct";
@@ -62,6 +63,10 @@ public class LOTApp {
 					new WRestServiceClient(serviceurl, beanstorage));
 		}
 		return client;
+	}
+
+	public WClient getWClient() {
+		return getLClient().getClient();
 	}
 
 	public void close() {

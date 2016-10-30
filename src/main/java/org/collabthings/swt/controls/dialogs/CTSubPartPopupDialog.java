@@ -2,6 +2,7 @@ package org.collabthings.swt.controls.dialogs;
 
 import org.collabthings.math.CTMath;
 import org.collabthings.model.CTSubPart;
+import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTText;
 import org.collabthings.swt.controls.LOTDoubleEditor;
@@ -17,7 +18,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import waazdoh.common.MStringID;
-import waazdoh.swt.CTSelectionAdapter;
 
 public class CTSubPartPopupDialog extends Dialog {
 

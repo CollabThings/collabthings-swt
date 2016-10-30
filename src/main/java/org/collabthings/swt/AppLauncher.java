@@ -1,49 +1,95 @@
 package org.collabthings.swt;
 
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.List;
 
 import org.collabthings.swt.app.LOTApp;
+import org.collabthings.swt.app.LoginWindow;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.WClient;
 import waazdoh.client.utils.ThreadChecker;
 import waazdoh.common.WPreferences;
-import waazdoh.swt.WSWTApp;
-import waazdoh.swt.WSWTAppLauncher;
 
-public final class AppLauncher implements WSWTApp {
+public final class AppLauncher {
 	private LOTApp app;
 	private LLog log = LLog.getLogger(this);
 
-	@Override
+	private LoginWindow loginwindow;
+
 	public void openWindow() {
+		setProxy();
+
 		AppWindow w = new AppWindow(app);
 		w.open();
 	}
 
 	private void launch() throws MalformedURLException {
 		log.info("Launching " + this);
-		WSWTAppLauncher l = new WSWTAppLauncher();
 		app = new LOTApp();
-		l.launch(this);
+		doLaunch();
 	}
 
-	@Override
-	public boolean isClosed() {
-		return app.isClosed();
+	public void doLaunch() {
+		try {
+			loginwindow = new LoginWindow(app);
+			loginwindow.open();
+
+			new ThreadChecker(() -> getClient().isRunning());
+
+			if (!getClient().isRunning()) {
+				close();
+			} else {
+				openWindow();
+			}
+		} finally {
+			close();
+		}
 	}
 
-	@Override
+	private void setProxy() {
+		System.setProperty("java.net.useSystemProxies", "true");
+		log.info("detecting proxies");
+		List<Proxy> l = null;
+		try {
+			l = ProxySelector.getDefault().select(new URI("http://waazdoh.com"));
+		} catch (URISyntaxException e) {
+			log.error(this, "setProxy", e);
+		}
+
+		if (l != null) {
+			for (Iterator<Proxy> iter = l.iterator(); iter.hasNext();) {
+				Proxy proxy = iter.next();
+				log.info("proxy hostname : " + proxy.type());
+
+				InetSocketAddress addr = (InetSocketAddress) proxy.address();
+
+				if (addr == null) {
+					log.info("No Proxy");
+				} else {
+					log.info("proxy hostname : " + addr.getHostName());
+					System.setProperty("http.proxyHost", addr.getHostName());
+					log.info("proxy port : " + addr.getPort());
+					System.setProperty("http.proxyPort", Integer.toString(addr.getPort()));
+				}
+			}
+		}
+	}
+
 	public void close() {
 		app.close();
 	}
 
-	@Override
 	public WClient getClient() {
 		return app.getLClient().getClient();
 	}
 
-	@Override
 	public WPreferences getPreferences() {
 		return app.getLClient().getPreferences();
 	}

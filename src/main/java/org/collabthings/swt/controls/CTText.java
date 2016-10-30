@@ -1,5 +1,6 @@
 package org.collabthings.swt.controls;
 
+import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
@@ -67,7 +68,7 @@ public class CTText extends CTComposite {
 
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				l.event();
+				l.event(new CTEvent("focus lost"));
 			}
 
 			@Override

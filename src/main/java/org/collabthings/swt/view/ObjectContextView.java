@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.math.CTMath;
 import org.collabthings.model.CTPart;
@@ -89,7 +90,7 @@ public class ObjectContextView extends CTComposite {
 		ctools = new CTComposite(this, SWT.NONE);
 		ctools.setBackground(SWTResourceManager.getActiontitle2Background());
 		ctools.setForeground(SWTResourceManager.getActionTitle2Color());
-		
+
 		GridLayout ctoolslayout = new GridLayout();
 		ctoolslayout.numColumns = 10;
 		ctools.setLayout(ctoolslayout);
@@ -138,7 +139,7 @@ public class ObjectContextView extends CTComposite {
 		ltitle.setText("Tree");
 		ltitle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
-		propertiesview.addObjectChangeListener(() -> {
+		propertiesview.addObjectChangeListener((e) -> {
 			updateLayout();
 		});
 	}
@@ -223,7 +224,7 @@ public class ObjectContextView extends CTComposite {
 				fireHovered(null);
 			}
 		});
-		
+
 		table.addListener(SWT.MouseDown, e -> {
 			Point pt = new Point(e.x, e.y);
 			TableItem item = table.getItem(pt);
@@ -261,7 +262,7 @@ public class ObjectContextView extends CTComposite {
 	private void fireEvent(final TableItem item) {
 		CTListener listener = tableitemlisteners.get(item);
 		if (listener != null) {
-			listener.event();
+			listener.event(new CTEvent("UI event"));
 		}
 	}
 
@@ -340,7 +341,7 @@ public class ObjectContextView extends CTComposite {
 
 				tableitem.setData(subpart);
 
-				tableitemlisteners.put(tableitem, () -> {
+				tableitemlisteners.put(tableitem, (e) -> {
 					subpart.setName(tableitem.getText(SUBPART_COLUMN_INDEX_NAME));
 					subpart.setAngle(Double.parseDouble(tableitem.getText(SUBPART_COLUMN_INDEX_ANGLE)));
 				});

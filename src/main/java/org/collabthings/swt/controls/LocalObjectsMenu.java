@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.collabthings.swt.AppWindow;
+import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
@@ -18,7 +19,6 @@ import waazdoh.common.BeanStorage;
 import waazdoh.common.MStringID;
 import waazdoh.common.UserID;
 import waazdoh.common.WObject;
-import waazdoh.swt.CTSelectionAdapter;
 
 public class LocalObjectsMenu {
 	private static final String MAX_LOCALMENU_OBJECTS = "ct.gui.local.menuobjects.max";

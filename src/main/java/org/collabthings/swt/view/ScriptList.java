@@ -5,6 +5,7 @@ import java.util.List;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
+import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
@@ -18,7 +19,6 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.common.MStringID;
 import waazdoh.common.WObject;
-import waazdoh.swt.CTSelectionAdapter;
 
 public class ScriptList extends CTComposite {
 
