@@ -229,7 +229,7 @@
 		<dependency>
 			<groupId>org.waazdoh</groupId>
 			<artifactId>swt</artifactId>
-			<version>[0.0.5-RELEASE,)</version>
+			<version>[0.0.6-SNAPSHOT,)</version>
 		</dependency>
 
 		<dependency>
