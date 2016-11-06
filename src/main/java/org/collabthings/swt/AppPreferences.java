@@ -75,11 +75,14 @@ public final class AppPreferences implements WPreferences {
 			defaultvalue = "" + defaults.get(name);
 		}
 
+		String value = p.get(name, defaultvalue);
 		if (System.getProperty("waazdoh." + name) != null) {
-			defaultvalue = System.getProperty("waazdoh." + name);
+			value = System.getProperty("waazdoh." + name);
+		} else if (value == null) {
+			value = defaultvalue;
 		}
 
-		String parsed = parse(name, p.get(name, defaultvalue));
+		String parsed = parse(name, value);
 
 		log.debug("get " + name + " = " + parsed);
 		return parsed;
