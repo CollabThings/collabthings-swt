@@ -27,7 +27,7 @@ public class CTSubPartPopupDialog extends Dialog {
 
 	private LOTVectorEditor loc;
 
-	private Composite composite_1;
+	private Composite composite;
 
 	private LOTVectorEditor n;
 
@@ -59,31 +59,31 @@ public class CTSubPartPopupDialog extends Dialog {
 		GridLayout gl_shell = new GridLayout();
 		shell.setLayout(gl_shell);
 
-		composite_1 = new Composite(shell, SWT.NONE);
-		composite_1.setLayout(new GridLayout(2, false));
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		composite = new Composite(shell, SWT.NONE);
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		lblName = new Label(composite_1, SWT.NONE);
+		lblName = new Label(composite, SWT.NONE);
 		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText("name");
 
-		tname = new CTText(composite_1, SWT.BORDER);
+		tname = new CTText(composite, SWT.BORDER);
 		tname.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tname.setText(subpart.getName());
-		tname.addEditDoneListener(() -> subpart.setName(tname.getText()));
-		lblLoc = new Label(composite_1, SWT.NONE);
+		tname.addEditDoneListener(e -> subpart.setName(tname.getText()));
+		lblLoc = new Label(composite, SWT.NONE);
 		lblLoc.setText("loc");
 
-		loc = new LOTVectorEditor(composite_1, subpart.getLocation(), v -> {
+		loc = new LOTVectorEditor(composite, subpart.getLocation(), v -> {
 			updateOrientation();
 		});
 
 		loc.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		lblN = new Label(composite_1, SWT.NONE);
+		lblN = new Label(composite, SWT.NONE);
 		lblN.setText("n");
 
-		n = new LOTVectorEditor(composite_1, subpart.getNormal(), v -> {
+		n = new LOTVectorEditor(composite, subpart.getNormal(), v -> {
 			updateOrientation();
 		});
 
@@ -91,37 +91,37 @@ public class CTSubPartPopupDialog extends Dialog {
 		gd_n.widthHint = 349;
 		n.setLayoutData(gd_n);
 
-		lblAngle = new Label(composite_1, SWT.NONE);
+		lblAngle = new Label(composite, SWT.NONE);
 		lblAngle.setText("angle");
 
-		a = new LOTDoubleEditor(composite_1, CTMath.radToDegrees(subpart.getAngle()), d -> {
+		a = new LOTDoubleEditor(composite, CTMath.radToDegrees(subpart.getAngle()), d -> {
 			updateOrientation();
 		});
 		a.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		lblPartid = new Label(composite_1, SWT.NONE);
+		lblPartid = new Label(composite, SWT.NONE);
 		lblPartid.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPartid.setText("Part id");
 
-		tpartid = new CTText(composite_1, SWT.BORDER);
+		tpartid = new CTText(composite, SWT.BORDER);
 		tpartid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tpartid.setText(subpart.getPart().getID().toString());
 		tpartid.addEditDoneListener(
-				() -> subpart.setPart(app.getObjectFactory().getPart(new MStringID(tpartid.getText()))));
+				e -> subpart.setPart(app.getObjectFactory().getPart(new MStringID(tpartid.getText()))));
 
-		lpartbookmark = new Label(composite_1, SWT.NONE);
+		lpartbookmark = new Label(composite, SWT.NONE);
 		lpartbookmark.setText("Part bm");
 
-		tpartbookmark = new CTText(composite_1, SWT.BORDER);
+		tpartbookmark = new CTText(composite, SWT.BORDER);
 		tpartbookmark.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		if (subpart.getPartBookmark() != null) {
 			tpartbookmark.setText(subpart.getPartBookmark());
 		}
-		tpartbookmark.addEditDoneListener(() -> subpart.setPartBookmark(tpartbookmark.getText()));
+		tpartbookmark.addEditDoneListener(e -> subpart.setPartBookmark(tpartbookmark.getText()));
 
-		new Label(composite_1, SWT.NONE);
+		new Label(composite, SWT.NONE);
 
-		Button bOK = new Button(composite_1, SWT.NONE);
+		Button bOK = new Button(composite, SWT.NONE);
 		bOK.addSelectionListener(new CTSelectionAdapter(e -> {
 			subpart.getNormal().normalize();
 			popupclosed = true;

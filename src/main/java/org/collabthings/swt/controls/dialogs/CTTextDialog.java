@@ -4,7 +4,6 @@ import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -29,8 +28,8 @@ public class CTTextDialog extends Dialog {
 		shell.setSize(281, 125);
 		shell.setText("Color");
 
-		GridLayout gl_shell = new GridLayout();
-		shell.setLayout(gl_shell);
+		GridLayout glshell = new GridLayout();
+		shell.setLayout(glshell);
 
 		Label ltitle = new Label(shell, SWT.NONE);
 		ltitle.setText(title);
@@ -43,10 +42,7 @@ public class CTTextDialog extends Dialog {
 
 		etext = new CTText(composite, SWT.NONE);
 		etext.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		etext.addEditDoneListener(() -> {
-			this.text = etext.getText();
-
-		});
+		etext.addEditDoneListener((e) -> this.text = etext.getText());
 
 		Button bOK = new Button(composite, SWT.NONE);
 		bOK.addSelectionListener(new CTSelectionAdapter(e -> popupclosed = true));

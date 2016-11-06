@@ -31,7 +31,11 @@ public class CTLabel {
 	}
 
 	public void setText(String string) {
-		this.label.setText(string);
+		if (string != null) {
+			this.label.setText(string);
+		} else {
+			this.label.setText("unknown");
+		}
 	}
 
 	public String getText() {

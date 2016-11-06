@@ -40,7 +40,6 @@ public class CTText extends CTComposite {
 
 	public void setEditable(boolean arg0) {
 		text.setEditable(arg0);
-		// text.setBackground(SWTResourceManager.getTextBackground());
 	}
 
 	public void setText(String stext) {
