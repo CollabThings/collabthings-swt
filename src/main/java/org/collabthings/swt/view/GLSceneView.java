@@ -92,8 +92,8 @@ public class GLSceneView extends CTComposite {
 				log.info("setscenecwait done");
 				scene = new CTObjectViewerImpl(view.getAssetManager());
 				view.setScene(scene);
-				view.setBackgroundColor(controlBg.getRed() / 255.0f, controlBg.getGreen() / 255.0f,
-						controlBg.getBlue() / 255.0f);
+				view.setBackgroundColor(controlBg.getRed() / 255.0F, controlBg.getGreen() / 255.0F,
+						controlBg.getBlue() / 255.0F);
 			}).start();
 		});
 

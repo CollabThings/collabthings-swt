@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 import waazdoh.common.WObject;
 
 public class ScriptList extends CTComposite {
@@ -58,7 +58,7 @@ public class ScriptList extends CTComposite {
 
 			CTButton btnView = new CTButton(cscript, SWT.NONE);
 			btnView.addSelectionListener(() -> {
-				window.viewScript(app.getObjectFactory().getScript(new MStringID(id)));
+				window.viewScript(app.getObjectFactory().getScript(new WStringID(id)));
 			});
 			btnView.setText("View");
 
@@ -94,7 +94,7 @@ public class ScriptList extends CTComposite {
 				MenuItem mcontrol = new MenuItem(menu, SWT.NONE);
 				mcontrol.setText("" + c.getControlName());
 				mcontrol.addSelectionListener(
-						new CTSelectionAdapter(e -> su.addScript(app.getObjectFactory().getScript(new MStringID(id)))));
+						new CTSelectionAdapter(e -> su.addScript(app.getObjectFactory().getScript(new WStringID(id)))));
 			}
 		}
 	}

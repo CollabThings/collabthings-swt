@@ -16,8 +16,8 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.client.model.User;
 import waazdoh.common.BeanStorage;
-import waazdoh.common.MStringID;
-import waazdoh.common.UserID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WUserID;
 import waazdoh.common.WObject;
 
 public class LocalObjectsMenu {
@@ -50,7 +50,7 @@ public class LocalObjectsMenu {
 		LOTApp app = appwindow.getApp();
 		BeanStorage storage = app.getBeanStorage();
 		String search = "" + Calendar.getInstance().get(Calendar.YEAR);
-		Iterable<MStringID> ids = storage.getLocalSetIDs(search);
+		Iterable<WStringID> ids = storage.getLocalSetIDs(search);
 
 		MenuItem[] items = menulocal.getItems();
 		for (MenuItem menuItem : items) {
@@ -58,7 +58,7 @@ public class LocalObjectsMenu {
 		}
 
 		int count = 0;
-		for (MStringID id : ids) {
+		for (WStringID id : ids) {
 			WObject bean = storage.getBean(id);
 			// modified -value should be in every bean.
 			if (bean != null) {
@@ -82,7 +82,7 @@ public class LocalObjectsMenu {
 		}
 	}
 
-	private MenuItem addObjectMenu(MStringID id, WObject bean) {
+	private MenuItem addObjectMenu(WStringID id, WObject bean) {
 		String localBeanInfo = getLocalBeanInfo(bean);
 		if (localBeanInfo != null) {
 			MenuItem i = new MenuItem(menulocal, SWT.NONE);
@@ -101,7 +101,7 @@ public class LocalObjectsMenu {
 		StringBuilder sb = new StringBuilder();
 		String userid = bean.getValue("creator");
 		if (userid != null) {
-			User user = appwindow.getApp().getLClient().getClient().getUser(new UserID(userid));
+			User user = appwindow.getApp().getLClient().getClient().getUser(new WUserID(userid));
 
 			long modified = bean.getLongValue("modified");
 			WObject content = bean.get("content");
@@ -117,7 +117,7 @@ public class LocalObjectsMenu {
 		return null;
 	}
 
-	protected void openLocal(MStringID id) {
+	protected void openLocal(WStringID id) {
 		WObject b = appwindow.getApp().getBeanStorage().getBean(id);
 		log.info("opening " + b);
 

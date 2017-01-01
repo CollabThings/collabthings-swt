@@ -8,7 +8,7 @@ import org.collabthings.model.CTPart;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.swt.app.LOTApp;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 
 public class ViewTypes {
 
@@ -58,10 +58,10 @@ public class ViewTypes {
 	}
 
 	private interface View {
-		public void view(MStringID id);
+		public void view(WStringID id);
 	}
 
-	public void view(String type, MStringID id) {
+	public void view(String type, WStringID id) {
 		View view = views.get(type);
 		if (view != null) {
 			view.view(id);

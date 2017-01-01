@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 import waazdoh.common.WaazdohInfo;
 import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.StorageAreaVO;
@@ -113,7 +113,7 @@ public final class AppWindow implements CTInfo {
 			ObjectVO o = app.getLClient().getClient().getObjects().read(id);
 			if (o != null) {
 				String type = o.toObject().getType();
-				viewtypes.view(type, new MStringID(id));
+				viewtypes.view(type, new WStringID(id));
 			}
 		}).start();
 
@@ -123,7 +123,7 @@ public final class AppWindow implements CTInfo {
 		setInfo(0, 0, 0, "View " + type + " id:" + id);
 
 		new Thread(() -> {
-			viewtypes.view(type, new MStringID(id));
+			viewtypes.view(type, new WStringID(id));
 		}).start();
 	}
 
@@ -263,7 +263,7 @@ public final class AppWindow implements CTInfo {
 			String latestscadpart = app.getLClient().getService().getStorageArea()
 					.read(new StorageAreaVO(user.getUsername(), "published/part/latest", null)).getData();
 			if (latestscadpart != null) {
-				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
+				CTPart b = app.getObjectFactory().getPart(new WStringID(latestscadpart));
 				mainview.viewPart(b);
 			} else {
 				mainview.newPart();
@@ -535,7 +535,7 @@ public final class AppWindow implements CTInfo {
 	private void initLocalMenu() {
 		LocalObjectsMenu localmenu = new LocalObjectsMenu(this, menulocal);
 		localmenu.addObjectHandler(CTFactoryImpl.BEANNAME, (data) -> {
-			MStringID id = data.getIDValue("id");
+			WStringID id = data.getIDValue("id");
 			CTFactory f = getApp().getLClient().getObjectFactory().getFactory(id);
 			if (f != null) {
 				viewFactory(f);
@@ -545,7 +545,7 @@ public final class AppWindow implements CTInfo {
 		});
 
 		localmenu.addObjectHandler(CTPartImpl.BEANNAME, (data) -> {
-			MStringID id = data.getIDValue("id");
+			WStringID id = data.getIDValue("id");
 			CTPart p = getApp().getLClient().getObjectFactory().getPart();
 			p.parse(data);
 			mainview.viewPart(p);

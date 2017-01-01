@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import waazdoh.common.MStringID;
+import waazdoh.common.WStringID;
 
 public class CTSubPartPopupDialog extends Dialog {
 
@@ -107,7 +107,7 @@ public class CTSubPartPopupDialog extends Dialog {
 		tpartid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tpartid.setText(subpart.getPart().getID().toString());
 		tpartid.addEditDoneListener(
-				e -> subpart.setPart(app.getObjectFactory().getPart(new MStringID(tpartid.getText()))));
+				e -> subpart.setPart(app.getObjectFactory().getPart(new WStringID(tpartid.getText()))));
 
 		lpartbookmark = new Label(composite, SWT.NONE);
 		lpartbookmark.setText("Part bm");

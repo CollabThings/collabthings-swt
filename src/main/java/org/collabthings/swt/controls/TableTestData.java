@@ -8,8 +8,8 @@ import org.collabthings.model.CTObject;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
+import waazdoh.common.WStringID;
+import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
 
 public class TableTestData implements CTObject {
@@ -19,6 +19,7 @@ public class TableTestData implements CTObject {
 	private Vector3f v = new Vector3f(1, 2, 3);
 	private LOrientation o = new LOrientation();
 	private Set<String> somestrings = new HashSet<String>();
+	private String name = "testdata";
 
 	public TableTestData() {
 		while (somestrings.size() < 3) {
@@ -27,10 +28,10 @@ public class TableTestData implements CTObject {
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "TableTestData";
@@ -103,7 +104,7 @@ public class TableTestData implements CTObject {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -122,7 +123,11 @@ public class TableTestData implements CTObject {
 
 	@Override
 	public String getName() {
-		return "testdata";
+		return name;
 	}
 
+	@Override
+	public void setName(String n) {
+		this.name = n;
+	}
 }

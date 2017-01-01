@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import waazdoh.client.model.BinaryID;
+import waazdoh.client.model.WBinaryID;
 import waazdoh.common.WLogger;
 import waazdoh.common.WObject;
 import waazdoh.common.vo.ObjectVO;
@@ -161,7 +161,7 @@ public class ObjectSmallView extends CTComposite {
 
 		addDataHandler("creationtime", (n, d) -> lcreated.setText("" + new Date(Long.parseLong(d.getValue(n)))));
 		addDataHandler("modified", (n, d) -> lmodified.setText("" + new Date(Long.parseLong(d.getValue(n)))));
-		addDataHandler("thumbnail", (n, d) -> thumbnail.setId(new BinaryID(d.getValue(n))));
+		addDataHandler("thumbnail", (n, d) -> thumbnail.setId(new WBinaryID(d.getValue(n))));
 		addDataHandler("content", (n, d) -> handle(d.get(n)));
 	}
 
