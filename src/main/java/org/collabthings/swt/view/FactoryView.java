@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.Set;
 
 import org.collabthings.CTClient;
+import org.collabthings.app.CTApp;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.model.CTEnvironment;
@@ -20,7 +21,6 @@ import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTTabFolder;
@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.MenuItem;
 
 public class FactoryView extends CTComposite implements CTAppControl {
 	private CTFactory factory;
-	private LOTApp app;
+	private CTApp app;
 
 	private AppWindow window;
 
@@ -46,7 +46,7 @@ public class FactoryView extends CTComposite implements CTAppControl {
 	private YamlEditor yamleditor;
 	private YamlEditor enveditor;
 
-	public FactoryView(Composite composite, LOTApp app, AppWindow w, CTFactory f) {
+	public FactoryView(Composite composite, CTApp app, AppWindow w, CTFactory f) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;

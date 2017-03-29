@@ -2,12 +2,12 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTScript;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
@@ -30,9 +30,9 @@ public class ScriptView extends CTComposite implements CTAppControl {
 	private CTScript script;
 	private CTText bottomtext;
 
-	private LOTApp app;
+	private CTApp app;
 
-	public ScriptView(Composite c, LOTApp app, AppWindow appWindow, CTScript script) {
+	public ScriptView(Composite c, CTApp app, AppWindow appWindow, CTScript script) {
 		super(c, SWT.NONE);
 		this.app = app;
 

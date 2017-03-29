@@ -9,7 +9,7 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.collabthings.swt.app.LOTApp;
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.app.LoginWindow;
 import org.collabthings.util.LLog;
 
@@ -18,7 +18,7 @@ import waazdoh.client.utils.ThreadChecker;
 import waazdoh.common.WPreferences;
 
 public final class AppLauncher {
-	private LOTApp app;
+	private CTApp app;
 	private LLog log = LLog.getLogger(this);
 
 	private LoginWindow loginwindow;
@@ -32,7 +32,7 @@ public final class AppLauncher {
 
 	private void launch() throws MalformedURLException {
 		log.info("Launching " + this);
-		app = new LOTApp();
+		app = new CTApp();
 		doLaunch();
 	}
 

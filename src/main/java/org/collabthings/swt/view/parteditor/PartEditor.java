@@ -2,6 +2,7 @@ package org.collabthings.swt.view.parteditor;
 
 import java.util.Stack;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
@@ -9,7 +10,6 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTRunner;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTTabFolder;
@@ -38,7 +38,7 @@ public class PartEditor extends CTComposite implements CTAppControl {
 	private CTPart part;
 
 	private LLog log = LLog.getLogger(this);
-	private final LOTApp app;
+	private final CTApp app;
 
 	private Stack<CTPart> parts = new Stack<CTPart>();
 
@@ -52,7 +52,7 @@ public class PartEditor extends CTComposite implements CTAppControl {
 
 	private GLSceneView view;
 
-	public PartEditor(Composite composite, LOTApp app, AppWindow window, CTPart p, GLSceneView view) {
+	public PartEditor(Composite composite, CTApp app, AppWindow window, CTPart p, GLSceneView view) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.part = p;

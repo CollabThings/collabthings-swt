@@ -7,6 +7,7 @@ import java.util.List;
 import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTInfo;
 import org.collabthings.model.CTObject;
@@ -21,7 +22,6 @@ import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.CTRunners;
 import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.collabthings.swt.controls.CTTabFolder;
@@ -63,7 +63,7 @@ public final class AppWindow implements CTInfo {
 
 	protected Shell shell;
 	//
-	private LOTApp app;
+	private CTApp app;
 
 	private List<CTAppControl> controls = new LinkedList<>();
 
@@ -86,7 +86,7 @@ public final class AppWindow implements CTInfo {
 	private CTRunners runners;
 	private Label lblrunners;
 
-	public AppWindow(LOTApp app) {
+	public AppWindow(CTApp app) {
 		this.app = app;
 		this.viewtypes = new ViewTypes(this, app);
 		this.runners = new CTRunners(this, app);
@@ -594,7 +594,7 @@ public final class AppWindow implements CTInfo {
 		}).gui((o) -> lblBottonInfo.setText("" + o)));// addRunner(runner);
 	}
 
-	public LOTApp getApp() {
+	public CTApp getApp() {
 		return this.app;
 	}
 

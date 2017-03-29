@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTRunner;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Control;
 import waazdoh.common.vo.UserVO;
 
 public class UserPublishedView extends CTComposite {
-	public final LOTApp app;
+	public final CTApp app;
 	public final AppWindow window;
 
 	public UserVO u;
@@ -35,7 +35,7 @@ public class UserPublishedView extends CTComposite {
 	private ScrolledComposite scrolledComposite;
 	private Composite clist;
 
-	public UserPublishedView(Composite parent, LOTApp app2, AppWindow window2) {
+	public UserPublishedView(Composite parent, CTApp app2, AppWindow window2) {
 		super(parent, SWT.NONE);
 		app = app2;
 		window = window2;

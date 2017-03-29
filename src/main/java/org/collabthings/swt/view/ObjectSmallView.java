@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
@@ -29,7 +29,7 @@ import waazdoh.common.vo.ObjectVO;
 import waazdoh.common.vo.UserVO;
 
 public class ObjectSmallView extends CTComposite {
-	private LOTApp app;
+	private CTApp app;
 
 	private Map<String, DataHandler> handlers = new HashMap<>();
 	private CTLabel ltype;
@@ -46,7 +46,7 @@ public class ObjectSmallView extends CTComposite {
 
 	private CTBinaryImage thumbnail;
 
-	public ObjectSmallView(Composite cc, LOTApp app, AppWindow window, String id) {
+	public ObjectSmallView(Composite cc, CTApp app, AppWindow window, String id) {
 		super(cc, SWT.NONE);
 		this.app = app;
 		this.id = id;

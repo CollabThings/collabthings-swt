@@ -1,9 +1,9 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
@@ -19,7 +19,7 @@ import waazdoh.common.vo.UserVO;
 
 public class UserView extends CTComposite implements CTAppControl {
 	private AppWindow window;
-	private LOTApp app;
+	private CTApp app;
 	private UserVO u;
 
 	/**
@@ -28,7 +28,7 @@ public class UserView extends CTComposite implements CTAppControl {
 	 * @param parent
 	 * @param style
 	 */
-	public UserView(Composite parent, LOTApp app, AppWindow window, String userid) {
+	public UserView(Composite parent, CTApp app, AppWindow window, String userid) {
 		super(parent, SWT.NO_FOCUS | SWT.NO_MERGE_PAINTS | SWT.NO_REDRAW_RESIZE | SWT.NO_RADIO_GROUP | SWT.EMBEDDED);
 
 		this.app = app;

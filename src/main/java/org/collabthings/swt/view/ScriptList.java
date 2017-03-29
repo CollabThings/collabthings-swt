@@ -1,12 +1,13 @@
 package org.collabthings.swt.view;
 
+import java.util.HashMap;
 import java.util.List;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
@@ -17,16 +18,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import waazdoh.common.WStringID;
 import waazdoh.common.WObject;
+import waazdoh.common.WStringID;
 
 public class ScriptList extends CTComposite {
 
 	private AppWindow window;
-	private LOTApp app;
+	private CTApp app;
 	private WObject o;
 
-	public ScriptList(Composite parent, LOTApp app, AppWindow window, WObject d) {
+	public ScriptList(Composite parent, CTApp app, AppWindow window, WObject d) {
 		super(parent, SWT.NONE);
 		this.window = window;
 		this.app = app;
@@ -38,16 +39,19 @@ public class ScriptList extends CTComposite {
 		l.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		l.setText("Scripts");
 
-		addRow("scripts");
-
-		for (String name : d.getChildren()) {
-			addRow(name);
+		List<HashMap> scripts = d.getList("scripts");
+		for (HashMap wscript : scripts) {
+			addRow(new WObject(wscript));
 		}
+
+		// for (String name : d.getChildren()) {
+		// addRow(name);
+		// }
 	}
 
-	private void addRow(String name) {
-		WObject scriptdata = o.get(name);
+	private void addRow(WObject scriptdata) {
 		String id = scriptdata.getValue("id");
+		String name = scriptdata.getValue("n");
 		if (id != null && name != null) {
 			Composite cscript = new CTComposite(this, SWT.NONE);
 			cscript.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));

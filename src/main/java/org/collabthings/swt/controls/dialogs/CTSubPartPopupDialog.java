@@ -1,9 +1,9 @@
 package org.collabthings.swt.controls.dialogs;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.math.CTMath;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTText;
 import org.collabthings.swt.controls.LOTDoubleEditor;
 import org.collabthings.swt.controls.LOTVectorEditor;
@@ -40,11 +40,11 @@ public class CTSubPartPopupDialog extends Dialog {
 	private Label lblPartid;
 	private CTText tpartid;
 
-	private LOTApp app;
+	private CTApp app;
 	private Label lpartbookmark;
 	private CTText tpartbookmark;
 
-	public CTSubPartPopupDialog(Shell shell, LOTApp app, CTSubPart data) {
+	public CTSubPartPopupDialog(Shell shell, CTApp app, CTSubPart data) {
 		super(shell);
 		this.subpart = data;
 		this.app = app;

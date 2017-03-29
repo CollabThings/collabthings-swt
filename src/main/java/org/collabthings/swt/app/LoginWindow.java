@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.collabthings.app.CTApp;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -22,13 +23,13 @@ import waazdoh.common.vo.AppLoginVO;
 
 public class LoginWindow {
 	protected Shell shell;
-	private LOTApp app;
+	private CTApp app;
 	private AppLoginVO applogin;
 	private WLogger log = WLogger.getLogger(this);
 	private Link link;
 	private Text text;
 
-	public LoginWindow(LOTApp app) {
+	public LoginWindow(CTApp app) {
 		this.app = app;
 	}
 

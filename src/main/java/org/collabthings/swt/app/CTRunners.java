@@ -3,20 +3,21 @@ package org.collabthings.swt.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.util.LLog;
 
 public class CTRunners {
 
 	private AppWindow window;
-	private LOTApp app;
+	private CTApp app;
 
 	@SuppressWarnings("rawtypes")
 	private List<CTRunner> runners = new ArrayList<>();
 	private String status;
 
 	@SuppressWarnings("rawtypes")
-	public CTRunners(AppWindow appWindow, LOTApp app) {
+	public CTRunners(AppWindow appWindow, CTApp app) {
 		this.window = appWindow;
 		this.app = app;
 

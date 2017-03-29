@@ -2,9 +2,9 @@ package org.collabthings.swt.view;
 
 import java.util.List;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.SearchView.CTSearchResultFactory;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.widgets.Composite;
@@ -17,7 +17,7 @@ public class ObjectSearchView {
 
 	private SearchView search;
 
-	public ObjectSearchView(Composite composite, LOTApp app, AppWindow window) {
+	public ObjectSearchView(Composite composite, CTApp app, AppWindow window) {
 		search = new SearchView(composite, app, window, new CTSearchResultFactory() {
 
 			@Override

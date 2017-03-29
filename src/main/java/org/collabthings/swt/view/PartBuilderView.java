@@ -1,11 +1,11 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.ObjectViewer;
@@ -19,13 +19,13 @@ import org.eclipse.swt.widgets.MenuItem;
 
 public class PartBuilderView extends CTComposite implements CTAppControl {
 
-	private LOTApp app;
+	private CTApp app;
 	private AppWindow window;
 	private CTPartBuilder builder;
 	private ScriptView scriptview;
 	private GLSceneView view;
 
-	public PartBuilderView(Composite parent, LOTApp app, AppWindow appWindow, CTPart p, CTPartBuilder pb,
+	public PartBuilderView(Composite parent, CTApp app, AppWindow appWindow, CTPart p, CTPartBuilder pb,
 			GLSceneView view) {
 		super(parent, SWT.NONE);
 		this.window = appWindow;

@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
+import org.collabthings.app.CTApp;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.math.LOrientation;
 import org.collabthings.model.CTBoundingBox;
@@ -23,7 +24,6 @@ import org.collabthings.model.impl.CTPartBuilderImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
 import org.collabthings.swt.view.parteditor.CTObjectListener;
 import org.collabthings.util.LLog;
@@ -55,16 +55,16 @@ public class ObjectViewer extends CTComposite {
 	private CTLabel lblObject;
 	private final Set<String> ignoreset;
 	private AppWindow window;
-	private LOTApp app;
+	private CTApp app;
 
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ObjectViewer(LOTApp app, AppWindow window, Composite parent) {
+	public ObjectViewer(CTApp app, AppWindow window, Composite parent) {
 		this(app, window, parent, new String[0]);
 	}
 
-	public ObjectViewer(LOTApp app, AppWindow window, Composite parent, String ignore[]) {
+	public ObjectViewer(CTApp app, AppWindow window, Composite parent, String ignore[]) {
 		super(parent, SWT.NONE);
 
 		setBackground(SWTResourceManager.getControlBg());

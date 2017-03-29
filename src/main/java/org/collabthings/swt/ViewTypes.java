@@ -3,10 +3,10 @@ package org.collabthings.swt;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
-import org.collabthings.swt.app.LOTApp;
 
 import waazdoh.common.WStringID;
 
@@ -16,7 +16,7 @@ public class ViewTypes {
 
 	private Map<String, View> views = new HashMap<>();
 
-	public ViewTypes(AppWindow appWindow, LOTApp app) {
+	public ViewTypes(AppWindow appWindow, CTApp app) {
 		this.window = appWindow;
 		app.getObjectFactory().addInfoListener(appWindow);
 

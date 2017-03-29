@@ -1,5 +1,6 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTModel;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTOpenSCAD;
@@ -8,7 +9,6 @@ import org.collabthings.model.CTPartBuilder;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.view.parteditor.PartEditor;
@@ -27,10 +27,10 @@ public class CTMainView extends CTComposite implements CTAppControl {
 	private CTTabFolder tabfolder;
 	private AppWindow window;
 	private LLog log = LLog.getLogger(this);
-	private LOTApp app;
+	private CTApp app;
 	private GLSceneView view;
 
-	public CTMainView(Composite parent, LOTApp app, AppWindow window) {
+	public CTMainView(Composite parent, CTApp app, AppWindow window) {
 		super(parent, SWT.NONE);
 
 		this.app = app;

@@ -1,5 +1,6 @@
 package org.collabthings.swt.view;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
@@ -9,7 +10,6 @@ import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
@@ -29,7 +29,7 @@ public class RunEnvironmentBuildRunView extends CTComposite implements CTAppCont
 	private CTSimpleSimulation s;
 	private CTText text;
 
-	public RunEnvironmentBuildRunView(Composite parent, LOTApp app, AppWindow appWindow,
+	public RunEnvironmentBuildRunView(Composite parent, CTApp app, AppWindow appWindow,
 			CTRunEnvironmentBuilder builder) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));

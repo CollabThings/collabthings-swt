@@ -2,11 +2,11 @@ package org.collabthings.swt.view;
 
 import java.util.List;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTText;
@@ -31,7 +31,7 @@ public class SearchView extends CTComposite implements CTAppControl {
 	private static final int COLUMN_WIDTH = 500;
 	private AppWindow window;
 	private CTText text;
-	private LOTApp app;
+	private CTApp app;
 	private LLog log = LLog.getLogger(this);
 	private Composite clist;
 	private ScrolledComposite scrolledComposite;
@@ -42,11 +42,11 @@ public class SearchView extends CTComposite implements CTAppControl {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, CTSearchResultFactory factory) {
+	public SearchView(Composite c, CTApp app, AppWindow appWindow, CTSearchResultFactory factory) {
 		this(c, app, appWindow, false, factory);
 	}
 
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox,
+	public SearchView(Composite c, CTApp app, AppWindow appWindow, boolean hidesearchbox,
 			CTSearchResultFactory nfactory) {
 		super(c, SWT.NONE);
 		this.app = app;

@@ -1,6 +1,6 @@
 package org.collabthings.swt.view;
 
-import org.collabthings.swt.app.LOTApp;
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
 import org.eclipse.swt.SWT;
@@ -11,11 +11,11 @@ import waazdoh.client.model.WBinaryID;
 
 public class CTBinaryImage extends CTComposite {
 
-	private LOTApp app;
+	private CTApp app;
 	private WBinaryID id;
 	private CTLabel label;
 
-	public CTBinaryImage(LOTApp app, Composite arg0, int arg1) {
+	public CTBinaryImage(CTApp app, Composite arg0, int arg1) {
 		super(arg0, arg1);
 		this.app = app;
 

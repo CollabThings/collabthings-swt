@@ -2,6 +2,7 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
@@ -13,7 +14,6 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
@@ -38,7 +38,7 @@ public class RunEnvironmentBuilderView extends CTComposite implements CTAppContr
 	private CTRunEnvironmentBuilder builder;
 
 	private LLog log = LLog.getLogger(this);
-	private LOTApp app;
+	private CTApp app;
 
 	private Composite composite;
 	private AppWindow window;
@@ -57,7 +57,7 @@ public class RunEnvironmentBuilderView extends CTComposite implements CTAppContr
 
 	private YamlEditor enveditor;
 
-	public RunEnvironmentBuilderView(Composite composite, LOTApp app, AppWindow w, CTRunEnvironmentBuilder b) {
+	public RunEnvironmentBuilderView(Composite composite, CTApp app, AppWindow w, CTRunEnvironmentBuilder b) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;

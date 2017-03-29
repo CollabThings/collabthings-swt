@@ -1,5 +1,6 @@
 package org.collabthings.swt.app;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 
 public class CTRunner<T> {
@@ -37,7 +38,7 @@ public class CTRunner<T> {
 		return this;
 	}
 
-	public boolean check(AppWindow window, LOTApp app) {
+	public boolean check(AppWindow window, CTApp app) {
 		if (runwhile != null || action != null || run != null) {
 			// run once if runwhile is null
 			boolean shouldContinue = runwhile != null ? runwhile.shouldContinue() : true;

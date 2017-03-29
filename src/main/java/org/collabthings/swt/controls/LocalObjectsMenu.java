@@ -4,9 +4,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
@@ -47,7 +47,7 @@ public class LocalObjectsMenu {
 
 	protected void localMenuShown() {
 		log.info("Local menu shown");
-		LOTApp app = appwindow.getApp();
+		CTApp app = appwindow.getApp();
 		BeanStorage storage = app.getBeanStorage();
 		String search = "" + Calendar.getInstance().get(Calendar.YEAR);
 		Iterable<WStringID> ids = storage.getLocalSetIDs(search);

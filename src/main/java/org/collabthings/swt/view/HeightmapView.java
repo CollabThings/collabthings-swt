@@ -2,6 +2,7 @@ package org.collabthings.swt.view;
 
 import java.util.Date;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
@@ -9,7 +10,6 @@ import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTText;
@@ -34,11 +34,11 @@ public class HeightmapView extends CTComposite implements CTAppControl {
 	private Composite composite;
 	private Composite ctools;
 
-	public HeightmapView(Composite c, LOTApp app, AppWindow window2, CTHeightmap o) {
+	public HeightmapView(Composite c, CTApp app, AppWindow window2, CTHeightmap o) {
 		this(c, app, window2, o, true);
 	}
 
-	public HeightmapView(Composite c, LOTApp app, AppWindow nwindow, CTHeightmap o, boolean b) {
+	public HeightmapView(Composite c, CTApp app, AppWindow nwindow, CTHeightmap o, boolean b) {
 		super(c, SWT.NONE);
 		this.window = nwindow;
 

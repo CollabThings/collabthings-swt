@@ -8,12 +8,12 @@ import java.util.Set;
 
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
+import org.collabthings.app.CTApp;
 import org.collabthings.math.CTMath;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
@@ -52,7 +52,7 @@ public class ObjectContextView extends CTComposite {
 	private static final int SUBPART_COLUMN_INDEX_NORM = 6;
 	private static final int SUBPART_COLUMN_INDEX_ANGLE = 7;
 
-	private final LOTApp app;
+	private final CTApp app;
 
 	private Set<SubpartListener> subpartlisteners = new HashSet<>();
 	private Set<PartListener> partlisteners = new HashSet<>();
@@ -80,7 +80,7 @@ public class ObjectContextView extends CTComposite {
 	 * @param parent
 	 * @param style
 	 */
-	public ObjectContextView(LOTApp app, AppWindow window, Composite parent, int style) {
+	public ObjectContextView(CTApp app, AppWindow window, Composite parent, int style) {
 		super(parent, style);
 
 		this.app = app;
