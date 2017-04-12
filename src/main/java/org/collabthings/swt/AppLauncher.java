@@ -97,6 +97,5 @@ public final class AppLauncher {
 	public static void main(String[] args) throws MalformedURLException {
 		AppLauncher l = new AppLauncher();
 		l.launch();
-		System.exit(0);
 	}
 }

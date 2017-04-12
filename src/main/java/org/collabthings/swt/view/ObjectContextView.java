@@ -47,10 +47,11 @@ public class ObjectContextView extends CTComposite {
 	private static final int SUBPART_COLUMN_INDEX_TOOLS = 1;
 	private static final int SUBPART_COLUMN_INDEX_BMUPDATE = 2;
 	private static final int SUBPART_COLUMN_INDEX_LINE = 3;
-	private static final int SUBPART_COLUMN_INDEX_NAME = 4;
-	private static final int SUBPART_COLUMN_INDEX_LOC = 5;
-	private static final int SUBPART_COLUMN_INDEX_NORM = 6;
-	private static final int SUBPART_COLUMN_INDEX_ANGLE = 7;
+	private static final int SUBPART_COLUMN_INDEX_SUBCHANGED = 4;
+	private static final int SUBPART_COLUMN_INDEX_NAME = 5;
+	private static final int SUBPART_COLUMN_INDEX_LOC = 6;
+	private static final int SUBPART_COLUMN_INDEX_NORM = 7;
+	private static final int SUBPART_COLUMN_INDEX_ANGLE = 8;
 
 	private final CTApp app;
 
@@ -180,6 +181,10 @@ public class ObjectContextView extends CTComposite {
 		tblclmnIndex = new TableColumn(table, SWT.NONE);
 		tblclmnIndex.setWidth(TABLE_SMALL_COLUMN_WIDTH);
 		tblclmnIndex.setText("I");
+
+		TableColumn tblclmnChanged = new TableColumn(table, SWT.NONE);
+		tblclmnChanged.setWidth(100);
+		tblclmnChanged.setText("changed");
 
 		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
 		tblclmnName.setWidth(100);
@@ -334,6 +339,7 @@ public class ObjectContextView extends CTComposite {
 				tableitem.setBackground(SUBPART_COLUMN_INDEX_BMUPDATE, subpart.isBookmarkUpdated()
 						? SWTResourceManager.getActiontitleBackground() : SWTResourceManager.getControlBg());
 				tableitem.setText(SUBPART_COLUMN_INDEX_LINE, "" + (count++));
+				tableitem.setText(SUBPART_COLUMN_INDEX_SUBCHANGED, "" + subpart.hasPartChanged());
 				tableitem.setText(SUBPART_COLUMN_INDEX_NAME, "" + subpart.getName());
 				tableitem.setText(SUBPART_COLUMN_INDEX_LOC, "" + subpart.getLocation());
 				tableitem.setText(SUBPART_COLUMN_INDEX_NORM, "" + subpart.getNormal());

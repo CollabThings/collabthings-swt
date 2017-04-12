@@ -632,7 +632,7 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void setStatus(String string, String status) {
-		if (shell != null) {
+		if (shell != null && !shell.isDisposed() && !shell.getDisplay().isDisposed()) {
 			shell.getDisplay().asyncExec(() -> {
 				if (STATUS_RUNNERS.equals(string)) {
 					lblrunners.setText(status);
