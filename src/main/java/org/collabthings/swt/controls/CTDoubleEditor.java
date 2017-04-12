@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls;
 
 import org.collabthings.swt.SWTResourceManager;
@@ -9,14 +19,14 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class LOTDoubleEditor extends CTComposite {
+public class CTDoubleEditor extends CTComposite {
 	private static final int MAX_DECIMALS = 3;
 	private static final double MIN_POS_VALUE = 0.001;
 	private static final double MIN_NEG_VALUE = 0.001;
 	private CTText s;
 	private ChangeListener<Double> listener;
 
-	public LOTDoubleEditor(Composite c, Double d, ChangeListener<Double> listener) {
+	public CTDoubleEditor(Composite c, Double d, ChangeListener<Double> listener) {
 		super(c, SWT.None);
 		this.listener = listener;
 

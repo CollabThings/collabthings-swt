@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls;
 
 import org.eclipse.swt.SWT;
@@ -7,16 +17,16 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.jme3.math.Vector3f;
 
-public class LOTVectorEditor extends CTComposite {
+public class CTVectorEditor extends CTComposite {
 
 	private ChangeListener<Vector3f> listener;
-	private LOTDoubleEditor ey;
-	private LOTDoubleEditor ez;
-	private LOTDoubleEditor ex;
+	private CTDoubleEditor ey;
+	private CTDoubleEditor ez;
+	private CTDoubleEditor ex;
 	private Vector3f v;
 	private CTLabel lname;
 
-	public LOTVectorEditor(Composite c, Vector3f nv, ChangeListener<Vector3f> listener) {
+	public CTVectorEditor(Composite c, Vector3f nv, ChangeListener<Vector3f> listener) {
 		super(c, SWT.None);
 		this.v = nv;
 		this.listener = listener;
@@ -34,17 +44,17 @@ public class LOTVectorEditor extends CTComposite {
 
 		lname = new CTLabel(this, SWT.None);
 
-		ex = new LOTDoubleEditor(this, (Double) (double) v.x, d -> {
+		ex = new CTDoubleEditor(this, (Double) (double) v.x, d -> {
 			v.x = d.floatValue();
 			changed();
 		});
 		ex.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		ey = new LOTDoubleEditor(this, (Double) (double) v.x, d -> {
+		ey = new CTDoubleEditor(this, (Double) (double) v.x, d -> {
 			v.y = d.floatValue();
 			changed();
 		});
 		ey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		ez = new LOTDoubleEditor(this, (Double) (double) v.x, d -> {
+		ez = new CTDoubleEditor(this, (Double) (double) v.x, d -> {
 			v.z = d.floatValue();
 			changed();
 		});

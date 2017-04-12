@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls;
 
 import java.lang.reflect.InvocationTargetException;
@@ -291,14 +301,14 @@ public class ObjectViewer extends CTComposite {
 		Composite c = getTwoRowsComposite(parent);
 		addLabel(key, c);
 
-		LOTBoundingBoxEditor bbeditor = new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
+		CTBoundingBoxEditor bbeditor = new CTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
 		bbeditor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
 		return c;
 	}
 
 	private Composite addOrientationField(String key, Composite c, LOrientation orgo) {
-		return new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key, orgo));
+		return new CTOrientationEditor(c, orgo, o -> fireValueChanged(key, orgo));
 	}
 
 	private CTMaterialEditor addMaterialView(String key, Composite c, CTMaterial o) {
@@ -317,7 +327,7 @@ public class ObjectViewer extends CTComposite {
 	private Composite addVectorField(String key, Composite parent, Vector3f orgv) {
 		Composite c = getRowComposite(parent);
 		addLabel(key, c);
-		LOTVectorEditor e = new LOTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
+		CTVectorEditor e = new CTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
 		return e;
 	}
 

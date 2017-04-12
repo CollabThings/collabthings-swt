@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls;
 
 import org.collabthings.math.CTMath;
@@ -8,15 +18,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public class LOTOrientationEditor extends CTComposite {
+public class CTOrientationEditor extends CTComposite {
 
 	private ChangeListener<LOrientation> listener;
-	private LOTVectorEditor el;
-	private LOTVectorEditor en;
-	private LOTDoubleEditor ea;
+	private CTVectorEditor el;
+	private CTVectorEditor en;
+	private CTDoubleEditor ea;
 	private LOrientation o;
 
-	public LOTOrientationEditor(Composite c, LOrientation no,
+	public CTOrientationEditor(Composite c, LOrientation no,
 			ChangeListener<LOrientation> listener) {
 		super(c, SWT.None);
 		this.o = no;
@@ -29,12 +39,12 @@ public class LOTOrientationEditor extends CTComposite {
 		gridLayout.horizontalSpacing = 4;
 		setLayout(gridLayout);
 
-		el = new LOTVectorEditor(this, o.getLocation(),
+		el = new CTVectorEditor(this, o.getLocation(),
 				v -> listener.changed(o));
 		el.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		el.setName("loc");
 
-		en = new LOTVectorEditor(this, o.getNormal(), v -> {
+		en = new CTVectorEditor(this, o.getNormal(), v -> {
 			if (en != null) {
 				o.getNormal().normalize();
 				en.updateValues();
@@ -52,7 +62,7 @@ public class LOTOrientationEditor extends CTComposite {
 		
 		CTLabel langlename = new CTLabel(bottom, SWT.NONE);
 		langlename.setText("Angle");
-		ea = new LOTDoubleEditor(bottom, CTMath.radToDegrees(o.getAngle()), e -> angleChanged(e));
+		ea = new CTDoubleEditor(bottom, CTMath.radToDegrees(o.getAngle()), e -> angleChanged(e));
 		ea.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 	}
 
