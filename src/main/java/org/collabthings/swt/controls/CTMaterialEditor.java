@@ -84,9 +84,9 @@ public class CTMaterialEditor extends CTComposite {
 	}
 
 	public void colorChanged(double ered, double egreen, double eblue) {
-		material.getColor()[0] = checkValue(ered);
-		material.getColor()[1] = checkValue(egreen);
-		material.getColor()[2] = checkValue(eblue);
+		material.setColor(0, checkValue(ered));
+		material.setColor(1, checkValue(egreen));
+		material.setColor(2, checkValue(eblue));
 
 		updateColor();
 	}
