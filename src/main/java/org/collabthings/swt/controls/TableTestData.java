@@ -18,9 +18,9 @@ import org.collabthings.model.CTObject;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.WStringID;
-import waazdoh.common.WObjectID;
 import waazdoh.common.WObject;
+import waazdoh.common.WObjectID;
+import waazdoh.common.WStringID;
 
 public class TableTestData implements CTObject {
 	private String value1 = "value1";

@@ -40,7 +40,7 @@ public class PartEditor extends CTComposite implements CTAppControl {
 	private LLog log = LLog.getLogger(this);
 	private final CTApp app;
 
-	private Stack<CTPart> parts = new Stack<CTPart>();
+	private Stack<CTPart> parts = new Stack<>();
 
 	private YamlEditor csource;
 

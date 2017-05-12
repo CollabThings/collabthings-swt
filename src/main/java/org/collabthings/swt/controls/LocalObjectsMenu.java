@@ -26,9 +26,9 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.client.model.User;
 import waazdoh.common.BeanStorage;
+import waazdoh.common.WObject;
 import waazdoh.common.WStringID;
 import waazdoh.common.WUserID;
-import waazdoh.common.WObject;
 
 public class LocalObjectsMenu {
 	private static final String MAX_LOCALMENU_OBJECTS = "ct.gui.local.menuobjects.max";

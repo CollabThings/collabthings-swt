@@ -11,7 +11,6 @@
 package org.collabthings.swt.view;
 
 import org.collabthings.app.CTApp;
-import org.collabthings.model.CTModel;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;

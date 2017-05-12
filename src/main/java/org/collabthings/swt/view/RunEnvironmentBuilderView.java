@@ -34,15 +34,12 @@ import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
 public class RunEnvironmentBuilderView extends CTComposite implements CTAppControl {
 	private CTRunEnvironmentBuilder builder;
