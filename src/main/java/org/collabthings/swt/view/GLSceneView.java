@@ -32,6 +32,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
+import com.jme3.math.Vector3f;
+
 import waazdoh.client.utils.ConditionWaiter;
 
 public class GLSceneView extends CTComposite {
@@ -121,6 +123,10 @@ public class GLSceneView extends CTComposite {
 
 	public boolean isReady() {
 		return view != null && view.isReady() && scene != null;
+	}
+
+	public void lookAt(Vector3f lookAt) {
+		view.setLookAt(lookAt);
 	}
 
 }

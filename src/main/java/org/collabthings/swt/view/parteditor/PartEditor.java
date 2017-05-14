@@ -212,6 +212,7 @@ public class PartEditor extends CTComposite implements CTAppControl {
 			@Override
 			public void view(CTPart part) {
 				pushPart(part);
+				view.lookAt(part.getViewingProperties().getLookAt());
 			}
 		});
 
@@ -233,10 +234,6 @@ public class PartEditor extends CTComposite implements CTAppControl {
 		CTSubPart nsub = this.part.newSubPart();
 		nsub.setOrientation(subpart.getLocation(), subpart.getNormal(), subpart.getAngle());
 		nsub.setPart(subpart.getPart());
-	}
-
-	private void view(CTSubPart p) {
-		pushPart(p.getPart());
 	}
 
 	protected void publish() {
