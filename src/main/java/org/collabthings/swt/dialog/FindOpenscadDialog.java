@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.collabthings.swt.dialog;
 
-import org.collabthings.CTClient;
 import org.collabthings.app.CTApp;
+import org.collabthings.model.impl.CTConstants;
 import org.collabthings.swt.AppWindow;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -25,7 +25,7 @@ public class FindOpenscadDialog {
 			FileDialog fd = new FileDialog(shell);
 			fd.setText("path of openscad executable");
 			path.append(fd.open());
-			app.getLClient().getPreferences().set(CTClient.PREFERENCES_OPENSCADPATH, path.toString());
+			app.getLClient().getPreferences().set(CTConstants.PREFERENCES_OPENSCADPATH, path.toString());
 		});
 	}
 

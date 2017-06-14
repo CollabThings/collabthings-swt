@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.app.CTApp;
@@ -25,6 +24,7 @@ import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
+import org.collabthings.model.impl.CTConstants;
 import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
@@ -292,7 +292,7 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void showError(String name, Exception e) {
-		if (name.equals(CTClient.ERROR_OPENSCADFAILED)) {
+		if (name.equals(CTConstants.ERROR_OPENSCADFAILED)) {
 			new FindOpenscadDialog(app, this, shell);
 		} else {
 			LLog.getLogger(this).info("Error  " + name + " " + e);
@@ -599,7 +599,7 @@ public final class AppWindow implements CTInfo {
 		addRunner(new CTRunner<String>("BottomUpdateInfo", 1000).runWhile(() -> {
 			return !lblBottonInfo.isDisposed();
 		}).action(() -> {
-			return " CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: " + app.getLClient()
+			return " CT:" + CTConstants.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: " + app.getLClient()
 					+ " " + app.getLClient().getBinarySource().getStats();
 		}).gui((o) -> lblBottonInfo.setText("" + o)));// addRunner(runner);
 	}

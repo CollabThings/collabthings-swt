@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class CTButton {
 	private StyledText l;
-	private int padding = 10;
+	private int padding = 5;
 
 	public CTButton(String string, CTComposite ctools, int none, ButtonListener listener) {
 		this(ctools, none);
@@ -32,7 +32,6 @@ public class CTButton {
 
 	public CTButton(Composite parent, int style) {
 		l = new StyledText(parent, style);
-		// l = new CTLabel(parent, style);
 
 		l.setEditable(false);
 		l.setCaret(null);
@@ -50,7 +49,6 @@ public class CTButton {
 		setText(string);
 		addSelectionListener(listener);
 	}
-
 
 	public void setText(String string) {
 		l.setText(string);
