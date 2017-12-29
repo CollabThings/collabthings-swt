@@ -8,7 +8,7 @@
  * Contributors:
  *     Juuso Vilmunen
  ******************************************************************************/
-package org.collabthings.tk;
+package org.collabthings.swt.controls;
 
 import java.util.HashSet;
 import java.util.Set;

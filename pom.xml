@@ -227,6 +227,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.collabthings</groupId>
+			<artifactId>tk</artifactId>
+			<version>0.4.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<groupId>${swt.groupId}</groupId>
 			<artifactId>${swt.artifactId}</artifactId>
 			<version>4.3</version>

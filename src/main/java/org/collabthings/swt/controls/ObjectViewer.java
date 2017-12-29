@@ -40,7 +40,6 @@ import org.collabthings.tk.CTComposite;
 import org.collabthings.tk.CTLabel;
 import org.collabthings.tk.CTResourceManagerFactory;
 import org.collabthings.tk.CTText;
-import org.collabthings.tk.TableTestData;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
