@@ -18,10 +18,10 @@ import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.swt.controls.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -61,7 +61,7 @@ public class SCADView extends CTComposite implements CTAppControl {
 			ctools = new CTComposite(this, SWT.NONE);
 			ctools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 			ctools.setLayout(gridLayout);
-			ctools.setBackground(SWTResourceManager.getActiontitleBackground());
+			ctools.setBackground(CTResourceManagerFactory.instance().getActiontitleBackground());
 			CTButton bsave = new CTButton(ctools, SWT.NONE);
 			bsave.setText("Save");
 			bsave.addSelectionListener(() -> save());
@@ -85,7 +85,7 @@ public class SCADView extends CTComposite implements CTAppControl {
 			textstyle = textstyle | SWT.H_SCROLL;
 		}
 		scripttext = new CTText(left, textstyle);
-		scripttext.setFont(SWTResourceManager.getDefaultFont());
+		scripttext.setFont(CTResourceManagerFactory.instance().getDefaultFont());
 
 		if (!b) {
 			scripttext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

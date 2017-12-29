@@ -12,7 +12,6 @@ package org.collabthings.swt.controls;
 
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
-import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -37,7 +36,7 @@ public class CTText extends CTComposite {
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Composite composite = new Composite(this, SWT.NONE);
-		composite.setBackground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+		composite.setBackground(CTResourceManagerFactory.instance().getColor(SWT.COLOR_BLACK));
 		GridData gd_composite = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		gd_composite.heightHint = 1;
 		composite.setLayoutData(gd_composite);
@@ -66,9 +65,9 @@ public class CTText extends CTComposite {
 
 	public void setValidated(boolean b) {
 		if (b) {
-			text.setForeground(SWTResourceManager.getTextEditorColor());
+			text.setForeground(CTResourceManagerFactory.instance().getTextEditorColor());
 		} else {
-			text.setForeground(SWTResourceManager.getTextError());
+			text.setForeground(CTResourceManagerFactory.instance().getTextErrorColor());
 		}
 	}
 

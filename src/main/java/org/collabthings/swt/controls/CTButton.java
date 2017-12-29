@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.collabthings.swt.controls;
 
-import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseAdapter;
@@ -36,8 +35,8 @@ public class CTButton {
 		l.setEditable(false);
 		l.setCaret(null);
 
-		l.setBackground(SWTResourceManager.getColor(220, 220, 220));
-		l.setFont(SWTResourceManager.getDefaultFont());
+		l.setBackground(CTResourceManagerFactory.instance().getColor(220, 220, 220));
+		l.setFont(CTResourceManagerFactory.instance().getDefaultFont());
 		l.setLeftMargin(padding);
 		l.setRightMargin(padding);
 		l.setTopMargin(padding);

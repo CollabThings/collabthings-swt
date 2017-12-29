@@ -34,6 +34,7 @@ import org.collabthings.swt.app.CTRunners;
 import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.controls.dialogs.CTTextDialog;
@@ -213,7 +214,7 @@ public final class AppWindow implements CTInfo {
 
 	private void addTab(String name, CTAppControl c, Object data) {
 		Control control = c.getControl();
-		control.setBackground(SWTResourceManager.getControlBg());
+		control.setBackground(CTResourceManagerFactory.instance().getControlBg());
 
 		tabFolder.addTab(name, control, data);
 
@@ -322,7 +323,7 @@ public final class AppWindow implements CTInfo {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setBackground(SWTResourceManager.getControlBg());
+		shell.setBackground(CTResourceManagerFactory.instance().getControlBg());
 
 		Image small = new Image(shell.getDisplay(), ClassLoader.getSystemResourceAsStream("logo.png"));
 		shell.setImage(small);
@@ -441,7 +442,7 @@ public final class AppWindow implements CTInfo {
 		Composite composite_1 = new CTComposite(composite, SWT.NONE);
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		composite_1.setLayout(new GridLayout(3, false));
-		composite_1.setBackground(SWTResourceManager.getActiontitleBackground());
+		composite_1.setBackground(CTResourceManagerFactory.instance().getActiontitleBackground());
 
 		lblStatus = new CTLabel(composite_1, SWT.NONE);
 		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

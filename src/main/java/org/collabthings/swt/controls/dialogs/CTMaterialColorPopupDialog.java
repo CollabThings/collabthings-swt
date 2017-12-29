@@ -11,12 +11,12 @@
 package org.collabthings.swt.controls.dialogs;
 
 import org.collabthings.model.CTMaterial;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTSelectionAdapter;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTDoubleEditor;
 import org.collabthings.swt.controls.CTDoubleEditor.ChangeListener;
 import org.collabthings.swt.controls.CTMaterialEditor;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
@@ -106,7 +106,7 @@ public class CTMaterialColorPopupDialog extends Dialog {
 			dblue = eblue.getValue();
 
 			RGB rgb = getRGB();
-			composite_1.setBackground(SWTResourceManager.getColor(rgb));
+			composite_1.setBackground(CTResourceManagerFactory.instance().getColor(rgb));
 		} catch (IllegalArgumentException e) {
 			LLog.getLogger(this).error(this, "updateColor", e);
 		}
@@ -116,7 +116,7 @@ public class CTMaterialColorPopupDialog extends Dialog {
 		double red = ered.getValue();
 		double green = egreen.getValue();
 		double blue = eblue.getValue();
-		return SWTResourceManager.getRGBWithDoubled(red, green, blue);
+		return CTResourceManagerFactory.instance().getRGBWithDoubled(red, green, blue);
 	}
 
 	public void setListener(CTMaterialEditor ctMaterialEditor) {

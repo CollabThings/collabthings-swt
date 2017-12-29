@@ -33,7 +33,6 @@ import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.model.impl.CTPartBuilderImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.view.ObjectSmallView;
 import org.collabthings.swt.view.parteditor.CTObjectListener;
 import org.collabthings.util.LLog;
@@ -77,8 +76,8 @@ public class ObjectViewer extends CTComposite {
 	public ObjectViewer(CTApp app, AppWindow window, Composite parent, String ignore[]) {
 		super(parent, SWT.NONE);
 
-		setBackground(SWTResourceManager.getControlBg());
-		setFont(SWTResourceManager.getDefaultFont());
+		setBackground(CTResourceManagerFactory.instance().getControlBg());
+		setFont(CTResourceManagerFactory.instance().getDefaultFont());
 
 		this.app = app;
 		this.window = window;

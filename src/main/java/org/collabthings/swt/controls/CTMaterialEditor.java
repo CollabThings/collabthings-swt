@@ -11,7 +11,6 @@
 package org.collabthings.swt.controls;
 
 import org.collabthings.model.CTMaterial;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.dialogs.CTMaterialColorPopupDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -92,7 +91,7 @@ public class CTMaterialEditor extends CTComposite {
 	}
 
 	private void updateColor() {
-		Color color = SWTResourceManager.getColor(SWTResourceManager.getRGBWithDoubled(material.getColor()[0],
+		Color color = CTResourceManagerFactory.instance().getColor(CTResourceManagerFactory.instance().getRGBWithDoubled(material.getColor()[0],
 				material.getColor()[1], material.getColor()[2]));
 		ccolorandclick.setBackground(color);
 		ccolorandclick.setForeground(color);

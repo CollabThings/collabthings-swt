@@ -23,10 +23,10 @@ import org.collabthings.math.CTMath;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.controls.dialogs.CTSubPartPopupDialog;
 import org.eclipse.swt.SWT;
@@ -99,8 +99,8 @@ public class ObjectContextView extends CTComposite {
 		setLayout(new GridLayout(1, false));
 
 		ctools = new CTComposite(this, SWT.NONE);
-		ctools.setBackground(SWTResourceManager.getActiontitle2Background());
-		ctools.setForeground(SWTResourceManager.getActionTitle2Color());
+		ctools.setBackground(CTResourceManagerFactory.instance().getActiontitle2Background());
+		ctools.setForeground(CTResourceManagerFactory.instance().getActionTitle2Color());
 
 		GridLayout ctoolslayout = new GridLayout();
 		ctoolslayout.numColumns = 10;
@@ -121,7 +121,7 @@ public class ObjectContextView extends CTComposite {
 		});
 
 		expandBar = new ExpandBar(scrolledComposite, SWT.NONE);
-		expandBar.setBackground(SWTResourceManager.getControlBg());
+		expandBar.setBackground(CTResourceManagerFactory.instance().getControlBg());
 
 		ExpandItem xpndtmUsedIn = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmUsedIn.setExpanded(true);
@@ -347,7 +347,7 @@ public class ObjectContextView extends CTComposite {
 				tableitem.setText(SUBPART_COLUMN_INDEX_TOOLS, "T");
 				tableitem.setText(SUBPART_COLUMN_INDEX_BMUPDATE, "U");
 				tableitem.setBackground(SUBPART_COLUMN_INDEX_BMUPDATE, subpart.isBookmarkUpdated()
-						? SWTResourceManager.getActiontitleBackground() : SWTResourceManager.getControlBg());
+						? CTResourceManagerFactory.instance().getActiontitleBackground() : CTResourceManagerFactory.instance().getControlBg());
 				tableitem.setText(SUBPART_COLUMN_INDEX_LINE, "" + (count++));
 				tableitem.setText(SUBPART_COLUMN_INDEX_SUBCHANGED, "" + subpart.hasPartChanged());
 				tableitem.setText(SUBPART_COLUMN_INDEX_NAME, "" + subpart.getName());

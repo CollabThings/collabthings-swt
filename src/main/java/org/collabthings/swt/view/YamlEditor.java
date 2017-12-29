@@ -12,10 +12,10 @@ package org.collabthings.swt.view;
 
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.LOTSWT;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.swt.controls.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
@@ -56,7 +56,7 @@ public class YamlEditor extends CTComposite {
 		ltitle.setText(title);
 
 		text = new CTText(this, SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		text.setFont(SWTResourceManager.getFont("Open Sans", 10, SWT.NORMAL));
+		text.setFont(CTResourceManagerFactory.instance().getFont("Open Sans", 10, SWT.NORMAL));
 		text.setText("testing\ntestintintit");
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 

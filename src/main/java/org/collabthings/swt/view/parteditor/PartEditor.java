@@ -8,10 +8,10 @@ import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.view.GLSceneView;
@@ -124,13 +124,13 @@ public class PartEditor extends CTComposite implements CTAppControl {
 	}
 
 	private void init() {
-		setBackground(SWTResourceManager.getControlBg());
+		setBackground(CTResourceManagerFactory.instance().getControlBg());
 
 		GridLayout gridLayout = new GridLayout(1, false);
 		setLayout(gridLayout);
 
 		Composite c_toolbar = new CTComposite(this, SWT.NONE);
-		c_toolbar.setBackground(SWTResourceManager.getActiontitleBackground());
+		c_toolbar.setBackground(CTResourceManagerFactory.instance().getActiontitleBackground());
 		c_toolbar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		RowLayout rl_c_toolbar = new RowLayout(SWT.HORIZONTAL);
 		rl_c_toolbar.spacing = 5;
@@ -176,7 +176,7 @@ public class PartEditor extends CTComposite implements CTAppControl {
 		btnPublish.setText("Publish");
 
 		SashForm composite_main = new SashForm(this, SWT.BORDER);
-		composite_main.setBackground(SWTResourceManager.getControlBg());
+		composite_main.setBackground(CTResourceManagerFactory.instance().getControlBg());
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		CTTabFolder tabFolder = new CTTabFolder(composite_main, SWT.NONE);

@@ -17,8 +17,8 @@ import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.view.parteditor.PartEditor;
 import org.collabthings.util.LLog;
@@ -166,7 +166,7 @@ public class CTMainView extends CTComposite implements CTAppControl {
 
 	private void addTab(String name, CTAppControl c, Object data) {
 		Control control = c.getControl();
-		control.setBackground(SWTResourceManager.getControlBg());
+		control.setBackground(CTResourceManagerFactory.instance().getControlBg());
 
 		tabfolder.addTab(name, control, data);
 

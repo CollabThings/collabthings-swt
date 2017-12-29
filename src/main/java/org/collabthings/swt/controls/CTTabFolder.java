@@ -15,7 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.MouseAdapter;
@@ -38,8 +37,8 @@ public class CTTabFolder extends CTComposite {
 
 	public CTTabFolder(Composite composite, int flat) {
 		super(composite, flat);
-		setBackground(SWTResourceManager.getControlBg());
-		setFont(SWTResourceManager.getDefaultFont());
+		setBackground(CTResourceManagerFactory.instance().getControlBg());
+		setFont(CTResourceManagerFactory.instance().getDefaultFont());
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.verticalSpacing = 0;
@@ -74,7 +73,7 @@ public class CTTabFolder extends CTComposite {
 
 		l.setText(name.toUpperCase());
 		l.setTitleFont();
-		l.setColor(SWTResourceManager.getTabNotSelectedColor());
+		l.setColor(CTResourceManagerFactory.instance().getTabNotSelectedColor());
 
 		l.addMouseListener(new MouseAdapter() {
 			@Override
@@ -95,11 +94,11 @@ public class CTTabFolder extends CTComposite {
 	private void select(TabInfo i) {
 		if (selected != null) {
 			selected.l.setTitleFont();
-			selected.l.setColor(SWTResourceManager.getTabNotSelectedColor());
+			selected.l.setColor(CTResourceManagerFactory.instance().getTabNotSelectedColor());
 		}
 
 		selected = i;
-		i.l.setColor(SWTResourceManager.getTabSelectedColor());
+		i.l.setColor(CTResourceManagerFactory.instance().getTabSelectedColor());
 
 		stackLayout.topControl = i.getControl();
 		cstack.layout();

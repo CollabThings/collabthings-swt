@@ -17,11 +17,11 @@ import java.util.StringTokenizer;
 import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.swt.controls.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
@@ -148,7 +148,7 @@ public class UserPublishedView extends CTComposite {
 		});
 
 		if (publishedcount++ % 2 == 0) {
-			Color bgcolor = SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
+			Color bgcolor = CTResourceManagerFactory.instance().getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
 			item.setBackground(bgcolor);
 			btnView.setBackground(bgcolor);
 			btncopy.setBackground(bgcolor);

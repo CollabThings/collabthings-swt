@@ -16,9 +16,9 @@ import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.CTButton;
 import org.collabthings.swt.controls.CTComposite;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.swt.controls.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
@@ -71,7 +71,7 @@ public class UserSearchView extends CTComposite implements CTAppControl {
 
 		if (!hidesearchbox) {
 			Composite composite = new CTComposite(this, SWT.NONE);
-			composite.setBackground(SWTResourceManager.getActiontitleBackground());
+			composite.setBackground(CTResourceManagerFactory.instance().getActiontitleBackground());
 
 			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			GridLayout clayout = new GridLayout(2, false);

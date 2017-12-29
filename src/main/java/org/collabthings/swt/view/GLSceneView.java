@@ -17,9 +17,9 @@ import org.collabthings.jme.CTObjectViewer;
 import org.collabthings.jme.CTObjectViewerImpl;
 import org.collabthings.jme.CTSceneApp;
 import org.collabthings.model.CTPart;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.swt.controls.CTResourceManagerFactory;
 import org.collabthings.swt.controls.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
@@ -52,8 +52,8 @@ public class GLSceneView extends CTComposite {
 		this.setLayout(gridLayout);
 
 		Composite ctools = new CTComposite(this, SWT.NONE);
-		ctools.setBackground(SWTResourceManager.getActiontitle2Background());
-		ctools.setForeground(SWTResourceManager.getActionTitle2Color());
+		ctools.setBackground(CTResourceManagerFactory.instance().getActiontitle2Background());
+		ctools.setForeground(CTResourceManagerFactory.instance().getActionTitle2Color());
 		ctools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		GridLayout ctoolslayout = new GridLayout();
@@ -81,13 +81,13 @@ public class GLSceneView extends CTComposite {
 		lhighlight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		Composite c = new CTComposite(this, SWT.EMBEDDED);
-		c.setBackground(SWTResourceManager.getColor(248, 100, 100));
+		c.setBackground(CTResourceManagerFactory.instance().getColor(248, 100, 100));
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		view = new CTSceneApp();
 		view.init();
 
-		Color controlBg = SWTResourceManager.getControlBg();
+		Color controlBg = CTResourceManagerFactory.instance().getControlBg();
 
 		getDisplay().asyncExec(() -> {
 			Canvas canvas = view.getCanvas(c.getSize().x, c.getSize().y);

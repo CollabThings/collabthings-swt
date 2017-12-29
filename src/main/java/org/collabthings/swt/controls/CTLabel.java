@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.collabthings.swt.controls;
 
-import org.collabthings.swt.SWTResourceManager;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -28,7 +27,7 @@ public class CTLabel {
 		this.label = new Label(composite_1, none);
 
 		label.setBackground(composite_1.getBackground());
-		label.setFont(SWTResourceManager.getDefaultFont());
+		label.setFont(CTResourceManagerFactory.instance().getDefaultFont());
 		label.setForeground(composite_1.getForeground());
 	}
 
@@ -77,7 +76,7 @@ public class CTLabel {
 	}
 
 	public void setFont(int size, int style) {
-		this.label.setFont(SWTResourceManager.getDefaultFont(size, style));
+		this.label.setFont(CTResourceManagerFactory.instance().getDefaultFont(size, style));
 	}
 
 	public void setEnabled(boolean b) {
@@ -93,8 +92,8 @@ public class CTLabel {
 	}
 
 	public void setTitleFont() {
-		label.setFont(SWTResourceManager.getTitleFont());
-		label.setForeground(SWTResourceManager.getTitleColor());
+		label.setFont(CTResourceManagerFactory.instance().getTitleFont());
+		label.setForeground(CTResourceManagerFactory.instance().getTitleColor());
 	}
 
 	public void setFont(Font font) {
