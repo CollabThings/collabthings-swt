@@ -11,8 +11,8 @@
 package org.collabthings.swt.controls.dialogs;
 
 import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

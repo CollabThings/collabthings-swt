@@ -12,6 +12,9 @@ package org.collabthings.swt.controls;
 
 import org.collabthings.model.CTMaterial;
 import org.collabthings.swt.controls.dialogs.CTMaterialColorPopupDialog;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
+import org.collabthings.tk.CTResourceManagerFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;

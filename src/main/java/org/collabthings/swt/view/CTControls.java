@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.collabthings.swt.view;
 
-import org.collabthings.swt.controls.CTResourceManagerFactory;
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTText;
 import org.eclipse.swt.widgets.Composite;
 
 public class CTControls {

@@ -8,7 +8,7 @@
  * Contributors:
  *     Juuso Vilmunen
  ******************************************************************************/
-package org.collabthings.swt.controls;
+package org.collabthings.tk;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

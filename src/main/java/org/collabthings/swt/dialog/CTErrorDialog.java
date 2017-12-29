@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.collabthings.swt.dialog;
 
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

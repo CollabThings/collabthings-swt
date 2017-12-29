@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.collabthings.swt.controls;
 
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTDoubleEditor;
+import org.collabthings.tk.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;

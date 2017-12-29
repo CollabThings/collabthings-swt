@@ -1,4 +1,4 @@
-package org.collabthings.swt.controls;
+package org.collabthings.tk;
 
 public class CTResourceManagerFactory {
 	private static CTResourceManager manager;

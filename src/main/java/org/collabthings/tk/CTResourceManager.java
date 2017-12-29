@@ -1,4 +1,4 @@
-package org.collabthings.swt.controls;
+package org.collabthings.tk;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;

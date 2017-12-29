@@ -8,7 +8,7 @@
  * Contributors:
  *     Juuso Vilmunen
  ******************************************************************************/
-package org.collabthings.swt.controls;
+package org.collabthings.tk;
 
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;

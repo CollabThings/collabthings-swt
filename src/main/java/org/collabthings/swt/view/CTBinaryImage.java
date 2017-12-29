@@ -11,8 +11,8 @@
 package org.collabthings.swt.view;
 
 import org.collabthings.app.CTApp;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;

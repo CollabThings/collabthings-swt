@@ -19,9 +19,9 @@ import java.util.StringTokenizer;
 
 import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;

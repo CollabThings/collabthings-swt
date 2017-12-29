@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.collabthings.swt.controls.CTResourceManager;
+import org.collabthings.tk.CTResourceManager;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
