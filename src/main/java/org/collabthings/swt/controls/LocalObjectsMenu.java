@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.app.CTSelectionAdapter;
+import org.collabthings.tk.CTSelectionAdapter;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
