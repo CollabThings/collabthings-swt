@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
-	<version>0.4.1-SNAPSHOT</version>
+	<version>0.5.0-SNAPSHOT</version>
 	<name>collabthings.swt</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.collabthings</groupId>
@@ -209,7 +209,7 @@
 		<dependency>
 			<groupId>org.collabthings</groupId>
 			<artifactId>client</artifactId>
-			<version>0.4.1-SNAPSHOT</version>
+			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -221,7 +221,7 @@
 		<dependency>
 			<groupId>org.collabthings</groupId>
 			<artifactId>tk</artifactId>
-			<version>0.4.1-SNAPSHOT</version>
+			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

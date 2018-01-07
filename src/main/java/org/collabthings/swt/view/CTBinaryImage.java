@@ -17,12 +17,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import waazdoh.client.model.WBinaryID;
+import waazdoh.common.WStringID;
 
 public class CTBinaryImage extends CTComposite {
 
 	private CTApp app;
-	private WBinaryID id;
+	private WStringID id;
 	private CTLabel label;
 
 	public CTBinaryImage(CTApp app, Composite arg0, int arg1) {
@@ -34,7 +34,7 @@ public class CTBinaryImage extends CTComposite {
 		label.setText("Image not found");
 	}
 
-	public void setId(WBinaryID binaryID) {
+	public void setId(WStringID binaryID) {
 		this.id = binaryID;
 		label.setText("Image loading");
 	}
