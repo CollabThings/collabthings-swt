@@ -18,7 +18,7 @@ import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 
-import waazdoh.common.WStringID;
+import waazdoh.datamodel.WStringID;
 
 public class ViewTypes {
 

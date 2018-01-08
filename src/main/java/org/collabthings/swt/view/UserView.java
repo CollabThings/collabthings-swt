@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import waazdoh.common.vo.UserVO;
+import waazdoh.datamodel.UserVO;
 
 public class UserView extends CTComposite implements CTAppControl {
 	private AppWindow window;
@@ -72,11 +72,14 @@ public class UserView extends CTComposite implements CTAppControl {
 		new Thread(() -> {
 			u = app.getLClient().getService().getUsers().getUser(userid);
 			getDisplay().syncExec(() -> {
-				lname.setText("" + u.getUsername());
+				if (u != null) {
+					lname.setText("" + u.getUsername());
+				}
 			});
 
 			dview.setUser(u);
 		}).start();
+
 	}
 
 	@Override

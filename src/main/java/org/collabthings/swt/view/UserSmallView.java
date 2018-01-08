@@ -27,8 +27,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import waazdoh.common.WData;
-import waazdoh.common.vo.UserVO;
+import waazdoh.datamodel.UserVO;
+import waazdoh.datamodel.WData;
 
 public class UserSmallView extends CTComposite {
 	private CTApp app;

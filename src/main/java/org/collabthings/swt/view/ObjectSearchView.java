@@ -20,7 +20,7 @@ import org.collabthings.util.LLog;
 import org.eclipse.swt.widgets.Composite;
 
 import waazdoh.client.WClient;
-import waazdoh.common.vo.ObjectVO;
+import waazdoh.datamodel.ObjectVO;
 
 public class ObjectSearchView {
 	private LLog log = LLog.getLogger(this);

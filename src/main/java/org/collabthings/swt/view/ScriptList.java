@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import waazdoh.common.WObject;
-import waazdoh.common.WStringID;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WStringID;
 
 public class ScriptList extends CTComposite {
 

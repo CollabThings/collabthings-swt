@@ -11,12 +11,12 @@
 package org.collabthings.swt.controls.dialogs;
 
 import org.collabthings.model.CTMaterial;
+import org.collabthings.swt.controls.CTMaterialEditor;
 import org.collabthings.tk.CTComposite;
 import org.collabthings.tk.CTDoubleEditor;
+import org.collabthings.tk.CTDoubleEditor.ChangeListener;
 import org.collabthings.tk.CTResourceManagerFactory;
 import org.collabthings.tk.CTSelectionAdapter;
-import org.collabthings.tk.CTDoubleEditor.ChangeListener;
-import org.collabthings.swt.controls.CTMaterialEditor;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;

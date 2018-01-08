@@ -274,6 +274,12 @@
 			<version>2.3.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.ipfs</groupId>
+			<artifactId>java-ipfs-api</artifactId>
+			<version>v1.2.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<profiles>
@@ -370,6 +376,10 @@
 			<name>jogamp test mirror</name>
 			<url>http://www.jogamp.org/deployment/maven/</url>
 			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
 

@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import waazdoh.common.WStringID;
+import waazdoh.datamodel.WStringID;
 
 public class CTSubPartPopupDialog extends Dialog {
 

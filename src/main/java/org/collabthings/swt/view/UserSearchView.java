@@ -34,7 +34,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import waazdoh.common.vo.UserVO;
+import waazdoh.datamodel.UserVO;
 
 public class UserSearchView extends CTComposite implements CTAppControl {
 	private static final int COLUMN_WIDTH = 500;

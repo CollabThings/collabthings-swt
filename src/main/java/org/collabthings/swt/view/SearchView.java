@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.collabthings.swt.view;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.collabthings.app.CTApp;
@@ -34,7 +35,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import waazdoh.common.vo.ObjectVO;
+import waazdoh.datamodel.ObjectVO;
+import waazdoh.datamodel.WStringID;
 
 public class SearchView extends CTComposite implements CTAppControl {
 	private static final int COLUMN_WIDTH = 500;
@@ -156,6 +158,16 @@ public class SearchView extends CTComposite implements CTAppControl {
 			List<ObjectVO> list = factory.search(searchitem, start, count);
 
 			log.info("search got list " + list);
+			if (list == null) {
+				Iterable<WStringID> ids = app.getBeanStorage().getLocalSetIDs(searchitem);
+				list = new LinkedList<>();
+				for (WStringID localid : ids) {
+					ObjectVO vo = new ObjectVO();
+					vo.setId(localid.toString());
+					list.add(vo);
+				}
+			}
+
 			handleResponse(list);
 		}).start();
 	}

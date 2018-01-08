@@ -17,7 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import waazdoh.common.WStringID;
+import waazdoh.datamodel.WStringID;
 
 public class CTBinaryImage extends CTComposite {
 

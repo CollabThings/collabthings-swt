@@ -19,7 +19,7 @@ import org.collabthings.util.LLog;
 import org.eclipse.swt.widgets.Composite;
 
 import waazdoh.client.WClient;
-import waazdoh.common.vo.UserVO;
+import waazdoh.datamodel.UserVO;
 
 public class UsersSearchView {
 	private LLog log = LLog.getLogger(this);

@@ -32,11 +32,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import waazdoh.common.WLogger;
-import waazdoh.common.WObject;
-import waazdoh.common.WStringID;
-import waazdoh.common.vo.ObjectVO;
-import waazdoh.common.vo.UserVO;
+import waazdoh.client.utils.WLogger;
+import waazdoh.datamodel.ObjectVO;
+import waazdoh.datamodel.UserVO;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WStringID;
 
 public class ObjectSmallView extends CTComposite {
 	private CTApp app;
@@ -204,7 +204,7 @@ public class ObjectSmallView extends CTComposite {
 				UserVO u = app.getLClient().getService().getUsers().getUser(userid);
 				if (!lcreator.isDisposed()) {
 					lcreator.getDisplay().syncExec(() -> {
-						if (!lcreator.isDisposed()) {
+						if (!lcreator.isDisposed() && u!=null) {
 							lcreator.setText("" + u.getUsername());
 						}
 					});

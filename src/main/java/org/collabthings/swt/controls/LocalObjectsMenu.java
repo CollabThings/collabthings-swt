@@ -24,11 +24,11 @@ import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import waazdoh.client.BeanStorage;
 import waazdoh.client.model.User;
-import waazdoh.common.BeanStorage;
-import waazdoh.common.WObject;
-import waazdoh.common.WStringID;
-import waazdoh.common.WUserID;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WStringID;
+import waazdoh.datamodel.WUserID;
 
 public class LocalObjectsMenu {
 	private static final String MAX_LOCALMENU_OBJECTS = "ct.gui.local.menuobjects.max";
@@ -59,14 +59,22 @@ public class LocalObjectsMenu {
 		log.info("Local menu shown");
 		CTApp app = appwindow.getApp();
 		BeanStorage storage = app.getBeanStorage();
-		String search = "" + Calendar.getInstance().get(Calendar.YEAR);
-		Iterable<WStringID> ids = storage.getLocalSetIDs(search);
 
 		MenuItem[] items = menulocal.getItems();
 		for (MenuItem menuItem : items) {
 			menuItem.dispose();
 		}
 
+		String search = "" + Calendar.getInstance().get(Calendar.YEAR);
+		Iterable<WStringID> ids = storage.getLocalSetIDs(search);
+		addToLocalMenu(app, storage, ids);
+		
+		search = "" + (Calendar.getInstance().get(Calendar.YEAR)-1);
+		ids = storage.getLocalSetIDs(search);
+		addToLocalMenu(app, storage, ids);
+	}
+
+	private void addToLocalMenu(CTApp app, BeanStorage storage, Iterable<WStringID> ids) {
 		int count = 0;
 		for (WStringID id : ids) {
 			WObject bean = storage.getBean(id);

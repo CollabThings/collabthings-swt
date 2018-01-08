@@ -32,7 +32,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import waazdoh.common.vo.UserVO;
+import waazdoh.datamodel.UserVO;
 
 public class UserPublishedView extends CTComposite {
 	public final CTApp app;

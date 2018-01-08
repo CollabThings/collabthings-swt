@@ -20,18 +20,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.collabthings.app.CTApp;
-import org.collabthings.swt.app.LoginWindow;
+import org.collabthings.tk.CTResourceManagerFactory;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.WClient;
 import waazdoh.client.utils.ThreadChecker;
-import waazdoh.common.WPreferences;
+import waazdoh.client.utils.WPreferences;
 
 public final class AppLauncher {
 	private CTApp app;
 	private LLog log = LLog.getLogger(this);
-
-	private LoginWindow loginwindow;
 
 	public void openWindow() {
 		setProxy();
@@ -42,15 +40,14 @@ public final class AppLauncher {
 
 	private void launch() throws MalformedURLException {
 		log.info("Launching " + this);
+		CTResourceManagerFactory.setInstance(new SWTResourceManager());
+
 		app = new CTApp();
 		doLaunch();
 	}
 
 	public void doLaunch() {
 		try {
-			loginwindow = new LoginWindow(app);
-			loginwindow.open();
-
 			new ThreadChecker(() -> getClient().isRunning());
 
 			if (!getClient().isRunning()) {

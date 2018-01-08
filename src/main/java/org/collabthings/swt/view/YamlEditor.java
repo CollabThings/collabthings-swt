@@ -24,7 +24,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
 
 public class YamlEditor extends CTComposite {
 	private CTObject o;
