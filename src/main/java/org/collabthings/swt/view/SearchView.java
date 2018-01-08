@@ -36,6 +36,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.datamodel.ObjectVO;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WObjectID;
 import waazdoh.datamodel.WStringID;
 
 public class SearchView extends CTComposite implements CTAppControl {
@@ -164,6 +166,15 @@ public class SearchView extends CTComposite implements CTAppControl {
 				for (WStringID localid : ids) {
 					ObjectVO vo = new ObjectVO();
 					vo.setId(localid.toString());
+					list.add(vo);
+				}
+			}
+
+			if (list.isEmpty()) {
+				WStringID searchid = new WStringID(searchitem);
+				if (searchid.isId()) {
+					ObjectVO vo = new ObjectVO();
+					vo.setId(searchid.toString());
 					list.add(vo);
 				}
 			}
