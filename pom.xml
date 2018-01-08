@@ -19,7 +19,7 @@
 	<distributionManagement>
 		<repository>
 			<id>waazdoh-ssh-repository</id>
-			<url>sftp://maven.waazdoh.com/opt/maven/repository</url>
+			<url>sftp://maven@maven.waazdoh.com/opt/maven/repository</url>
 		</repository>
 	</distributionManagement>
 
