@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt;
 
 import java.net.InetSocketAddress;
@@ -9,19 +19,17 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.app.LoginWindow;
+import org.collabthings.app.CTApp;
+import org.collabthings.tk.CTResourceManagerFactory;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.WClient;
 import waazdoh.client.utils.ThreadChecker;
-import waazdoh.common.WPreferences;
+import waazdoh.client.utils.WPreferences;
 
 public final class AppLauncher {
-	private LOTApp app;
+	private CTApp app;
 	private LLog log = LLog.getLogger(this);
-
-	private LoginWindow loginwindow;
 
 	public void openWindow() {
 		setProxy();
@@ -32,15 +40,14 @@ public final class AppLauncher {
 
 	private void launch() throws MalformedURLException {
 		log.info("Launching " + this);
-		app = new LOTApp();
+		CTResourceManagerFactory.setInstance(new SWTResourceManager());
+
+		app = new CTApp();
 		doLaunch();
 	}
 
 	public void doLaunch() {
 		try {
-			loginwindow = new LoginWindow(app);
-			loginwindow.open();
-
 			new ThreadChecker(() -> getClient().isRunning());
 
 			if (!getClient().isRunning()) {
@@ -97,6 +104,5 @@ public final class AppLauncher {
 	public static void main(String[] args) throws MalformedURLException {
 		AppLauncher l = new AppLauncher();
 		l.launch();
-		System.exit(0);
 	}
 }

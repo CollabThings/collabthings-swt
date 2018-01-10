@@ -1,12 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.collabthings.CTClient;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTInfo;
 import org.collabthings.model.CTObject;
@@ -14,20 +24,14 @@ import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
+import org.collabthings.model.impl.CTConstants;
 import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.model.impl.CTPartImpl;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.model.run.impl.CTRunEnvironmentBuilderImpl;
 import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.CTRunners;
-import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTLabel;
-import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
-import org.collabthings.swt.controls.dialogs.CTTextDialog;
-import org.collabthings.swt.dialog.CTErrorDialog;
 import org.collabthings.swt.dialog.FindOpenscadDialog;
 import org.collabthings.swt.view.CTMainView;
 import org.collabthings.swt.view.FactoryView;
@@ -38,6 +42,13 @@ import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.UserView;
 import org.collabthings.swt.view.UsersSearchView;
 import org.collabthings.swt.view.ValueEditorDialog;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
+import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTSelectionAdapter;
+import org.collabthings.tk.CTTabFolder;
+import org.collabthings.tk.dialogs.CTErrorDialog;
+import org.collabthings.tk.dialogs.CTTextDialog;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -52,18 +63,18 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
-import waazdoh.common.MStringID;
-import waazdoh.common.WaazdohInfo;
-import waazdoh.common.vo.ObjectVO;
-import waazdoh.common.vo.StorageAreaVO;
-import waazdoh.common.vo.UserVO;
+import waazdoh.datamodel.ObjectVO;
+import waazdoh.datamodel.StorageAreaVO;
+import waazdoh.datamodel.UserVO;
+import waazdoh.datamodel.WStringID;
+import waazdoh.datamodel.WaazdohInfo;
 
 public final class AppWindow implements CTInfo {
 	public static final String STATUS_RUNNERS = "Runners";
 
 	protected Shell shell;
 	//
-	private LOTApp app;
+	private CTApp app;
 
 	private List<CTAppControl> controls = new LinkedList<>();
 
@@ -86,7 +97,7 @@ public final class AppWindow implements CTInfo {
 	private CTRunners runners;
 	private Label lblrunners;
 
-	public AppWindow(LOTApp app) {
+	public AppWindow(CTApp app) {
 		this.app = app;
 		this.viewtypes = new ViewTypes(this, app);
 		this.runners = new CTRunners(this, app);
@@ -113,7 +124,7 @@ public final class AppWindow implements CTInfo {
 			ObjectVO o = app.getLClient().getClient().getObjects().read(id);
 			if (o != null) {
 				String type = o.toObject().getType();
-				viewtypes.view(type, new MStringID(id));
+				viewtypes.view(type, new WStringID(id));
 			}
 		}).start();
 
@@ -123,7 +134,7 @@ public final class AppWindow implements CTInfo {
 		setInfo(0, 0, 0, "View " + type + " id:" + id);
 
 		new Thread(() -> {
-			viewtypes.view(type, new MStringID(id));
+			viewtypes.view(type, new WStringID(id));
 		}).start();
 	}
 
@@ -203,7 +214,7 @@ public final class AppWindow implements CTInfo {
 
 	private void addTab(String name, CTAppControl c, Object data) {
 		Control control = c.getControl();
-		control.setBackground(SWTResourceManager.getControlBg());
+		control.setBackground(CTResourceManagerFactory.instance().getControlBg());
 
 		tabFolder.addTab(name, control, data);
 
@@ -260,10 +271,27 @@ public final class AppWindow implements CTInfo {
 			UserVO user = app.getLClient().getService().getUser();
 			viewUser(user.getUsername(), user.getUserid());
 
+			// cities hopefully
+			// 201801CT_eb500e3c-edb8-48c2-905f-2c9904a659cc_A6923f848b4a2bce1f020a90f5afacf90575987b1da564b142b6568ed3c587f8e_QmSEWzxrcNpQhydBnw4XXqHuBEcVG9sj9wDsrHDNXCb23Y
+			// 201801CT_4b8ee11c-7adb-4323-9d76-2dd2abbdeb10_A21af7aefc11d725c2be9966e789234447f7a7a8d6b0278cdf6e5eaa586826eb8_QmdQjmUTwM8f1sAhVAnAie1NBL3wXVBH7fH22fgmVUf3DL
+			// 201801CT_b9d3ebb9-bee0-4aa5-9e94-81db425ae036_4d35c3954995ddb54e2c5010b482ee717a9fdaeba371336757b33dc141f3641a_QmW8zj9xcBaeLmKK7DoJEeE2ZBewgSCZcQSSbb6pG7eWUJ
+			// 201801CT_df31d189-2181-4461-b518-0e48b6635c50_A7546ddb0892d318634eeae01f38faa73793aeac7bb805697ad231d1b6bcec495_QmV4VAWvs72SK2wK37kLkJKJwthgX8br75EtTZs5zWKEdF
+			// 201801CT_a8b11ebe-da2c-4968-97b3-75415cecd368_3ca4ed315ab565b3a923d90abaf7317d0999f53e02282c7e378fe687f8601b82_QmZohJExF2kCYEataDYK5Xk7fe22wQvdAN2zF6xwK5mTKg
+			// 201801CT_adef987c-8436-4f27-8ce3-448b60821d95_A56a14b06edfbbf7d6dd100ae92102621b929d38d687d0fa25504d507fd0980bb_QmPuy1atH4uhH7KEmfqUZMRdM4kRf5V5AVjtG27L15kTbZ
+			try {
+				CTPart cities = app.getObjectFactory().getPart(new WStringID(
+						"201801CT_adef987c-8436-4f27-8ce3-448b60821d95_A56a14b06edfbbf7d6dd100ae92102621b929d38d687d0fa25504d507fd0980bb_QmPuy1atH4uhH7KEmfqUZMRdM4kRf5V5AVjtG27L15kTbZ"));
+				if (cities != null) {
+					mainview.viewPart(cities);
+				}
+			} catch (Exception e) {
+				log.error(this, "view cities", e);
+			}
+
 			String latestscadpart = app.getLClient().getService().getStorageArea()
 					.read(new StorageAreaVO(user.getUsername(), "published/part/latest", null)).getData();
 			if (latestscadpart != null) {
-				CTPart b = app.getObjectFactory().getPart(new MStringID(latestscadpart));
+				CTPart b = app.getObjectFactory().getPart(new WStringID(latestscadpart));
 				mainview.viewPart(b);
 			} else {
 				mainview.newPart();
@@ -282,7 +310,7 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void showError(String name, Exception e) {
-		if (name.equals(CTClient.ERROR_OPENSCADFAILED)) {
+		if (name.equals(CTConstants.ERROR_OPENSCADFAILED)) {
 			new FindOpenscadDialog(app, this, shell);
 		} else {
 			LLog.getLogger(this).info("Error  " + name + " " + e);
@@ -312,7 +340,7 @@ public final class AppWindow implements CTInfo {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setBackground(SWTResourceManager.getControlBg());
+		shell.setBackground(CTResourceManagerFactory.instance().getControlBg());
 
 		Image small = new Image(shell.getDisplay(), ClassLoader.getSystemResourceAsStream("logo.png"));
 		shell.setImage(small);
@@ -431,7 +459,7 @@ public final class AppWindow implements CTInfo {
 		Composite composite_1 = new CTComposite(composite, SWT.NONE);
 		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
 		composite_1.setLayout(new GridLayout(3, false));
-		composite_1.setBackground(SWTResourceManager.getActiontitleBackground());
+		composite_1.setBackground(CTResourceManagerFactory.instance().getActiontitleBackground());
 
 		lblStatus = new CTLabel(composite_1, SWT.NONE);
 		lblStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -535,7 +563,7 @@ public final class AppWindow implements CTInfo {
 	private void initLocalMenu() {
 		LocalObjectsMenu localmenu = new LocalObjectsMenu(this, menulocal);
 		localmenu.addObjectHandler(CTFactoryImpl.BEANNAME, (data) -> {
-			MStringID id = data.getIDValue("id");
+			WStringID id = data.getIDValue("id");
 			CTFactory f = getApp().getLClient().getObjectFactory().getFactory(id);
 			if (f != null) {
 				viewFactory(f);
@@ -545,7 +573,7 @@ public final class AppWindow implements CTInfo {
 		});
 
 		localmenu.addObjectHandler(CTPartImpl.BEANNAME, (data) -> {
-			MStringID id = data.getIDValue("id");
+			WStringID id = data.getIDValue("id");
 			CTPart p = getApp().getLClient().getObjectFactory().getPart();
 			p.parse(data);
 			mainview.viewPart(p);
@@ -589,12 +617,12 @@ public final class AppWindow implements CTInfo {
 		addRunner(new CTRunner<String>("BottomUpdateInfo", 1000).runWhile(() -> {
 			return !lblBottonInfo.isDisposed();
 		}).action(() -> {
-			return " CT:" + CTClient.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: " + app.getLClient()
-					+ " " + app.getLClient().getBinarySource().getStats();
+			return " CT:" + CTConstants.VERSION + " Waazdoh:" + WaazdohInfo.VERSION + " environment: "
+					+ app.getLClient() + " " + app.getLClient().getBinarySource().getStats();
 		}).gui((o) -> lblBottonInfo.setText("" + o)));// addRunner(runner);
 	}
 
-	public LOTApp getApp() {
+	public CTApp getApp() {
 		return this.app;
 	}
 
@@ -632,7 +660,7 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void setStatus(String string, String status) {
-		if (shell != null) {
+		if (shell != null && !shell.isDisposed() && !shell.getDisplay().isDisposed()) {
 			shell.getDisplay().asyncExec(() -> {
 				if (STATUS_RUNNERS.equals(string)) {
 					lblrunners.setText(status);

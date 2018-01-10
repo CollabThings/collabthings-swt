@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls;
 
 import java.lang.reflect.InvocationTargetException;
@@ -11,6 +21,7 @@ import java.util.Set;
 
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
+import org.collabthings.app.CTApp;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.math.LOrientation;
 import org.collabthings.model.CTBoundingBox;
@@ -22,10 +33,13 @@ import org.collabthings.model.impl.CTOpenSCADImpl;
 import org.collabthings.model.impl.CTPartBuilderImpl;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
-import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.ObjectSmallView;
 import org.collabthings.swt.view.parteditor.CTObjectListener;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
+import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -55,20 +69,20 @@ public class ObjectViewer extends CTComposite {
 	private CTLabel lblObject;
 	private final Set<String> ignoreset;
 	private AppWindow window;
-	private LOTApp app;
+	private CTApp app;
 
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ObjectViewer(LOTApp app, AppWindow window, Composite parent) {
+	public ObjectViewer(CTApp app, AppWindow window, Composite parent) {
 		this(app, window, parent, new String[0]);
 	}
 
-	public ObjectViewer(LOTApp app, AppWindow window, Composite parent, String ignore[]) {
+	public ObjectViewer(CTApp app, AppWindow window, Composite parent, String ignore[]) {
 		super(parent, SWT.NONE);
 
-		setBackground(SWTResourceManager.getControlBg());
-		setFont(SWTResourceManager.getDefaultFont());
+		setBackground(CTResourceManagerFactory.instance().getControlBg());
+		setFont(CTResourceManagerFactory.instance().getDefaultFont());
 
 		this.app = app;
 		this.window = window;
@@ -291,14 +305,14 @@ public class ObjectViewer extends CTComposite {
 		Composite c = getTwoRowsComposite(parent);
 		addLabel(key, c);
 
-		LOTBoundingBoxEditor bbeditor = new LOTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
+		CTBoundingBoxEditor bbeditor = new CTBoundingBoxEditor(c, box, o -> fireValueChanged(key, box));
 		bbeditor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
 
 		return c;
 	}
 
 	private Composite addOrientationField(String key, Composite c, LOrientation orgo) {
-		return new LOTOrientationEditor(c, orgo, o -> fireValueChanged(key, orgo));
+		return new CTOrientationEditor(c, orgo, o -> fireValueChanged(key, orgo));
 	}
 
 	private CTMaterialEditor addMaterialView(String key, Composite c, CTMaterial o) {
@@ -317,7 +331,7 @@ public class ObjectViewer extends CTComposite {
 	private Composite addVectorField(String key, Composite parent, Vector3f orgv) {
 		Composite c = getRowComposite(parent);
 		addLabel(key, c);
-		LOTVectorEditor e = new LOTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
+		CTVectorEditor e = new CTVectorEditor(c, orgv, v -> invokeSetMethod(key, v));
 		return e;
 	}
 

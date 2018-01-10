@@ -1,14 +1,24 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.ObjectViewer;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -19,13 +29,13 @@ import org.eclipse.swt.widgets.MenuItem;
 
 public class PartBuilderView extends CTComposite implements CTAppControl {
 
-	private LOTApp app;
+	private CTApp app;
 	private AppWindow window;
 	private CTPartBuilder builder;
 	private ScriptView scriptview;
 	private GLSceneView view;
 
-	public PartBuilderView(Composite parent, LOTApp app, AppWindow appWindow, CTPart p, CTPartBuilder pb,
+	public PartBuilderView(Composite parent, CTApp app, AppWindow appWindow, CTPart p, CTPartBuilder pb,
 			GLSceneView view) {
 		super(parent, SWT.NONE);
 		this.window = appWindow;

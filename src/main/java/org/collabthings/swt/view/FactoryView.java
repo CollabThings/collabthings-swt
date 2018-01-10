@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
 import java.io.File;
@@ -7,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.Set;
 
 import org.collabthings.CTClient;
+import org.collabthings.app.CTApp;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
 import org.collabthings.model.CTEnvironment;
@@ -19,12 +30,11 @@ import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.CTRunner;
-import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.LocalObjectsMenu;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTSelectionAdapter;
+import org.collabthings.tk.CTTabFolder;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
@@ -38,7 +48,7 @@ import org.eclipse.swt.widgets.MenuItem;
 
 public class FactoryView extends CTComposite implements CTAppControl {
 	private CTFactory factory;
-	private LOTApp app;
+	private CTApp app;
 
 	private AppWindow window;
 
@@ -46,7 +56,7 @@ public class FactoryView extends CTComposite implements CTAppControl {
 	private YamlEditor yamleditor;
 	private YamlEditor enveditor;
 
-	public FactoryView(Composite composite, LOTApp app, AppWindow w, CTFactory f) {
+	public FactoryView(Composite composite, CTApp app, AppWindow w, CTFactory f) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;

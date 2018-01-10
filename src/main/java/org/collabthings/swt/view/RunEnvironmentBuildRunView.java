@@ -1,5 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
@@ -9,9 +20,8 @@ import org.collabthings.model.run.CTRunEnvironmentBuilder;
 import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
@@ -20,7 +30,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
 public class RunEnvironmentBuildRunView extends CTComposite implements CTAppControl, RunEnvironmentListener {
 
@@ -29,7 +38,7 @@ public class RunEnvironmentBuildRunView extends CTComposite implements CTAppCont
 	private CTSimpleSimulation s;
 	private CTText text;
 
-	public RunEnvironmentBuildRunView(Composite parent, LOTApp app, AppWindow appWindow,
+	public RunEnvironmentBuildRunView(Composite parent, CTApp app, AppWindow appWindow,
 			CTRunEnvironmentBuilder builder) {
 		super(parent, SWT.NONE);
 		setLayout(new GridLayout(1, false));

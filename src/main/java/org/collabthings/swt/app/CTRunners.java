@@ -1,22 +1,33 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.app;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.util.LLog;
 
 public class CTRunners {
 
 	private AppWindow window;
-	private LOTApp app;
+	private CTApp app;
 
 	@SuppressWarnings("rawtypes")
 	private List<CTRunner> runners = new ArrayList<>();
 	private String status;
 
 	@SuppressWarnings("rawtypes")
-	public CTRunners(AppWindow appWindow, LOTApp app) {
+	public CTRunners(AppWindow appWindow, CTApp app) {
 		this.window = appWindow;
 		this.app = app;
 
@@ -27,7 +38,7 @@ public class CTRunners {
 				runners = new ArrayList<>();
 				orgrunners.stream().forEach(r -> {
 					setStatus("Running count:" + orgrunners.size() + " " + r.getName());
-					if (r.check(window, app)) {
+					if (r.check(window)) {
 						runners.add(r);
 					}
 				});

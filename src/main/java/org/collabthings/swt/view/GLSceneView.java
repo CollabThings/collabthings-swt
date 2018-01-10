@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
 import java.awt.Canvas;
@@ -6,14 +16,11 @@ import java.awt.Frame;
 import org.collabthings.jme.CTObjectViewer;
 import org.collabthings.jme.CTObjectViewerImpl;
 import org.collabthings.jme.CTSceneApp;
-import org.collabthings.model.CTModel;
-import org.collabthings.model.CTObject;
-import org.collabthings.model.CTOpenSCAD;
 import org.collabthings.model.CTPart;
-import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTLabel;
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
+import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -24,6 +31,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+
+import com.jme3.math.Vector3f;
 
 import waazdoh.client.utils.ConditionWaiter;
 
@@ -43,8 +52,8 @@ public class GLSceneView extends CTComposite {
 		this.setLayout(gridLayout);
 
 		Composite ctools = new CTComposite(this, SWT.NONE);
-		ctools.setBackground(SWTResourceManager.getActiontitle2Background());
-		ctools.setForeground(SWTResourceManager.getActionTitle2Color());
+		ctools.setBackground(CTResourceManagerFactory.instance().getActiontitle2Background());
+		ctools.setForeground(CTResourceManagerFactory.instance().getActionTitle2Color());
 		ctools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		GridLayout ctoolslayout = new GridLayout();
@@ -72,13 +81,13 @@ public class GLSceneView extends CTComposite {
 		lhighlight.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
 		Composite c = new CTComposite(this, SWT.EMBEDDED);
-		c.setBackground(SWTResourceManager.getColor(248, 100, 100));
+		c.setBackground(CTResourceManagerFactory.instance().getColor(248, 100, 100));
 		c.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		view = new CTSceneApp();
 		view.init();
 
-		Color controlBg = SWTResourceManager.getControlBg();
+		Color controlBg = CTResourceManagerFactory.instance().getControlBg();
 
 		getDisplay().asyncExec(() -> {
 			Canvas canvas = view.getCanvas(c.getSize().x, c.getSize().y);
@@ -92,8 +101,8 @@ public class GLSceneView extends CTComposite {
 				log.info("setscenecwait done");
 				scene = new CTObjectViewerImpl(view.getAssetManager());
 				view.setScene(scene);
-				view.setBackgroundColor(controlBg.getRed() / 255.0f, controlBg.getGreen() / 255.0f,
-						controlBg.getBlue() / 255.0f);
+				view.setBackgroundColor(controlBg.getRed() / 255.0F, controlBg.getGreen() / 255.0F,
+						controlBg.getBlue() / 255.0F);
 			}).start();
 		});
 
@@ -114,6 +123,10 @@ public class GLSceneView extends CTComposite {
 
 	public boolean isReady() {
 		return view != null && view.isReady() && scene != null;
+	}
+
+	public void lookAt(Vector3f lookAt) {
+		view.setLookAt(lookAt);
 	}
 
 }

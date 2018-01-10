@@ -2,23 +2,23 @@ package org.collabthings.swt.view.parteditor;
 
 import java.util.Stack;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTRunner;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTTabFolder;
 import org.collabthings.swt.controls.ObjectViewer;
 import org.collabthings.swt.view.GLSceneView;
 import org.collabthings.swt.view.ObjectContextView;
 import org.collabthings.swt.view.ObjectContextView.PartListener;
 import org.collabthings.swt.view.ObjectContextView.SubpartListener;
 import org.collabthings.swt.view.YamlEditor;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTTabFolder;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -38,9 +38,9 @@ public class PartEditor extends CTComposite implements CTAppControl {
 	private CTPart part;
 
 	private LLog log = LLog.getLogger(this);
-	private final LOTApp app;
+	private final CTApp app;
 
-	private Stack<CTPart> parts = new Stack<CTPart>();
+	private Stack<CTPart> parts = new Stack<>();
 
 	private YamlEditor csource;
 
@@ -52,7 +52,7 @@ public class PartEditor extends CTComposite implements CTAppControl {
 
 	private GLSceneView view;
 
-	public PartEditor(Composite composite, LOTApp app, AppWindow window, CTPart p, GLSceneView view) {
+	public PartEditor(Composite composite, CTApp app, AppWindow window, CTPart p, GLSceneView view) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.part = p;
@@ -124,13 +124,13 @@ public class PartEditor extends CTComposite implements CTAppControl {
 	}
 
 	private void init() {
-		setBackground(SWTResourceManager.getControlBg());
+		setBackground(CTResourceManagerFactory.instance().getControlBg());
 
 		GridLayout gridLayout = new GridLayout(1, false);
 		setLayout(gridLayout);
 
 		Composite c_toolbar = new CTComposite(this, SWT.NONE);
-		c_toolbar.setBackground(SWTResourceManager.getActiontitleBackground());
+		c_toolbar.setBackground(CTResourceManagerFactory.instance().getActiontitleBackground());
 		c_toolbar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		RowLayout rl_c_toolbar = new RowLayout(SWT.HORIZONTAL);
 		rl_c_toolbar.spacing = 5;
@@ -176,7 +176,7 @@ public class PartEditor extends CTComposite implements CTAppControl {
 		btnPublish.setText("Publish");
 
 		SashForm composite_main = new SashForm(this, SWT.BORDER);
-		composite_main.setBackground(SWTResourceManager.getControlBg());
+		composite_main.setBackground(CTResourceManagerFactory.instance().getControlBg());
 		composite_main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		CTTabFolder tabFolder = new CTTabFolder(composite_main, SWT.NONE);
@@ -212,6 +212,7 @@ public class PartEditor extends CTComposite implements CTAppControl {
 			@Override
 			public void view(CTPart part) {
 				pushPart(part);
+				view.lookAt(part.getViewingProperties().getLookAt());
 			}
 		});
 
@@ -233,10 +234,6 @@ public class PartEditor extends CTComposite implements CTAppControl {
 		CTSubPart nsub = this.part.newSubPart();
 		nsub.setOrientation(subpart.getLocation(), subpart.getNormal(), subpart.getAngle());
 		nsub.setPart(subpart.getPart());
-	}
-
-	private void view(CTSubPart p) {
-		pushPart(p.getPart());
 	}
 
 	protected void publish() {

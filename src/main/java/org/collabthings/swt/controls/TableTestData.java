@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls;
 
 import java.util.HashSet;
@@ -8,9 +18,9 @@ import org.collabthings.model.CTObject;
 
 import com.jme3.math.Vector3f;
 
-import waazdoh.common.MStringID;
-import waazdoh.common.ObjectID;
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WObjectID;
+import waazdoh.datamodel.WStringID;
 
 public class TableTestData implements CTObject {
 	private String value1 = "value1";
@@ -19,6 +29,7 @@ public class TableTestData implements CTObject {
 	private Vector3f v = new Vector3f(1, 2, 3);
 	private LOrientation o = new LOrientation();
 	private Set<String> somestrings = new HashSet<String>();
+	private String name = "testdata";
 
 	public TableTestData() {
 		while (somestrings.size() < 3) {
@@ -27,10 +38,10 @@ public class TableTestData implements CTObject {
 	}
 
 	@Override
-	public boolean load(MStringID id) {
+	public boolean load(WStringID id) {
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "TableTestData";
@@ -103,7 +114,7 @@ public class TableTestData implements CTObject {
 	}
 
 	@Override
-	public ObjectID getID() {
+	public WObjectID getID() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -122,7 +133,11 @@ public class TableTestData implements CTObject {
 
 	@Override
 	public String getName() {
-		return "testdata";
+		return name;
 	}
 
+	@Override
+	public void setName(String n) {
+		this.name = n;
+	}
 }

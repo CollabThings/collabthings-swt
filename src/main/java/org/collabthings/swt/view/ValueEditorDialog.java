@@ -1,8 +1,8 @@
 package org.collabthings.swt.view;
 
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTLabel;
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
+import org.collabthings.tk.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -11,7 +11,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 public class ValueEditorDialog {
 

@@ -1,12 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls;
 
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
+import org.collabthings.tk.CTSelectionAdapter;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
@@ -14,11 +24,11 @@ import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import waazdoh.client.BeanStorage;
 import waazdoh.client.model.User;
-import waazdoh.common.BeanStorage;
-import waazdoh.common.MStringID;
-import waazdoh.common.UserID;
-import waazdoh.common.WObject;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WStringID;
+import waazdoh.datamodel.WUserID;
 
 public class LocalObjectsMenu {
 	private static final String MAX_LOCALMENU_OBJECTS = "ct.gui.local.menuobjects.max";
@@ -47,18 +57,26 @@ public class LocalObjectsMenu {
 
 	protected void localMenuShown() {
 		log.info("Local menu shown");
-		LOTApp app = appwindow.getApp();
+		CTApp app = appwindow.getApp();
 		BeanStorage storage = app.getBeanStorage();
-		String search = "" + Calendar.getInstance().get(Calendar.YEAR);
-		Iterable<MStringID> ids = storage.getLocalSetIDs(search);
 
 		MenuItem[] items = menulocal.getItems();
 		for (MenuItem menuItem : items) {
 			menuItem.dispose();
 		}
 
+		String search = "" + Calendar.getInstance().get(Calendar.YEAR);
+		Iterable<WStringID> ids = storage.getLocalSetIDs(search);
+		addToLocalMenu(app, storage, ids);
+		
+		search = "" + (Calendar.getInstance().get(Calendar.YEAR)-1);
+		ids = storage.getLocalSetIDs(search);
+		addToLocalMenu(app, storage, ids);
+	}
+
+	private void addToLocalMenu(CTApp app, BeanStorage storage, Iterable<WStringID> ids) {
 		int count = 0;
-		for (MStringID id : ids) {
+		for (WStringID id : ids) {
 			WObject bean = storage.getBean(id);
 			// modified -value should be in every bean.
 			if (bean != null) {
@@ -82,7 +100,7 @@ public class LocalObjectsMenu {
 		}
 	}
 
-	private MenuItem addObjectMenu(MStringID id, WObject bean) {
+	private MenuItem addObjectMenu(WStringID id, WObject bean) {
 		String localBeanInfo = getLocalBeanInfo(bean);
 		if (localBeanInfo != null) {
 			MenuItem i = new MenuItem(menulocal, SWT.NONE);
@@ -101,7 +119,7 @@ public class LocalObjectsMenu {
 		StringBuilder sb = new StringBuilder();
 		String userid = bean.getValue("creator");
 		if (userid != null) {
-			User user = appwindow.getApp().getLClient().getClient().getUser(new UserID(userid));
+			User user = appwindow.getApp().getLClient().getClient().getUser(new WUserID(userid));
 
 			long modified = bean.getLongValue("modified");
 			WObject content = bean.get("content");
@@ -117,7 +135,7 @@ public class LocalObjectsMenu {
 		return null;
 	}
 
-	protected void openLocal(MStringID id) {
+	protected void openLocal(WStringID id) {
 		WObject b = appwindow.getApp().getBeanStorage().getBean(id);
 		log.info("opening " + b);
 

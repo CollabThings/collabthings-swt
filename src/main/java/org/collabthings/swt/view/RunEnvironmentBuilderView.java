@@ -1,7 +1,18 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
 import java.util.Date;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.environment.CTEnvironmentTask;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.CTRuntimeEvent;
@@ -12,33 +23,29 @@ import org.collabthings.simulation.CTSimpleSimulation;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
-import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTLabel;
-import org.collabthings.swt.controls.CTTabFolder;
-import org.collabthings.swt.controls.CTText;
 import org.collabthings.swt.controls.ObjectViewer;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
+import org.collabthings.tk.CTSelectionAdapter;
+import org.collabthings.tk.CTTabFolder;
+import org.collabthings.tk.CTText;
 import org.collabthings.util.LLog;
 import org.collabthings.util.PrintOut;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
 public class RunEnvironmentBuilderView extends CTComposite implements CTAppControl {
 	private CTRunEnvironmentBuilder builder;
 
 	private LLog log = LLog.getLogger(this);
-	private LOTApp app;
+	private CTApp app;
 
 	private Composite composite;
 	private AppWindow window;
@@ -57,7 +64,7 @@ public class RunEnvironmentBuilderView extends CTComposite implements CTAppContr
 
 	private YamlEditor enveditor;
 
-	public RunEnvironmentBuilderView(Composite composite, LOTApp app, AppWindow w, CTRunEnvironmentBuilder b) {
+	public RunEnvironmentBuilderView(Composite composite, CTApp app, AppWindow w, CTRunEnvironmentBuilder b) {
 		super(composite, SWT.None);
 		this.app = app;
 		this.window = w;

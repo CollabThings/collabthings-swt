@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.app;
 
 import org.collabthings.swt.AppWindow;
@@ -37,7 +47,7 @@ public class CTRunner<T> {
 		return this;
 	}
 
-	public boolean check(AppWindow window, LOTApp app) {
+	public boolean check(AppWindow window) {
 		if (runwhile != null || action != null || run != null) {
 			// run once if runwhile is null
 			boolean shouldContinue = runwhile != null ? runwhile.shouldContinue() : true;
@@ -46,20 +56,7 @@ public class CTRunner<T> {
 				if (current - lastrun > interval) {
 					lastrun = current;
 
-					T t = null;
-
-					if (this.run != null) {
-						run.run();
-					}
-
-					if (action != null) {
-						t = action.action();
-					}
-
-					if (gui != null) {
-						final T ft = t;
-						window.launch((e) -> gui.action(ft));
-					}
+					checkRun(window);
 				}
 
 				// run once if runwhile is null
@@ -73,19 +70,39 @@ public class CTRunner<T> {
 		}
 	}
 
+	private void checkRun(AppWindow window) {
+		T t = null;
+
+		if (this.run != null) {
+			run.run();
+		}
+
+		if (action != null) {
+			t = action.action();
+		}
+
+		if (gui != null) {
+			final T ft = t;
+			window.launch((e) -> gui.action(ft));
+		}
+	}
+
 	public CTRunner<T> run(Runnable r) {
 		this.run = r;
 		return this;
 	}
 
+	@FunctionalInterface
 	public static interface CTRunnerBoolean {
 		boolean shouldContinue();
 	}
 
+	@FunctionalInterface
 	public static interface CTRunnerReturn<T> {
 		T action();
 	}
 
+	@FunctionalInterface
 	public static interface CTRunnerAction<T> {
 		void action(T t);
 	}

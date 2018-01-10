@@ -1,23 +1,33 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
 import java.util.List;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.app.LOTApp;
 import org.collabthings.swt.view.SearchView.CTSearchResultFactory;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.widgets.Composite;
 
 import waazdoh.client.WClient;
-import waazdoh.common.vo.ObjectVO;
+import waazdoh.datamodel.ObjectVO;
 
 public class ObjectSearchView {
 	private LLog log = LLog.getLogger(this);
 
 	private SearchView search;
 
-	public ObjectSearchView(Composite composite, LOTApp app, AppWindow window) {
+	public ObjectSearchView(Composite composite, CTApp app, AppWindow window) {
 		search = new SearchView(composite, app, window, new CTSearchResultFactory() {
 
 			@Override

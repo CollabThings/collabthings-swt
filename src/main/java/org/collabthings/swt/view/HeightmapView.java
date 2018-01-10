@@ -1,18 +1,28 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
 import java.util.Date;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTHeightmap;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
-import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTSelectionAdapter;
+import org.collabthings.tk.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
@@ -34,11 +44,11 @@ public class HeightmapView extends CTComposite implements CTAppControl {
 	private Composite composite;
 	private Composite ctools;
 
-	public HeightmapView(Composite c, LOTApp app, AppWindow window2, CTHeightmap o) {
+	public HeightmapView(Composite c, CTApp app, AppWindow window2, CTHeightmap o) {
 		this(c, app, window2, o, true);
 	}
 
-	public HeightmapView(Composite c, LOTApp app, AppWindow nwindow, CTHeightmap o, boolean b) {
+	public HeightmapView(Composite c, CTApp app, AppWindow nwindow, CTHeightmap o, boolean b) {
 		super(c, SWT.NONE);
 		this.window = nwindow;
 
@@ -51,7 +61,7 @@ public class HeightmapView extends CTComposite implements CTAppControl {
 			ctools = new CTComposite(this, SWT.NONE);
 			ctools.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 			ctools.setLayout(gridLayout);
-			ctools.setBackground(SWTResourceManager.getActiontitleBackground());
+			ctools.setBackground(CTResourceManagerFactory.instance().getActiontitleBackground());
 			CTButton bsave = new CTButton(ctools, SWT.NONE);
 			bsave.setText("Save");
 			bsave.addSelectionListener(() -> save());
@@ -75,7 +85,7 @@ public class HeightmapView extends CTComposite implements CTAppControl {
 			textstyle = textstyle | SWT.H_SCROLL;
 		}
 		scripttext = new CTText(left, textstyle);
-		scripttext.setFont(SWTResourceManager.getDefaultFont());
+		scripttext.setFont(CTResourceManagerFactory.instance().getDefaultFont());
 
 		if (!b) {
 			scripttext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

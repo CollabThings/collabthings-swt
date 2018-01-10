@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>jar</packaging>
-	<version>0.4.0-RELEASE</version>
+	<version>0.5.0-SNAPSHOT</version>
 	<name>collabthings.swt</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.collabthings</groupId>
@@ -16,18 +16,10 @@
 		<exe.version>0.0.1.0</exe.version>
 	</properties>
 
-	<scm>
-		<connection>scm:svn:http://127.0.0.1/dummy</connection>
-		<developerConnection>scm:svn:https://127.0.0.1/dummy
-		</developerConnection>
-		<tag>HEAD</tag>
-		<url>http://127.0.0.1/dummy</url>
-	</scm>
-
 	<distributionManagement>
 		<repository>
 			<id>waazdoh-ssh-repository</id>
-			<url>sftp://maven.waazdoh.com/opt/maven/repository</url>
+			<url>sftp://maven@maven.waazdoh.com/opt/maven/repository</url>
 		</repository>
 	</distributionManagement>
 
@@ -217,13 +209,19 @@
 		<dependency>
 			<groupId>org.collabthings</groupId>
 			<artifactId>client</artifactId>
-			<version>[0.4.0-RELEASE,)</version>
+			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.collabthings</groupId>
 			<artifactId>ogl</artifactId>
-			<version>[0.0.3-RELEASE,)</version>
+			<version>0.0.4-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.collabthings</groupId>
+			<artifactId>tk</artifactId>
+			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -259,7 +257,6 @@
 			</systemPath>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.vafer</groupId>
 			<artifactId>jdeb</artifactId>
@@ -275,6 +272,12 @@
 			<groupId>org.jogamp.gluegen</groupId>
 			<artifactId>gluegen-rt-main</artifactId>
 			<version>2.3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.ipfs</groupId>
+			<artifactId>java-ipfs-api</artifactId>
+			<version>v1.2.0</version>
 		</dependency>
 
 	</dependencies>
@@ -374,6 +377,15 @@
 			<url>http://www.jogamp.org/deployment/maven/</url>
 			<layout>default</layout>
 		</repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+		<repository>
+			<id>jmonkeyengine</id>
+			<url>https://dl.bintray.com/jmonkeyengine/org.jmonkeyengine/</url>
+		</repository>
+
 	</repositories>
 
 	<pluginRepositories>

@@ -1,8 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls;
 
 import org.collabthings.model.CTMaterial;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.controls.dialogs.CTMaterialColorPopupDialog;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
+import org.collabthings.tk.CTResourceManagerFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -74,15 +86,15 @@ public class CTMaterialEditor extends CTComposite {
 	}
 
 	public void colorChanged(double ered, double egreen, double eblue) {
-		material.getColor()[0] = checkValue(ered);
-		material.getColor()[1] = checkValue(egreen);
-		material.getColor()[2] = checkValue(eblue);
+		material.setColor(0, checkValue(ered));
+		material.setColor(1, checkValue(egreen));
+		material.setColor(2, checkValue(eblue));
 
 		updateColor();
 	}
 
 	private void updateColor() {
-		Color color = SWTResourceManager.getColor(SWTResourceManager.getRGBWithDoubled(material.getColor()[0],
+		Color color = CTResourceManagerFactory.instance().getColor(CTResourceManagerFactory.instance().getRGBWithDoubled(material.getColor()[0],
 				material.getColor()[1], material.getColor()[2]));
 		ccolorandclick.setBackground(color);
 		ccolorandclick.setForeground(color);

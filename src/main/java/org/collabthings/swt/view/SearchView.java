@@ -1,15 +1,26 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -23,15 +34,17 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
-import waazdoh.common.vo.ObjectVO;
+import waazdoh.datamodel.ObjectVO;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WObjectID;
+import waazdoh.datamodel.WStringID;
 
 public class SearchView extends CTComposite implements CTAppControl {
 	private static final int COLUMN_WIDTH = 500;
 	private AppWindow window;
 	private CTText text;
-	private LOTApp app;
+	private CTApp app;
 	private LLog log = LLog.getLogger(this);
 	private Composite clist;
 	private ScrolledComposite scrolledComposite;
@@ -42,11 +55,11 @@ public class SearchView extends CTComposite implements CTAppControl {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, CTSearchResultFactory factory) {
+	public SearchView(Composite c, CTApp app, AppWindow appWindow, CTSearchResultFactory factory) {
 		this(c, app, appWindow, false, factory);
 	}
 
-	public SearchView(Composite c, LOTApp app, AppWindow appWindow, boolean hidesearchbox,
+	public SearchView(Composite c, CTApp app, AppWindow appWindow, boolean hidesearchbox,
 			CTSearchResultFactory nfactory) {
 		super(c, SWT.NONE);
 		this.app = app;
@@ -62,7 +75,7 @@ public class SearchView extends CTComposite implements CTAppControl {
 
 		if (!hidesearchbox) {
 			Composite composite = new CTComposite(this, SWT.NONE);
-			composite.setBackground(SWTResourceManager.getActiontitleBackground());
+			composite.setBackground(CTResourceManagerFactory.instance().getActiontitleBackground());
 
 			composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			GridLayout clayout = new GridLayout(2, false);
@@ -147,6 +160,25 @@ public class SearchView extends CTComposite implements CTAppControl {
 			List<ObjectVO> list = factory.search(searchitem, start, count);
 
 			log.info("search got list " + list);
+			if (list == null) {
+				Iterable<WStringID> ids = app.getBeanStorage().getLocalSetIDs(searchitem);
+				list = new LinkedList<>();
+				for (WStringID localid : ids) {
+					ObjectVO vo = new ObjectVO();
+					vo.setId(localid.toString());
+					list.add(vo);
+				}
+			}
+
+			if (list.isEmpty()) {
+				WStringID searchid = new WStringID(searchitem);
+				if (searchid.isId()) {
+					ObjectVO vo = new ObjectVO();
+					vo.setId(searchid.toString());
+					list.add(vo);
+				}
+			}
+
 			handleResponse(list);
 		}).start();
 	}

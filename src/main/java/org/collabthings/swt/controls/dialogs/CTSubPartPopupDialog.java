@@ -1,12 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls.dialogs;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.math.CTMath;
 import org.collabthings.model.CTSubPart;
-import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTText;
-import org.collabthings.swt.controls.LOTDoubleEditor;
-import org.collabthings.swt.controls.LOTVectorEditor;
+import org.collabthings.swt.controls.CTVectorEditor;
+import org.collabthings.tk.CTDoubleEditor;
+import org.collabthings.tk.CTSelectionAdapter;
+import org.collabthings.tk.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -17,7 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import waazdoh.common.MStringID;
+import waazdoh.datamodel.WStringID;
 
 public class CTSubPartPopupDialog extends Dialog {
 
@@ -25,13 +35,13 @@ public class CTSubPartPopupDialog extends Dialog {
 
 	private CTSubPart subpart;
 
-	private LOTVectorEditor loc;
+	private CTVectorEditor loc;
 
 	private Composite composite;
 
-	private LOTVectorEditor n;
+	private CTVectorEditor n;
 
-	private LOTDoubleEditor a;
+	private CTDoubleEditor a;
 	private Label lblLoc;
 	private Label lblN;
 	private Label lblAngle;
@@ -40,11 +50,11 @@ public class CTSubPartPopupDialog extends Dialog {
 	private Label lblPartid;
 	private CTText tpartid;
 
-	private LOTApp app;
+	private CTApp app;
 	private Label lpartbookmark;
 	private CTText tpartbookmark;
 
-	public CTSubPartPopupDialog(Shell shell, LOTApp app, CTSubPart data) {
+	public CTSubPartPopupDialog(Shell shell, CTApp app, CTSubPart data) {
 		super(shell);
 		this.subpart = data;
 		this.app = app;
@@ -74,7 +84,7 @@ public class CTSubPartPopupDialog extends Dialog {
 		lblLoc = new Label(composite, SWT.NONE);
 		lblLoc.setText("loc");
 
-		loc = new LOTVectorEditor(composite, subpart.getLocation(), v -> {
+		loc = new CTVectorEditor(composite, subpart.getLocation(), v -> {
 			updateOrientation();
 		});
 
@@ -83,7 +93,7 @@ public class CTSubPartPopupDialog extends Dialog {
 		lblN = new Label(composite, SWT.NONE);
 		lblN.setText("n");
 
-		n = new LOTVectorEditor(composite, subpart.getNormal(), v -> {
+		n = new CTVectorEditor(composite, subpart.getNormal(), v -> {
 			updateOrientation();
 		});
 
@@ -94,7 +104,7 @@ public class CTSubPartPopupDialog extends Dialog {
 		lblAngle = new Label(composite, SWT.NONE);
 		lblAngle.setText("angle");
 
-		a = new LOTDoubleEditor(composite, CTMath.radToDegrees(subpart.getAngle()), d -> {
+		a = new CTDoubleEditor(composite, CTMath.radToDegrees(subpart.getAngle()), d -> {
 			updateOrientation();
 		});
 		a.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -107,7 +117,7 @@ public class CTSubPartPopupDialog extends Dialog {
 		tpartid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tpartid.setText(subpart.getPart().getID().toString());
 		tpartid.addEditDoneListener(
-				e -> subpart.setPart(app.getObjectFactory().getPart(new MStringID(tpartid.getText()))));
+				e -> subpart.setPart(app.getObjectFactory().getPart(new WStringID(tpartid.getText()))));
 
 		lpartbookmark = new Label(composite, SWT.NONE);
 		lpartbookmark.setText("Part bm");

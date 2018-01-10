@@ -1,13 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2011 Google, Inc.
+ * Copyright (c) 2014 Juuso Vilmunen.
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+ * are made available under the terms of the GNU Public License v3.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
+ * http://www.gnu.org/licenses/gpl.html
+ * 
  * Contributors:
- *    Google, Inc. - initial API and implementation
- *******************************************************************************/
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt;
 
 import java.io.FileInputStream;
@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.collabthings.tk.CTResourceManager;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -44,14 +45,14 @@ import org.eclipse.swt.widgets.Display;
  * @author scheglov_ke
  * @author Dan Rubel
  */
-public class SWTResourceManager {
+public class SWTResourceManager implements CTResourceManager {
 	// //////////////////////////////////////////////////////////////////////////
 	//
 	// Color
 	//
 	// //////////////////////////////////////////////////////////////////////////
-	private static Map<RGB, Color> m_colorMap = new HashMap<RGB, Color>();
-	private static final LLog log = LLog.getLogger(SWTResourceManager.class.getName());
+	private Map<RGB, Color> m_colorMap = new HashMap<RGB, Color>();
+	private final LLog log = LLog.getLogger(SWTResourceManager.class.getName());
 
 	/**
 	 * Returns the system {@link Color} matching the specific ID.
@@ -60,7 +61,7 @@ public class SWTResourceManager {
 	 *            the ID value for the color
 	 * @return the system {@link Color} matching the specific ID
 	 */
-	public static Color getColor(int systemColorID) {
+	public Color getColor(int systemColorID) {
 		Display display = Display.getCurrent();
 		return display.getSystemColor(systemColorID);
 	}
@@ -77,7 +78,7 @@ public class SWTResourceManager {
 	 * @return the {@link Color} matching the given red, green and blue
 	 *         component values
 	 */
-	public static Color getColor(int r, int g, int b) {
+	public Color getColor(int r, int g, int b) {
 		return getColor(new RGB(r, g, b));
 	}
 
@@ -88,7 +89,7 @@ public class SWTResourceManager {
 	 *            the {@link RGB} value of the color
 	 * @return the {@link Color} matching the RGB value
 	 */
-	public static Color getColor(RGB rgb) {
+	public Color getColor(RGB rgb) {
 		Color color = m_colorMap.get(rgb);
 		if (color == null) {
 			Display display = Display.getCurrent();
@@ -101,7 +102,7 @@ public class SWTResourceManager {
 	/**
 	 * Dispose of all the cached {@link Color}'s.
 	 */
-	public static void disposeColors() {
+	public void disposeColors() {
 		for (Color color : m_colorMap.values()) {
 			color.dispose();
 		}
@@ -116,7 +117,7 @@ public class SWTResourceManager {
 	/**
 	 * Maps image paths to images.
 	 */
-	private static Map<String, Image> m_imageMap = new HashMap<String, Image>();
+	private Map<String, Image> m_imageMap = new HashMap<String, Image>();
 
 	/**
 	 * Returns an {@link Image} encoded by the specified {@link InputStream}.
@@ -125,7 +126,7 @@ public class SWTResourceManager {
 	 *            the {@link InputStream} encoding the image data
 	 * @return the {@link Image} encoded by the specified input stream
 	 */
-	protected static Image getImage(InputStream stream) throws IOException {
+	protected Image getImage(InputStream stream) throws IOException {
 		try {
 			Display display = Display.getCurrent();
 			ImageData data = new ImageData(stream);
@@ -145,7 +146,7 @@ public class SWTResourceManager {
 	 *            the path to the image file
 	 * @return the {@link Image} stored in the file at the specified path
 	 */
-	public static Image getImage(String path) {
+	public Image getImage(String path) {
 		Image image = m_imageMap.get(path);
 		if (image == null) {
 			try {
@@ -170,7 +171,7 @@ public class SWTResourceManager {
 	 *            the path to the image file, if starts with <code>'/'</code>
 	 * @return the {@link Image} stored in the file at the specified path
 	 */
-	public static Image getImage(Class<?> clazz, String path) {
+	public Image getImage(Class<?> clazz, String path) {
 		String key = clazz.getName() + '|' + path;
 		Image image = m_imageMap.get(key);
 		if (image == null) {
@@ -186,13 +187,13 @@ public class SWTResourceManager {
 		return image;
 	}
 
-	private static final int MISSING_IMAGE_SIZE = 10;
+	private final int MISSING_IMAGE_SIZE = 10;
 
 	/**
 	 * @return the small {@link Image} that can be used as placeholder for
 	 *         missing image.
 	 */
-	private static Image getMissingImage() {
+	private Image getMissingImage() {
 		Image image = new Image(Display.getCurrent(), MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
 		//
 		GC gc = new GC(image);
@@ -207,31 +208,31 @@ public class SWTResourceManager {
 	 * Style constant for placing decorator image in top left corner of base
 	 * image.
 	 */
-	public static final int TOP_LEFT = 1;
+	public final int TOP_LEFT = 1;
 	/**
 	 * Style constant for placing decorator image in top right corner of base
 	 * image.
 	 */
-	public static final int TOP_RIGHT = 2;
+	public final int TOP_RIGHT = 2;
 	/**
 	 * Style constant for placing decorator image in bottom left corner of base
 	 * image.
 	 */
-	public static final int BOTTOM_LEFT = 3;
+	public final int BOTTOM_LEFT = 3;
 	/**
 	 * Style constant for placing decorator image in bottom right corner of base
 	 * image.
 	 */
-	public static final int BOTTOM_RIGHT = 4;
+	public final int BOTTOM_RIGHT = 4;
 	/**
 	 * Internal value.
 	 */
-	protected static final int LAST_CORNER_KEY = 5;
+	protected final int LAST_CORNER_KEY = 5;
 	/**
 	 * Maps images to decorated images.
 	 */
 	@SuppressWarnings("unchecked")
-	private static Map<Image, Map<Image, Image>>[] m_decoratedImageMap = new Map[LAST_CORNER_KEY];
+	private Map<Image, Map<Image, Image>>[] m_decoratedImageMap = new Map[LAST_CORNER_KEY];
 
 	/**
 	 * Returns an {@link Image} composed of a base image decorated by another
@@ -243,7 +244,7 @@ public class SWTResourceManager {
 	 *            the {@link Image} to decorate the base image
 	 * @return {@link Image} The resulting decorated image
 	 */
-	public static Image decorateImage(Image baseImage, Image decorator) {
+	public Image decorateImage(Image baseImage, Image decorator) {
 		return decorateImage(baseImage, decorator, BOTTOM_RIGHT);
 	}
 
@@ -259,7 +260,7 @@ public class SWTResourceManager {
 	 *            the corner to place decorator image
 	 * @return the resulting decorated {@link Image}
 	 */
-	public static Image decorateImage(final Image baseImage, final Image decorator, final int corner) {
+	public Image decorateImage(final Image baseImage, final Image decorator, final int corner) {
 		if (corner <= 0 || corner >= LAST_CORNER_KEY) {
 			throw new IllegalArgumentException("Wrong decorate corner");
 		}
@@ -302,7 +303,7 @@ public class SWTResourceManager {
 	/**
 	 * Dispose all of the cached {@link Image}'s.
 	 */
-	public static void disposeImages() {
+	public void disposeImages() {
 		// dispose loaded images
 		{
 			for (Image image : m_imageMap.values()) {
@@ -333,11 +334,11 @@ public class SWTResourceManager {
 	/**
 	 * Maps font names to fonts.
 	 */
-	private static Map<String, Font> m_fontMap = new HashMap<String, Font>();
+	private Map<String, Font> m_fontMap = new HashMap<String, Font>();
 	/**
 	 * Maps fonts to their bold versions.
 	 */
-	private static Map<Font, Font> m_fontToBoldFontMap = new HashMap<Font, Font>();
+	private Map<Font, Font> m_fontToBoldFontMap = new HashMap<Font, Font>();
 
 	/**
 	 * Returns a {@link Font} based on its name, height and style.
@@ -350,7 +351,7 @@ public class SWTResourceManager {
 	 *            the style of the font
 	 * @return {@link Font} The font matching the name, height and style
 	 */
-	public static Font getFont(String name, int height, int style) {
+	public Font getFont(String name, int height, int style) {
 		return getFont(name, height, style, false, false);
 	}
 
@@ -371,7 +372,7 @@ public class SWTResourceManager {
 	 * @return {@link Font} The font matching the name, height, style, strikeout
 	 *         and underline
 	 */
-	public static Font getFont(String name, int size, int style, boolean strikeout, boolean underline) {
+	public Font getFont(String name, int size, int style, boolean strikeout, boolean underline) {
 		String fontName = name + '|' + size + '|' + style + '|' + strikeout + '|' + underline;
 		Font font = m_fontMap.get(fontName);
 		if (font == null) {
@@ -406,7 +407,7 @@ public class SWTResourceManager {
 	 *            the {@link Font} for which a bold version is desired
 	 * @return the bold version of the given {@link Font}
 	 */
-	public static Font getBoldFont(Font baseFont) {
+	public Font getBoldFont(Font baseFont) {
 		Font font = m_fontToBoldFontMap.get(baseFont);
 		if (font == null) {
 			FontData fontDatas[] = baseFont.getFontData();
@@ -420,7 +421,7 @@ public class SWTResourceManager {
 	/**
 	 * Dispose all of the cached {@link Font}'s.
 	 */
-	public static void disposeFonts() {
+	public void disposeFonts() {
 		// clear fonts
 		for (Font font : m_fontMap.values()) {
 			font.dispose();
@@ -441,7 +442,7 @@ public class SWTResourceManager {
 	/**
 	 * Maps IDs to cursors.
 	 */
-	private static Map<Integer, Cursor> m_idToCursorMap = new HashMap<Integer, Cursor>();
+	private Map<Integer, Cursor> m_idToCursorMap = new HashMap<Integer, Cursor>();
 
 	/**
 	 * Returns the system cursor matching the specific ID.
@@ -450,7 +451,7 @@ public class SWTResourceManager {
 	 *            int The ID value for the cursor
 	 * @return Cursor The system cursor matching the specific ID
 	 */
-	public static Cursor getCursor(int id) {
+	public Cursor getCursor(int id) {
 		Integer key = Integer.valueOf(id);
 		Cursor cursor = m_idToCursorMap.get(key);
 		if (cursor == null) {
@@ -463,7 +464,7 @@ public class SWTResourceManager {
 	/**
 	 * Dispose all of the cached cursors.
 	 */
-	public static void disposeCursors() {
+	public void disposeCursors() {
 		for (Cursor cursor : m_idToCursorMap.values()) {
 			cursor.dispose();
 		}
@@ -480,69 +481,69 @@ public class SWTResourceManager {
 	 * only be called when the cached objects are no longer needed (e.g. on
 	 * application shutdown).
 	 */
-	public static void dispose() {
+	public void dispose() {
 		disposeColors();
 		disposeImages();
 		disposeFonts();
 		disposeCursors();
 	}
 
-	public static Color getControlBg() {
+	public Color getControlBg() {
 		return getColor(255, 255, 255);
 	}
 
-	public static Font getDefaultFont() {
+	public Font getDefaultFont() {
 		return getDefaultFont(10, SWT.NORMAL);
 	}
 
-	public static Font getDefaultFont(int size, int style) {
+	public Font getDefaultFont(int size, int style) {
 		return getFont("Verdana", size, style);
 	}
 
-	public static Font getTitleFont() {
+	public Font getTitleFont() {
 		return getDefaultFont(13, SWT.BOLD);
 	}
 
-	public static Color getTitleColor() {
+	public Color getTitleColor() {
 		return getColor(200, 100, 0);
 	}
 
-	public static Color getActiontitleBackground() {
+	public Color getActiontitleBackground() {
 		return getColor(250, 150, 100);
 	}
 
-	public static Color getTabSelectedColor() {
+	public Color getTabSelectedColor() {
 		return getColor(50, 50, 50);
 	}
 
-	public static Color getTabNotSelectedColor() {
+	public Color getTabNotSelectedColor() {
 		return getColor(190, 190, 190);
 	}
 
-	public static Color getActiontitle2Background() {
+	public Color getActiontitle2Background() {
 		return getColor(200, 200, 200);
 	}
 
-	public static Color getActionTitle2Color() {
+	public Color getActionTitle2Color() {
 		return getTabSelectedColor();
 	}
 
-	public static Color getTextBackground() {
+	public Color getTextBackground() {
 		return getColor(240, 240, 240);
 	}
 
-	public static RGB getRGBWithDoubled(double red, double green, double blue) {
+	public RGB getRGBWithDoubled(double red, double green, double blue) {
 		int r = (int) (255 * red);
 		int g = (int) (255 * green);
 		int b = (int) (255 * blue);
 		return new RGB(r, g, b);
 	}
 
-	public static Color getTextError() {
+	public Color getTextErrorColor() {
 		return getColor(150, 20, 20);
 	}
 
-	public static Color getTextEditorColor() {
+	public Color getTextEditorColor() {
 		return getColor(0, 0, 0);
 	}
 }

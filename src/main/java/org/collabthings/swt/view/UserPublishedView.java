@@ -1,18 +1,28 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
-import org.collabthings.swt.SWTResourceManager;
 import org.collabthings.swt.app.CTRunner;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTLabel;
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
+import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTText;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -22,10 +32,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import waazdoh.common.vo.UserVO;
+import waazdoh.datamodel.UserVO;
 
 public class UserPublishedView extends CTComposite {
-	public final LOTApp app;
+	public final CTApp app;
 	public final AppWindow window;
 
 	public UserVO u;
@@ -35,7 +45,7 @@ public class UserPublishedView extends CTComposite {
 	private ScrolledComposite scrolledComposite;
 	private Composite clist;
 
-	public UserPublishedView(Composite parent, LOTApp app2, AppWindow window2) {
+	public UserPublishedView(Composite parent, CTApp app2, AppWindow window2) {
 		super(parent, SWT.NONE);
 		app = app2;
 		window = window2;
@@ -138,7 +148,7 @@ public class UserPublishedView extends CTComposite {
 		});
 
 		if (publishedcount++ % 2 == 0) {
-			Color bgcolor = SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
+			Color bgcolor = CTResourceManagerFactory.instance().getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW);
 			item.setBackground(bgcolor);
 			btnView.setBackground(bgcolor);
 			btncopy.setBackground(bgcolor);

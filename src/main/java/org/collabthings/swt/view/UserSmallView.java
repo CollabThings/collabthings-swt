@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
 import java.util.HashMap;
@@ -6,22 +16,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import waazdoh.common.WData;
-import waazdoh.common.vo.UserVO;
+import waazdoh.datamodel.UserVO;
+import waazdoh.datamodel.WData;
 
 public class UserSmallView extends CTComposite {
-	private LOTApp app;
+	private CTApp app;
 	private AppWindow window;
 	private UserVO user;
 
@@ -29,7 +39,7 @@ public class UserSmallView extends CTComposite {
 
 	private Set<String> ignorelist;
 
-	public UserSmallView(Composite cc, LOTApp app, AppWindow window, UserVO user) {
+	public UserSmallView(Composite cc, CTApp app, AppWindow window, UserVO user) {
 		super(cc, SWT.NONE);
 		this.app = app;
 		this.window = window;

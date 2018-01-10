@@ -1,12 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.controls.dialogs;
 
 import org.collabthings.model.CTMaterial;
-import org.collabthings.swt.SWTResourceManager;
-import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.controls.CTComposite;
 import org.collabthings.swt.controls.CTMaterialEditor;
-import org.collabthings.swt.controls.LOTDoubleEditor;
-import org.collabthings.swt.controls.LOTDoubleEditor.ChangeListener;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTDoubleEditor;
+import org.collabthings.tk.CTDoubleEditor.ChangeListener;
+import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTSelectionAdapter;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
@@ -22,9 +32,9 @@ public class CTMaterialColorPopupDialog extends Dialog {
 	private CTMaterialEditor materialeditor;
 	private CTMaterial material;
 
-	private LOTDoubleEditor ered;
-	private LOTDoubleEditor egreen;
-	private LOTDoubleEditor eblue;
+	private CTDoubleEditor ered;
+	private CTDoubleEditor egreen;
+	private CTDoubleEditor eblue;
 
 	private boolean popupclosed;
 	private Composite composite_1;
@@ -58,11 +68,11 @@ public class CTMaterialColorPopupDialog extends Dialog {
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		composite.setLayout(new GridLayout());
 
-		ered = new LOTDoubleEditor(composite, this.material.getColor()[0], listener);
+		ered = new CTDoubleEditor(composite, this.material.getColor()[0], listener);
 		ered.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		egreen = new LOTDoubleEditor(composite, this.material.getColor()[1], listener);
+		egreen = new CTDoubleEditor(composite, this.material.getColor()[1], listener);
 		egreen.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		eblue = new LOTDoubleEditor(composite, this.material.getColor()[2], listener);
+		eblue = new CTDoubleEditor(composite, this.material.getColor()[2], listener);
 		eblue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		updateColor();
@@ -96,7 +106,7 @@ public class CTMaterialColorPopupDialog extends Dialog {
 			dblue = eblue.getValue();
 
 			RGB rgb = getRGB();
-			composite_1.setBackground(SWTResourceManager.getColor(rgb));
+			composite_1.setBackground(CTResourceManagerFactory.instance().getColor(rgb));
 		} catch (IllegalArgumentException e) {
 			LLog.getLogger(this).error(this, "updateColor", e);
 		}
@@ -106,7 +116,7 @@ public class CTMaterialColorPopupDialog extends Dialog {
 		double red = ered.getValue();
 		double green = egreen.getValue();
 		double blue = eblue.getValue();
-		return SWTResourceManager.getRGBWithDoubled(red, green, blue);
+		return CTResourceManagerFactory.instance().getRGBWithDoubled(red, green, blue);
 	}
 
 	public void setListener(CTMaterialEditor ctMaterialEditor) {

@@ -1,28 +1,35 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
 import java.util.Date;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTScript;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
-import org.collabthings.swt.app.CTSelectionAdapter;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTText;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTSelectionAdapter;
+import org.collabthings.tk.CTText;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
 public class ScriptView extends CTComposite implements CTAppControl {
 
@@ -30,9 +37,9 @@ public class ScriptView extends CTComposite implements CTAppControl {
 	private CTScript script;
 	private CTText bottomtext;
 
-	private LOTApp app;
+	private CTApp app;
 
-	public ScriptView(Composite c, LOTApp app, AppWindow appWindow, CTScript script) {
+	public ScriptView(Composite c, CTApp app, AppWindow appWindow, CTScript script) {
 		super(c, SWT.NONE);
 		this.app = app;
 

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Juuso Vilmunen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Juuso Vilmunen
+ ******************************************************************************/
 package org.collabthings.swt.view;
 
 import java.util.Date;
@@ -7,11 +17,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.collabthings.app.CTApp;
 import org.collabthings.swt.AppWindow;
-import org.collabthings.swt.app.LOTApp;
-import org.collabthings.swt.controls.CTButton;
-import org.collabthings.swt.controls.CTComposite;
-import org.collabthings.swt.controls.CTLabel;
+import org.collabthings.tk.CTButton;
+import org.collabthings.tk.CTComposite;
+import org.collabthings.tk.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -22,14 +32,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import waazdoh.client.model.BinaryID;
-import waazdoh.common.WLogger;
-import waazdoh.common.WObject;
-import waazdoh.common.vo.ObjectVO;
-import waazdoh.common.vo.UserVO;
+import waazdoh.client.utils.WLogger;
+import waazdoh.datamodel.ObjectVO;
+import waazdoh.datamodel.UserVO;
+import waazdoh.datamodel.WObject;
+import waazdoh.datamodel.WStringID;
 
 public class ObjectSmallView extends CTComposite {
-	private LOTApp app;
+	private CTApp app;
 
 	private Map<String, DataHandler> handlers = new HashMap<>();
 	private CTLabel ltype;
@@ -46,7 +56,7 @@ public class ObjectSmallView extends CTComposite {
 
 	private CTBinaryImage thumbnail;
 
-	public ObjectSmallView(Composite cc, LOTApp app, AppWindow window, String id) {
+	public ObjectSmallView(Composite cc, CTApp app, AppWindow window, String id) {
 		super(cc, SWT.NONE);
 		this.app = app;
 		this.id = id;
@@ -161,7 +171,7 @@ public class ObjectSmallView extends CTComposite {
 
 		addDataHandler("creationtime", (n, d) -> lcreated.setText("" + new Date(Long.parseLong(d.getValue(n)))));
 		addDataHandler("modified", (n, d) -> lmodified.setText("" + new Date(Long.parseLong(d.getValue(n)))));
-		addDataHandler("thumbnail", (n, d) -> thumbnail.setId(new BinaryID(d.getValue(n))));
+		addDataHandler("thumbnail", (n, d) -> thumbnail.setId(new WStringID(d.getValue(n))));
 		addDataHandler("content", (n, d) -> handle(d.get(n)));
 	}
 
@@ -194,7 +204,7 @@ public class ObjectSmallView extends CTComposite {
 				UserVO u = app.getLClient().getService().getUsers().getUser(userid);
 				if (!lcreator.isDisposed()) {
 					lcreator.getDisplay().syncExec(() -> {
-						if (!lcreator.isDisposed()) {
+						if (!lcreator.isDisposed() && u!=null) {
 							lcreator.setText("" + u.getUsername());
 						}
 					});
