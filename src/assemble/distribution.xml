@@ -10,7 +10,7 @@
 	</formats>
 	<files>
 		<file>
-			<source>target/lot-jar-with-dependencies.jar</source>
+			<source>target/collabthings-jar-with-dependencies.jar</source>
 			<outputDirectory>/</outputDirectory>
 		</file>
 	</files>

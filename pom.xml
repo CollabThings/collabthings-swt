@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -73,7 +74,7 @@
 								</manifest>
 							</archive>
 							<outputDirectory>
-								src/main/app/bin/
+								src/main/app/
 							</outputDirectory>
 							<descriptors>
 								<descriptor>src/assemble/jar.xml</descriptor>
@@ -118,13 +119,16 @@
 						<configuration>
 							<tasks>
 								<!-- -->
-								<zip destfile="${project.build.directory}/nsis/files/bin.zip">
-									<fileset dir="src/main/app/bin" />
+								<zip
+									destfile="${project.build.directory}/nsis/files/bin.zip">
+									<fileset dir="src/main/app" />
 								</zip>
-								<zip destfile="${project.build.directory}/nsis/files/jdk.zip">
+								<zip
+									destfile="${project.build.directory}/nsis/files/jdk.zip">
 									<fileset dir="${jdk}" />
 								</zip>
-								<zip destfile="${project.build.directory}/nsis/files/resources.zip">
+								<zip
+									destfile="${project.build.directory}/nsis/files/resources.zip">
 									<fileset dir="src/main/resources" />
 								</zip>
 								<copy todir="${project.build.directory}/nsis/">
@@ -149,7 +153,7 @@
 						<configuration>
 							<dataSet>
 								<data>
-									<src>src/main/app/bin</src>
+									<src>src/main/app</src>
 									<type>directory</type>
 									<mapper>
 										<type>perm</type>
@@ -171,7 +175,7 @@
 			</plugin>
 		</plugins>
 		<!-- Name of the generated WAR file -->
-		<finalName>lot-app-${app.arch}</finalName>
+		<finalName>collabthings-${app.arch}</finalName>
 	</build>
 
 	<dependencies>
@@ -235,7 +239,7 @@
 			<artifactId>zest</artifactId>
 			<version>1.5</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/app/bin/org.eclipse.zest.core_1.5.100.201408150207.jar
+			<systemPath>${project.basedir}/src/main/app/org.eclipse.zest.core_1.5.100.201408150207.jar
 			</systemPath>
 		</dependency>
 
@@ -244,7 +248,7 @@
 			<artifactId>zest.layouts</artifactId>
 			<version>1.1</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/app/bin/org.eclipse.zest.layouts_1.1.100.201408150207.jar
+			<systemPath>${project.basedir}/src/main/app/org.eclipse.zest.layouts_1.1.100.201408150207.jar
 			</systemPath>
 		</dependency>
 
@@ -253,7 +257,7 @@
 			<artifactId>draw2d</artifactId>
 			<version>3.9.101</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/app/bin/org.eclipse.draw2d_3.9.101.201408150207.jar
+			<systemPath>${project.basedir}/src/main/app/org.eclipse.draw2d_3.9.101.201408150207.jar
 			</systemPath>
 		</dependency>
 

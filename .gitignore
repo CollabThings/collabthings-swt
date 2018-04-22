@@ -12,3 +12,5 @@ target/
 /lwjgl64.dll
 /OpenAL64.dll
 /install.log
+node_modules/
+*.log

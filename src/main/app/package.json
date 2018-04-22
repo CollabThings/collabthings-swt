@@ -1,0 +1,15 @@
+{
+  "bin": {"collabthings": "jdeploy-bundle/jdeploy.js"},
+  "author": "",
+  "description": "",
+  "main": "index.js",
+  "preferGlobal": true,
+  "repository": "",
+  "version": "1.0.0",
+  "jdeploy": { "jar": "collabthings-windows_64-jar-with-dependencies.jar" },
+  "dependencies": {"shelljs": "^0.7.5", "ipfs": "^0.28.2", "orbit-db": "^0.19.7" },
+  "license": "ISC",
+  "files": ["jdeploy-bundle"],
+  "name": "collabthings",
+  "scripts": {"test": "echo \"Error: no test specified\" && exit 1"}
+}
