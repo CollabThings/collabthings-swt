@@ -24,6 +24,7 @@ import org.collabthings.tk.CTResourceManagerFactory;
 import org.collabthings.util.LLog;
 
 import waazdoh.client.WClient;
+import waazdoh.client.env.Runner;
 import waazdoh.client.utils.ThreadChecker;
 import waazdoh.client.utils.WPreferences;
 
@@ -48,6 +49,9 @@ public final class AppLauncher {
 
 	public void doLaunch() {
 		try {
+			Runner run = new Runner();
+			run.run(app.getPreferences());
+
 			new ThreadChecker(() -> getClient().isRunning());
 
 			if (!getClient().isRunning()) {
