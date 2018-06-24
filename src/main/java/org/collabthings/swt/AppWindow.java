@@ -17,12 +17,12 @@ import java.util.List;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.app.CTApp;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTInfo;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTPartBuilder;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.CTTool;
 import org.collabthings.model.impl.CTConstants;
 import org.collabthings.model.impl.CTFactoryImpl;
@@ -33,12 +33,12 @@ import org.collabthings.swt.app.CTRunner;
 import org.collabthings.swt.app.CTRunners;
 import org.collabthings.swt.controls.LocalObjectsMenu;
 import org.collabthings.swt.dialog.FindOpenscadDialog;
+import org.collabthings.swt.view.ApplicationView;
 import org.collabthings.swt.view.CTMainView;
 import org.collabthings.swt.view.FactoryView;
 import org.collabthings.swt.view.ObjectSearchView;
 import org.collabthings.swt.view.RunEnvironmentBuildRunView;
 import org.collabthings.swt.view.RunEnvironmentBuilderView;
-import org.collabthings.swt.view.ScriptView;
 import org.collabthings.swt.view.UserView;
 import org.collabthings.swt.view.UsersSearchView;
 import org.collabthings.swt.view.ValueEditorDialog;
@@ -198,10 +198,10 @@ public final class AppWindow implements CTInfo {
 		s.search(searchitem, 0, 50);
 	}
 
-	public void viewScript(CTScript script) {
+	public void viewApplication(CTApplication application) {
 		shell.getDisplay().asyncExec(() -> {
-			ScriptView v = new ScriptView(tabFolder.getComposite(), app, this, script);
-			addTab("" + script, v, script);
+			ApplicationView v = new ApplicationView(tabFolder.getComposite(), app, this, application);
+			addTab("" + application, v, application);
 		});
 	}
 

@@ -185,13 +185,13 @@ public class UserSearchView extends CTComposite implements CTAppControl {
 
 	@Override
 	public MenuItem createMenu(Menu menu) {
-		MenuItem miscripts = new MenuItem(menu, SWT.CASCADE);
-		miscripts.setText("Search");
+		MenuItem miapplications = new MenuItem(menu, SWT.CASCADE);
+		miapplications.setText("Search");
 
-		Menu mscript = new Menu(miscripts);
-		miscripts.setMenu(mscript);
+		Menu mapplication = new Menu(miapplications);
+		miapplications.setMenu(mapplication);
 
-		return miscripts;
+		return miapplications;
 	}
 
 	private void updateLayout() {

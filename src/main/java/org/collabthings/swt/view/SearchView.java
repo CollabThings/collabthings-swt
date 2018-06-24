@@ -36,8 +36,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import waazdoh.datamodel.ObjectVO;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WObjectID;
 import waazdoh.datamodel.WStringID;
 
 public class SearchView extends CTComposite implements CTAppControl {
@@ -208,13 +206,13 @@ public class SearchView extends CTComposite implements CTAppControl {
 
 	@Override
 	public MenuItem createMenu(Menu menu) {
-		MenuItem miscripts = new MenuItem(menu, SWT.CASCADE);
-		miscripts.setText("Search");
+		MenuItem miapplications = new MenuItem(menu, SWT.CASCADE);
+		miapplications.setText("Search");
 
-		Menu mscript = new Menu(miscripts);
-		miscripts.setMenu(mscript);
+		Menu mapplication = new Menu(miapplications);
+		miapplications.setMenu(mapplication);
 
-		return miscripts;
+		return miapplications;
 	}
 
 	private void updateLayout() {

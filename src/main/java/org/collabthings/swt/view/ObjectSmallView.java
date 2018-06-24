@@ -111,8 +111,8 @@ public class ObjectSmallView extends CTComposite {
 		addDataHandler("license", (n, e) -> {
 		});
 
-		addDataHandler("scripts", (n, d) -> {
-			ScriptList sl = new ScriptList(items, app, window, d);
+		addDataHandler("applications", (n, d) -> {
+			ApplicationList sl = new ApplicationList(items, app, window, d);
 			setListLayoutData(sl);
 		});
 
@@ -121,7 +121,7 @@ public class ObjectSmallView extends CTComposite {
 		});
 
 		addDataHandler("value", (n, d) -> {
-			// Probably script base64 value
+			// Probably application base64 value
 		});
 	}
 
@@ -204,7 +204,7 @@ public class ObjectSmallView extends CTComposite {
 				UserVO u = app.getLClient().getService().getUsers().getUser(userid);
 				if (!lcreator.isDisposed()) {
 					lcreator.getDisplay().syncExec(() -> {
-						if (!lcreator.isDisposed() && u!=null) {
+						if (!lcreator.isDisposed() && u != null) {
 							lcreator.setText("" + u.getUsername());
 						}
 					});

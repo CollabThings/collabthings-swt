@@ -10,10 +10,10 @@
  ******************************************************************************/
 package org.collabthings.swt.view;
 
-import org.collabthings.model.CTScript;
+import org.collabthings.model.CTApplication;
 
-public interface ScriptUser {
+public interface ApplicationUser {
 
-	void addScript(CTScript script);
+	void addApplication(CTApplication application);
 
 }

@@ -13,8 +13,8 @@ package org.collabthings.swt.view;
 import java.util.Date;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTObject;
-import org.collabthings.model.CTScript;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.tk.CTComposite;
@@ -31,38 +31,38 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class ScriptView extends CTComposite implements CTAppControl {
+public class ApplicationView extends CTComposite implements CTAppControl {
 
-	private CTText scripttext;
-	private CTScript script;
+	private CTText applicationtext;
+	private CTApplication application;
 	private CTText bottomtext;
 
 	private CTApp app;
 
-	public ScriptView(Composite c, CTApp app, AppWindow appWindow, CTScript script) {
+	public ApplicationView(Composite c, CTApp app, AppWindow appWindow, CTApplication application) {
 		super(c, SWT.NONE);
 		this.app = app;
 
 		setLayout(new GridLayout(1, false));
-		this.script = script;
+		this.application = application;
 
 		SashForm sashForm = new SashForm(this, SWT.VERTICAL);
 		GridData gd_sashForm = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_sashForm.heightHint = 200;
 		sashForm.setLayoutData(gd_sashForm);
 
-		scripttext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
-		scripttext.addKeyListener(new KeyAdapter() {
+		applicationtext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		applicationtext.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				key(arg0);
 			}
 		});
 
-		if (script != null) {
-			scripttext.setText("" + script.getScript());
+		if (application != null) {
+			applicationtext.setText("" + application.getObject().toYaml());
 		} else {
-			scripttext.setText("Script null");
+			applicationtext.setText("Application null");
 		}
 
 		bottomtext = new CTText(sashForm, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
@@ -75,11 +75,11 @@ public class ScriptView extends CTComposite implements CTAppControl {
 
 	@Override
 	public CTObject getObject() {
-		return script;
+		return application;
 	}
 
 	public synchronized void save() {
-		String sstring = this.scripttext.getText();
+		String sstring = this.applicationtext.getText();
 		doSave(sstring);
 	}
 
@@ -90,22 +90,17 @@ public class ScriptView extends CTComposite implements CTAppControl {
 
 	@Override
 	public String getControlName() {
-		return "Script: " + script;
+		return "Application: " + application;
 	}
 
-	private void doSave(String sscripttext) {
-		if (sscripttext != null && (script.getScript() == null || !script.getScript().equals(sscripttext))) {
+	private void doSave(String sapplicationtext) {
+		if (sapplicationtext != null && (!application.getObject().toYaml().equals(sapplicationtext))) {
 
-			CTScript s = this.app.getObjectFactory().getScript();
-			s.setScript(sscripttext);
+			CTApplication s = this.app.getObjectFactory().getApplication();
+			s.setApplication(sapplicationtext);
 			getDisplay().asyncExec(() -> {
-				if (s.isOK()) {
-					script.setScript(sscripttext);
-					bottomtext.append("OK " + new Date() + "\n");
-				} else {
-					String error = s.getError();
-					bottomtext.append("ERROR " + error + "\n");
-				}
+				application.setApplication(sapplicationtext);
+				bottomtext.append("OK " + new Date() + "\n");
 			});
 		}
 	}
@@ -117,16 +112,16 @@ public class ScriptView extends CTComposite implements CTAppControl {
 
 	@Override
 	public MenuItem createMenu(Menu menu) {
-		MenuItem miscripts = new MenuItem(menu, SWT.CASCADE);
-		miscripts.setText("Script");
+		MenuItem miapplications = new MenuItem(menu, SWT.CASCADE);
+		miapplications.setText("Application");
 
-		Menu mscript = new Menu(miscripts);
-		miscripts.setMenu(mscript);
+		Menu mapplication = new Menu(miapplications);
+		miapplications.setMenu(mapplication);
 
-		MenuItem msave = new MenuItem(mscript, SWT.NONE);
+		MenuItem msave = new MenuItem(mapplication, SWT.NONE);
 		msave.setText("Save");
 		msave.addSelectionListener(new CTSelectionAdapter(e -> save()));
 
-		return miscripts;
+		return miapplications;
 	}
 }

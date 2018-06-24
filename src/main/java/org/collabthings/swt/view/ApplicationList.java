@@ -31,13 +31,13 @@ import org.eclipse.swt.widgets.MenuItem;
 import waazdoh.datamodel.WObject;
 import waazdoh.datamodel.WStringID;
 
-public class ScriptList extends CTComposite {
+public class ApplicationList extends CTComposite {
 
 	private AppWindow window;
 	private CTApp app;
 	private WObject o;
 
-	public ScriptList(Composite parent, CTApp app, AppWindow window, WObject d) {
+	public ApplicationList(Composite parent, CTApp app, AppWindow window, WObject d) {
 		super(parent, SWT.NONE);
 		this.window = window;
 		this.app = app;
@@ -47,11 +47,11 @@ public class ScriptList extends CTComposite {
 
 		CTLabel l = new CTLabel(this, SWT.NONE);
 		l.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		l.setText("Scripts");
+		l.setText("Applications");
 
-		List<HashMap> scripts = d.getList("scripts");
-		for (HashMap wscript : scripts) {
-			addRow(new WObject(wscript));
+		List<HashMap> applications = d.getList("applications");
+		for (HashMap wapplication : applications) {
+			addRow(new WObject(wapplication));
 		}
 
 		// for (String name : d.getChildren()) {
@@ -59,28 +59,28 @@ public class ScriptList extends CTComposite {
 		// }
 	}
 
-	private void addRow(WObject scriptdata) {
-		String id = scriptdata.getValue("id");
-		String name = scriptdata.getValue("n");
+	private void addRow(WObject applicationdata) {
+		String id = applicationdata.getValue("id");
+		String name = applicationdata.getValue("n");
 		if (id != null && name != null) {
-			Composite cscript = new CTComposite(this, SWT.NONE);
-			cscript.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+			Composite capplication = new CTComposite(this, SWT.NONE);
+			capplication.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 
-			cscript.setLayout(new GridLayout(4, false));
-			CTLabel clname = new CTLabel(cscript, SWT.NONE);
+			capplication.setLayout(new GridLayout(4, false));
+			CTLabel clname = new CTLabel(capplication, SWT.NONE);
 			clname.setText("" + name);
 
-			CTButton btnView = new CTButton(cscript, SWT.NONE);
+			CTButton btnView = new CTButton(capplication, SWT.NONE);
 			btnView.addSelectionListener(() -> {
-				window.viewScript(app.getObjectFactory().getScript(new WStringID(id)));
+				window.viewApplication(app.getObjectFactory().getApplication(new WStringID(id)));
 			});
 			btnView.setText("View");
 
-			CTButton btnId = new CTButton(cscript, SWT.NONE);
-			btnId.addSelectionListener(() -> new CopyToClipbard(cscript, id));
+			CTButton btnId = new CTButton(capplication, SWT.NONE);
+			btnId.addSelectionListener(() -> new CopyToClipbard(capplication, id));
 			btnId.setText("ID");
 
-			Composite composite = new CTComposite(cscript, SWT.NONE);
+			Composite composite = new CTComposite(capplication, SWT.NONE);
 			GridLayout gl_composite = new GridLayout(2, false);
 			LOTSWT.setDefaults(gl_composite);
 			composite.setLayout(gl_composite);
@@ -103,12 +103,12 @@ public class ScriptList extends CTComposite {
 	private void createAddToMenu(String id, Menu menu) {
 		List<CTAppControl> controls = window.getTablist();
 		for (CTAppControl c : controls) {
-			if (c instanceof ScriptUser) {
-				ScriptUser su = (ScriptUser) c;
+			if (c instanceof ApplicationUser) {
+				ApplicationUser su = (ApplicationUser) c;
 				MenuItem mcontrol = new MenuItem(menu, SWT.NONE);
 				mcontrol.setText("" + c.getControlName());
-				mcontrol.addSelectionListener(
-						new CTSelectionAdapter(e -> su.addScript(app.getObjectFactory().getScript(new WStringID(id)))));
+				mcontrol.addSelectionListener(new CTSelectionAdapter(
+						e -> su.addApplication(app.getObjectFactory().getApplication(new WStringID(id)))));
 			}
 		}
 	}

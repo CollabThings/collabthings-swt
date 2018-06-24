@@ -32,7 +32,7 @@ public class PartBuilderView extends CTComposite implements CTAppControl {
 	private CTApp app;
 	private AppWindow window;
 	private CTPartBuilder builder;
-	private ScriptView scriptview;
+	private ApplicationView applicationview;
 	private GLSceneView view;
 
 	public PartBuilderView(Composite parent, CTApp app, AppWindow appWindow, CTPart p, CTPartBuilder pb,
@@ -72,8 +72,8 @@ public class PartBuilderView extends CTComposite implements CTAppControl {
 
 		btnRun.setText("Run");
 
-		scriptview = new ScriptView(this, app, window, builder.getScript());
-		scriptview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		applicationview = new ApplicationView(this, app, window, builder.getApplication());
+		applicationview.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class PartBuilderView extends CTComposite implements CTAppControl {
 	}
 
 	private void save() {
-		scriptview.save();
+		applicationview.save();
 	}
 
 	@Override

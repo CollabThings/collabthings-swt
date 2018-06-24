@@ -31,7 +31,7 @@ public class EnvironmentView extends CTComposite {
 
 	private CTEnvironment environment;
 	private AppWindow window;
-	private Composite cscriptslist;
+	private Composite capplicationslist;
 	private TitleComposite ctools;
 	private Composite ctoolslist;
 
@@ -45,7 +45,7 @@ public class EnvironmentView extends CTComposite {
 		setLayout(gridLayout_1);
 		LOTSWT.setDefaults(gridLayout_1);
 
-		addScripts();
+		addApplications();
 		addTools();
 		addParameters();
 	}
@@ -161,69 +161,69 @@ public class EnvironmentView extends CTComposite {
 		btndeletetool.setText("delete");
 	}
 
-	private void addScripts() {
-		TitleComposite cscripts = new TitleComposite(this, "SCRIPTS");
-		cscripts.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GridLayout gridLayout = (GridLayout) cscripts.getLayout();
+	private void addApplications() {
+		TitleComposite capplications = new TitleComposite(this, "SCRIPTS");
+		capplications.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridLayout gridLayout = (GridLayout) capplications.getLayout();
 		LOTSWT.setDefaults(gridLayout);
 
-		cscriptslist = new CTComposite(cscripts, SWT.NONE);
+		capplicationslist = new CTComposite(capplications, SWT.NONE);
 
 		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
 		fillLayout.marginHeight = 0;
 		fillLayout.marginWidth = 0;
 
-		cscriptslist.setLayout(fillLayout);
-		cscriptslist.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		capplicationslist.setLayout(fillLayout);
+		capplicationslist.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 		if (environment != null) {
-			cscripts.addButton("+", () -> {
-				String scriptname = "script" + environment.getScripts().size();
-				this.environment.addScript(scriptname,
-						this.window.getApp().getLClient().getObjectFactory().getScript());
-				addScript(scriptname);
+			capplications.addButton("+", () -> {
+				String applicationname = "application" + environment.getApplications().size();
+				this.environment.addApplication(applicationname,
+						this.window.getApp().getLClient().getObjectFactory().getApplication());
+				addApplication(applicationname);
 				getParent().layout();
 			});
 
-			Set<String> scripts = environment.getScripts();
-			for (String string : scripts) {
-				addScript(string);
+			Set<String> applications = environment.getApplications();
+			for (String string : applications) {
+				addApplication(string);
 			}
 		}
 	}
 
-	private void addScript(String string) {
-		Composite cscript = new CTComposite(cscriptslist, SWT.NONE);
-		GridLayout gl_cscript = new GridLayout();
+	private void addApplication(String string) {
+		Composite capplication = new CTComposite(capplicationslist, SWT.NONE);
+		GridLayout gl_capplication = new GridLayout();
 
-		gl_cscript.numColumns = 4;
-		cscript.setLayout(gl_cscript);
+		gl_capplication.numColumns = 4;
+		capplication.setLayout(gl_capplication);
 
-		CTText tname = new CTText(cscript, SWT.NONE);
+		CTText tname = new CTText(capplication, SWT.NONE);
 		GridData gd_tname = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_tname.widthHint = 146;
 		tname.setLayoutData(gd_tname);
 		tname.setText(string);
 		tname.setEditable(true);
 
-		CTButton btnrenamescript = new CTButton(cscript, SWT.NONE);
-		btnrenamescript.addSelectionListener(() -> {
-			environment.renameScript(string, tname.getText());
+		CTButton btnrenameapplication = new CTButton(capplication, SWT.NONE);
+		btnrenameapplication.addSelectionListener(() -> {
+			environment.renameApplication(string, tname.getText());
 		});
-		btnrenamescript.setText("rename");
+		btnrenameapplication.setText("rename");
 
-		CTButton btnopenscript = new CTButton(cscript, SWT.NONE);
-		btnopenscript.addSelectionListener(() -> {
-			window.viewScript(environment.getScript(string));
-		});
-
-		btnopenscript.setText("open");
-
-		CTButton btndeletescript = new CTButton(cscript, SWT.NONE);
-		btndeletescript.addSelectionListener(() -> {
-			environment.deleteScript(string);
+		CTButton btnopenapplication = new CTButton(capplication, SWT.NONE);
+		btnopenapplication.addSelectionListener(() -> {
+			window.viewApplication(environment.getApplication(string));
 		});
 
-		btndeletescript.setText("delete");
+		btnopenapplication.setText("open");
+
+		CTButton btndeleteapplication = new CTButton(capplication, SWT.NONE);
+		btndeleteapplication.addSelectionListener(() -> {
+			environment.deleteApplication(string);
+		});
+
+		btndeleteapplication.setText("delete");
 	}
 }

@@ -20,10 +20,10 @@ import org.collabthings.CTClient;
 import org.collabthings.app.CTApp;
 import org.collabthings.environment.CTRunEnvironment;
 import org.collabthings.environment.impl.CTFactoryState;
+import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTEnvironment;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTObject;
-import org.collabthings.model.CTScript;
 import org.collabthings.model.impl.CTEnvironmentImpl;
 import org.collabthings.model.impl.CTFactoryImpl;
 import org.collabthings.swt.AppWindow;
@@ -84,8 +84,8 @@ public class FactoryView extends CTComposite implements CTAppControl {
 		return "Factory: " + factory.getName();
 	}
 
-	public void addScript(CTScript script) {
-		factory.addScript("script" + factory.getScripts().size() + " " + script.getName(), script);
+	public void addApplication(CTApplication application) {
+		factory.addApplication("application" + factory.getApplications().size() + " " + application.getName(), application);
 	}
 
 	private synchronized void updateFactoryHash() {
@@ -101,8 +101,8 @@ public class FactoryView extends CTComposite implements CTAppControl {
 		window.viewFactory(f);
 	}
 
-	CTScript addScript(String name) {
-		return factory.addScript(name);
+	CTApplication addApplication(String name) {
+		return factory.addApplication(name);
 	}
 
 	private void init() {
@@ -187,31 +187,31 @@ public class FactoryView extends CTComposite implements CTAppControl {
 		Menu mfactory = new Menu(mifactory);
 		mifactory.setMenu(mfactory);
 
-		MenuItem mifscripts = new MenuItem(mfactory, SWT.CASCADE);
-		mifscripts.setText("Scripts");
+		MenuItem mifapplications = new MenuItem(mfactory, SWT.CASCADE);
+		mifapplications.setText("Applications");
 
-		Menu mfmscripts = new Menu(mifscripts);
-		mifscripts.setMenu(mfmscripts);
+		Menu mfmapplications = new Menu(mifapplications);
+		mifapplications.setMenu(mfmapplications);
 
-		MenuItem mfsaddnew = new MenuItem(mfmscripts, SWT.NONE);
+		MenuItem mfsaddnew = new MenuItem(mfmapplications, SWT.NONE);
 		mfsaddnew.setText("New");
 		mfsaddnew.addSelectionListener(
-				new CTSelectionAdapter(e -> addScript("script" + factory.getEnvironment().getScripts().size())));
+				new CTSelectionAdapter(e -> addApplication("application" + factory.getEnvironment().getApplications().size())));
 
-		MenuItem micscripts = new MenuItem(mfmscripts, SWT.CASCADE);
-		micscripts.setText("list");
+		MenuItem micapplications = new MenuItem(mfmapplications, SWT.CASCADE);
+		micapplications.setText("list");
 
-		Menu mscripts = new Menu(micscripts);
-		micscripts.setMenu(mscripts);
+		Menu mapplications = new Menu(micapplications);
+		micapplications.setMenu(mapplications);
 
-		Set<String> scripts = factory.getEnvironment().getScripts();
-		for (String string : scripts) {
-			MenuItem mscript = new MenuItem(mscripts, SWT.NONE);
-			mscript.setText(string);
-			mscript.addSelectionListener(new CTSelectionAdapter(e -> scriptMenuSelected(string)));
+		Set<String> applications = factory.getEnvironment().getApplications();
+		for (String string : applications) {
+			MenuItem mapplication = new MenuItem(mapplications, SWT.NONE);
+			mapplication.setText(string);
+			mapplication.addSelectionListener(new CTSelectionAdapter(e -> applicationMenuSelected(string)));
 		}
 
-		MenuItem mfmImport = new MenuItem(mfmscripts, SWT.NONE);
+		MenuItem mfmImport = new MenuItem(mfmapplications, SWT.NONE);
 		mfmImport.setText("Import");
 		mfmImport.addSelectionListener(new CTSelectionAdapter(e -> importSelected()));
 
@@ -288,9 +288,9 @@ public class FactoryView extends CTComposite implements CTAppControl {
 				String fpath = fd.getFilterPath();
 				String[] fns = fd.getFileNames();
 				for (String string : fns) {
-					CTScript s = addScript(string);
+					CTApplication s = addApplication(string);
 					byte[] bs = Files.readAllBytes(Paths.get(fpath + File.separator + string));
-					s.setScript(new String(bs));
+					s.setApplication(new String(bs));
 				}
 			} catch (IOException e) {
 				window.showError("importError", e);
@@ -298,7 +298,7 @@ public class FactoryView extends CTComposite implements CTAppControl {
 		});
 	}
 
-	protected void scriptMenuSelected(String string) {
-		window.viewScript(factory.getScript(string));
+	protected void applicationMenuSelected(String string) {
+		window.viewApplication(factory.getApplication(string));
 	}
 }

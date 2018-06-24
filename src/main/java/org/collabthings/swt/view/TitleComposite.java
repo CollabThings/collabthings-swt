@@ -36,9 +36,9 @@ public class TitleComposite extends CTComposite {
 		ctitle.setLayout(gl_ctitle);
 		ctitle.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		CTLabel lblScripts = new CTLabel(ctitle, SWT.NONE);
-		lblScripts.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblScripts.setText(title);
+		CTLabel lblApplications = new CTLabel(ctitle, SWT.NONE);
+		lblApplications.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lblApplications.setText(title);
 	}
 
 	public void addButton(String string, ButtonAction action) {

@@ -315,17 +315,17 @@ public class RunEnvironmentBuilderView extends CTComposite implements CTAppContr
 		Menu mrunenv = new Menu(mirunenv);
 		mirunenv.setMenu(mrunenv);
 
-		MenuItem mifscripts = new MenuItem(mrunenv, SWT.CASCADE);
-		mifscripts.setText("Scripts");
+		MenuItem mifapplications = new MenuItem(mrunenv, SWT.CASCADE);
+		mifapplications.setText("Applications");
 
-		Menu mfmscripts = new Menu(mifscripts);
-		mifscripts.setMenu(mfmscripts);
+		Menu mfmapplications = new Menu(mifapplications);
+		mifapplications.setMenu(mfmapplications);
 
-		MenuItem micscripts = new MenuItem(mfmscripts, SWT.CASCADE);
-		micscripts.setText("list");
+		MenuItem micapplications = new MenuItem(mfmapplications, SWT.CASCADE);
+		micapplications.setText("list");
 
-		Menu mscripts = new Menu(micscripts);
-		micscripts.setMenu(mscripts);
+		Menu mapplications = new Menu(micapplications);
+		micapplications.setMenu(mapplications);
 
 		MenuItem mifpublish = new MenuItem(mrunenv, SWT.NONE);
 		mifpublish.setText("Publish");

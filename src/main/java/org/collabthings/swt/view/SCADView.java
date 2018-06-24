@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.MenuItem;
 public class SCADView extends CTComposite implements CTAppControl {
 
 	private AppWindow window;
-	private CTText scripttext;
+	private CTText applicationtext;
 	private CTOpenSCAD scad;
 	private CTText bottomtext;
 
@@ -84,21 +84,21 @@ public class SCADView extends CTComposite implements CTAppControl {
 		if (b) {
 			textstyle = textstyle | SWT.H_SCROLL;
 		}
-		scripttext = new CTText(left, textstyle);
-		scripttext.setFont(CTResourceManagerFactory.instance().getDefaultFont());
+		applicationtext = new CTText(left, textstyle);
+		applicationtext.setFont(CTResourceManagerFactory.instance().getDefaultFont());
 
 		if (!b) {
-			scripttext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+			applicationtext.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		}
 
-		scripttext.addKeyListener(new KeyAdapter() {
+		applicationtext.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				key(arg0);
 			}
 		});
 
-		scripttext.setText("" + scad.getScript());
+		applicationtext.setText("" + scad.getApplication());
 
 		if (b) {
 			SashForm sashForm = new SashForm(left, SWT.VERTICAL);
@@ -121,7 +121,7 @@ public class SCADView extends CTComposite implements CTAppControl {
 	}
 
 	public synchronized void save() {
-		String sstring = this.scripttext.getText();
+		String sstring = this.applicationtext.getText();
 		doSave(sstring);
 	}
 
@@ -132,15 +132,15 @@ public class SCADView extends CTComposite implements CTAppControl {
 
 	@Override
 	public String getControlName() {
-		return "Script: " + scad;
+		return "Application: " + scad;
 	}
 
-	private void doSave(String sscripttext) {
-		if (sscripttext != null && (scad.getScript() == null || !scad.getScript().equals(sscripttext))) {
+	private void doSave(String sapplicationtext) {
+		if (sapplicationtext != null && (scad.getApplication() == null || !scad.getApplication().equals(sapplicationtext))) {
 
-			String oldscript = scad.getScript();
+			String oldapplication = scad.getApplication();
 			getDisplay().asyncExec(() -> {
-				scad.setScript(sscripttext);
+				scad.setApplication(sapplicationtext);
 				if (scad.getModel() != null && scad.isOK()) {
 					if (bottomtext != null) {
 						bottomtext.append("OK " + new Date() + "\n");
@@ -153,7 +153,7 @@ public class SCADView extends CTComposite implements CTAppControl {
 						window.showError("ERROR " + error);
 					}
 
-					scad.setScript(oldscript);
+					scad.setApplication(oldapplication);
 
 				}
 			});
@@ -167,16 +167,16 @@ public class SCADView extends CTComposite implements CTAppControl {
 
 	@Override
 	public MenuItem createMenu(Menu menu) {
-		MenuItem miscripts = new MenuItem(menu, SWT.CASCADE);
-		miscripts.setText("Script");
+		MenuItem miapplications = new MenuItem(menu, SWT.CASCADE);
+		miapplications.setText("Application");
 
-		Menu mscript = new Menu(miscripts);
-		miscripts.setMenu(mscript);
+		Menu mapplication = new Menu(miapplications);
+		miapplications.setMenu(mapplication);
 
-		MenuItem msave = new MenuItem(mscript, SWT.NONE);
+		MenuItem msave = new MenuItem(mapplication, SWT.NONE);
 		msave.setText("Save");
 		msave.addSelectionListener(new CTSelectionAdapter(e -> save()));
 
-		return miscripts;
+		return miapplications;
 	}
 }
