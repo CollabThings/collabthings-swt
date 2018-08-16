@@ -8,7 +8,7 @@
 	<name>collabthings.swt</name>
 	<url>http://maven.apache.org</url>
 	<groupId>org.collabthings</groupId>
-	<artifactId>collabthings.swt</artifactId>
+	<artifactId>collabthings-swt</artifactId>
 
 	<properties>
 		<cxf.version>2.4.2</cxf.version>
@@ -262,19 +262,19 @@
 
 		<dependency>
 			<groupId>org.collabthings</groupId>
-			<artifactId>client</artifactId>
+			<artifactId>collabthings-client</artifactId>
 			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.collabthings</groupId>
-			<artifactId>ogl</artifactId>
+			<artifactId>collabthings-ogl</artifactId>
 			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.collabthings</groupId>
-			<artifactId>tk</artifactId>
+			<artifactId>collabthings-tk</artifactId>
 			<version>0.5.0-SNAPSHOT</version>
 		</dependency>
 
