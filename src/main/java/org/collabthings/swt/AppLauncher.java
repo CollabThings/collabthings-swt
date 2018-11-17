@@ -20,13 +20,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.core.WClient;
+import org.collabthings.core.env.Runner;
+import org.collabthings.core.utils.ThreadChecker;
+import org.collabthings.core.utils.WPreferences;
 import org.collabthings.tk.CTResourceManagerFactory;
+import org.collabthings.tk.CTStyleAndResources;
 import org.collabthings.util.LLog;
-
-import waazdoh.client.WClient;
-import waazdoh.client.env.Runner;
-import waazdoh.client.utils.ThreadChecker;
-import waazdoh.client.utils.WPreferences;
 
 public final class AppLauncher {
 	private CTApp app;
@@ -41,7 +41,7 @@ public final class AppLauncher {
 
 	private void launch() throws MalformedURLException {
 		log.info("Launching " + this);
-		CTResourceManagerFactory.setInstance(new SWTResourceManager());
+		CTResourceManagerFactory.setInstance(new CTStyleAndResources());
 
 		app = new CTApp();
 		doLaunch();

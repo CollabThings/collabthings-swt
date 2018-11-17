@@ -11,6 +11,7 @@
 package org.collabthings.swt.view;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.datamodel.UserVO;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
@@ -24,8 +25,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
-import waazdoh.datamodel.UserVO;
 
 public class UserView extends CTComposite implements CTAppControl {
 	private AppWindow window;

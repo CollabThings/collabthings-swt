@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.LOTSWT;
@@ -27,9 +29,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WStringID;
 
 public class ApplicationList extends CTComposite {
 

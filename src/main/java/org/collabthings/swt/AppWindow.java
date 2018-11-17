@@ -17,6 +17,11 @@ import java.util.List;
 import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.app.CTApp;
+import org.collabthings.datamodel.ObjectVO;
+import org.collabthings.datamodel.StorageAreaVO;
+import org.collabthings.datamodel.UserVO;
+import org.collabthings.datamodel.WStringID;
+import org.collabthings.datamodel.WaazdohInfo;
 import org.collabthings.model.CTApplication;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTInfo;
@@ -62,12 +67,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
-
-import waazdoh.datamodel.ObjectVO;
-import waazdoh.datamodel.StorageAreaVO;
-import waazdoh.datamodel.UserVO;
-import waazdoh.datamodel.WStringID;
-import waazdoh.datamodel.WaazdohInfo;
 
 public final class AppWindow implements CTInfo {
 	public static final String STATUS_RUNNERS = "Runners";

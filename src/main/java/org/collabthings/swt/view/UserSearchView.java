@@ -13,6 +13,7 @@ package org.collabthings.swt.view;
 import java.util.List;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.datamodel.UserVO;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
@@ -33,8 +34,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
-import waazdoh.datamodel.UserVO;
 
 public class UserSearchView extends CTComposite implements CTAppControl {
 	private static final int COLUMN_WIDTH = 500;

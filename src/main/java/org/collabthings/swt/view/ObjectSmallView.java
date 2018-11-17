@@ -18,6 +18,11 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.core.utils.WLogger;
+import org.collabthings.datamodel.ObjectVO;
+import org.collabthings.datamodel.UserVO;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.tk.CTButton;
 import org.collabthings.tk.CTComposite;
@@ -31,12 +36,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-
-import waazdoh.client.utils.WLogger;
-import waazdoh.datamodel.ObjectVO;
-import waazdoh.datamodel.UserVO;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WStringID;
 
 public class ObjectSmallView extends CTComposite {
 	private CTApp app;

@@ -11,13 +11,12 @@
 package org.collabthings.swt.view;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.tk.CTComposite;
 import org.collabthings.tk.CTLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-
-import waazdoh.datamodel.WStringID;
 
 public class CTBinaryImage extends CTComposite {
 

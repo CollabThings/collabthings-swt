@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.datamodel.ObjectVO;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
@@ -34,9 +36,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
-import waazdoh.datamodel.ObjectVO;
-import waazdoh.datamodel.WStringID;
 
 public class SearchView extends CTComposite implements CTAppControl {
 	private static final int COLUMN_WIDTH = 500;

@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.core.BeanStorage;
+import org.collabthings.core.model.User;
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WStringID;
+import org.collabthings.datamodel.WUserID;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.tk.CTSelectionAdapter;
 import org.collabthings.util.LLog;
@@ -23,12 +28,6 @@ import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
-import waazdoh.client.BeanStorage;
-import waazdoh.client.model.User;
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WStringID;
-import waazdoh.datamodel.WUserID;
 
 public class LocalObjectsMenu {
 	private static final String MAX_LOCALMENU_OBJECTS = "ct.gui.local.menuobjects.max";

@@ -13,6 +13,7 @@ package org.collabthings.swt.view;
 import java.awt.Canvas;
 import java.awt.Frame;
 
+import org.collabthings.core.utils.ConditionWaiter;
 import org.collabthings.jme.CTObjectViewer;
 import org.collabthings.jme.CTObjectViewerImpl;
 import org.collabthings.jme.CTSceneApp;
@@ -33,8 +34,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import com.jme3.math.Vector3f;
-
-import waazdoh.client.utils.ConditionWaiter;
 
 public class GLSceneView extends CTComposite {
 

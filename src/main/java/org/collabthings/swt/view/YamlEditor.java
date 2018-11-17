@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.collabthings.swt.view;
 
+import org.collabthings.datamodel.WObject;
 import org.collabthings.model.CTObject;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.tk.CTButton;
@@ -23,8 +24,6 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-
-import waazdoh.datamodel.WObject;
 
 public class YamlEditor extends CTComposite {
 	private CTObject o;

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.datamodel.UserVO;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.LOTSWT;
 import org.collabthings.swt.app.CTRunner;
@@ -31,8 +32,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-
-import waazdoh.datamodel.UserVO;
 
 public class UserPublishedView extends CTComposite {
 	public final CTApp app;

@@ -13,14 +13,13 @@ package org.collabthings.swt.view;
 import java.util.List;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.core.WClient;
+import org.collabthings.datamodel.ObjectVO;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.swt.CTAppControl;
 import org.collabthings.swt.view.SearchView.CTSearchResultFactory;
 import org.collabthings.util.LLog;
 import org.eclipse.swt.widgets.Composite;
-
-import waazdoh.client.WClient;
-import waazdoh.datamodel.ObjectVO;
 
 public class ObjectSearchView {
 	private LLog log = LLog.getLogger(this);

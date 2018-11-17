@@ -3,6 +3,7 @@ package org.collabthings.swt.view.parteditor;
 import java.util.Stack;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.core.utils.ConditionWaiter;
 import org.collabthings.model.CTObject;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.CTSubPart;
@@ -29,8 +30,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
-import waazdoh.client.utils.ConditionWaiter;
 
 public class PartEditor extends CTComposite implements CTAppControl {
 	private static final String PREFERENCES_SHOWSOURCE = "app.editor.showsource";

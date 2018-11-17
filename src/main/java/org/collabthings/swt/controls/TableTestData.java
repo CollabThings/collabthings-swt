@@ -13,14 +13,13 @@ package org.collabthings.swt.controls;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.collabthings.datamodel.WObject;
+import org.collabthings.datamodel.WObjectID;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.math.LOrientation;
 import org.collabthings.model.CTObject;
 
 import com.jme3.math.Vector3f;
-
-import waazdoh.datamodel.WObject;
-import waazdoh.datamodel.WObjectID;
-import waazdoh.datamodel.WStringID;
 
 public class TableTestData implements CTObject {
 	private String value1 = "value1";

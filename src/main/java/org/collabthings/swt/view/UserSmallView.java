@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.datamodel.UserVO;
+import org.collabthings.datamodel.WData;
 import org.collabthings.swt.AppWindow;
 import org.collabthings.tk.CTButton;
 import org.collabthings.tk.CTComposite;
@@ -26,9 +28,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import waazdoh.datamodel.UserVO;
-import waazdoh.datamodel.WData;
 
 public class UserSmallView extends CTComposite {
 	private CTApp app;

@@ -14,11 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.collabthings.app.CTApp;
+import org.collabthings.datamodel.WStringID;
 import org.collabthings.model.CTFactory;
 import org.collabthings.model.CTPart;
 import org.collabthings.model.run.CTRunEnvironmentBuilder;
-
-import waazdoh.datamodel.WStringID;
 
 public class ViewTypes {
 
