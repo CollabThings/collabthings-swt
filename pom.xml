@@ -87,7 +87,7 @@
 								<argument>org.collabthings.swt.AppLauncher</argument>
 								<argument>-srcfiles</argument>
 								<argument>
-									src/main/app/collabthings-windows_64-jar-with-dependencies.jar
+									src/main/app/collabthings-linux_64-jar-with-dependencies.jar
 								</argument>
 								<argument>-outdir</argument>
 								<argument>./target</argument>
