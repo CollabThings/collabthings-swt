@@ -101,18 +101,20 @@ public class UserPublishedView extends CTComposite {
 	}
 
 	private void doSearch(String filter) {
+		// TODO doesn't work at all
 		window.addRunner(new CTRunner<String>("dosearch " + filter)).run(() -> {
-			List<String> published = app.getLClient().getStorage().getUserPublished(u.getUserid(), 0, 50);
+			List<String> published = app.getLClient().getStorage().listNewItems(u.getUserid(), 0, 50);
 			LLog.getLogger(this).info("got published list " + published);
-			List<String> list = new ArrayList<>();
-			published.stream().forEach(string -> {
-				if (string.startsWith("/published") && (string.indexOf(filter) > 0 || filter.length() < 2)) {
-					list.add(string);
-				}
-			});
-
-			addPublishedItem(list);
-
+			
+			if (published != null) {
+				List<String> list = new ArrayList<>();
+				published.stream().forEach(string -> {
+					if (string.startsWith("/published") && (string.indexOf(filter) > 0 || filter.length() < 2)) {
+						list.add(string);
+					}
+				});
+				addPublishedItem(list);
+			}
 		});
 	}
 
@@ -164,7 +166,7 @@ public class UserPublishedView extends CTComposite {
 	}
 
 	private String readID(String item) {
-		return app.getLClient().getStorage().readStorage(u, item);
+		return app.getLClient().getStorage().read(u.getUserid(), item);
 	}
 
 	private void updateLayout() {

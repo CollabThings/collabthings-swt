@@ -56,6 +56,7 @@ public class CTMainView extends CTComposite implements CTAppControl {
 
 		view = new GLSceneView(right);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
 		sashForm.setWeights(new int[] { 150, 287 });
 
 		tabfolder.addSelectionListener(() -> {

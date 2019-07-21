@@ -18,7 +18,6 @@ import org.collabthings.CTEvent;
 import org.collabthings.CTListener;
 import org.collabthings.app.CTApp;
 import org.collabthings.datamodel.ObjectVO;
-import org.collabthings.datamodel.StorageAreaVO;
 import org.collabthings.datamodel.UserVO;
 import org.collabthings.datamodel.WStringID;
 import org.collabthings.datamodel.WaazdohInfo;
@@ -287,8 +286,8 @@ public final class AppWindow implements CTInfo {
 				log.error(this, "view cities", e);
 			}
 
-			String latestscadpart = app.getLClient().getService().getStorageArea()
-					.read(new StorageAreaVO(user.getUsername(), "published/part/latest", null)).getData();
+			String latestscadpart = app.getLClient().getService().getStorageArea().read(user.getUserid(),
+					"/published/part/latest");
 			if (latestscadpart != null) {
 				CTPart b = app.getObjectFactory().getPart(new WStringID(latestscadpart));
 				mainview.viewPart(b);
@@ -309,6 +308,8 @@ public final class AppWindow implements CTInfo {
 	}
 
 	public void showError(String name, Exception e) {
+		log.error(this, name, e);
+		
 		if (name.equals(CTConstants.ERROR_OPENSCADFAILED)) {
 			new FindOpenscadDialog(app, this, shell);
 		} else {
@@ -509,7 +510,7 @@ public final class AppWindow implements CTInfo {
 
 		List<BM> bookmarklist = new ArrayList<>();
 		addRunner(new CTRunner<String>("updatebookmarkmenu " + path).run(() -> {
-			this.app.getLClient().getBookmarks().list(path).forEach(s -> {
+			this.app.getLClient().getBookmarks().list(path).keySet().forEach(s -> {
 				BM bm = new BM();
 				bm.path = s;
 				bm.value = this.app.getLClient().getBookmarks().get(path + "/" + s);

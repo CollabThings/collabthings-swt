@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.collabthings.app.CTApp;
 import org.collabthings.core.WClient;
-import org.collabthings.core.env.Runner;
 import org.collabthings.core.utils.ThreadChecker;
 import org.collabthings.core.utils.WPreferences;
 import org.collabthings.tk.CTResourceManagerFactory;
@@ -49,9 +48,6 @@ public final class AppLauncher {
 
 	public void doLaunch() {
 		try {
-			Runner run = new Runner();
-			run.run(app.getPreferences());
-
 			new ThreadChecker(() -> getClient().isRunning());
 
 			if (!getClient().isRunning()) {
